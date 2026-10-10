@@ -1,0 +1,5185 @@
+{
+  "source_file": "Select Questions Chapter 01.html",
+  "subject": {
+    "id": "1def1b99-7726-55ec-8b98-17c3f3c85c6a",
+    "course_id": "ca100000-0000-0000-0000-000000000005",
+    "name": "Computer Science",
+    "name_ur": "کمپیوٹر سائنس"
+  },
+  "chapter": {
+    "id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+    "subject_id": "1def1b99-7726-55ec-8b98-17c3f3c85c6a",
+    "number": 1,
+    "title": "Operating Systems: Structure and Services",
+    "title_ur": "آپریٹنگ سسٹمز: ساخت اور خدمات"
+  },
+  "topics": [
+    {
+      "id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "number": 1,
+      "title": "Introduction to Operating System (OS)",
+      "title_ur": "آپریٹنگ سسٹم کا تعارف"
+    },
+    {
+      "id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "number": 2,
+      "title": "Architecture of an Operating System",
+      "title_ur": "آپریٹنگ سسٹم کا ڈھانچہ اور آرکیٹیکچر"
+    },
+    {
+      "id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "number": 3,
+      "title": "Process Management in Operating System (OS)",
+      "title_ur": "پروسیس مینجمنٹ"
+    },
+    {
+      "id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "number": 4,
+      "title": "Memory",
+      "title_ur": "میموری مینجمنٹ"
+    },
+    {
+      "id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "number": 5,
+      "title": "Processes vs Threads",
+      "title_ur": "فائل سسٹم مینجمنٹ"
+    },
+    {
+      "id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "number": 6,
+      "title": "System Calls",
+      "title_ur": "ڈیوائس مینجمنٹ"
+    },
+    {
+      "id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "number": 7,
+      "title": "File System Structure and Management",
+      "title_ur": "یوزر انٹرفیس (UI)"
+    },
+    {
+      "id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "number": 8,
+      "title": "Types of Operating Systems",
+      "title_ur": "سیکیورٹی اور تحفظ"
+    }
+  ],
+  "questions": [
+    {
+      "id": "3bb014b0-f2c1-5535-8842-52b9a196c6f6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-1",
+      "concept_tag": "Identification",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which is NOT an example of an operating system?",
+          "options": [
+            "Linux لینکس",
+            "Windows ونڈوز",
+            "Photoshop فوٹو شاپ",
+            "macOS میک او ایس (macOS)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2de71da4-5d74-521e-88cc-09d430cf34f3",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-2",
+      "concept_tag": "Multi-user",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In multi-user environments, the OS ensures:",
+          "options": [
+            "Equal access and data privacy برابر رسائی اور ڈیٹا کی رازداری",
+            "All users share the same files تمام صارفین ایک جیسی فائلیں شیئر کرتے ہیں",
+            "Hardware is never used ہارڈ ویئر کبھی استعمال نہیں ہوتا",
+            "Internet speed is increased انٹرنیٹ کی رفتار بڑھ جاتی ہے"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "35114ba1-0ad6-59df-9e60-dea00682d234",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-3",
+      "concept_tag": "Accounts",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In Windows, user accounts can be created via:",
+          "options": [
+            "Task Manager ٹاسک مینیجر",
+            "Control Panel or Settings کنٹرول پینل یا سیٹنگز",
+            "Disk Management ڈسک مینجمنٹ",
+            "BIOS settings بایوس (BIOS) سیٹنگز"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bfa1cce9-c2af-5d89-998f-eb28cda287f9",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-4",
+      "concept_tag": "Core part",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The core part of the OS that interacts directly with hardware is the:",
+          "options": [
+            "Shell شیل (Shell)",
+            "Kernel کرنل (Kernel)",
+            "Device Driver ڈیوائس ڈرائیور",
+            "System Library سسٹم لائبریری"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2ab154e-ac81-5b25-91fc-4947edbfc528",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-5",
+      "concept_tag": "Shell functionality",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A graphical shell allows the user to:",
+          "options": [
+            "Type commands only صرف کمانڈز ٹائپ کرنے کی",
+            "Click icons and use menus آئیکنز پر کلک کرنے اور مینوز استعمال کرنے کی",
+            "Interact only via code صرف کوڈ کے ذریعے تعامل کرنے کی",
+            "Access only the BIOS صرف بایوس تک رسائی کی"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "943357ca-1add-5b7c-9f85-0414c994c09c",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-6",
+      "concept_tag": "FCFS logic",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In the FCFS scheduling method, processes are served:",
+          "options": [
+            "Randomly بلا ترتیب",
+            "Shortest job first سب سے چھوٹا کام پہلے",
+            "In the order they arrive آمد کی ترتیب میں",
+            "By priority only صرف ترجیح کی بنیاد پر"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0eabaec0-bf56-5a02-ba29-896edf799b7a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-7",
+      "concept_tag": "Threads",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Threads in the same process:",
+          "options": [
+            "Have separate memory spaces الگ الگ میموری اسپیس رکھتے ہیں",
+            "Share the same memory and resources ایک جیسی میموری اور وسائل شیئر کرتے ہیں",
+            "Run on different OS مختلف آپریٹنگ سسٹم پر چلتے ہیں",
+            "Cannot run simultaneously ایک ساتھ نہیں چل سکتے"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1bdfa73b-3362-5b8a-875b-953b61367841",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-8",
+      "concept_tag": "Call usage",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which system call is used to create a new process?",
+          "options": [
+            "Open اوپن (Open)",
+            "Read ریڈ (Read)",
+            "Write رائٹ (Write)",
+            "Fork فورک (Fork)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "06e876e0-d59e-50c4-a912-ee689d0fa390",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Operating System (OS) is a type of:",
+          "options": [
+            "Application software ایپلی کیشن سافٹ ویئر",
+            "System software سسٹم سافٹ ویئر",
+            "Hardware ہارڈ ویئر",
+            "Utility program یوٹیلیٹی پروگرام"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7b17f2c0-555f-5dc5-99c8-f842bc324153",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Analogy",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "An operating system works like a ______ for the computer.",
+          "options": [
+            "Translator only صرف مترجم",
+            "Data storage ڈیٹا اسٹوریج",
+            "Traffic controller ٹریفک کنٹرولر",
+            "Memory chip میموری چپ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0263a140-e867-5ad8-9732-04423af4dd75",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "User-Hardware Interaction",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The OS acts as a ______ between the user and the hardware system.",
+          "options": [
+            "Developer ڈویلپر",
+            "Programmer پروگرامر",
+            "Controller کنٹرولر",
+            "Translator مترجم (Translator)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0b459400-e1b6-5e73-a098-9a544c6111f5",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Binary Language",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Computers understand only ______ language.",
+          "options": [
+            "Binary بائنری (Binary)",
+            "Urdu اردو",
+            "English انگریزی",
+            "High-level ہائی لیول"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "76620c4d-c9d9-5993-8f7f-143838bb14a4",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Binary code",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The binary code for the letter 'A' is:",
+          "options": [
+            "$(10000001)_{2}$ $(10000001)_{2}$",
+            "$(01100001)_{2}$ $(01100001)_{2}$",
+            "$(01000001)_{2}$ $(01000001)_{2}$",
+            "$(01000011)_{2}$ $(01000011)_{2}$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1b31eae2-3aae-5484-b06e-b61c45b3401e",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multi-user task",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In a multi-user environment, the OS protects shared resources from:",
+          "options": [
+            "The internet انٹرنیٹ",
+            "Unauthorized access غیر مجاز رسائی (Unauthorized access)",
+            "Binary code بائنری کوڈ",
+            "The hardware ہارڈ ویئر"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c370ec04-ec39-59c7-9883-7c98e9a45425",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Account Types",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which of the following is a type of user account?",
+          "options": [
+            "Administrative ایڈمنسٹریٹو (Administrative)",
+            "Application ایپلی کیشن",
+            "Interface انٹرفیس",
+            "Hardware ہارڈ ویئر"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c204f917-3be6-5ae5-9374-90f39642538d",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Windows Control",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In Windows, a new account can be created through:",
+          "options": [
+            "Desktop icon ڈیسک ٹاپ آئیکن",
+            "Binary menu بائنری مینو",
+            "Taskbar ٹاسک بار",
+            "Settings or Control Panel سیٹنگز یا کنٹرول پینل"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "17e04a1e-a45a-52be-90c4-aa1edd73c697",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "OS Examples",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "macOS and Android are examples of:",
+          "options": [
+            "Hardware ہارڈ ویئر",
+            "Operating Systems آپریٹنگ سسٹم",
+            "Application Software ایپلی کیشن سافٹ ویئر",
+            "User accounts صارف اکاؤنٹ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3e71a02e-907b-55ce-a70c-d0a1780eb973",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multi-user privacy",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The OS ensures each user's files and information remain:",
+          "options": [
+            "Public عوامی",
+            "Deleted ڈیلیٹ شدہ",
+            "Private پرائیویٹ (نجی)",
+            "Binary بائنری"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "24d749a3-948c-5809-9593-28d7146999ab",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Core Part",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which part is considered the core part of the operating system?",
+          "options": [
+            "Shell شیل (Shell)",
+            "Kernel کرنل (Kernel)",
+            "Application ایپلی کیشن",
+            "Driver ڈرائیور"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f9a7199d-9529-5d25-873f-a3aad242e0c9",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Kernel Analogy",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In the car analogy, the kernel is compared to the:",
+          "options": [
+            "Engine انجن",
+            "Steering wheel اسٹیرنگ وہیل",
+            "Dashboard ڈیش بورڈ",
+            "Seats سیٹیں"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "33c3aa5e-4b93-5916-8c6c-42f1ee573232",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Outer Part",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The ______ is the outer part of the OS that interacts with the user.",
+          "options": [
+            "Kernel کرنل",
+            "Hardware ہارڈ ویئر",
+            "Shell شیل (Shell)",
+            "System Library سسٹم لائبریری"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "843eb6fa-e285-51a2-aee2-f187636969d2",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Shell Interface",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Windows desktop, where you click icons, is an example of a:",
+          "options": [
+            "Command-line shell کمانڈ لائن شیل",
+            "Hardware layer ہارڈ ویئر لیئر",
+            "Central controller مرکزی کنٹرولر",
+            "Graphical shell گرافیکل شیل"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "63fec742-ad17-5732-9ece-c98a085067e6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "CLI Shell",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A shell where you type instructions is called:",
+          "options": [
+            "Graphical shell گرافیکل شیل",
+            "Command-line shell کمانڈ لائن شیل",
+            "Interface shell انٹرفیس شیل",
+            "Middle layer درمیانی تہہ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "07ffc016-f380-5a1f-9aba-4b41e0384272",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Lower Layer",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The ______ layer of an OS works directly with hardware devices like CPU and RAM.",
+          "options": [
+            "Lower نچلی (Lower)",
+            "Middle درمیانی (Middle)",
+            "Upper اوپری (Upper)",
+            "External بیرونی"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f93963c6-7815-5511-bbc5-7d646cfa5cbf",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Upper Layer",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Running applications and providing the interface is the job of the:",
+          "options": [
+            "Lower layer نچلی تہہ",
+            "Middle layer درمیانی تہہ",
+            "Upper layer اوپری تہہ",
+            "Hardware layer ہارڈ ویئر تہہ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "125d6f9f-37f8-5a91-ae62-7363ffb96513",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Layer Dependency",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Each layer in the operating system architecture depends on:",
+          "options": [
+            "The one above it اپنے سے اوپر والی پر",
+            "The user صارف پر",
+            "The shell شیل پر",
+            "The one below it اپنے سے نیچے والی پر"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e428c772-2207-5c88-92eb-a4cfec76f36b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "System Libraries",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Collections of ready-made instructions for common tasks are called:",
+          "options": [
+            "Device drivers ڈیوائس ڈرائیورز",
+            "System libraries سسٹم لائبریریز",
+            "Upper layers اوپری تہیں",
+            "Kernels کرنلز"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "de085e5b-8b8e-5345-b5f8-57c5e8d9dca3",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Device Drivers",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Special programs that allow OS to communicate with printers are:",
+          "options": [
+            "Device drivers ڈیوائس ڈرائیورز",
+            "Graphical shells گرافیکل شیلز",
+            "Middle layers درمیانی تہیں",
+            "User applications صارف کی ایپلی کیشنز"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ec53cb8e-abb1-59da-a877-923b483cf3da",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Middle Layer",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which layer manages resources and ensures programs can use them?",
+          "options": [
+            "Lower layer نچلی تہہ",
+            "Upper layer اوپری تہہ",
+            "Middle layer درمیانی تہہ",
+            "Shell layer شیل تہہ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "904adbb1-1c21-54da-af9f-8a91affba49c",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Library Usage",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A photo editing app uses a ______ to read a file without creating its own method.",
+          "options": [
+            "Device driver ڈیوائس ڈرائیور",
+            "Command-line shell کمانڈ لائن شیل",
+            "Lower layer نچلی تہہ",
+            "System library سسٹم لائبریری"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "68dd0c4a-5a5c-5c76-be2a-818d0ede661e",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Analogies",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In the school analogy, the administration represents the:",
+          "options": [
+            "Lower layer نچلی تہہ",
+            "Middle layer درمیانی تہہ",
+            "Upper layer اوپری تہہ",
+            "Hardware ہارڈ ویئر"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2f6db30f-afbd-5533-868a-d589ea60dddd",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Kernel Role",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The kernel decides ______ different programs can use resources.",
+          "options": [
+            "How and when کیسے اور کب",
+            "If اگر",
+            "Where کہاں",
+            "Why کیوں"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "32fc241f-95f1-5ba6-9f30-94ef8c3333a3",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Design Benefit",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Layered design makes the OS easier to manage without changing the:",
+          "options": [
+            "Kernel کرنل",
+            "Hardware ہارڈ ویئر",
+            "Whole system پورے سسٹم",
+            "User accounts صارف کے اکاؤنٹس"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "30cda28e-74e6-5e97-9d5c-71ed483fcc56",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Process Definition",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In the context of an operating system, running programs are called:",
+          "options": [
+            "Hardwares ہارڈ ویئرز",
+            "Applications ایپلی کیشنز",
+            "Processes پروسیسز (Processes)",
+            "Drivers ڈرائیورز"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "49707a45-2cb5-542d-b74d-570c19c48bce",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Creation Stage",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which stage of the process life cycle happens when you start a program like MS Word?",
+          "options": [
+            "Creation تخلیق (Creation)",
+            "Execution ایگزیکیوشن",
+            "Termination خاتمہ (Termination)",
+            "Scheduling شیڈولنگ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8e1e9816-cd0f-545f-9909-6c6259aec119",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Execution Stage",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The stage where a process is actively running and performing tasks is:",
+          "options": [
+            "Creation تخلیق",
+            "Execution ایگزیکیوشن (Execution)",
+            "Termination خاتمہ",
+            "Waiting انتظار"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5c23b823-a11f-509f-9d8b-4504b15ca287",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Termination Stage",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In which stage does the OS free up resources like memory?",
+          "options": [
+            "Creation تخلیق",
+            "Execution ایگزیکیوشن",
+            "Termination خاتمہ (Termination)",
+            "Concurrency کنسرنسی"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "99305f3c-67fc-5c7f-adea-86f58520ffd3",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multitasking",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Allowing more than one program to be usable by a single user at the same time is called:",
+          "options": [
+            "Scheduling شیڈولنگ",
+            "Termination خاتمہ",
+            "Creation تخلیق",
+            "Multitasking ملٹی ٹاسکنگ (Multitasking)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5ac5df41-e935-5572-acef-d220ba57b5be",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Concurrency",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "CPU processing multiple tasks one by one in extremely fast cycles is known as:",
+          "options": [
+            "Multitasking ملٹی ٹاسکنگ",
+            "Concurrency کنسرنسی (Concurrency)",
+            "Termination خاتمہ",
+            "First Come First Served فرسٹ کم فرسٹ سروڈ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "552bd9ae-6064-5618-b9c7-b70599dfccb7",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Scheduling Definition",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The process of deciding which task should run first and for how long is called:",
+          "options": [
+            "Scheduling شیڈولنگ (Scheduling)",
+            "Creation تخلیق",
+            "Execution ایگزیکیوشن",
+            "Multitasking ملٹی ٹاسکنگ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c3947b9d-31c3-5174-b84b-0f18bd725584",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "FCFS Method",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "FCFS scheduling stands for:",
+          "options": [
+            "Fast Computer Fast System فاسٹ کمپیوٹر فاسٹ سسٹم",
+            "File Creation File System فائل کریشن فائل سسٹم",
+            "First Cycle Fast Scheduling فرسٹ سائیکل فاسٹ شیڈولنگ",
+            "First Come, First Served فرسٹ کم، فرسٹ سروڈ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "31cd6f59-c297-5747-895e-9427925fbda0",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "FCFS Disadvantage",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Short processes waiting a long time behind long processes is called the:",
+          "options": [
+            "Multi-user effect ملٹی یوزر ایفیکٹ",
+            "Fast cycle effect فاسٹ سائیکل ایفیکٹ",
+            "Convoy effect کونوائے ایفیکٹ (Convoy effect)",
+            "Termination effect ٹرمینیشن ایفیکٹ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7d8dfb88-4a9b-54df-96ea-cf3a9d7d6c48",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "FCFS Logic",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In the FCFS method, if $P_{1}$ takes $5\\text{s}$ and $P_{2}$ takes $3\\text{s}$, $P_{2}$ will finish at:",
+          "options": [
+            "$3\\text{ seconds}$ $3$ سیکنڈ",
+            "$8\\text{ seconds}$ $8$ سیکنڈ",
+            "$5\\text{ seconds}$ $5$ سیکنڈ",
+            "$10\\text{ seconds}$ $10$ سیکنڈ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "680704df-5ce1-55d9-b3d1-832743626814",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "CPU Speed",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The CPU can switch between processes ______ of times in just one second.",
+          "options": [
+            "Millions لاکھوں (Millions)",
+            "Hundreds سینکڑوں",
+            "Thousands ہزاروں",
+            "Tens دہائیوں"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "da6d5979-84f7-56d3-822c-d656bd8b95d7",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "FCFS Analogy",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "FCFS scheduling is like a:",
+          "options": [
+            "Chef preparing dishes کھانا تیار کرتا ہوا باورچی",
+            "Traffic light ٹریفک لائٹ",
+            "Fast cycle فاسٹ سائیکل",
+            "Queue at a shop counter دکان کے کاؤنٹر پر لگی قطار"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "755b138b-d190-56ba-bd53-c95672472dc5",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "FCFS Characteristic",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "An advantage of FCFS is that:",
+          "options": [
+            "Short tasks run first چھوٹے کام پہلے چلتے ہیں",
+            "Overall efficiency is highest مجموعی کارکردگی سب سے زیادہ ہوتی ہے",
+            "No process is skipped کوئی بھی پروسیس چھوڑا نہیں جاتا",
+            "It avoids delays یہ تاخیر سے بچاتا ہے"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1f9dac60-c96c-5653-a40a-d2e69e8153d6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Creation Data",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "During Creation, the OS loads the program into ______ and gives it resources.",
+          "options": [
+            "Hard drive ہارڈ ڈرائیو",
+            "Memory میموری (Memory)",
+            "Printer پرنٹر",
+            "Speakers سپیکرز"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "80721b8a-dddf-53b5-b2b9-025115a4366d",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Concurrency Analogy",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Concurrency is like a ______ preparing three dishes at once by switching rapidly.",
+          "options": [
+            "Chef باورچی (Chef)",
+            "Driver ڈرائیور",
+            "Gardener مالی",
+            "Teacher استاد"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b3e46161-e60e-5a36-83b9-337c56a93022",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which fundamental component is used to store data and instructions required for processing?",
+          "options": [
+            "CPU CPU",
+            "Memory میموری",
+            "Keyboard کی بورڈ",
+            "Printer پرنٹر"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "256f8658-8fe4-50e9-9fde-67ac0a224b39",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RAM Full Form",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "RAM stands for:",
+          "options": [
+            "Read Access Memory ریڈ ایکسیس میموری",
+            "Rapid Action Memory ریپڈ ایکشن میموری",
+            "Random Access Memory رینڈم ایکسیس میموری",
+            "Record Access Memory ریکارڈ ایکسیس میموری"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "544ecbbb-c4e1-57de-a57c-9b9b2000fd0b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Volatility",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What happens to data in RAM when the computer is turned off?",
+          "options": [
+            "It is erased یہ ختم (erase) ہو جاتا ہے",
+            "It is saved forever یہ ہمیشہ کے لیے محفوظ ہو جاتا ہے",
+            "It is moved to the CPU یہ CPU میں منتقل ہو جاتا ہے",
+            "It is printed یہ پرنٹ ہو جاتا ہے"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c136adc8-85c2-511b-8343-ef13eb7ac45e",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Virtual Memory usage",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Virtual memory is used by the operating system when:",
+          "options": [
+            "The CPU is fast جب CPU تیز ہو",
+            "The computer starts جب کمپیوٹر شروع ہو",
+            "The hard drive is empty جب ہارڈ ڈرائیو خالی ہو",
+            "The RAM is full جب RAM بھر جائے"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "be93f53e-034d-58c1-882d-5d92d2e12005",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Virtual memory location",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Virtual memory uses part of the computer's:",
+          "options": [
+            "Monitor مانیٹر",
+            "ROM ROM",
+            "Storage drive (HDD/SSD) اسٹوریج ڈرائیو (HDD/SSD)",
+            "Mouse ماؤس"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "85ecec00-f519-5f6f-bcac-cc91ee096dfc",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Speed comparison",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Compared to RAM, storage drives (used for virtual memory) have:",
+          "options": [
+            "Higher speed زیادہ رفتار",
+            "Lower data transfer speed کم ڈیٹا ٹرانسفر اسپیڈ",
+            "Instant access فوری رسائی",
+            "No memory کوئی میموری نہیں"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "38170cb4-3d72-5fda-8d40-d2eda12e689b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "History",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The first personal computer IBM 5150 had only ______ of RAM.",
+          "options": [
+            "$16\\text{ KB}$ $16\\text{ KB}$",
+            "$16\\text{ MB}$ $16\\text{ MB}$",
+            "$16\\text{ GB}$ $16\\text{ GB}$",
+            "$50\\text{ GB}$ $50\\text{ GB}$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "62876284-3da4-553b-ab66-c90c2424bc45",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "DDR5 speed",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Modern DDR5 RAM can transfer data at speeds exceeding:",
+          "options": [
+            "$50\\text{ KB/s}$ $50\\text{ KB/s}$",
+            "$50\\text{ MB/s}$ $50\\text{ MB/s}$",
+            "$50\\text{ GB/s}$ $50\\text{ GB/s}$",
+            "$16\\text{ GB/s}$ $16\\text{ GB/s}$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "693d03a9-8eff-5035-817a-fe2202c6fde3",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Virtual performance",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The use of virtual memory can result in:",
+          "options": [
+            "Increased speed رفتار میں اضافہ",
+            "Reduced system performance سسٹم کی کارکردگی میں کمی",
+            "Battery charging بیٹری چارجنگ",
+            "Hardware repair ہارڈ ویئر کی مرمت"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c75aff3f-e91c-5849-a860-f02e420202cc",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NVMe",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which of the following is a type of storage used for virtual memory?",
+          "options": [
+            "Speaker اسپیکر",
+            "Keyboard کی بورڈ",
+            "Printer پرنٹر",
+            "NVMe NVMe"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3f16d26e-587f-59ca-a023-bf33eb5b6f67",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Process Definition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "An independent program that is currently being executed by the computer is called:",
+          "options": [
+            "Thread تھریڈ (Thread)",
+            "Process پروسیس (Process)",
+            "Driver ڈرائیور",
+            "Library لائبریری"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "49cf60e7-82f3-573f-bcba-018d298f94ea",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Process Isolation",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Processes are isolated from one another to ensure:",
+          "options": [
+            "Speed رفتار",
+            "Responsiveness جواب دہی (Responsiveness)",
+            "Stability and security استحکام اور سیکیورٹی",
+            "Binary conversion بائنری تبدیلی"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "75cfc4f7-a3d6-5ee5-9ecb-d77fcbc1a777",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Thread Definition",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The smallest unit of execution within a process is:",
+          "options": [
+            "Thread تھریڈ (Thread)",
+            "Kernel کرنل",
+            "Shell شیل",
+            "Application ایپلی کیشن"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ea0de1ed-f7e8-5a6f-8e8f-74dcfd15274f",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Thread Sharing",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "All threads in the same process share the same:",
+          "options": [
+            "CPU only صرف CPU",
+            "Network cable نیٹ ورک کیبل",
+            "Monitor مانیٹر",
+            "Memory and resources میموری اور وسائل (resources)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bd1cae3f-fcba-5e5a-819c-ebad3e6249cf",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Browser Process Example",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In a web browser process, one thread might be responsible for:",
+          "options": [
+            "Opening the computer کمپیوٹر کھولنے کا",
+            "Playing audio or video content آڈیو یا ویڈیو چلانے کا",
+            "Shutting down the OS OS کو بند کرنے کا",
+            "Allocating RAM ریم (RAM) مختص کرنے کا"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c31a9c80-05ea-541f-a375-a853f29d04d5",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multithreading Definition",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The technique that allows a single process to perform multiple tasks at the same time is:",
+          "options": [
+            "Scheduling شیڈولنگ",
+            "Termination خاتمہ (Termination)",
+            "Multithreading ملٹی تھریڈنگ (Multithreading)",
+            "Virtualization ورچوئلائزیشن"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "9f69c4c2-fd0a-54b9-b86b-ee024979c545",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Performance",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Multithreading enhances performance by executing tasks in:",
+          "options": [
+            "Series سیریز (Series)",
+            "Order of arrival آمد کی ترتیب",
+            "Slow cycles سست سائیکلوں",
+            "Parallel پیرلل (Parallel)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ea28e65f-0b20-5b13-a359-f81fe02df3a6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Responsiveness Example",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A word processor remains responsive while checking spelling because of:",
+          "options": [
+            "Multithreading ملٹی تھریڈنگ",
+            "Primary memory پرائمری میموری",
+            "Device drivers ڈیوائس ڈرائیورز",
+            "Command-line shell کمانڈ لائن شیل"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cd95800c-960b-5807-a01b-179f4a4c5699",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Concurrent Apps",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Support for parallel operations is particularly important in:",
+          "options": [
+            "Word documents ورڈ دستاویزات",
+            "Games and video editing گیمز اور ویڈیو ایڈیٹنگ",
+            "Reading a text file ٹیکسٹ فائل پڑھنے",
+            "Calculator apps کیلکولیٹر ایپس"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "09095ad7-885d-5602-b707-151317beae21",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Efficiency",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Threads use fewer system resources because they share their ______ process's resources.",
+          "options": [
+            "Child چائلڈ (Child)",
+            "External بیرونی",
+            "Parent پیرنٹ (Parent)",
+            "Neighbor ہمسایہ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "9ccfed39-826b-5d0c-a7c8-7f2edb7bd445",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Process Resources",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A process has its own memory space, CPU time, and:",
+          "options": [
+            "Keyboard کی بورڈ",
+            "Network connections نیٹ ورک کنکشنز",
+            "Monitor مانیٹر",
+            "Power supply پاور سپلائی"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "351b9580-f359-5fca-9f6d-7d79dcaeb699",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Stability",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A problem in one process generally:",
+          "options": [
+            "Crashes the whole OS پورے OS کو کریش کر دیتا ہے",
+            "Speeds up the computer کمپیوٹر کو تیز کرتا ہے",
+            "Deletes all files تمام فائلیں ڈیلیٹ کر دیتا ہے",
+            "Does not affect another دوسرے کو متاثر نہیں کرتا"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "03dd7916-704a-5a3c-9390-547a407d5d02",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Thread Independence",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Multiple threads inside a single process operate:",
+          "options": [
+            "Independently آزادانہ طور پر (Independently)",
+            "One per hour فی گھنٹہ ایک",
+            "Manually دستی طور پر",
+            "By deleting RAM ریم (RAM) ڈیلیٹ کر کے"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6c6eb5f1-065d-5b66-9335-e8b9ba4d8f1d",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Browser responsiveness",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Using multiple threads allows a browser to load content while:",
+          "options": [
+            "The computer is off کمپیوٹر بند ہو",
+            "Typing in binary بائنری میں ٹائپنگ",
+            "Playing a video ویڈیو چل رہی ہو",
+            "Reformatting the disk ڈسک ری فارمیٹ ہو رہی ہو"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4183db5a-1ee2-52ff-a2fd-afff19230406",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Thread Execution",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which of the following is executed within a process?",
+          "options": [
+            "Hardware ہارڈ ویئر",
+            "Thread تھریڈ (Thread)",
+            "Operating System آپریٹنگ سسٹم",
+            "User account صارف اکاؤنٹ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a5e0b8e4-3a9f-5ab0-a604-285b23535870",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A request made by a program to the OS to perform a specific task is called a:",
+          "options": [
+            "Hard call ہارڈ کال",
+            "System call سسٹم کال",
+            "Software call سافٹ ویئر کال",
+            "User call یوزر کال"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5bebd233-6e56-58cb-a33e-b47364e7a52b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Bridge role",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "System calls act as a bridge between user programs and the:",
+          "options": [
+            "Monitor مانیٹر",
+            "Keyboard کی بورڈ",
+            "Kernel کرنل (Kernel)",
+            "Printer پرنٹر"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "43952848-d322-5b55-b213-bb5f8ae26198",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safety purpose",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "System calls allow applications to access hardware:",
+          "options": [
+            "Safely محفوظ طریقے سے (Safely)",
+            "Directly براہ راست",
+            "Slowly آہستہ",
+            "Illegally غیر قانونی طور پر"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dd1360a2-0663-574d-8941-429b5256504b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Open system call",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which system call is used to open a music file to play?",
+          "options": [
+            "Fork Fork",
+            "Write Write",
+            "Read Read",
+            "Open Open"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b09f0c2b-58b7-53e9-8784-ec1c7da85f6e",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Read system call",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which system call retrieves data from a file or input device?",
+          "options": [
+            "Write Write",
+            "Fork Fork",
+            "Read Read",
+            "Open Open"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3596203a-aa34-5fc5-a130-207ae2945d2a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Write system call",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Saving an image to the computer uses which system call?",
+          "options": [
+            "Write Write",
+            "Read Read",
+            "Open Open",
+            "Fork Fork"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bbce4f4a-bf60-511c-a067-75f342087abf",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Fork system call",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which system call creates a new process by duplicating an existing one?",
+          "options": [
+            "Open Open",
+            "Fork Fork",
+            "Write Write",
+            "Read Read"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "05e7a5b2-9326-5ce6-994c-06d0289d7228",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Windows stats",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Windows OS uses nearly ______ system calls.",
+          "options": [
+            "$100$ $100$",
+            "$500$ $500$",
+            "$1,000$ $1,000$",
+            "$2,000$ $2,000$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "47e62b4a-d54a-574d-9ee9-f24beb01cfa0",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task duplication",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Opening a new browser tab often utilizes which system call?",
+          "options": [
+            "Read Read",
+            "Open Open",
+            "Fork Fork",
+            "Write Write"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fa34b194-1af0-5076-83fc-2e78066b7e30",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Complexity",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Without system calls, programs that directly control hardware would be:",
+          "options": [
+            "Fast and easy تیز اور آسان",
+            "Unsafe and complex غیر محفوظ اور پیچیدہ",
+            "Free and open مفت اور اوپن",
+            "Safe and simple محفوظ اور سادہ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5647ee72-1396-599d-90be-e1d16e8fda82",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which system provides a structured way for users and applications to store, locate, and manage information?",
+          "options": [
+            "Memory system میموری سسٹم",
+            "Process system پروسیس سسٹم",
+            "File system فائل سسٹم",
+            "Hardware system ہارڈ ویئر سسٹم"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b08efa5b-2de2-5af1-a8d9-5d048b624d9a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Files",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A collection of related data stored on a computer is called a:",
+          "options": [
+            "Folder فولڈر",
+            "File فائل",
+            "Metadata میٹا ڈیٹا",
+            "Driver ڈرائیور"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "672b0480-13d9-564e-8e3e-1a6849ef51b9",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Folders",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A folder is also known as a:",
+          "options": [
+            "Directory ڈائرکٹری (Directory)",
+            "Metadata میٹا ڈیٹا",
+            "Sector سیکٹر",
+            "Cluster کلسٹر"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dedfae00-2435-595f-9b1d-6acf385c88b9",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Metadata",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Details like name, size, and date of creation of a file are called:",
+          "options": [
+            "Application data ایپلی کیشن ڈیٹا",
+            "System calls سسٹم کالز",
+            "Source code سورس کوڈ",
+            "Metadata میٹا ڈیٹا"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "51fd9765-bcb4-5f18-9ed4-b46cab68f74b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "FAT32",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which file system is commonly used in USB flash drives?",
+          "options": [
+            "$NTFS$ $NTFS$",
+            "$EXT4$ $EXT4$",
+            "$FAT32$ $FAT32$",
+            "$APFS$ $APFS$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "96053997-5f41-5bb0-b210-ba0445be8a52",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NTFS",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Windows OS primarily uses which file system?",
+          "options": [
+            "$HFS+$ $HFS+$",
+            "$NTFS$ $NTFS$",
+            "$EXT4$ $EXT4$",
+            "$FAT16$ $FAT16$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7c04af28-1282-50c1-81c6-1649b99537cd",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Linux OS",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "$EXT4$ is a file system commonly used by:",
+          "options": [
+            "Windows OS ونڈوز OS",
+            "macOS میک OS",
+            "Android اینڈرائیڈ",
+            "Linux OS لینکس OS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "32da961e-308e-57b6-bfcb-8c2b7cb79afa",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "macOS",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which file system is used by macOS?",
+          "options": [
+            "$APFS$ / $HFS+$ $APFS$ / $HFS+$",
+            "$NTFS$ $NTFS$",
+            "$FAT32$ $FAT32$",
+            "$EXT2$ $EXT2$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ded1b0f4-64c5-5961-a009-c4fd96203faf",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Librarian Analogy",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A file system is compared to a ______ in the text.",
+          "options": [
+            "Chef باورچی",
+            "Traffic controller ٹریفک کنٹرولر",
+            "Librarian لائبریرین",
+            "Translator مترجم"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b4009a2c-723c-546b-9cfd-0253c46ebdb2",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Impact",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The choice of file system affects which of the following?",
+          "options": [
+            "Monitor resolution مانیٹر ریزولوشن",
+            "Performance and security کارکردگی اور سیکیورٹی",
+            "Keyboard language کی بورڈ زبان",
+            "Internet speed انٹرنیٹ کی رفتار"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6edb7afe-d57e-5d9c-bee2-ca7fe150e6b8",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RTOS Deadline",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A Real-Time Operating System (RTOS) must respond within a strict time limit known as a:",
+          "options": [
+            "Wait time انتظار کا وقت",
+            "Deadline ڈیڈ لائن (Deadline)",
+            "Fast cycle فاسٹ سائیکل",
+            "Execution period ایگزیکیوشن پیریڈ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c34d9e38-41a2-58e4-9ae6-589bf86698a0",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RTOS usage",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which type of OS is used in air traffic control or heart-monitoring devices?",
+          "options": [
+            "Network OS نیٹ ورک OS",
+            "Embedded OS ایمبیڈڈ OS",
+            "Real-Time OS ریئل ٹائم OS",
+            "Mobile OS موبائل OS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7417f73e-2900-5dac-ba31-7bd4fcdb4e3b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Embedded OS definition",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "An operating system built into a specific device to control only the functions it needs is called:",
+          "options": [
+            "Embedded OS ایمبیڈڈ OS",
+            "Network OS نیٹ ورک OS",
+            "General-purpose OS جنرل پرپز OS",
+            "Real-Time OS ریئل ٹائم OS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4212f109-4689-5e88-bff8-fdb2d7335d0b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "EOS Power",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A key feature of an Embedded OS is that it uses very little:",
+          "options": [
+            "Storage drives اسٹوریج ڈرائیوز",
+            "Screens اسکرینیں",
+            "System calls سسٹم کالز",
+            "Memory and power میموری اور پاور"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7167e814-3c59-5636-85a5-2cde5ea973bd",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NOS Purpose",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which OS enables the sharing of files, printers, and internet connections among users in a network?",
+          "options": [
+            "Real-Time OS ریئل ٹائم OS",
+            "Network OS نیٹ ورک OS",
+            "Embedded OS ایمبیڈڈ OS",
+            "Single-user OS سنگل یوزر OS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0393f5f3-905d-55ed-b5e8-f88c6cffbc59",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NOS Coordination",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Network OS focuses primarily on communication and ______ between computers.",
+          "options": [
+            "Battery saving بیٹری کی بچت",
+            "Touch screens ٹچ اسکرین",
+            "Coordination کوآرڈینیشن (Coordination)",
+            "Industrial robotics انڈسٹریل روبوٹکس"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1397b719-1a1d-5eed-807e-14a1a8677d46",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Mobile OS Optimization",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Mobile OS is optimized for touch-screen use, mobile apps, and:",
+          "options": [
+            "Printing paper کاغذ پرنٹ کرنے",
+            "Battery saving بیٹری کی بچت (Battery saving)",
+            "Controlling industrial robots صنعتی روبوٹ کو کنٹرول کرنے",
+            "Managing servers سرورز مینیج کرنے"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "285d60f8-0efa-555c-a572-e6e21802904f",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Mobile OS Examples",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Android and iOS are examples of:",
+          "options": [
+            "Mobile Operating Systems موبائل آپریٹنگ سسٹمز",
+            "Network Operating Systems نیٹ ورک آپریٹنگ سسٹمز",
+            "Embedded Operating Systems ایمبیڈڈ آپریٹنگ سسٹمز",
+            "Real-Time Operating Systems ریئل ٹائم آپریٹنگ سسٹمز"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4c3caa65-dab8-5107-a13d-f4b9a83cbc97",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Symbian Stats",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Early mobile operating systems like Symbian could only run:",
+          "options": [
+            "3D games تھری ڈی گیمز",
+            "Video editing tools ویڈیو ایڈیٹنگ ٹولز",
+            "Large databases بڑے ڈیٹا بیس",
+            "A few small apps چند چھوٹی ایپس"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "94800ec6-c440-548c-854a-daeb7e14a916",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "EOS storage",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "An Embedded OS is often stored ______ inside the device.",
+          "options": [
+            "Temporarily عارضی طور پر",
+            "In virtual memory ورچوئل میموری میں",
+            "Permanently مستقل طور پر (Permanently)",
+            "Online آن لائن"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4ef25187-de10-5c7d-b55b-538114139c39",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "EOS Examples",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Microwaves, washing machines, and ATMs use an:",
+          "options": [
+            "Embedded OS ایمبیڈڈ OS",
+            "Network OS نیٹ ورک OS",
+            "Real-Time OS ریئل ٹائم OS",
+            "Desktop OS ڈیسک ٹاپ OS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bbb59769-7afe-5ae8-882f-cc76fe04cc1a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RTOS Speed",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In RTOS, tasks are processed ______ as they arrive.",
+          "options": [
+            "After an hour ایک گھنٹے بعد",
+            "In a queue قطار میں",
+            "Immediately فوری طور پر (Immediately)",
+            "Slowly آہستہ"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "50c8a28f-6884-59a2-9008-f7808f1387c2",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Mobile OS Apps",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Modern mobile OS platforms can handle ______ of apps.",
+          "options": [
+            "Hundreds سینکڑوں",
+            "Thousands ہزاروں",
+            "Dozens دہائیوں",
+            "Millions لاکھوں (Millions)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "9dbc1f13-0cf1-559e-83b9-b7089ee800ad",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NOS location",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Data centers and offices are typical places where ______ is used.",
+          "options": [
+            "Embedded OS ایمبیڈڈ OS",
+            "Network OS نیٹ ورک OS",
+            "Mobile OS موبائل OS",
+            "Real-Time OS ریئل ٹائم OS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "35dbda0b-3010-5c3e-89c2-3c3efb0c5210",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "OS optimization",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Operating systems are optimized for specific tasks according to the needs of the:",
+          "options": [
+            "Device ڈیوائس",
+            "Binary code بائنری کوڈ",
+            "Deadline ڈیڈ لائن",
+            "Metadata میٹا ڈیٹا"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "99d8d498-1ba4-5b4b-8dc6-b758a49b0a08",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-1",
+      "concept_tag": "Central Controller",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is the operating system referred to as the 'central controller'?"
+        }
+      ]
+    },
+    {
+      "id": "5bafbcfa-2e1f-59fd-95dd-4748e254ed2d",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-2",
+      "concept_tag": "Translator",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does the OS act as a translator between the user and hardware?"
+        }
+      ]
+    },
+    {
+      "id": "33b800e6-c282-5f43-bc17-bfb3d3c56078",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-3",
+      "concept_tag": "Windows accounts",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define one way to create a new user account in Windows."
+        }
+      ]
+    },
+    {
+      "id": "db59014f-77f3-5ec8-9309-bc9c0d000e98",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-4",
+      "concept_tag": "Kernel vs Shell",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How is kernel different from shell?"
+        }
+      ]
+    },
+    {
+      "id": "6386e4ee-f571-55be-b703-df9cb5e78a95",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-5",
+      "concept_tag": "Library",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give one example of a system library and its purpose."
+        }
+      ]
+    },
+    {
+      "id": "a8e9478a-d4cf-5740-993e-9b4cd0c41a85",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-6",
+      "concept_tag": "FCFS pros/cons",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain one advantage and one disadvantage of FCFS scheduling."
+        }
+      ]
+    },
+    {
+      "id": "461071b6-d6fb-5d75-8ec5-10e59ded8366",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-7",
+      "concept_tag": "Speed difference",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is virtual memory slower than RAM?"
+        }
+      ]
+    },
+    {
+      "id": "7c66bec0-f6d6-5117-8b1b-32b03d8bf3b6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-8",
+      "concept_tag": "Call definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define a system call."
+        }
+      ]
+    },
+    {
+      "id": "28092f2c-635d-5577-b88b-cb5d22f7dbe3",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-9",
+      "concept_tag": "File System",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the role of a file system?"
+        }
+      ]
+    },
+    {
+      "id": "0cbe2540-671d-5b68-b188-08d947140412",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-10",
+      "concept_tag": "Multitasking",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define multitasking in computer system."
+        }
+      ]
+    },
+    {
+      "id": "a85b1497-b40d-5297-8e04-3f933f325919",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define Operating System (OS)."
+        }
+      ]
+    },
+    {
+      "id": "e2caac76-5394-5a3e-9efc-24610246a5db",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Central Controller",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does the OS work as a Central System Controller?"
+        }
+      ]
+    },
+    {
+      "id": "606826b0-dc33-526e-ad5a-66cfe2f13c55",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Translator Role",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the role of OS in user-hardware interaction."
+        }
+      ]
+    },
+    {
+      "id": "ee0099c8-29b0-5c6e-b3af-dee7804c245b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Computer Language",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What language do computers understand?"
+        }
+      ]
+    },
+    {
+      "id": "9f7ee0d7-465e-5d62-b3f6-9abfdbc6d443",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Binary Example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What happens when you press letter 'A' on a keyboard?"
+        }
+      ]
+    },
+    {
+      "id": "f48638e8-5b65-5918-9c15-661b9b162387",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multi-user responsibilities",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List two responsibilities of the OS in multi-user environments."
+        }
+      ]
+    },
+    {
+      "id": "04cd6be2-4e57-58e7-a984-dc877aaadf8d",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Resource sharing",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does OS handle resources in multi-user settings?"
+        }
+      ]
+    },
+    {
+      "id": "514259a6-2e9c-5ac3-abb1-c77d6441ab29",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Account Management",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What features does a separate user account provide?"
+        }
+      ]
+    },
+    {
+      "id": "437b8322-ddd2-5dc7-8481-c4281cc77dcd",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Creation of account",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How is a new user account added in Windows?"
+        }
+      ]
+    },
+    {
+      "id": "c82bdf7b-f1e5-5dce-a501-f12f7161e137",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c8950b6f-8023-55b2-ab77-e0629859f399",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Account Types list",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_1_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Mention the types of accounts that can be created."
+        }
+      ]
+    },
+    {
+      "id": "ee24f2b5-b468-5eb6-9999-0ddd12aeda33",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is meant by the architecture of an operating system?"
+        }
+      ]
+    },
+    {
+      "id": "39b8cae6-9a8e-5d7f-821e-c1f02b8ebd00",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Kernel definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define Kernel in OS."
+        }
+      ]
+    },
+    {
+      "id": "58459fc9-fc44-5b3a-a590-e61bc0d417bd",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Shell definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the function of the Shell?"
+        }
+      ]
+    },
+    {
+      "id": "95c899c4-413b-5af9-bcd1-459c8f7b1805",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Types of shells",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Differentiate between Graphical and Command-line shells."
+        }
+      ]
+    },
+    {
+      "id": "32f086eb-d037-5625-90f9-5c7aae8a8749",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Kernel example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give an example of a task managed by the kernel."
+        }
+      ]
+    },
+    {
+      "id": "97abd796-55eb-5b1d-8a22-a8f7ba08f2e0",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Layers definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is OS design divided into layers?"
+        }
+      ]
+    },
+    {
+      "id": "69d5b80b-ee57-550f-ae8d-2938f0a27644",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Lower layer",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the role of the Lower layer in OS architecture?"
+        }
+      ]
+    },
+    {
+      "id": "99ee9350-ea7b-5974-8474-0d5bb8317c22",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Middle layer",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Describe the function of the Middle layer."
+        }
+      ]
+    },
+    {
+      "id": "64a716fd-f380-5808-8f24-2e0631e11375",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Upper layer",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What tasks are performed by the Upper layer?"
+        }
+      ]
+    },
+    {
+      "id": "d7befcaa-1fdf-5eaa-b027-61e1f49f11b0",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "System Libraries definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define System Libraries."
+        }
+      ]
+    },
+    {
+      "id": "9cdf3cb1-3489-5ab4-a9d0-c8ecd0450e65",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Device Drivers definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are Device Drivers?"
+        }
+      ]
+    },
+    {
+      "id": "36988b13-41fa-5cf9-b130-bca31f24649f",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "School analogy staff",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In the school analogy, what does the 'support staff' represent?"
+        }
+      ]
+    },
+    {
+      "id": "35f6fb1d-06e6-573a-8756-c660792f167c",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Library example photo",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does a photo editing app benefit from system libraries?"
+        }
+      ]
+    },
+    {
+      "id": "a2fefad1-7c4c-5d6e-a16a-2e1649a7dd41",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Car Accessories analogy",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What parts of a car represent the 'Shell'?"
+        }
+      ]
+    },
+    {
+      "id": "191825f7-0a5b-5840-b273-7061a488833c",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "2d813dda-0a67-5fd8-b62a-b14bc72a8d6f",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Layer dependency",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_2_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the dependency rule in OS layers."
+        }
+      ]
+    },
+    {
+      "id": "2b692e11-243a-5863-ac26-c394758f08d8",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define Process Management."
+        }
+      ]
+    },
+    {
+      "id": "b4aa928b-5b09-514a-ab6f-c08b46985364",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Process Stages",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List the three main stages of a process life cycle."
+        }
+      ]
+    },
+    {
+      "id": "4b038b2f-8a38-5bb9-92ff-6521735fb633",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Creation Stage",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What happens during the 'Creation' stage of a process?"
+        }
+      ]
+    },
+    {
+      "id": "7105cc79-4df5-55c3-9b41-180768571ad9",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Execution Stage",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Describe the 'Execution' stage of a process."
+        }
+      ]
+    },
+    {
+      "id": "0fea58bb-db5c-5d62-bc19-4dec683fa38e",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Termination Stage",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What occurs during the 'Termination' stage?"
+        }
+      ]
+    },
+    {
+      "id": "7f129e81-442f-5137-8386-1d78216f2182",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multitasking",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define Multitasking."
+        }
+      ]
+    },
+    {
+      "id": "203d873f-f9d7-57b3-914e-f9c312acea83",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Concurrency",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is Concurrency?"
+        }
+      ]
+    },
+    {
+      "id": "88a076ec-0894-5839-ae4c-ceab92676610",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Scheduling",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is Process Scheduling?"
+        }
+      ]
+    },
+    {
+      "id": "c47ccb4a-8c43-5ac6-8848-373ccdf0562f",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "FCFS Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the FCFS scheduling technique."
+        }
+      ]
+    },
+    {
+      "id": "9d23cba7-34d6-528e-8d8e-81c062bc11f7",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "FCFS Advantage",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "State one advantage of FCFS scheduling."
+        }
+      ]
+    },
+    {
+      "id": "b747d8d1-62da-5bc6-bfba-b3c29e128762",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Convoy Effect",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the 'Convoy Effect' in FCFS?"
+        }
+      ]
+    },
+    {
+      "id": "e76ee8aa-556f-536c-bbb5-a4bae572098a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multitasking Example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give a practical example of multitasking."
+        }
+      ]
+    },
+    {
+      "id": "9bd0cd58-ff85-5816-a324-9b0877b94dbd",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Google Chrome Lifecycle",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Briefly explain the life cycle of opening Google Chrome."
+        }
+      ]
+    },
+    {
+      "id": "7b7a9ea9-4b6b-596c-a04c-d1183c492a31",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Process Importance",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is process management one of the most important jobs of an OS?"
+        }
+      ]
+    },
+    {
+      "id": "a03f408a-dca1-5fa0-8a8a-eaf7cedcad9f",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "91d2ac16-a7e7-57ad-b2a5-cf778ef00b2c",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Short Task FCFS",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_3_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What happens to a short task arriving after a long task in FCFS?"
+        }
+      ]
+    },
+    {
+      "id": "f8227418-083f-55e4-b793-82f39466e355",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define computer memory."
+        }
+      ]
+    },
+    {
+      "id": "69ffb756-3885-57a6-9751-5c0bbd1333fd",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RAM function",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is Primary Memory (RAM)?"
+        }
+      ]
+    },
+    {
+      "id": "f1ecc18e-e6e5-52f5-9d61-e0ef8817cfdc",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Volatility check",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is RAM considered volatile?"
+        }
+      ]
+    },
+    {
+      "id": "dad6e999-fa0b-5029-9505-a3d5923ed617",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RAM Example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give an example of how RAM works when opening a document."
+        }
+      ]
+    },
+    {
+      "id": "e9336d6b-398a-532c-a164-c3c626a6f37a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Virtual Memory definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is virtual memory?"
+        }
+      ]
+    },
+    {
+      "id": "3d1c074b-1ac9-5d4a-8f50-99c66adb5c76",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Virtual Performance reason",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why can virtual memory reduce system performance?"
+        }
+      ]
+    },
+    {
+      "id": "57c979c2-1bab-5979-9db6-9baf8a2453e8",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Space management",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does the OS free up space in RAM using virtual memory?"
+        }
+      ]
+    },
+    {
+      "id": "c1ce6640-b59b-58ea-99da-8dfc6b2e9ea6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NVMe mention",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List three types of storage drives that can provide space for virtual memory."
+        }
+      ]
+    },
+    {
+      "id": "d7aee5f7-5347-55d3-91b5-2f5ffaa00ba4",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "IBM comparison",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Compare the RAM of the first IBM 5150 with modern DDR5 RAM."
+        }
+      ]
+    },
+    {
+      "id": "5c9c958b-8e07-5aca-aa9a-fcff3c684423",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "88a198ec-59a0-5466-8d16-fca16af6c07a",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Modern Speed benefit",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_4_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How fast is modern DDR5 RAM in terms of movie copying?"
+        }
+      ]
+    },
+    {
+      "id": "e609ce8a-0b0a-5906-ae9d-db1d9246887a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Process definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define a process in an operating system."
+        }
+      ]
+    },
+    {
+      "id": "8681e839-b61f-5b48-8ea5-d5e5ea1eeedb",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Process isolation",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why are processes isolated from one another?"
+        }
+      ]
+    },
+    {
+      "id": "46b28aa4-c0b5-5676-9fff-f220d05afe4c",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Thread definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is a thread?"
+        }
+      ]
+    },
+    {
+      "id": "7d83a260-3f4c-5d13-8593-0fa61c12e3e2",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Thread sharing",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What do threads within the same process share?"
+        }
+      ]
+    },
+    {
+      "id": "255150ba-eec9-506b-83ab-5e82d2ab1af8",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Browser example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give an example of threads in a web browser."
+        }
+      ]
+    },
+    {
+      "id": "cd34ddfd-ee2e-57d4-93cb-fa4a2d0d0927",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multithreading technique",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define multithreading."
+        }
+      ]
+    },
+    {
+      "id": "bac20457-b1fb-59af-9b3a-4111b6944cc1",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multithreading efficiency",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does multithreading ensure efficient use of system resources?"
+        }
+      ]
+    },
+    {
+      "id": "3c7ef902-5ea6-5eaa-a844-f6e0b7afa821",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Responsiveness",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is meant by 'Improved Responsiveness' in multithreading?"
+        }
+      ]
+    },
+    {
+      "id": "5f820aa3-36be-5ee2-9a2d-481d1cbefca0",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Enhanced Performance",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does multithreading enhance computer performance?"
+        }
+      ]
+    },
+    {
+      "id": "0c05b09e-a7e9-5561-a0dc-4fc76b97bb43",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Parallel operations apps",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which types of applications particularly need support for parallel operations?"
+        }
+      ]
+    },
+    {
+      "id": "1d609981-6abd-5960-8905-eea08100a756",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Process Resources",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List the resources owned by an independent process."
+        }
+      ]
+    },
+    {
+      "id": "1c0e27a4-af59-5a60-9e11-ca5ccd105622",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Thread execution benefits",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "State two benefits of multithreading."
+        }
+      ]
+    },
+    {
+      "id": "ae0ca473-edb1-5efc-8d3c-85c460bdfda3",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Word Processor example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does multithreading work in a word processor?"
+        }
+      ]
+    },
+    {
+      "id": "35b4c990-8080-5f68-b822-c33e0655bc4a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Thread vs Process memory",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the main difference in memory usage between processes and threads?"
+        }
+      ]
+    },
+    {
+      "id": "2a416b0a-b22d-5cd6-8782-5ebfcfc44c12",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "1c285c7b-27b5-54cb-9208-bf18509a7699",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Smallest unit",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_5_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which is the smallest unit of execution in an OS?"
+        }
+      ]
+    },
+    {
+      "id": "9a96737e-407e-50f0-88f2-e80ae72f8791",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is a system call?"
+        }
+      ]
+    },
+    {
+      "id": "1066ea4d-e396-54df-bcb6-2a531c0cb3de",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Bridge role",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why are system calls described as a 'bridge'?"
+        }
+      ]
+    },
+    {
+      "id": "edf33867-e737-5844-b1ca-674c0bfaa3c4",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Direct Control Risk",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are the risks of programs directly controlling hardware without system calls?"
+        }
+      ]
+    },
+    {
+      "id": "abfeea0f-8bbb-5778-883e-a2290cd6f8fe",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Open system call",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the purpose of the 'open' system call."
+        }
+      ]
+    },
+    {
+      "id": "88e0912f-b577-5101-b891-1816d7adfeb6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Read system call",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Describe the 'read' system call."
+        }
+      ]
+    },
+    {
+      "id": "d28ec1d9-5579-59ca-bdb1-c8c3c169ed93",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Write system call",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the 'write' system call used for?"
+        }
+      ]
+    },
+    {
+      "id": "38872eb3-b60c-5648-901b-d4891c7d022a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Fork system call",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define the 'fork' system call."
+        }
+      ]
+    },
+    {
+      "id": "0dcfed23-cd1d-573c-9792-15696328a27b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Linux vs Windows stats",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Compare the number of system calls in Linux vs Windows."
+        }
+      ]
+    },
+    {
+      "id": "5a97d81c-4bf1-5371-bd1b-a5b345d9428f",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Scope of calls",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What tasks do system calls handle in an OS?"
+        }
+      ]
+    },
+    {
+      "id": "710d12a2-778e-597b-a635-acfa9c5979ec",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "10a56515-452d-5ad0-9699-a47c1cb98f63",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Text Editor example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_6_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does a text editor use a system call to save a file?"
+        }
+      ]
+    },
+    {
+      "id": "e69b0c18-7dc5-5abe-998c-4d1e914cfe50",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "File System Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the purpose of a file system in an operating system?"
+        }
+      ]
+    },
+    {
+      "id": "23c0b76d-92c7-52f1-b034-c6b6c581e5a7",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "File Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define a 'File'."
+        }
+      ]
+    },
+    {
+      "id": "557eabdf-5ce3-540c-9d87-186eb9e91ba2",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Folder Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is a folder and why is it used?"
+        }
+      ]
+    },
+    {
+      "id": "fcfe6bbf-72cb-5c08-8d00-249ff6b9ee7a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Metadata Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What does Metadata refer to?"
+        }
+      ]
+    },
+    {
+      "id": "a1c79fbd-9cb7-5636-84e8-fcf1e5ad906d",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Metadata Benefit",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does metadata help the user?"
+        }
+      ]
+    },
+    {
+      "id": "65904292-0e61-5538-8863-d4cd334d8fa8",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Windows and Linux File Systems",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Mention the file systems used by Windows and Linux operating systems."
+        }
+      ]
+    },
+    {
+      "id": "ae8c19f9-7e64-5a86-8de0-450650e43bc4",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "FAT32 Use",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Where is the FAT32 file system commonly applied?"
+        }
+      ]
+    },
+    {
+      "id": "e150821f-84fe-5453-9ff6-2b797098a0f6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Librarian Analogy",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the librarian analogy for a file system."
+        }
+      ]
+    },
+    {
+      "id": "426c8676-b9f2-5cef-b8d4-ec050b1a03b6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Choice impact",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What features are affected by the choice of a file system?"
+        }
+      ]
+    },
+    {
+      "id": "a540a4ac-03df-57ee-8137-e78ae3b378d3",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "c0c80803-0510-59a1-abaa-ef41a02e138b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "File Content",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_7_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List four types of data that a file may contain."
+        }
+      ]
+    },
+    {
+      "id": "f47b60df-7fd9-5f8c-bd69-81eabf71a84c",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RTOS definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is a Real-Time Operating System (RTOS)?"
+        }
+      ]
+    },
+    {
+      "id": "cd558f1e-70f2-5155-a344-c21e3a714d92",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RTOS critical systems",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is tiny delay critical in RTOS?"
+        }
+      ]
+    },
+    {
+      "id": "ad5de180-c3c9-5eb7-b5f7-d2bd395f4500",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RTOS usage",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give three examples of where RTOS is used."
+        }
+      ]
+    },
+    {
+      "id": "4fa95bac-c58d-5e47-bf4c-85a81dc80551",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "EOS definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define Embedded Operating System (EOS)."
+        }
+      ]
+    },
+    {
+      "id": "98283aab-d09a-5cf9-af6c-e201aa88487a",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "EOS features",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "State two key features of an Embedded Operating System."
+        }
+      ]
+    },
+    {
+      "id": "7ccf23aa-561a-5207-a12e-93552b466c8f",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "EOS applications",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List three home appliances that use an Embedded OS."
+        }
+      ]
+    },
+    {
+      "id": "f4d8c21f-8849-5c30-b47d-0da5725e6acf",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NOS definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is a Network Operating System (NOS)?"
+        }
+      ]
+    },
+    {
+      "id": "4482e480-db73-5e81-bc9e-717c5677a2a8",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NOS Resource Sharing",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which resources can be shared using a Network OS?"
+        }
+      ]
+    },
+    {
+      "id": "d6cd4fcf-3d2c-510f-9042-db186bb79ed1",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NOS examples",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Where is a Network OS typically used?"
+        }
+      ]
+    },
+    {
+      "id": "6829b083-8f40-580c-8a70-053807e4c1bb",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "NOS school lab",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give an example of NOS usage in a school computer lab."
+        }
+      ]
+    },
+    {
+      "id": "c97e2a7b-e99c-57d7-ad6f-117d807c4c3b",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Mobile OS definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is a Mobile Operating System?"
+        }
+      ]
+    },
+    {
+      "id": "0fa04d12-a6d5-52be-bceb-37d2a0873720",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Mobile OS features",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Mention three key features supported by Mobile OS."
+        }
+      ]
+    },
+    {
+      "id": "bc1306cf-58de-5f19-b25c-5f7e4ec71662",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Mobile OS examples",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List two modern mobile OS platforms."
+        }
+      ]
+    },
+    {
+      "id": "56b929eb-5c98-510b-8181-c6e8963300b6",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Modern capabilities",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What advanced tools can modern mobile OS handle?"
+        }
+      ]
+    },
+    {
+      "id": "483d5cac-27f0-5bbc-96d0-d0bd9fbad349",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": "49adb86d-ff04-5ab9-880d-3ab46cb16ca2",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Symbian contrast",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_1_8_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How did early mobile OS like Symbian differ from modern ones?"
+        }
+      ]
+    },
+    {
+      "id": "9f9869eb-7e82-5d69-b102-ea914f4d0147",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-1",
+      "concept_tag": "OS Architecture",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_LQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Describe the architecture of an operating system, explaining kernel, shell, and layered design with examples."
+        }
+      ]
+    },
+    {
+      "id": "6fb92e20-2537-5f20-9978-30d7065e3191",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-2",
+      "concept_tag": "Process Lifecycle",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_LQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the process lifecycle in detail with examples."
+        }
+      ]
+    },
+    {
+      "id": "abf0c45d-e514-5d8a-af07-09320825e743",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-3",
+      "concept_tag": "RAM vs Virtual",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_LQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Differentiate between RAM and virtual memory, and explain how multithreading improves performance."
+        }
+      ]
+    },
+    {
+      "id": "96b3f73d-bb56-543c-a4ab-bc8229d44ec7",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-4",
+      "concept_tag": "System Calls Detail",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_LQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Describe system calls, their purpose, and give examples of at least three types."
+        }
+      ]
+    },
+    {
+      "id": "279be8c6-275b-5aa8-b913-b6f5d43ea307",
+      "chapter_id": "81fef04e-6a53-5018-9051-fdb1c36775d9",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-5",
+      "concept_tag": "Numerical FCFS",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 01.html (id Comp10_Ex_1_LQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A computer system uses FCFS scheduling. Calculate the following for processes P1 (Burst: 4s , Arr: 0), P2 (Burst: 3s , Arr: 1), and P3 (Burst: 1s , Arr: 2): (I) Order (II) Sequence (III) Start/Finish times (IV) Wait times (V) Average Wait time."
+        }
+      ]
+    }
+  ],
+  "skipped_duplicates": []
+}
