@@ -55,19 +55,27 @@ export default function Home() {
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
             <Link
-              href="/admin/questions"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-xl shadow-emerald-950/60 active:scale-[0.98] transition-all"
+              href="/select-questions"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-sm shadow-xl shadow-blue-950/60 active:scale-[0.98] transition-all"
             >
-              <span>Launch Admin Question Bank</span>
+              <FileSpreadsheet className="w-4 h-4" />
+              <span>Select Questions &amp; Generate Paper</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
 
             <Link
-              href="/admin/import"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-sm transition-all"
+              href="/paper-editor"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-sm transition-all"
             >
-              <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
-              <span>CSV Bulk Ingestion</span>
+              <span>Paper Preview &amp; Editor</span>
+            </Link>
+
+            <Link
+              href="/admin/questions"
+              className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-800 font-semibold text-xs transition-all"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>Admin Question Bank</span>
             </Link>
           </div>
         </div>
