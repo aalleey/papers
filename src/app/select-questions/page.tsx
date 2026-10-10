@@ -117,6 +117,24 @@ export default function SelectQuestionsPage() {
     loadData();
   }, []);
 
+  async function handleChapterChange(chapterId: string) {
+    const ch = chapters.find((c) => c.id === chapterId);
+    if (!ch) return;
+    setCurrentChapter(ch);
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/paper/questions?chapter_id=${ch.id}`);
+      const data = await res.json();
+      if (data.topics) setTopics(data.topics);
+      if (data.questions) setAllQuestions(data.questions);
+      setSelectedTopicFilters(new Set(["ALL"]));
+    } catch (e) {
+      console.error("Failed to load chapter questions", e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // Sync selection to sessionStorage for seamless transfer to Paper Editor
   useEffect(() => {
     if (selectedIds.size > 0) {
@@ -444,17 +462,35 @@ export default function SelectQuestionsPage() {
             {/* Chapter Header row */}
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
-                disabled
-                className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-400 font-semibold text-xs transition-colors cursor-not-allowed"
+                onClick={() => {
+                  if (!currentChapter) return;
+                  const curIdx = chapters.findIndex((c) => c.id === currentChapter.id);
+                  if (curIdx > 0) handleChapterChange(chapters[curIdx - 1].id);
+                }}
+                disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) <= 0}
+                className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:text-slate-300 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
               >
                 Prev
               </button>
-              <div className="font-bold text-slate-800 text-sm bg-slate-100 px-4 py-1 rounded-full border border-slate-200">
-                Unit-8 Digital Entrepreneurship
-              </div>
+              <select
+                value={currentChapter?.id || ""}
+                onChange={(e) => handleChapterChange(e.target.value)}
+                className="font-bold text-slate-800 text-sm bg-slate-100 hover:bg-slate-200 px-4 py-1 rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-center"
+              >
+                {chapters.map((ch) => (
+                  <option key={ch.id} value={ch.id}>
+                    Unit-{ch.number}: {ch.title}
+                  </option>
+                ))}
+              </select>
               <button
-                disabled
-                className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-400 font-semibold text-xs transition-colors cursor-not-allowed"
+                onClick={() => {
+                  if (!currentChapter) return;
+                  const curIdx = chapters.findIndex((c) => c.id === currentChapter.id);
+                  if (curIdx < chapters.length - 1) handleChapterChange(chapters[curIdx + 1].id);
+                }}
+                disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) >= chapters.length - 1}
+                className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:text-slate-300 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
               >
                 Next
               </button>
