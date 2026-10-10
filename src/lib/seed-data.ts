@@ -84,35 +84,35 @@ export const SEED_CLASSES: SeedClass[] = [
 
 export const SEED_COURSES: SeedCourse[] = [
   {
-    id: "cr100000-0000-0000-0000-000000000001",
+    id: "ca100000-0000-0000-0000-000000000001",
     board_id: "b1000000-0000-0000-0000-000000000001", // Punjab
     class_id: "c1000000-0000-0000-0000-000000000010", // Class 10
     name: "Class 10 (Old)",
     is_active: true,
   },
   {
-    id: "cr100000-0000-0000-0000-000000000002",
+    id: "ca100000-0000-0000-0000-000000000002",
     board_id: "b1000000-0000-0000-0000-000000000001",
     class_id: "c0900000-0000-0000-0000-000000000009",
     name: "Class 9 (General Science)",
     is_active: true,
   },
   {
-    id: "cr100000-0000-0000-0000-000000000003",
+    id: "ca100000-0000-0000-0000-000000000003",
     board_id: "b1000000-0000-0000-0000-000000000001",
     class_id: "c1100000-0000-0000-0000-000000000011",
     name: "FSc Pre-Engineering Part 1",
     is_active: true,
   },
   {
-    id: "cr100000-0000-0000-0000-000000000004",
+    id: "ca100000-0000-0000-0000-000000000004",
     board_id: "b1000000-0000-0000-0000-000000000001",
     class_id: "c1200000-0000-0000-0000-000000000012",
     name: "FSc Pre-Engineering Part 2",
     is_active: true,
   },
   {
-    id: "cr100000-0000-0000-0000-000000000005",
+    id: "ca100000-0000-0000-0000-000000000005",
     board_id: "b1000000-0000-0000-0000-000000000001", // Punjab
     class_id: "c1000000-0000-0000-0000-000000000010", // Class 10
     name: "10th (New) 2026-27",
@@ -122,20 +122,20 @@ export const SEED_COURSES: SeedCourse[] = [
 
 export const SEED_SUBJECTS: SeedSubject[] = [
   {
-    id: "s1000000-0000-0000-0000-000000000001",
-    course_id: "cr100000-0000-0000-0000-000000000001", // Class 10 (Old)
+    id: "da100000-0000-0000-0000-000000000001",
+    course_id: "ca100000-0000-0000-0000-000000000001", // Class 10 (Old)
     name: "Mathematics",
     name_ur: "ریاضی",
   },
   {
-    id: "s1000000-0000-0000-0000-000000000002",
-    course_id: "cr100000-0000-0000-0000-000000000001",
+    id: "da100000-0000-0000-0000-000000000002",
+    course_id: "ca100000-0000-0000-0000-000000000001",
     name: "Physics",
     name_ur: "طبیعیات",
   },
   {
-    id: "s1000000-0000-0000-0000-000000000003",
-    course_id: "cr100000-0000-0000-0000-000000000001",
+    id: "da100000-0000-0000-0000-000000000003",
+    course_id: "ca100000-0000-0000-0000-000000000001",
     name: "Chemistry",
     name_ur: "کیمیا",
   },
@@ -146,8 +146,8 @@ export const SEED_SUBJECTS: SeedSubject[] = [
     name_ur: computerCh8Data.subject.name_ur,
   },
   {
-    id: "s1000000-0000-0000-0000-000000000004",
-    course_id: "cr100000-0000-0000-0000-000000000001", // Class 10 (Old)
+    id: "da100000-0000-0000-0000-000000000004",
+    course_id: "ca100000-0000-0000-0000-000000000001", // Class 10 (Old)
     name: "Computer Science",
     name_ur: "کمپیوٹر سائنس",
   },
@@ -155,50 +155,50 @@ export const SEED_SUBJECTS: SeedSubject[] = [
 
 export const SEED_CHAPTERS: SeedChapter[] = [
   {
-    id: "ch100000-0000-0000-0000-000000000001",
-    subject_id: "s1000000-0000-0000-0000-000000000001", // Math
+    id: "ea100000-0000-0000-0000-000000000001",
+    subject_id: "da100000-0000-0000-0000-000000000001", // Math
     number: 1,
     title: "Quadratic Equations",
     title_ur: "دو درجی مساواتیں",
   },
   {
-    id: "ch100000-0000-0000-0000-000000000002",
-    subject_id: "s1000000-0000-0000-0000-000000000001",
+    id: "ea100000-0000-0000-0000-000000000002",
+    subject_id: "da100000-0000-0000-0000-000000000001",
     number: 2,
     title: "Theory of Quadratic Equations",
     title_ur: "دو درجی مساواتوں کا نظریہ",
   },
   {
-    id: "ch100000-0000-0000-0000-000000000003",
-    subject_id: "s1000000-0000-0000-0000-000000000001",
+    id: "ea100000-0000-0000-0000-000000000003",
+    subject_id: "da100000-0000-0000-0000-000000000001",
     number: 3,
     title: "Variations",
     title_ur: "تغیرات",
   },
   {
-    id: "ch100000-0000-0000-0000-000000000004",
-    subject_id: "s1000000-0000-0000-0000-000000000001",
+    id: "ea100000-0000-0000-0000-000000000004",
+    subject_id: "da100000-0000-0000-0000-000000000001",
     number: 4,
     title: "Partial Fractions",
     title_ur: "جزوی کسریں",
   },
   {
-    id: "ch100000-0000-0000-0000-000000000005",
-    subject_id: "s1000000-0000-0000-0000-000000000001",
+    id: "ea100000-0000-0000-0000-000000000005",
+    subject_id: "da100000-0000-0000-0000-000000000001",
     number: 5,
     title: "Sets and Functions",
     title_ur: "سیٹ اور تفاعلات",
   },
   {
-    id: "ch100000-0000-0000-0000-000000000006",
-    subject_id: "s1000000-0000-0000-0000-000000000001",
+    id: "ea100000-0000-0000-0000-000000000006",
+    subject_id: "da100000-0000-0000-0000-000000000001",
     number: 6,
     title: "Basic Statistics",
     title_ur: "بنیادی شماریات",
   },
   {
-    id: "ch100000-0000-0000-0000-000000000007",
-    subject_id: "s1000000-0000-0000-0000-000000000001",
+    id: "ea100000-0000-0000-0000-000000000007",
+    subject_id: "da100000-0000-0000-0000-000000000001",
     number: 7,
     title: "Introduction to Trigonometry",
     title_ur: "علم المثلث کا تعارف",
@@ -211,8 +211,8 @@ export const SEED_CHAPTERS: SeedChapter[] = [
     title_ur: computerCh8Data.chapter.title_ur || "ڈیجیٹل انٹرپرینیورشپ",
   },
   {
-    id: "ch100000-0000-0000-0000-000000000008",
-    subject_id: "s1000000-0000-0000-0000-000000000004",
+    id: "ea100000-0000-0000-0000-000000000008",
+    subject_id: "da100000-0000-0000-0000-000000000004",
     number: computerCh8Data.chapter.number,
     title: computerCh8Data.chapter.title,
     title_ur: computerCh8Data.chapter.title_ur || "ڈیجیٹل انٹرپرینیورشپ",
@@ -221,43 +221,43 @@ export const SEED_CHAPTERS: SeedChapter[] = [
 
 export const SEED_TOPICS: SeedTopic[] = [
   {
-    id: "t1000000-0000-0000-0000-000000000001",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
+    id: "fa100000-0000-0000-0000-000000000001",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
     number: 1,
     title: "Standard Form of Quadratic Equation",
     title_ur: "دو درجی مساوات کی معیاری شکل",
   },
   {
-    id: "t1000000-0000-0000-0000-000000000002",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
+    id: "fa100000-0000-0000-0000-000000000002",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
     number: 2,
     title: "Solution by Factorization",
     title_ur: "بذریعہ تجزی حل",
   },
   {
-    id: "t1000000-0000-0000-0000-000000000003",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
+    id: "fa100000-0000-0000-0000-000000000003",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
     number: 3,
     title: "Quadratic Formula",
     title_ur: "دو درجی فارمولا",
   },
   {
-    id: "t1000000-0000-0000-0000-000000000004",
-    chapter_id: "ch100000-0000-0000-0000-000000000002",
+    id: "fa100000-0000-0000-0000-000000000004",
+    chapter_id: "ea100000-0000-0000-0000-000000000002",
     number: 1,
     title: "Discriminant of Quadratic Equation",
     title_ur: "دو درجی مساوات کا فرق کنندہ",
   },
   {
-    id: "t1000000-0000-0000-0000-000000000005",
-    chapter_id: "ch100000-0000-0000-0000-000000000003",
+    id: "fa100000-0000-0000-0000-000000000005",
+    chapter_id: "ea100000-0000-0000-0000-000000000003",
     number: 1,
     title: "Ratio, Proportion and Variations",
     title_ur: "نسبت، تناسب اور تغیرات",
   },
   {
-    id: "t1000000-0000-0000-0000-000000000006",
-    chapter_id: "ch100000-0000-0000-0000-000000000007",
+    id: "fa100000-0000-0000-0000-000000000006",
+    chapter_id: "ea100000-0000-0000-0000-000000000007",
     number: 1,
     title: "Trigonometric Ratios and Identities",
     title_ur: "مثلثی نسبتیں اور مماثلتیں",
@@ -269,9 +269,9 @@ export const SEED_TOPICS: SeedTopic[] = [
 const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
   // 1. MCQ - LaTeX - Ch 1 (Sample Note on all)
   {
-    id: "q0000001-0000-0000-0000-000000000001",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
-    topic_id: "t1000000-0000-0000-0000-000000000001",
+    id: "aa000001-0000-0000-0000-000000000001",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
+    topic_id: "fa100000-0000-0000-0000-000000000001",
     type: "mcq",
     source: "exercise",
     source_ref: "Ex 1.1 Q1",
@@ -299,9 +299,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 2. MCQ - LaTeX - Ch 1
   {
-    id: "q0000002-0000-0000-0000-000000000002",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
-    topic_id: "t1000000-0000-0000-0000-000000000003",
+    id: "aa000002-0000-0000-0000-000000000002",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
+    topic_id: "fa100000-0000-0000-0000-000000000003",
     type: "mcq",
     source: "exercise",
     source_ref: "Ex 1.2 Q1",
@@ -339,9 +339,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 3. MCQ - Ch 1
   {
-    id: "q0000003-0000-0000-0000-000000000003",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
-    topic_id: "t1000000-0000-0000-0000-000000000001",
+    id: "aa000003-0000-0000-0000-000000000003",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
+    topic_id: "fa100000-0000-0000-0000-000000000001",
     type: "mcq",
     source: "past_paper",
     source_ref: "LHR 2022 Group 1",
@@ -369,9 +369,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 4. MCQ - Ch 2 - LaTeX
   {
-    id: "q0000004-0000-0000-0000-000000000004",
-    chapter_id: "ch100000-0000-0000-0000-000000000002",
-    topic_id: "t1000000-0000-0000-0000-000000000004",
+    id: "aa000004-0000-0000-0000-000000000004",
+    chapter_id: "ea100000-0000-0000-0000-000000000002",
+    topic_id: "fa100000-0000-0000-0000-000000000004",
     type: "mcq",
     source: "exercise",
     source_ref: "Ex 2.1 Q1",
@@ -399,9 +399,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 5. MCQ - Ch 2
   {
-    id: "q0000005-0000-0000-0000-000000000005",
-    chapter_id: "ch100000-0000-0000-0000-000000000002",
-    topic_id: "t1000000-0000-0000-0000-000000000004",
+    id: "aa000005-0000-0000-0000-000000000005",
+    chapter_id: "ea100000-0000-0000-0000-000000000002",
+    topic_id: "fa100000-0000-0000-0000-000000000004",
     type: "mcq",
     source: "past_paper",
     source_ref: "FSD 2021 Group 2",
@@ -429,9 +429,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 6. MCQ - Ch 3
   {
-    id: "q0000006-0000-0000-0000-000000000006",
-    chapter_id: "ch100000-0000-0000-0000-000000000003",
-    topic_id: "t1000000-0000-0000-0000-000000000005",
+    id: "aa000006-0000-0000-0000-000000000006",
+    chapter_id: "ea100000-0000-0000-0000-000000000003",
+    topic_id: "fa100000-0000-0000-0000-000000000005",
     type: "mcq",
     source: "exercise",
     source_ref: "Ex 3.1 Q1",
@@ -459,8 +459,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 7. MCQ - Ch 4
   {
-    id: "q0000007-0000-0000-0000-000000000007",
-    chapter_id: "ch100000-0000-0000-0000-000000000004",
+    id: "aa000007-0000-0000-0000-000000000007",
+    chapter_id: "ea100000-0000-0000-0000-000000000004",
     type: "mcq",
     source: "exercise",
     source_ref: "Ex 4.1 Q1",
@@ -482,8 +482,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 8. MCQ - Ch 5
   {
-    id: "q0000008-0000-0000-0000-000000000008",
-    chapter_id: "ch100000-0000-0000-0000-000000000005",
+    id: "aa000008-0000-0000-0000-000000000008",
+    chapter_id: "ea100000-0000-0000-0000-000000000005",
     type: "mcq",
     source: "past_paper",
     source_ref: "RWP 2023",
@@ -505,8 +505,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 9. MCQ - Ch 6
   {
-    id: "q0000009-0000-0000-0000-000000000009",
-    chapter_id: "ch100000-0000-0000-0000-000000000006",
+    id: "aa000009-0000-0000-0000-000000000009",
+    chapter_id: "ea100000-0000-0000-0000-000000000006",
     type: "mcq",
     source: "exercise",
     source_ref: "Ex 6.2 Q2",
@@ -528,9 +528,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 10. MCQ - Ch 7 - LaTeX
   {
-    id: "q0000010-0000-0000-0000-000000000010",
-    chapter_id: "ch100000-0000-0000-0000-000000000007",
-    topic_id: "t1000000-0000-0000-0000-000000000006",
+    id: "aa000010-0000-0000-0000-000000000010",
+    chapter_id: "ea100000-0000-0000-0000-000000000007",
+    topic_id: "fa100000-0000-0000-0000-000000000006",
     type: "mcq",
     source: "exercise",
     source_ref: "Ex 7.4 Q1",
@@ -558,8 +558,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 11. MCQ - Ch 7
   {
-    id: "q0000011-0000-0000-0000-000000000011",
-    chapter_id: "ch100000-0000-0000-0000-000000000007",
+    id: "aa000011-0000-0000-0000-000000000011",
+    chapter_id: "ea100000-0000-0000-0000-000000000007",
     type: "mcq",
     source: "extra",
     source_ref: "Model Paper 2024",
@@ -581,9 +581,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 12. MCQ - Ch 1
   {
-    id: "q0000012-0000-0000-0000-000000000012",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
-    topic_id: "t1000000-0000-0000-0000-000000000002",
+    id: "aa000012-0000-0000-0000-000000000012",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
+    topic_id: "fa100000-0000-0000-0000-000000000002",
     type: "mcq",
     source: "exercise",
     source_ref: "Ex 1.1 Q2",
@@ -605,9 +605,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 13. Short - Ch 1 - LaTeX
   {
-    id: "q0000013-0000-0000-0000-000000000013",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
-    topic_id: "t1000000-0000-0000-0000-000000000002",
+    id: "aa000013-0000-0000-0000-000000000013",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
+    topic_id: "fa100000-0000-0000-0000-000000000002",
     type: "short",
     source: "exercise",
     source_ref: "Ex 1.1 Q2 (ii)",
@@ -632,9 +632,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 14. Short - Ch 1 - LaTeX
   {
-    id: "q0000014-0000-0000-0000-000000000014",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
-    topic_id: "t1000000-0000-0000-0000-000000000001",
+    id: "aa000014-0000-0000-0000-000000000014",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
+    topic_id: "fa100000-0000-0000-0000-000000000001",
     type: "short",
     source: "exercise",
     source_ref: "Ex 1.1 Q1 (i)",
@@ -659,9 +659,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 15. Short - Ch 2 - LaTeX
   {
-    id: "q0000015-0000-0000-0000-000000000015",
-    chapter_id: "ch100000-0000-0000-0000-000000000002",
-    topic_id: "t1000000-0000-0000-0000-000000000004",
+    id: "aa000015-0000-0000-0000-000000000015",
+    chapter_id: "ea100000-0000-0000-0000-000000000002",
+    topic_id: "fa100000-0000-0000-0000-000000000004",
     type: "short",
     source: "past_paper",
     source_ref: "LHR 2023 Group 2",
@@ -686,8 +686,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 16. Short - Ch 2
   {
-    id: "q0000016-0000-0000-0000-000000000016",
-    chapter_id: "ch100000-0000-0000-0000-000000000002",
+    id: "aa000016-0000-0000-0000-000000000016",
+    chapter_id: "ea100000-0000-0000-0000-000000000002",
     type: "short",
     source: "exercise",
     source_ref: "Ex 2.2 Q2",
@@ -712,8 +712,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 17. Short - Ch 3
   {
-    id: "q0000017-0000-0000-0000-000000000017",
-    chapter_id: "ch100000-0000-0000-0000-000000000003",
+    id: "aa000017-0000-0000-0000-000000000017",
+    chapter_id: "ea100000-0000-0000-0000-000000000003",
     type: "short",
     source: "past_paper",
     source_ref: "GRW 2021",
@@ -738,8 +738,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 18. Short - Ch 3
   {
-    id: "q0000018-0000-0000-0000-000000000018",
-    chapter_id: "ch100000-0000-0000-0000-000000000003",
+    id: "aa000018-0000-0000-0000-000000000018",
+    chapter_id: "ea100000-0000-0000-0000-000000000003",
     type: "short",
     source: "exercise",
     source_ref: "Ex 3.2 Q1",
@@ -759,8 +759,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 19. Short - Ch 4
   {
-    id: "q0000019-0000-0000-0000-000000000019",
-    chapter_id: "ch100000-0000-0000-0000-000000000004",
+    id: "aa000019-0000-0000-0000-000000000019",
+    chapter_id: "ea100000-0000-0000-0000-000000000004",
     type: "short",
     source: "exercise",
     source_ref: "Ex 4.1 Q1",
@@ -780,8 +780,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 20. Short - Ch 5
   {
-    id: "q0000020-0000-0000-0000-000000000020",
-    chapter_id: "ch100000-0000-0000-0000-000000000005",
+    id: "aa000020-0000-0000-0000-000000000020",
+    chapter_id: "ea100000-0000-0000-0000-000000000005",
     type: "short",
     source: "exercise",
     source_ref: "Ex 5.1 Q1",
@@ -801,8 +801,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 21. Short - Ch 6
   {
-    id: "q0000021-0000-0000-0000-000000000021",
-    chapter_id: "ch100000-0000-0000-0000-000000000006",
+    id: "aa000021-0000-0000-0000-000000000021",
+    chapter_id: "ea100000-0000-0000-0000-000000000006",
     type: "short",
     source: "exercise",
     source_ref: "Ex 6.2 Q3",
@@ -822,9 +822,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 22. Short - Ch 7 - LaTeX
   {
-    id: "q0000022-0000-0000-0000-000000000022",
-    chapter_id: "ch100000-0000-0000-0000-000000000007",
-    topic_id: "t1000000-0000-0000-0000-000000000006",
+    id: "aa000022-0000-0000-0000-000000000022",
+    chapter_id: "ea100000-0000-0000-0000-000000000007",
+    topic_id: "fa100000-0000-0000-0000-000000000006",
     type: "short",
     source: "past_paper",
     source_ref: "SWL 2022",
@@ -849,9 +849,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 23. Long - Ch 1 - LaTeX
   {
-    id: "q0000023-0000-0000-0000-000000000023",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
-    topic_id: "t1000000-0000-0000-0000-000000000003",
+    id: "aa000023-0000-0000-0000-000000000023",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
+    topic_id: "fa100000-0000-0000-0000-000000000003",
     type: "long",
     source: "exercise",
     source_ref: "Ex 1.2 Q1 (x)",
@@ -876,8 +876,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 24. Long - Ch 1 - LaTeX
   {
-    id: "q0000024-0000-0000-0000-000000000024",
-    chapter_id: "ch100000-0000-0000-0000-000000000001",
+    id: "aa000024-0000-0000-0000-000000000024",
+    chapter_id: "ea100000-0000-0000-0000-000000000001",
     type: "long",
     source: "exercise",
     source_ref: "Ex 1.3 Q12",
@@ -902,8 +902,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 25. Long - Ch 2
   {
-    id: "q0000025-0000-0000-0000-000000000025",
-    chapter_id: "ch100000-0000-0000-0000-000000000002",
+    id: "aa000025-0000-0000-0000-000000000025",
+    chapter_id: "ea100000-0000-0000-0000-000000000002",
     type: "long",
     source: "exercise",
     source_ref: "Ex 2.5 Q1",
@@ -923,9 +923,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 26. Long - Ch 3 - LaTeX
   {
-    id: "q0000026-0000-0000-0000-000000000026",
-    chapter_id: "ch100000-0000-0000-0000-000000000003",
-    topic_id: "t1000000-0000-0000-0000-000000000005",
+    id: "aa000026-0000-0000-0000-000000000026",
+    chapter_id: "ea100000-0000-0000-0000-000000000003",
+    topic_id: "fa100000-0000-0000-0000-000000000005",
     type: "long",
     source: "exercise",
     source_ref: "Ex 3.4 Q1 (i)",
@@ -950,8 +950,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 27. Long - Ch 4 - LaTeX
   {
-    id: "q0000027-0000-0000-0000-000000000027",
-    chapter_id: "ch100000-0000-0000-0000-000000000004",
+    id: "aa000027-0000-0000-0000-000000000027",
+    chapter_id: "ea100000-0000-0000-0000-000000000004",
     type: "long",
     source: "past_paper",
     source_ref: "LHR 2021",
@@ -971,8 +971,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 28. Long - Ch 5
   {
-    id: "q0000028-0000-0000-0000-000000000028",
-    chapter_id: "ch100000-0000-0000-0000-000000000005",
+    id: "aa000028-0000-0000-0000-000000000028",
+    chapter_id: "ea100000-0000-0000-0000-000000000005",
     type: "long",
     source: "exercise",
     source_ref: "Ex 5.2 Q1",
@@ -992,9 +992,9 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 29. Long - Ch 7 - LaTeX
   {
-    id: "q0000029-0000-0000-0000-000000000029",
-    chapter_id: "ch100000-0000-0000-0000-000000000007",
-    topic_id: "t1000000-0000-0000-0000-000000000006",
+    id: "aa000029-0000-0000-0000-000000000029",
+    chapter_id: "ea100000-0000-0000-0000-000000000007",
+    topic_id: "fa100000-0000-0000-0000-000000000006",
     type: "long",
     source: "exercise",
     source_ref: "Ex 7.4 Q20",
@@ -1019,8 +1019,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
   // 30. Long - Ch 6
   {
-    id: "q0000030-0000-0000-0000-000000000030",
-    chapter_id: "ch100000-0000-0000-0000-000000000006",
+    id: "aa000030-0000-0000-0000-000000000030",
+    chapter_id: "ea100000-0000-0000-0000-000000000006",
     type: "long",
     source: "exercise",
     source_ref: "Ex 6.3 Q4",

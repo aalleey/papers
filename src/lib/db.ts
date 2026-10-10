@@ -89,6 +89,11 @@ export const db = {
       const { data, error } = await serverClient.from("boards").select("*").order("name");
       if (!error && data && data.length > 0) return data as Board[];
     }
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      const { data, error } = await adminClient.from("boards").select("*").order("name");
+      if (!error && data && data.length > 0) return data as Board[];
+    }
     const store = initMockStore();
     return [...store.boards].sort((a, b) => a.name.localeCompare(b.name));
   },
@@ -151,6 +156,11 @@ export const db = {
       const { data, error } = await serverClient.from("classes").select("*").order("numeric_order");
       if (!error && data && data.length > 0) return data as ClassItem[];
     }
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      const { data, error } = await adminClient.from("classes").select("*").order("numeric_order");
+      if (!error && data && data.length > 0) return data as ClassItem[];
+    }
     const store = initMockStore();
     return [...store.classes].sort((a, b) => a.numeric_order - b.numeric_order);
   },
@@ -160,6 +170,13 @@ export const db = {
     const serverClient = await createServerSupabaseClient();
     if (serverClient) {
       let q = serverClient.from("courses").select("*");
+      if (boardId) q = q.eq("board_id", boardId);
+      const { data, error } = await q.order("name");
+      if (!error && data && data.length > 0) return data as Course[];
+    }
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      let q = adminClient.from("courses").select("*");
       if (boardId) q = q.eq("board_id", boardId);
       const { data, error } = await q.order("name");
       if (!error && data && data.length > 0) return data as Course[];
@@ -221,6 +238,13 @@ export const db = {
       const { data, error } = await q.order("name");
       if (!error && data && data.length > 0) return data as Subject[];
     }
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      let q = adminClient.from("subjects").select("*");
+      if (courseId) q = q.eq("course_id", courseId);
+      const { data, error } = await q.order("name");
+      if (!error && data && data.length > 0) return data as Subject[];
+    }
     const store = initMockStore();
     let subjects = [...store.subjects];
     if (courseId) {
@@ -278,6 +302,13 @@ export const db = {
       const { data, error } = await q.order("number");
       if (!error && data && data.length > 0) return data as Chapter[];
     }
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      let q = adminClient.from("chapters").select("*");
+      if (subjectId) q = q.eq("subject_id", subjectId);
+      const { data, error } = await q.order("number");
+      if (!error && data && data.length > 0) return data as Chapter[];
+    }
     const store = initMockStore();
     let chapters = [...store.chapters];
     if (subjectId) {
@@ -331,6 +362,13 @@ export const db = {
     const serverClient = await createServerSupabaseClient();
     if (serverClient) {
       let q = serverClient.from("topics").select("*");
+      if (chapterId) q = q.eq("chapter_id", chapterId);
+      const { data, error } = await q.order("number");
+      if (!error && data && data.length > 0) return data as Topic[];
+    }
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      let q = adminClient.from("topics").select("*");
       if (chapterId) q = q.eq("chapter_id", chapterId);
       const { data, error } = await q.order("number");
       if (!error && data && data.length > 0) return data as Topic[];
@@ -426,6 +464,32 @@ export const db = {
       }
     }
 
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      let q = adminClient.from("questions").select("*, translations:question_translations(*)");
+      if (filters?.chapterId) q = q.eq("chapter_id", filters.chapterId);
+      if (filters?.topicId) q = q.eq("topic_id", filters.topicId);
+      if (filters?.type && filters.type !== "all") q = q.eq("type", filters.type);
+      if (filters?.difficulty && filters.difficulty !== "all") q = q.eq("difficulty", filters.difficulty);
+      if (filters?.source && filters.source !== "all") q = q.eq("source", filters.source);
+      if (filters?.isActiveOnly) q = q.eq("is_active", true);
+
+      const { data, error } = await q.order("created_at", { ascending: false });
+      if (!error && data && data.length > 0) {
+        let results = data as Question[];
+        if (filters?.search) {
+          const s = filters.search.toLowerCase();
+          results = results.filter((item) => {
+            const matchRef = item.source_ref?.toLowerCase().includes(s);
+            const matchTag = item.concept_tag?.toLowerCase().includes(s);
+            const matchTrans = item.translations?.some((t) => t.text.toLowerCase().includes(s));
+            return matchRef || matchTag || matchTrans;
+          });
+        }
+        return results;
+      }
+    }
+
     const store = initMockStore();
     let questions = [...store.questions];
 
@@ -470,6 +534,15 @@ export const db = {
         .single();
       if (!error && data) return data as Question;
     }
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      const { data, error } = await adminClient
+        .from("questions")
+        .select("*, translations:question_translations(*)")
+        .eq("id", id)
+        .single();
+      if (!error && data) return data as Question;
+    }
     const store = initMockStore();
     return store.questions.find((q) => q.id === id) || null;
   },
@@ -494,9 +567,11 @@ export const db = {
       answer?: string | null;
     }[];
   }): Promise<Question> {
+    const qId = question.id || crypto.randomUUID();
     const adminClient = createAdminSupabaseClient();
     if (adminClient) {
       const questionPayload = {
+        id: qId,
         chapter_id: question.chapter_id,
         topic_id: question.topic_id || null,
         type: question.type,
@@ -510,21 +585,13 @@ export const db = {
         source_note: question.source_note || null,
       };
 
-      let qId = question.id;
-      if (qId) {
-        await adminClient.from("questions").update(questionPayload).eq("id", qId);
+      const { error: upsertErr } = await adminClient
+        .from("questions")
+        .upsert(questionPayload);
+
+      if (!upsertErr) {
         // Replace translations
         await adminClient.from("question_translations").delete().eq("question_id", qId);
-      } else {
-        const { data: createdQ } = await adminClient
-          .from("questions")
-          .insert(questionPayload)
-          .select("id")
-          .single();
-        if (createdQ) qId = createdQ.id;
-      }
-
-      if (qId) {
         for (const t of question.translations) {
           if (!t.text.trim()) continue;
           await adminClient.from("question_translations").insert({
@@ -535,14 +602,11 @@ export const db = {
             answer: t.answer || null,
           });
         }
-        const fullQ = await this.getQuestionById(qId);
-        if (fullQ) return fullQ;
       }
     }
 
     const store = initMockStore();
-    const now = new Date().toISOString();
-    const id = question.id || `q${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const id = qId;
 
     const newQuestion: Question = {
       id,
