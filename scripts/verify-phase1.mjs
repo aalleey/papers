@@ -193,6 +193,7 @@ async function runTests() {
     console.log(`   Importing into Subject: ${mathSubject.name} (${subjectId})`);
 
     // Build 20 rows: 19 valid rows + 1 invalid row (Row 10 has invalid difficulty 'impossible')
+    const batchSuffix = Date.now();
     const rows = [];
     for (let i = 1; i <= 20; i++) {
       if (i === 10) {
@@ -204,7 +205,7 @@ async function runTests() {
           source: "exercise",
           source_ref: `Test Row ${i}`,
           concept_tag: "bad_row",
-          text_en: `Question row ${i} with math $x^${i} + 1 = 0$`,
+          text_en: `Question row ${i} (${batchSuffix}) with math $x^${i} + 1 = 0$`,
           option_a: "A",
           option_b: "B",
           option_c: "C",
@@ -223,7 +224,7 @@ async function runTests() {
           source: "exercise",
           source_ref: `Test Row ${i}`,
           concept_tag: `concept_${i}`,
-          text_en: `Imported Question #${i}: Calculate $x^2 + \\frac{${i}}{2} = 0$.`,
+          text_en: `Imported Question #${i} (${batchSuffix}): Calculate $x^2 + \\frac{${i}}{2} = 0$.`,
           option_a: "$1$",
           option_b: "$2$",
           option_c: "$3$",

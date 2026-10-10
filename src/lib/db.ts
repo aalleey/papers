@@ -87,7 +87,7 @@ export const db = {
     const serverClient = await createServerSupabaseClient();
     if (serverClient) {
       const { data, error } = await serverClient.from("boards").select("*").order("name");
-      if (!error && data) return data as Board[];
+      if (!error && data && data.length > 0) return data as Board[];
     }
     const store = initMockStore();
     return [...store.boards].sort((a, b) => a.name.localeCompare(b.name));
@@ -149,7 +149,7 @@ export const db = {
     const serverClient = await createServerSupabaseClient();
     if (serverClient) {
       const { data, error } = await serverClient.from("classes").select("*").order("numeric_order");
-      if (!error && data) return data as ClassItem[];
+      if (!error && data && data.length > 0) return data as ClassItem[];
     }
     const store = initMockStore();
     return [...store.classes].sort((a, b) => a.numeric_order - b.numeric_order);
@@ -162,7 +162,7 @@ export const db = {
       let q = serverClient.from("courses").select("*");
       if (boardId) q = q.eq("board_id", boardId);
       const { data, error } = await q.order("name");
-      if (!error && data) return data as Course[];
+      if (!error && data && data.length > 0) return data as Course[];
     }
     const store = initMockStore();
     let courses = [...store.courses];
@@ -219,7 +219,7 @@ export const db = {
       let q = serverClient.from("subjects").select("*");
       if (courseId) q = q.eq("course_id", courseId);
       const { data, error } = await q.order("name");
-      if (!error && data) return data as Subject[];
+      if (!error && data && data.length > 0) return data as Subject[];
     }
     const store = initMockStore();
     let subjects = [...store.subjects];
@@ -276,7 +276,7 @@ export const db = {
       let q = serverClient.from("chapters").select("*");
       if (subjectId) q = q.eq("subject_id", subjectId);
       const { data, error } = await q.order("number");
-      if (!error && data) return data as Chapter[];
+      if (!error && data && data.length > 0) return data as Chapter[];
     }
     const store = initMockStore();
     let chapters = [...store.chapters];
@@ -333,7 +333,7 @@ export const db = {
       let q = serverClient.from("topics").select("*");
       if (chapterId) q = q.eq("chapter_id", chapterId);
       const { data, error } = await q.order("number");
-      if (!error && data) return data as Topic[];
+      if (!error && data && data.length > 0) return data as Topic[];
     }
     const store = initMockStore();
     let topics = [...store.topics];
@@ -411,7 +411,7 @@ export const db = {
       if (filters?.isActiveOnly) q = q.eq("is_active", true);
 
       const { data, error } = await q.order("created_at", { ascending: false });
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         let results = data as Question[];
         if (filters?.search) {
           const s = filters.search.toLowerCase();
