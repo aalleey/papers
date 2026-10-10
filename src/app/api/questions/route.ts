@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
   }
 
   const { searchParams } = new URL(req.url);
-  const chapterId = searchParams.get("chapterId") || undefined;
-  const topicId = searchParams.get("topicId") || undefined;
+  const chapterId = searchParams.get("chapterId") || searchParams.get("chapter_id") || undefined;
+  const topicId = searchParams.get("topicId") || searchParams.get("topic_id") || undefined;
   const type = searchParams.get("type") || undefined;
   const difficulty = searchParams.get("difficulty") || undefined;
   const source = searchParams.get("source") || undefined;

@@ -6,27 +6,27 @@ export const BoardSchema = z.object({
 });
 
 export const CourseSchema = z.object({
-  board_id: z.string().uuid("Please select a valid board"),
-  class_id: z.string().uuid("Please select a valid class"),
+  board_id: z.string().min(1, "Please select a valid board"),
+  class_id: z.string().min(1, "Please select a valid class"),
   name: z.string().trim().min(1, "Course name is required"),
   is_active: z.boolean().default(true),
 });
 
 export const SubjectSchema = z.object({
-  course_id: z.string().uuid("Please select a valid course"),
+  course_id: z.string().min(1, "Please select a valid course"),
   name: z.string().trim().min(1, "Subject name in English is required"),
   name_ur: z.string().trim().optional().nullable(),
 });
 
 export const ChapterSchema = z.object({
-  subject_id: z.string().uuid("Please select a valid subject"),
+  subject_id: z.string().min(1, "Please select a valid subject"),
   number: z.coerce.number().int().positive("Chapter number must be a positive integer"),
   title: z.string().trim().min(1, "Chapter title in English is required"),
   title_ur: z.string().trim().optional().nullable(),
 });
 
 export const TopicSchema = z.object({
-  chapter_id: z.string().uuid("Please select a valid chapter"),
+  chapter_id: z.string().min(1, "Please select a valid chapter"),
   number: z.coerce.number().int().positive("Topic number must be a positive integer"),
   title: z.string().trim().min(1, "Topic title in English is required"),
   title_ur: z.string().trim().optional().nullable(),
@@ -41,9 +41,9 @@ export const QuestionTranslationSchema = z.object({
 
 export const QuestionSchema = z
   .object({
-    id: z.string().uuid().optional(),
-    chapter_id: z.string().uuid("Please select a valid chapter"),
-    topic_id: z.string().uuid().optional().nullable(),
+    id: z.string().optional(),
+    chapter_id: z.string().min(1, "Please select a valid chapter"),
+    topic_id: z.string().optional().nullable(),
     type: z.enum(["mcq", "short", "long"]),
     source: z.enum(["exercise", "extra", "past_paper"]).default("exercise"),
     source_ref: z.string().trim().optional().nullable(),

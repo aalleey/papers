@@ -1,3 +1,5 @@
+import computerCh8Data from "./data/computer10-ch8.json";
+
 export interface SeedBoard {
   id: string;
   name: string;
@@ -30,7 +32,7 @@ export interface SeedChapter {
   subject_id: string;
   number: number;
   title: string;
-  title_ur: string;
+  title_ur?: string | null;
 }
 
 export interface SeedTopic {
@@ -38,27 +40,27 @@ export interface SeedTopic {
   chapter_id: string;
   number: number;
   title: string;
-  title_ur: string;
+  title_ur?: string | null;
 }
 
 export interface SeedQuestion {
   id: string;
   chapter_id: string;
-  topic_id?: string;
+  topic_id?: string | null;
   type: 'mcq' | 'short' | 'long';
   source: 'exercise' | 'extra' | 'past_paper';
-  source_ref: string;
-  concept_tag: string;
-  correct_option?: number; // 1 to 4
+  source_ref?: string | null;
+  concept_tag?: string | null;
+  correct_option?: number | null; // 1 to 4
   marks: number;
   difficulty: 'easy' | 'medium' | 'hard';
   is_active: boolean;
-  source_note: string;
+  source_note?: string | null;
   translations: {
     language: 'en' | 'ur';
     text: string;
-    options?: string[];
-    answer?: string;
+    options?: string[] | null;
+    answer?: string | null;
   }[];
 }
 
@@ -109,6 +111,13 @@ export const SEED_COURSES: SeedCourse[] = [
     name: "FSc Pre-Engineering Part 2",
     is_active: true,
   },
+  {
+    id: "cr100000-0000-0000-0000-000000000005",
+    board_id: "b1000000-0000-0000-0000-000000000001", // Punjab
+    class_id: "c1000000-0000-0000-0000-000000000010", // Class 10
+    name: "10th (New) 2026-27",
+    is_active: true,
+  },
 ];
 
 export const SEED_SUBJECTS: SeedSubject[] = [
@@ -129,6 +138,18 @@ export const SEED_SUBJECTS: SeedSubject[] = [
     course_id: "cr100000-0000-0000-0000-000000000001",
     name: "Chemistry",
     name_ur: "کیمیا",
+  },
+  {
+    id: computerCh8Data.subject.id,
+    course_id: computerCh8Data.subject.course_id,
+    name: computerCh8Data.subject.name,
+    name_ur: computerCh8Data.subject.name_ur,
+  },
+  {
+    id: "s1000000-0000-0000-0000-000000000004",
+    course_id: "cr100000-0000-0000-0000-000000000001", // Class 10 (Old)
+    name: "Computer Science",
+    name_ur: "کمپیوٹر سائنس",
   },
 ];
 
@@ -182,6 +203,20 @@ export const SEED_CHAPTERS: SeedChapter[] = [
     title: "Introduction to Trigonometry",
     title_ur: "علم المثلث کا تعارف",
   },
+  {
+    id: computerCh8Data.chapter.id,
+    subject_id: computerCh8Data.chapter.subject_id,
+    number: computerCh8Data.chapter.number,
+    title: computerCh8Data.chapter.title,
+    title_ur: computerCh8Data.chapter.title_ur || "ڈیجیٹل انٹرپرینیورشپ",
+  },
+  {
+    id: "ch100000-0000-0000-0000-000000000008",
+    subject_id: "s1000000-0000-0000-0000-000000000004",
+    number: computerCh8Data.chapter.number,
+    title: computerCh8Data.chapter.title,
+    title_ur: computerCh8Data.chapter.title_ur || "ڈیجیٹل انٹرپرینیورشپ",
+  },
 ];
 
 export const SEED_TOPICS: SeedTopic[] = [
@@ -227,10 +262,11 @@ export const SEED_TOPICS: SeedTopic[] = [
     title: "Trigonometric Ratios and Identities",
     title_ur: "مثلثی نسبتیں اور مماثلتیں",
   },
+  ...(computerCh8Data.topics as SeedTopic[]),
 ];
 
 // 30 Sample Questions with mixed types, difficulties, LaTeX, and Urdu translations
-export const SEED_QUESTIONS: SeedQuestion[] = [
+const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
   // 1. MCQ - LaTeX - Ch 1 (Sample Note on all)
   {
     id: "q0000001-0000-0000-0000-000000000001",
@@ -1001,4 +1037,9 @@ export const SEED_QUESTIONS: SeedQuestion[] = [
       },
     ],
   },
+];
+
+export const SEED_QUESTIONS: SeedQuestion[] = [
+  ...SAMPLE_MATH_QUESTIONS,
+  ...(computerCh8Data.questions as unknown as SeedQuestion[]),
 ];

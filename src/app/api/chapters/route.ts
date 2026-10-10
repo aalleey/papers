@@ -5,7 +5,7 @@ import { ChapterSchema } from "@/lib/validations";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const subjectId = searchParams.get("subjectId") || undefined;
+  const subjectId = searchParams.get("subjectId") || searchParams.get("subject_id") || undefined;
   const chapters = await db.getChapters(subjectId);
   return NextResponse.json({ chapters });
 }

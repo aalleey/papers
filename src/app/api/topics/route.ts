@@ -5,7 +5,7 @@ import { TopicSchema } from "@/lib/validations";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const chapterId = searchParams.get("chapterId") || undefined;
+  const chapterId = searchParams.get("chapterId") || searchParams.get("chapter_id") || undefined;
   const topics = await db.getTopics(chapterId);
   return NextResponse.json({ topics });
 }

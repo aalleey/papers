@@ -5,7 +5,7 @@ import { SubjectSchema } from "@/lib/validations";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const courseId = searchParams.get("courseId") || undefined;
+  const courseId = searchParams.get("courseId") || searchParams.get("course_id") || undefined;
   const subjects = await db.getSubjects(courseId);
   return NextResponse.json({ subjects });
 }

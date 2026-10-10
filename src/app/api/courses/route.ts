@@ -5,7 +5,7 @@ import { CourseSchema } from "@/lib/validations";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const boardId = searchParams.get("boardId") || undefined;
+  const boardId = searchParams.get("boardId") || searchParams.get("board_id") || undefined;
   const courses = await db.getCourses(boardId);
   return NextResponse.json({ courses });
 }
