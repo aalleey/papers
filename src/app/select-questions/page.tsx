@@ -7,8 +7,6 @@ import {
   Question,
   Chapter,
   Topic,
-  QuestionType,
-  QuestionSource,
 } from "@/lib/types";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
@@ -17,8 +15,7 @@ import {
   ChevronUp,
   ChevronDown,
   Check,
-  CheckSquare,
-  Square,
+  CheckCircle2,
   Sparkles,
   ArrowRight,
   Filter,
@@ -26,10 +23,16 @@ import {
   FileText,
   SlidersHorizontal,
   X,
-  BookOpen,
   ArrowLeft,
   Settings,
   HelpCircle,
+  BookOpen,
+  Award,
+  Zap,
+  RotateCcw,
+  Eye,
+  Sliders,
+  ChevronRight,
 } from "lucide-react";
 
 export default function SelectQuestionsPage() {
@@ -42,13 +45,13 @@ export default function SelectQuestionsPage() {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
 
-  // Selection state (Array of selected question IDs)
+  // Selection state (Set of question IDs)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  // Filter controls state (matching Screenshot 1)
+  // Filter controls state
   const [patternMode, setPatternMode] = useState<"board" | "auto" | "custom" | null>(null);
   const [skipALP, setSkipALP] = useState(false);
-  const [sourceFilter, setSourceFilter] = useState<"mixed" | "exercise" | "additional" | "board">("exercise");
+  const [sourceFilter, setSourceFilter] = useState<"mixed" | "exercise" | "additional" | "board">("mixed");
   const [languageMode, setLanguageMode] = useState<"English" | "Urdu" | "Bilingual">("Bilingual");
 
   // Topic filter state (Set of selected topic IDs or 'ALL')
@@ -58,6 +61,7 @@ export default function SelectQuestionsPage() {
   const [headerCollapsed, setHeaderCollapsed] = useState(false);
   const [viewOnlySelected, setViewOnlySelected] = useState(false);
   const [showCustomModal, setShowCustomModal] = useState(false);
+  const [mobileTopicsOpen, setMobileTopicsOpen] = useState(false);
 
   // Accordion state
   const [accordionOpen, setAccordionOpen] = useState({
@@ -82,7 +86,6 @@ export default function SelectQuestionsPage() {
         const urlChap = searchParams.get("chapter");
         const urlChapId = searchParams.get("chapter_id");
 
-        // Map known chapter numbers or use provided chapter_id
         let initialChapterId = urlChapId || "68fc022a-f4b1-53f8-a133-2946135d88db"; // Default Chapter 2
         if (urlChap === "1") initialChapterId = "81fef04e-6a53-5018-9051-fdb1c36775d9";
         if (urlChap === "8") initialChapterId = "ac5b38de-123c-51fc-a96b-1ecaff9762ce";
@@ -133,7 +136,6 @@ export default function SelectQuestionsPage() {
     setCurrentChapter(ch);
     setLoading(true);
     try {
-      // Update browser URL query without reload
       const newUrl = new URL(window.location.href);
       newUrl.searchParams.set("chapter_id", ch.id);
       window.history.replaceState({}, "", newUrl.toString());
@@ -150,7 +152,7 @@ export default function SelectQuestionsPage() {
     }
   }
 
-  // Sync selection to sessionStorage for seamless transfer to Paper Editor
+  // Sync selection to sessionStorage
   useEffect(() => {
     if (selectedIds.size > 0) {
       sessionStorage.setItem("papermaker_selected_ids", JSON.stringify([...selectedIds]));
@@ -184,31 +186,30 @@ export default function SelectQuestionsPage() {
       }
 
       // 2. Source Filter
-      if (sourceFilter === "exercise" && q.source !== "exercise") {
-        return false;
-      }
-      if (sourceFilter === "additional" && q.source !== "extra") {
-        return false;
-      }
-      if (sourceFilter === "board" && q.source !== "past_paper") {
+      if (sourceFilter === "exercise" && q.source !== "exercise") return false;
+      if (sourceFilter === "additional" && q.source !== "extra") return false;
+      if (sourceFilter === "board" && q.source !== "past_paper") return false;
+
+      // 3. Skip ALP Filter
+      if (skipALP && (q.concept_tag?.toLowerCase().includes("alp") || q.source_ref?.toLowerCase().includes("alp"))) {
         return false;
       }
 
-      // 3. View Only Selected toggle
+      // 4. View Only Selected filter
       if (viewOnlySelected && !selectedIds.has(q.id)) {
         return false;
       }
 
       return true;
     });
-  }, [allQuestions, selectedTopicFilters, sourceFilter, viewOnlySelected, selectedIds]);
+  }, [allQuestions, selectedTopicFilters, sourceFilter, skipALP, viewOnlySelected, selectedIds]);
 
-  // Group by question type
+  // Split into categories
   const mcqQuestions = useMemo(() => filteredQuestions.filter((q) => q.type === "mcq"), [filteredQuestions]);
   const shortQuestions = useMemo(() => filteredQuestions.filter((q) => q.type === "short"), [filteredQuestions]);
   const longQuestions = useMemo(() => filteredQuestions.filter((q) => q.type === "long"), [filteredQuestions]);
 
-  // Live Selected counts
+  // Selected counts breakdown
   const selectedCounts = useMemo(() => {
     let mcq = 0;
     let short = 0;
@@ -224,7 +225,7 @@ export default function SelectQuestionsPage() {
     return { mcq, short, long, total: selectedIds.size };
   }, [selectedIds, allQuestions]);
 
-  // Toggle selection for a single question
+  // Toggle selection of a question
   const toggleQuestion = (id: string) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -237,21 +238,21 @@ export default function SelectQuestionsPage() {
     });
   };
 
-  // Select all or clear questions in a specific group
-  const selectAllInGroup = (questionsGroup: Question[]) => {
+  // Select all in a group
+  const selectAllInGroup = (group: Question[]) => {
+    const allSelected = group.every((q) => selectedIds.has(q.id));
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      const allSelected = questionsGroup.every((q) => next.has(q.id));
       if (allSelected) {
-        questionsGroup.forEach((q) => next.delete(q.id));
+        group.forEach((q) => next.delete(q.id));
       } else {
-        questionsGroup.forEach((q) => next.add(q.id));
+        group.forEach((q) => next.add(q.id));
       }
       return next;
     });
   };
 
-  // Toggle Topic Filter
+  // Toggle topic filter
   const toggleTopic = (topicKey: string) => {
     setSelectedTopicFilters((prev) => {
       if (topicKey === "ALL") {
@@ -277,7 +278,6 @@ export default function SelectQuestionsPage() {
     const shorts = allQuestions.filter((q) => q.type === "short");
     const longs = allQuestions.filter((q) => q.type === "long");
 
-    // Pick target count from each
     mcqs.slice(0, mcqTarget).forEach((q) => newSelected.add(q.id));
     shorts.slice(0, shortTarget).forEach((q) => newSelected.add(q.id));
     longs.slice(0, longTarget).forEach((q) => newSelected.add(q.id));
@@ -288,7 +288,6 @@ export default function SelectQuestionsPage() {
 
   // Navigate to Paper Editor
   const handleGeneratePaper = () => {
-    // Save selected questions list
     const selectedList = allQuestions.filter((q) => selectedIds.has(q.id));
     sessionStorage.setItem("papermaker_selected_questions", JSON.stringify(selectedList));
     sessionStorage.setItem("papermaker_language_mode", languageMode);
@@ -297,10 +296,18 @@ export default function SelectQuestionsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6 text-slate-700">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
-        <h2 className="text-lg font-bold text-slate-800">Loading Question Bank...</h2>
-        <p className="text-xs text-slate-500 mt-1">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex flex-col items-center justify-center p-6 text-white">
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-emerald-500/30 border-t-emerald-400 rounded-full animate-spin" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <BookOpen className="w-6 h-6 text-emerald-400 animate-pulse" />
+          </div>
+        </div>
+        <h2 className="text-xl font-black text-white mt-6 tracking-tight flex items-center gap-2">
+          <span>Loading Question Bank...</span>
+          <span className="font-urdu text-emerald-400 text-lg">پیپر والا</span>
+        </h2>
+        <p className="text-xs text-slate-400 mt-2 font-medium">
           Fetching Class 10 Computer Science {currentChapter ? `Unit-${currentChapter.number}` : "Chapter 2"}
         </p>
       </div>
@@ -308,179 +315,213 @@ export default function SelectQuestionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f2f5] text-slate-800 font-sans pb-28 selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-[#f3f6fb] text-slate-800 font-sans pb-36 selection:bg-indigo-500 selection:text-white">
       {/* =========================================================================
-          TOP FIXED HEADER WRAPPER (Exact match to Screenshot 1)
+          TOP SMART HEADER (VIBRANT & FULLY RESPONSIVE)
           ========================================================================= */}
-      <div className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm transition-all duration-200">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-indigo-100 shadow-md shadow-indigo-950/5 transition-all duration-200">
         {!headerCollapsed && (
-          <div className="max-w-[1700px] mx-auto px-4 py-3 sm:px-6">
-            {/* Header Content */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-2 border-b border-slate-100">
-              <div className="flex items-center gap-3">
+          <div className="max-w-[1700px] mx-auto px-3 sm:px-6 py-2.5 sm:py-3 space-y-3">
+            {/* Top Bar: Title, Breadcrumbs, and Brand Badge */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2.5 sm:gap-3">
                 <Link
                   href="/"
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                  title="Back to Home"
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 transition-colors shadow-2xs shrink-0"
+                  title="Back to Homepage"
+                  id="btn-back-home"
                 >
-                  <ArrowLeft className="w-5 h-5" />
+                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Link>
+
                 <div>
-                  <h1 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
-                    <span>Select: Computer</span>
-                    <span className="font-urdu text-blue-700 text-lg">کمپیوٹر</span>
-                    <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200">
-                      PaperWala پیپر والا
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h1 className="text-base sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-1.5">
+                      <span className="bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-700 bg-clip-text text-transparent">
+                        Select: Computer
+                      </span>
+                      <span className="font-urdu text-blue-700 text-base sm:text-lg">کمپیوٹر</span>
+                    </h1>
+                    <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold px-2.5 py-0.5 rounded-full shadow-xs">
+                      <Sparkles className="w-3 h-3 text-emerald-200" />
+                      PaperWala
                     </span>
-                  </h1>
-                  <div className="text-xs text-slate-500 font-medium">
-                    Punjab Boards &bull; 10th (New) 2026-27 &bull; Unit-{currentChapter?.number || 2}: {currentChapter?.title || "System Recovery and Advanced Maintenance"}
+                  </div>
+                  <div className="text-[11px] sm:text-xs text-slate-500 font-semibold mt-0.5 flex flex-wrap items-center gap-1">
+                    <span>Punjab Boards &bull; 10th (New) 2026-27 &bull;</span>
+                    <span className="text-indigo-600 font-bold">
+                      Unit-{currentChapter?.number || 2}: {currentChapter?.title || "System Recovery"}
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* Controls Grid (Pattern, Source, Language) */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                {/* Pattern Group */}
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
-                  <div className="font-bold text-slate-500 uppercase tracking-wider text-[10px] mb-1.5">Pattern</div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
-                      <input
-                        type="checkbox"
-                        checked={patternMode === "board"}
-                        onChange={() => setPatternMode(patternMode === "board" ? null : "board")}
-                        className="rounded text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Board</span>
-                    </label>
+              {/* Responsive Quick Action Buttons in Header */}
+              <div className="flex items-center gap-2 self-end md:self-auto">
+                <button
+                  onClick={() => applyCustomPattern(10, 5, 2)}
+                  className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-all border border-indigo-200 flex items-center gap-1.5 shadow-2xs"
+                  title="Quick Auto Pick (10 MCQs, 5 Shorts, 2 Longs)"
+                >
+                  <Zap className="w-3.5 h-3.5 fill-indigo-600 text-indigo-600" />
+                  <span>Auto Pick</span>
+                </button>
 
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
-                      <input
-                        type="checkbox"
-                        checked={patternMode === "auto"}
-                        onChange={() => {
-                          setPatternMode(patternMode === "auto" ? null : "auto");
-                          if (patternMode !== "auto") applyCustomPattern(10, 5, 2);
-                        }}
-                        className="rounded text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Auto</span>
-                    </label>
+                <button
+                  onClick={() => setShowCustomModal(true)}
+                  className="px-3 py-1.5 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-700 text-xs font-bold transition-all border border-violet-200 flex items-center gap-1.5 shadow-2xs"
+                >
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-violet-600" />
+                  <span>Custom</span>
+                </button>
 
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
-                      <input
-                        type="checkbox"
-                        checked={patternMode === "custom"}
-                        onChange={() => {
-                          setPatternMode("custom");
-                          setShowCustomModal(true);
-                        }}
-                        className="rounded text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Custom</span>
-                    </label>
+                <button
+                  onClick={() => setSelectedIds(new Set())}
+                  disabled={selectedIds.size === 0}
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 disabled:opacity-40 disabled:pointer-events-none text-xs font-semibold transition-all"
+                  title="Clear selection"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
 
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-bold text-rose-600 select-none">
-                      <input
-                        type="checkbox"
-                        checked={skipALP}
-                        onChange={(e) => setSkipALP(e.target.checked)}
-                        className="rounded text-rose-600 focus:ring-rose-500"
-                      />
-                      <span>Skip ALP</span>
-                    </label>
-                  </div>
+            {/* Vibrant Controls Grid: Pattern, Source, Language */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 text-xs">
+              {/* 1. Pattern Group (Warm Amber / Gold Theme) */}
+              <div className="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-white border border-amber-200/90 rounded-xl p-2.5 shadow-xs">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="font-extrabold text-amber-800 uppercase tracking-wider text-[10px] flex items-center gap-1">
+                    <Sliders className="w-3 h-3 text-amber-600" />
+                    Selection Pattern
+                  </span>
+                  {skipALP && (
+                    <span className="text-[9px] bg-rose-600 text-white font-extrabold px-1.5 py-0.2 rounded">
+                      ALP Skipped
+                    </span>
+                  )}
                 </div>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-slate-700 font-medium">
+                  <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-amber-900 select-none">
+                    <input
+                      type="checkbox"
+                      checked={patternMode === "board"}
+                      onChange={() => setPatternMode(patternMode === "board" ? null : "board")}
+                      className="rounded text-amber-600 focus:ring-amber-500 h-3.5 w-3.5"
+                    />
+                    <span>Board</span>
+                  </label>
 
-                {/* Source Group */}
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
-                  <div className="font-bold text-slate-500 uppercase tracking-wider text-[10px] mb-1.5">Source</div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
-                      <input
-                        type="radio"
-                        name="source"
-                        checked={sourceFilter === "mixed"}
-                        onChange={() => setSourceFilter("mixed")}
-                        className="text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Mixed</span>
-                    </label>
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
-                      <input
-                        type="radio"
-                        name="source"
-                        checked={sourceFilter === "exercise"}
-                        onChange={() => setSourceFilter("exercise")}
-                        className="text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Exercise</span>
-                    </label>
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
-                      <input
-                        type="radio"
-                        name="source"
-                        checked={sourceFilter === "additional"}
-                        onChange={() => setSourceFilter("additional")}
-                        className="text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Extra</span>
-                    </label>
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
-                      <input
-                        type="radio"
-                        name="source"
-                        checked={sourceFilter === "board"}
-                        onChange={() => setSourceFilter("board")}
-                        className="text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Past Papers</span>
-                    </label>
-                  </div>
+                  <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-amber-900 select-none">
+                    <input
+                      type="checkbox"
+                      checked={patternMode === "auto"}
+                      onChange={() => {
+                        setPatternMode(patternMode === "auto" ? null : "auto");
+                        if (patternMode !== "auto") applyCustomPattern(10, 5, 2);
+                      }}
+                      className="rounded text-amber-600 focus:ring-amber-500 h-3.5 w-3.5"
+                    />
+                    <span className="font-bold text-amber-900">Auto (10:5:2)</span>
+                  </label>
+
+                  <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-amber-900 select-none">
+                    <input
+                      type="checkbox"
+                      checked={patternMode === "custom"}
+                      onChange={() => {
+                        setPatternMode("custom");
+                        setShowCustomModal(true);
+                      }}
+                      className="rounded text-amber-600 focus:ring-amber-500 h-3.5 w-3.5"
+                    />
+                    <span>Custom</span>
+                  </label>
+
+                  <label className="inline-flex items-center gap-1 cursor-pointer font-bold text-rose-600 hover:text-rose-700 select-none ml-auto">
+                    <input
+                      type="checkbox"
+                      checked={skipALP}
+                      onChange={(e) => setSkipALP(e.target.checked)}
+                      className="rounded text-rose-600 focus:ring-rose-500 h-3.5 w-3.5"
+                    />
+                    <span>Skip ALP</span>
+                  </label>
                 </div>
+              </div>
 
-                {/* Language Group */}
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
-                  <div className="font-bold text-slate-500 uppercase tracking-wider text-[10px] mb-1.5">Language</div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
+              {/* 2. Source Group (Fresh Emerald / Teal Theme) */}
+              <div className="bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-white border border-emerald-200/90 rounded-xl p-2.5 shadow-xs">
+                <div className="font-extrabold text-emerald-800 uppercase tracking-wider text-[10px] mb-1.5 flex items-center gap-1">
+                  <Filter className="w-3 h-3 text-emerald-600" />
+                  Question Source
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-1.5 text-slate-700 font-medium">
+                  {[
+                    { value: "mixed", label: "Mixed" },
+                    { value: "exercise", label: "Exercise" },
+                    { value: "additional", label: "Extra" },
+                    { value: "board", label: "Past Papers" },
+                  ].map((src) => (
+                    <label
+                      key={src.value}
+                      className={`inline-flex items-center gap-1 cursor-pointer select-none px-2 py-0.5 rounded-md transition-colors ${
+                        sourceFilter === src.value
+                          ? "bg-emerald-600 text-white font-bold shadow-2xs"
+                          : "hover:bg-emerald-50"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="source"
+                        checked={sourceFilter === src.value}
+                        onChange={() => setSourceFilter(src.value as any)}
+                        className="sr-only"
+                      />
+                      <span>{src.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* 3. Language Group (Vibrant Indigo / Violet Theme) */}
+              <div className="bg-gradient-to-br from-indigo-500/10 via-violet-500/5 to-white border border-indigo-200/90 rounded-xl p-2.5 shadow-xs">
+                <div className="font-extrabold text-indigo-800 uppercase tracking-wider text-[10px] mb-1.5 flex items-center gap-1">
+                  <BookOpen className="w-3 h-3 text-indigo-600" />
+                  Language Format
+                </div>
+                <div className="flex items-center justify-around gap-1.5 text-slate-700 font-medium">
+                  {[
+                    { value: "Bilingual", label: "Both (Bilingual)" },
+                    { value: "English", label: "English" },
+                    { value: "Urdu", label: "اردو" },
+                  ].map((lang) => (
+                    <label
+                      key={lang.value}
+                      className={`inline-flex items-center gap-1 cursor-pointer select-none px-2.5 py-0.5 rounded-md transition-colors ${
+                        languageMode === lang.value
+                          ? "bg-indigo-600 text-white font-bold shadow-2xs"
+                          : "hover:bg-indigo-50"
+                      }`}
+                    >
                       <input
                         type="radio"
                         name="lang"
-                        checked={languageMode === "English"}
-                        onChange={() => setLanguageMode("English")}
-                        className="text-blue-600 focus:ring-blue-500"
+                        checked={languageMode === lang.value}
+                        onChange={() => setLanguageMode(lang.value as any)}
+                        className="sr-only"
                       />
-                      <span>Eng</span>
+                      <span className={lang.value === "Urdu" ? "font-urdu text-sm" : ""}>
+                        {lang.label}
+                      </span>
                     </label>
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
-                      <input
-                        type="radio"
-                        name="lang"
-                        checked={languageMode === "Urdu"}
-                        onChange={() => setLanguageMode("Urdu")}
-                        className="text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Urdu</span>
-                    </label>
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 select-none">
-                      <input
-                        type="radio"
-                        name="lang"
-                        checked={languageMode === "Bilingual"}
-                        onChange={() => setLanguageMode("Bilingual")}
-                        className="text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Both</span>
-                    </label>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Chapter Navigation row (matches ref Chapter Header) */}
-            <div className="flex items-center justify-between gap-3 pt-2 px-1 border-t border-slate-100 mt-2">
+            {/* Chapter Navigation Bar (Matches Ref Chapter Header with high vibrance) */}
+            <div className="flex items-center justify-between gap-2 sm:gap-4 pt-2 border-t border-slate-100">
               <button
                 onClick={() => {
                   if (!currentChapter) return;
@@ -488,15 +529,19 @@ export default function SelectQuestionsPage() {
                   if (curIdx > 0) handleChapterChange(chapters[curIdx - 1].id);
                 }}
                 disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) <= 0}
-                className="px-4 py-1.5 rounded bg-[#1976d2] hover:bg-[#1565c0] text-white disabled:bg-[#cfd8dc] disabled:text-slate-400 font-bold text-xs transition-colors disabled:cursor-not-allowed shadow-sm shrink-0"
+                className="px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1"
+                id="btn-prev-chapter"
               >
-                Prev
+                <span>&larr;</span>
+                <span className="hidden sm:inline">Prev</span>
               </button>
+
               <div className="flex-1 max-w-xl text-center">
                 <select
                   value={currentChapter?.id || ""}
                   onChange={(e) => handleChapterChange(e.target.value)}
-                  className="w-full font-bold text-slate-800 text-xs sm:text-sm bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-center"
+                  className="w-full font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-slate-50 to-indigo-50/50 hover:bg-slate-100 px-3 py-1.5 sm:py-2 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer text-center shadow-xs"
+                  id="select-chapter-dropdown"
                 >
                   {chapters.map((ch) => (
                     <option key={ch.id} value={ch.id}>
@@ -505,6 +550,7 @@ export default function SelectQuestionsPage() {
                   ))}
                 </select>
               </div>
+
               <button
                 onClick={() => {
                   if (!currentChapter) return;
@@ -512,63 +558,123 @@ export default function SelectQuestionsPage() {
                   if (curIdx < chapters.length - 1) handleChapterChange(chapters[curIdx + 1].id);
                 }}
                 disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) >= chapters.length - 1}
-                className="px-4 py-1.5 rounded bg-[#1976d2] hover:bg-[#1565c0] text-white disabled:bg-[#cfd8dc] disabled:text-slate-400 font-bold text-xs transition-colors disabled:cursor-not-allowed shadow-sm shrink-0"
+                className="px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1"
+                id="btn-next-chapter"
               >
-                Next
+                <span className="hidden sm:inline">Next</span>
+                <span>&rarr;</span>
               </button>
             </div>
           </div>
         )}
 
-        {/* Toggle Collapse Chevron Tab */}
+        {/* Toggle Collapse Tab */}
         <div className="flex justify-center -mb-3 relative z-10">
           <button
             onClick={() => setHeaderCollapsed(!headerCollapsed)}
-            className="w-8 h-6 bg-white border border-slate-200 rounded-b-md shadow-sm hover:bg-slate-50 flex items-center justify-center text-slate-500 transition-colors"
-            title={headerCollapsed ? "Expand Header" : "Collapse Header"}
+            className="w-10 h-6 bg-white border border-indigo-100 rounded-b-xl shadow-sm hover:bg-indigo-50 flex items-center justify-center text-indigo-600 transition-colors"
+            title={headerCollapsed ? "Expand Smart Header" : "Collapse Smart Header"}
+            id="btn-toggle-header"
           >
             {headerCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
           </button>
         </div>
-      </div>
+      </header>
 
       {/* =========================================================================
-          MAIN LAYOUT: SIDEBAR + QUESTIONS GRID
+          MAIN LAYOUT: TOPICS (DESKTOP SIDEBAR + MOBILE ACCORDION) & QUESTIONS
           ========================================================================= */}
-      <div className="max-w-[1700px] mx-auto px-4 sm:px-6 pt-6 flex flex-col lg:flex-row items-start gap-6">
-        {/* LEFT VERTICAL SIDEBAR: TOPIC FILTER */}
-        <aside className="w-full lg:w-72 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0 sticky top-28">
-          <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-            <span className="font-bold text-xs uppercase tracking-wider text-blue-700 flex items-center gap-1.5">
-              <Filter className="w-3.5 h-3.5" />
+      <div className="max-w-[1700px] mx-auto px-3 sm:px-6 pt-5 sm:pt-7 flex flex-col lg:flex-row items-start gap-5 sm:gap-6">
+        {/* MOBILE TOPIC ACCORDION STRIP (Shown only on < lg) */}
+        <div className="lg:hidden w-full bg-white rounded-xl border border-indigo-100 shadow-sm overflow-hidden">
+          <button
+            onClick={() => setMobileTopicsOpen(!mobileTopicsOpen)}
+            className="w-full px-4 py-3 bg-gradient-to-r from-indigo-50 to-blue-50 flex items-center justify-between text-xs font-bold text-indigo-900"
+          >
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-indigo-600" />
+              <span>Filter by Topic ({topics.length} Topics Available)</span>
+              {!selectedTopicFilters.has("ALL") && (
+                <span className="px-2 py-0.5 rounded-full bg-indigo-600 text-white text-[10px]">
+                  Filtered
+                </span>
+              )}
+            </div>
+            {mobileTopicsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+
+          {mobileTopicsOpen && (
+            <div className="p-3 border-t border-indigo-100 flex flex-wrap gap-2 text-xs">
+              <button
+                onClick={() => toggleTopic("ALL")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                  selectedTopicFilters.has("ALL")
+                    ? "bg-indigo-600 text-white shadow-xs"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                All Topics ({allQuestions.length})
+              </button>
+
+              {topics.map((t) => {
+                const isSelected = selectedTopicFilters.has(t.id);
+                const count = topicCounts[t.id] || 0;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => toggleTopic(t.id)}
+                    className={`px-2.5 py-1.5 rounded-lg text-left transition-all text-xs font-medium ${
+                      isSelected
+                        ? "bg-indigo-600 text-white font-bold shadow-xs"
+                        : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-indigo-50"
+                    }`}
+                  >
+                    <span>
+                      {/^\d+\./.test(t.title) ? t.title : `${currentChapter?.number || 2}.${t.number} ${t.title}`}
+                    </span>
+                    <span className="ml-1.5 opacity-80 font-bold">({count})</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* DESKTOP VERTICAL SIDEBAR: TOPIC FILTER */}
+        <aside className="hidden lg:block w-72 xl:w-80 bg-white rounded-2xl border border-indigo-100 shadow-md shadow-indigo-950/5 overflow-hidden shrink-0 sticky top-28">
+          <div className="px-4 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-800 text-white flex items-center justify-between">
+            <span className="font-black text-xs uppercase tracking-wider flex items-center gap-2">
+              <Filter className="w-3.5 h-3.5 text-indigo-200" />
               Filter by Topic
             </span>
             <button
               onClick={() => setSelectedTopicFilters(new Set(["ALL"]))}
-              className="text-[10px] text-slate-400 hover:text-blue-600 font-medium underline"
+              className="text-[10px] text-indigo-200 hover:text-white font-bold underline transition-colors"
             >
               Reset
             </button>
           </div>
 
-          <ul className="divide-y divide-slate-100 text-xs">
+          <ul className="divide-y divide-slate-100 text-xs max-h-[calc(100vh-220px)] overflow-y-auto">
             {/* All Topics */}
             <li
               onClick={() => toggleTopic("ALL")}
-              className={`px-3.5 py-2.5 flex items-center justify-between cursor-pointer transition-colors ${
-                selectedTopicFilters.has("ALL") ? "bg-blue-50/80 font-bold text-blue-900" : "hover:bg-slate-50 text-slate-700"
+              className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
+                selectedTopicFilters.has("ALL")
+                  ? "bg-gradient-to-r from-indigo-50 to-blue-50 font-bold text-indigo-900 border-l-4 border-indigo-600"
+                  : "hover:bg-slate-50 text-slate-700"
               }`}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <input
                   type="checkbox"
                   checked={selectedTopicFilters.has("ALL")}
                   readOnly
-                  className="rounded text-blue-600 pointer-events-none"
+                  className="rounded text-indigo-600 pointer-events-none h-4 w-4"
                 />
-                <span>All Topics</span>
+                <span className="font-bold">All Topics</span>
               </div>
-              <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[11px] font-semibold">
+              <span className="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[11px] font-black">
                 {allQuestions.length}
               </span>
             </li>
@@ -581,22 +687,30 @@ export default function SelectQuestionsPage() {
                 <li
                   key={t.id}
                   onClick={() => toggleTopic(t.id)}
-                  className={`px-3.5 py-2.5 flex items-center justify-between cursor-pointer transition-colors ${
-                    isSelected ? "bg-blue-50/80 font-bold text-blue-900" : "hover:bg-slate-50 text-slate-700"
+                  className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
+                    isSelected
+                      ? "bg-gradient-to-r from-indigo-50 to-blue-50 font-bold text-indigo-900 border-l-4 border-indigo-600"
+                      : "hover:bg-slate-50 text-slate-700"
                   }`}
                 >
-                  <div className="flex items-center gap-2 pr-2 leading-tight">
+                  <div className="flex items-center gap-2.5 pr-2 leading-tight">
                     <input
                       type="checkbox"
                       checked={isSelected}
                       readOnly
-                      className="rounded text-blue-600 pointer-events-none shrink-0"
+                      className="rounded text-indigo-600 pointer-events-none shrink-0 h-4 w-4"
                     />
                     <span className="line-clamp-2">
                       {/^\d+\./.test(t.title) ? t.title : `${currentChapter?.number || 2}.${t.number} ${t.title}`}
                     </span>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-medium shrink-0">
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[11px] font-bold shrink-0 ${
+                      isSelected
+                        ? "bg-indigo-600 text-white"
+                        : "bg-slate-100 text-slate-600"
+                    }`}
+                  >
                     {count}
                   </span>
                 </li>
@@ -606,22 +720,22 @@ export default function SelectQuestionsPage() {
             {/* Exercise Filter */}
             <li
               onClick={() => toggleTopic("exercise_source")}
-              className={`px-3.5 py-2.5 flex items-center justify-between cursor-pointer transition-colors ${
+              className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
                 selectedTopicFilters.has("exercise_source")
-                  ? "bg-blue-50/80 font-bold text-blue-900"
+                  ? "bg-gradient-to-r from-indigo-50 to-blue-50 font-bold text-indigo-900 border-l-4 border-indigo-600"
                   : "hover:bg-slate-50 text-slate-700"
               }`}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <input
                   type="checkbox"
                   checked={selectedTopicFilters.has("exercise_source")}
                   readOnly
-                  className="rounded text-blue-600 pointer-events-none"
+                  className="rounded text-indigo-600 pointer-events-none h-4 w-4"
                 />
-                <span>Exercise</span>
+                <span className="font-bold">Textbook Exercise Questions</span>
               </div>
-              <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-medium">
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black">
                 {topicCounts["exercise_source"] || 0}
               </span>
             </li>
@@ -631,10 +745,12 @@ export default function SelectQuestionsPage() {
         {/* QUESTIONS CONTAINER */}
         <main className="flex-1 w-full space-y-6">
           {filteredQuestions.length === 0 ? (
-            <div className="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-500 shadow-sm space-y-3">
-              <FileText className="w-10 h-10 text-slate-300 mx-auto" />
-              <h3 className="font-bold text-base text-slate-800">No Questions Match Current Filters</h3>
-              <p className="text-xs text-slate-400">
+            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500 shadow-md space-y-4">
+              <div className="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
+                <FileText className="w-8 h-8" />
+              </div>
+              <h3 className="font-black text-lg text-slate-800">No Questions Match Current Filters</h3>
+              <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
                 Try selecting &ldquo;All Topics&rdquo; or switching the Source filter to &ldquo;Mixed&rdquo;.
               </p>
               <button
@@ -643,39 +759,46 @@ export default function SelectQuestionsPage() {
                   setSourceFilter("mixed");
                   setViewOnlySelected(false);
                 }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-500 transition-colors"
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-xs font-bold hover:shadow-lg transition-all"
               >
                 Reset All Filters
               </button>
             </div>
           ) : (
             <>
-              {/* SECTION: MULTIPLE CHOICE QUESTIONS */}
+              {/* SECTION 1: MULTIPLE CHOICE QUESTIONS (Vibrant Royal Blue / Indigo Theme) */}
               {mcqQuestions.length > 0 && (
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                  {/* Section Accordion Header */}
-                  <div className="px-5 py-3.5 bg-slate-50/70 border-b border-slate-200 flex items-center justify-between">
+                <section className="bg-white rounded-2xl border border-blue-100 shadow-md shadow-blue-950/5 overflow-hidden">
+                  {/* Accordion Header */}
+                  <div className="px-4 sm:px-6 py-3.5 bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-white border-b border-blue-100 flex items-center justify-between flex-wrap gap-2">
                     <button
                       onClick={() => setAccordionOpen((prev) => ({ ...prev, mcq: !prev.mcq }))}
-                      className="flex items-center gap-2 font-bold text-sm text-blue-800 hover:text-blue-900"
+                      className="flex items-center gap-2.5 font-black text-sm sm:text-base text-blue-950 hover:text-blue-700 transition-colors"
+                      id="accordion-toggle-mcq"
                     >
-                      <span>Multiple Choice Questions ( {mcqQuestions.length} )</span>
-                      {accordionOpen.mcq ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      <div className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold">
+                        A
+                      </div>
+                      <span>Multiple Choice Questions</span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-xs font-black">
+                        {mcqQuestions.length}
+                      </span>
+                      {accordionOpen.mcq ? <ChevronUp className="w-4 h-4 text-blue-600" /> : <ChevronDown className="w-4 h-4 text-blue-600" />}
                     </button>
 
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => selectAllInGroup(mcqQuestions)}
-                        className="px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors"
+                        className="px-3 py-1.5 text-xs font-bold text-blue-700 bg-white hover:bg-blue-50 rounded-lg border border-blue-200 shadow-2xs transition-all active:scale-95"
                       >
                         {mcqQuestions.every((q) => selectedIds.has(q.id)) ? "Deselect All MCQs" : "Select All MCQs"}
                       </button>
                     </div>
                   </div>
 
-                  {/* 3-Column Card Grid */}
+                  {/* Responsive Card Grid */}
                   {accordionOpen.mcq && (
-                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div className="p-3 sm:p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
                       {mcqQuestions.map((q, idx) => (
                         <QuestionCard
                           key={q.id}
@@ -688,25 +811,32 @@ export default function SelectQuestionsPage() {
                       ))}
                     </div>
                   )}
-                </div>
+                </section>
               )}
 
-              {/* SECTION: SHORT QUESTIONS */}
+              {/* SECTION 2: SHORT QUESTIONS (Vibrant Emerald / Teal Theme) */}
               {shortQuestions.length > 0 && (
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                  <div className="px-5 py-3.5 bg-slate-50/70 border-b border-slate-200 flex items-center justify-between">
+                <section className="bg-white rounded-2xl border border-emerald-100 shadow-md shadow-emerald-950/5 overflow-hidden">
+                  <div className="px-4 sm:px-6 py-3.5 bg-gradient-to-r from-emerald-50/90 via-teal-50/60 to-white border-b border-emerald-100 flex items-center justify-between flex-wrap gap-2">
                     <button
                       onClick={() => setAccordionOpen((prev) => ({ ...prev, short: !prev.short }))}
-                      className="flex items-center gap-2 font-bold text-sm text-blue-800 hover:text-blue-900"
+                      className="flex items-center gap-2.5 font-black text-sm sm:text-base text-emerald-950 hover:text-emerald-700 transition-colors"
+                      id="accordion-toggle-short"
                     >
-                      <span>Short Questions ( {shortQuestions.length} )</span>
-                      {accordionOpen.short ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      <div className="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">
+                        B
+                      </div>
+                      <span>Short Questions</span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-black">
+                        {shortQuestions.length}
+                      </span>
+                      {accordionOpen.short ? <ChevronUp className="w-4 h-4 text-emerald-600" /> : <ChevronDown className="w-4 h-4 text-emerald-600" />}
                     </button>
 
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => selectAllInGroup(shortQuestions)}
-                        className="px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors"
+                        className="px-3 py-1.5 text-xs font-bold text-emerald-700 bg-white hover:bg-emerald-50 rounded-lg border border-emerald-200 shadow-2xs transition-all active:scale-95"
                       >
                         {shortQuestions.every((q) => selectedIds.has(q.id)) ? "Deselect All Shorts" : "Select All Shorts"}
                       </button>
@@ -714,7 +844,7 @@ export default function SelectQuestionsPage() {
                   </div>
 
                   {accordionOpen.short && (
-                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div className="p-3 sm:p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
                       {shortQuestions.map((q, idx) => (
                         <QuestionCard
                           key={q.id}
@@ -727,25 +857,32 @@ export default function SelectQuestionsPage() {
                       ))}
                     </div>
                   )}
-                </div>
+                </section>
               )}
 
-              {/* SECTION: LONG QUESTIONS */}
+              {/* SECTION 3: DETAILED / LONG QUESTIONS (Vibrant Violet / Fuchsia Theme) */}
               {longQuestions.length > 0 && (
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                  <div className="px-5 py-3.5 bg-slate-50/70 border-b border-slate-200 flex items-center justify-between">
+                <section className="bg-white rounded-2xl border border-purple-100 shadow-md shadow-purple-950/5 overflow-hidden">
+                  <div className="px-4 sm:px-6 py-3.5 bg-gradient-to-r from-purple-50/90 via-fuchsia-50/60 to-white border-b border-purple-100 flex items-center justify-between flex-wrap gap-2">
                     <button
                       onClick={() => setAccordionOpen((prev) => ({ ...prev, long: !prev.long }))}
-                      className="flex items-center gap-2 font-bold text-sm text-blue-800 hover:text-blue-900"
+                      className="flex items-center gap-2.5 font-black text-sm sm:text-base text-purple-950 hover:text-purple-700 transition-colors"
+                      id="accordion-toggle-long"
                     >
-                      <span>Long Questions ( {longQuestions.length} )</span>
-                      {accordionOpen.long ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      <div className="w-6 h-6 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs font-bold">
+                        C
+                      </div>
+                      <span>Detailed / Long Questions</span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-purple-600 text-white text-xs font-black">
+                        {longQuestions.length}
+                      </span>
+                      {accordionOpen.long ? <ChevronUp className="w-4 h-4 text-purple-600" /> : <ChevronDown className="w-4 h-4 text-purple-600" />}
                     </button>
 
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => selectAllInGroup(longQuestions)}
-                        className="px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors"
+                        className="px-3 py-1.5 text-xs font-bold text-purple-700 bg-white hover:bg-purple-50 rounded-lg border border-purple-200 shadow-2xs transition-all active:scale-95"
                       >
                         {longQuestions.every((q) => selectedIds.has(q.id)) ? "Deselect All Longs" : "Select All Longs"}
                       </button>
@@ -753,7 +890,7 @@ export default function SelectQuestionsPage() {
                   </div>
 
                   {accordionOpen.long && (
-                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div className="p-3 sm:p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
                       {longQuestions.map((q, idx) => (
                         <QuestionCard
                           key={q.id}
@@ -766,7 +903,7 @@ export default function SelectQuestionsPage() {
                       ))}
                     </div>
                   )}
-                </div>
+                </section>
               )}
             </>
           )}
@@ -774,67 +911,57 @@ export default function SelectQuestionsPage() {
       </div>
 
       {/* =========================================================================
-          STICKY BOTTOM BAR (Exact Match to Screenshot 1)
+          STICKY BOTTOM BAR (COMPACT, GLOWING & 100% RESPONSIVE)
           ========================================================================= */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t border-slate-300 shadow-2xl py-3 px-4 sm:px-8">
-        <div className="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-4">
-          {/* Counters on the left */}
-          <div className="flex items-center gap-4 text-xs sm:text-sm font-bold text-slate-800">
-            <span className="flex items-center gap-1.5">
-              <span>MCQs:</span>
-              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-extrabold border border-blue-200">
-                {selectedCounts.mcq}
-              </span>
+      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-indigo-100 shadow-2xl py-2.5 sm:py-3.5 px-3 sm:px-8">
+        <div className="max-w-[1700px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          {/* Counters row */}
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 text-xs font-bold text-slate-800 w-full sm:w-auto">
+            <span className="flex items-center gap-1.5 bg-blue-50/80 px-2.5 py-1 rounded-lg border border-blue-200">
+              <span className="text-slate-600">MCQs:</span>
+              <span className="font-black text-blue-700">{selectedCounts.mcq}</span>
             </span>
 
-            <span className="text-slate-300">&bull;</span>
-
-            <span className="flex items-center gap-1.5">
-              <span>Shorts:</span>
-              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-extrabold border border-blue-200">
-                {selectedCounts.short}
-              </span>
+            <span className="flex items-center gap-1.5 bg-emerald-50/80 px-2.5 py-1 rounded-lg border border-emerald-200">
+              <span className="text-slate-600">Shorts:</span>
+              <span className="font-black text-emerald-700">{selectedCounts.short}</span>
             </span>
 
-            <span className="text-slate-300">&bull;</span>
-
-            <span className="flex items-center gap-1.5">
-              <span>Longs:</span>
-              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-extrabold border border-blue-200">
-                {selectedCounts.long}
-              </span>
+            <span className="flex items-center gap-1.5 bg-purple-50/80 px-2.5 py-1 rounded-lg border border-purple-200">
+              <span className="text-slate-600">Longs:</span>
+              <span className="font-black text-purple-700">{selectedCounts.long}</span>
             </span>
 
-            <span className="hidden md:inline-block text-slate-300">&bull;</span>
-
-            <span className="hidden md:inline-flex items-center gap-1.5 text-emerald-700">
-              <span>Total Selected:</span>
-              <span className="font-black">{selectedCounts.total}</span>
-            </span>
+            <div className="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-1 rounded-lg border border-amber-200 font-black text-amber-900">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span>Total Selected: {selectedCounts.total}</span>
+            </div>
           </div>
 
-          {/* Action buttons on the right */}
-          <div className="flex items-center gap-3">
+          {/* Action buttons row */}
+          <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto">
             {selectedCounts.total > 0 && (
               <button
                 onClick={() => setViewOnlySelected(!viewOnlySelected)}
-                className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all ${
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 ${
                   viewOnlySelected
-                    ? "bg-amber-500 text-white shadow-md hover:bg-amber-600"
-                    : "bg-teal-600 text-white shadow-md hover:bg-teal-500"
+                    ? "bg-amber-500 text-white hover:bg-amber-600 ring-2 ring-amber-300"
+                    : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200"
                 }`}
               >
-                {viewOnlySelected ? "Show All Questions" : "View Selected"}
+                <Eye className="w-3.5 h-3.5" />
+                <span>{viewOnlySelected ? "Show All" : `View Selected (${selectedCounts.total})`}</span>
               </button>
             )}
 
             <button
               onClick={handleGeneratePaper}
               disabled={selectedCounts.total === 0}
-              className={`px-6 py-2.5 rounded-lg text-sm font-bold text-white shadow-lg flex items-center gap-2 transition-all active:scale-[0.98] ${
+              id="btn-generate-paper-bottom"
+              className={`flex-1 sm:flex-initial px-6 py-2.5 rounded-xl text-xs sm:text-sm font-black text-white shadow-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
                 selectedCounts.total === 0
                   ? "bg-slate-300 text-slate-500 cursor-not-allowed shadow-none"
-                  : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20"
+                  : "bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-950/20 ring-2 ring-emerald-400/40"
               }`}
             >
               <span>Generate Paper</span>
@@ -842,65 +969,65 @@ export default function SelectQuestionsPage() {
             </button>
           </div>
         </div>
-      </div>
+      </footer>
 
       {/* =========================================================================
           CUSTOM PATTERN SELECTION MODAL
           ========================================================================= */}
       {showCustomModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150 border border-indigo-100">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2 font-bold text-base text-slate-900">
-                <SlidersHorizontal className="w-5 h-5 text-blue-600" />
+              <div className="flex items-center gap-2 font-black text-base text-slate-900">
+                <SlidersHorizontal className="w-5 h-5 text-indigo-600" />
                 <span>Custom Question Pattern</span>
               </div>
               <button
                 onClick={() => setShowCustomModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Specify the number of questions to auto-pick from Chapter 8 according to your exam format.
+            <p className="text-xs text-slate-500 leading-relaxed font-medium">
+              Specify the exact number of questions to pick for each section:
             </p>
 
-            <div className="space-y-4 text-xs font-medium">
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">Multiple Choice Questions (MCQs):</label>
+            <div className="space-y-4 text-xs font-semibold">
+              <div className="p-3 rounded-xl bg-blue-50/60 border border-blue-200">
+                <label className="block text-blue-900 mb-1">Multiple Choice Questions (MCQs):</label>
                 <input
                   type="number"
                   min="0"
-                  max={mcqQuestions.length}
+                  max={allQuestions.filter((q) => q.type === "mcq").length}
                   value={customCounts.mcqs}
                   onChange={(e) => setCustomCounts({ ...customCounts, mcqs: Number(e.target.value) })}
-                  className="w-full px-3 py-2 border rounded-lg text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-3 py-2 border rounded-lg text-sm font-black focus:ring-2 focus:ring-blue-500 outline-none bg-white text-slate-800"
                 />
               </div>
 
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">Short Questions:</label>
+              <div className="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200">
+                <label className="block text-emerald-900 mb-1">Short Questions:</label>
                 <input
                   type="number"
                   min="0"
-                  max={shortQuestions.length}
+                  max={allQuestions.filter((q) => q.type === "short").length}
                   value={customCounts.shorts}
                   onChange={(e) => setCustomCounts({ ...customCounts, shorts: Number(e.target.value) })}
-                  className="w-full px-3 py-2 border rounded-lg text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-3 py-2 border rounded-lg text-sm font-black focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-slate-800"
                 />
               </div>
 
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">Long Questions:</label>
+              <div className="p-3 rounded-xl bg-purple-50/60 border border-purple-200">
+                <label className="block text-purple-900 mb-1">Long / Detailed Questions:</label>
                 <input
                   type="number"
                   min="0"
-                  max={longQuestions.length}
+                  max={allQuestions.filter((q) => q.type === "long").length}
                   value={customCounts.longs}
                   onChange={(e) => setCustomCounts({ ...customCounts, longs: Number(e.target.value) })}
-                  className="w-full px-3 py-2 border rounded-lg text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-3 py-2 border rounded-lg text-sm font-black focus:ring-2 focus:ring-purple-500 outline-none bg-white text-slate-800"
                 />
               </div>
             </div>
@@ -908,13 +1035,13 @@ export default function SelectQuestionsPage() {
             <div className="pt-2 flex items-center justify-end gap-3">
               <button
                 onClick={() => setShowCustomModal(false)}
-                className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 font-semibold text-xs hover:bg-slate-50"
+                className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50"
               >
                 Cancel
               </button>
               <button
                 onClick={() => applyCustomPattern(customCounts.mcqs, customCounts.shorts, customCounts.longs)}
-                className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition-all"
+                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-md transition-all active:scale-95"
               >
                 Apply Selection
               </button>
@@ -927,7 +1054,7 @@ export default function SelectQuestionsPage() {
 }
 
 // =========================================================================
-// QUESTION CARD COMPONENT (Matching Screenshot 1)
+// VIBRANT, EYE-CATCHING QUESTION CARD COMPONENT
 // =========================================================================
 interface QuestionCardProps {
   index: number;
@@ -947,7 +1074,6 @@ function QuestionCard({
   const enTrans = question.translations?.find((t) => t.language === "en");
   const urTrans = question.translations?.find((t) => t.language === "ur");
 
-  // Lookup Urdu translation if not stored directly
   const dynamicUrdu = useMemo(() => {
     if (urTrans?.text) return { text_ur: urTrans.text, options_ur: urTrans.options };
     if (enTrans?.text) return getUrduTranslation(enTrans.text, enTrans.options);
@@ -961,42 +1087,52 @@ function QuestionCard({
   const optionsUr = dynamicUrdu.options_ur || [];
 
   return (
-    <div
+    <article
       onClick={onToggle}
-      className={`relative bg-white rounded-xl border p-4 text-xs transition-all cursor-pointer select-none flex flex-col justify-between ${
+      className={`group relative rounded-2xl border p-4 text-xs transition-all duration-200 cursor-pointer select-none flex flex-col justify-between ${
         isSelected
-          ? "border-blue-500 ring-2 ring-blue-500/20 shadow-md bg-blue-50/10"
-          : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
+          ? "border-indigo-400 bg-gradient-to-br from-indigo-50/90 via-blue-50/50 to-white ring-2 ring-indigo-500/40 shadow-lg shadow-indigo-100"
+          : "border-slate-200/90 bg-white hover:border-indigo-300 hover:shadow-md hover:shadow-indigo-950/5"
       }`}
     >
       {/* Top Header Row with Number and Badges */}
       <div>
-        <div className="flex items-center justify-between gap-2 pb-2.5 mb-2 border-b border-slate-100">
+        <div className="flex items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-slate-100">
           <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={isSelected}
-              onChange={() => {}} // handled by parent onClick
-              className="rounded text-blue-600 focus:ring-blue-500 pointer-events-none"
-            />
-            <span className="font-extrabold text-slate-800 text-sm">Q.{index}</span>
+            <div
+              className={`w-5 h-5 rounded-md flex items-center justify-center transition-colors ${
+                isSelected
+                  ? "bg-indigo-600 text-white shadow-xs"
+                  : "border-2 border-slate-300 group-hover:border-indigo-400"
+              }`}
+            >
+              {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+            </div>
+            <span
+              className={`font-black text-xs sm:text-sm tracking-tight ${
+                isSelected ? "text-indigo-950" : "text-slate-800"
+              }`}
+            >
+              Q.{index}
+            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
             {question.source === "exercise" && (
-              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-semibold border border-blue-200 text-[10px]">
+              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 text-[10px] flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 Exercise
               </span>
             )}
 
             {question.source_ref && (
-              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200 text-[10px]">
+              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold border border-blue-200 text-[10px]">
                 {question.source_ref}
               </span>
             )}
 
             {question.concept_tag && (
-              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-semibold border border-amber-200 text-[10px]">
+              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-bold border border-amber-200 text-[10px]">
                 {question.concept_tag}
               </span>
             )}
@@ -1008,22 +1144,22 @@ function QuestionCard({
           {languageMode === "Bilingual" ? (
             <div className="flex flex-col sm:flex-row items-start justify-between gap-3 text-slate-800 leading-relaxed">
               {/* English on Left */}
-              <div className="flex-1 font-semibold text-slate-900">
+              <div className="flex-1 font-bold text-slate-900 text-xs sm:text-sm">
                 <MathRenderer content={enTrans?.text || ""} />
               </div>
               {/* Urdu on Right */}
               {dynamicUrdu.text_ur && (
-                <div className="flex-1 text-right font-urdu text-sm text-blue-950 leading-loose" dir="rtl">
+                <div className="flex-1 text-right font-urdu text-sm sm:text-base text-indigo-950 leading-loose" dir="rtl">
                   <MathRenderer content={dynamicUrdu.text_ur} />
                 </div>
               )}
             </div>
           ) : showEnglish ? (
-            <div className="font-semibold text-slate-900 text-sm leading-relaxed">
+            <div className="font-bold text-slate-900 text-xs sm:text-sm leading-relaxed">
               <MathRenderer content={enTrans?.text || ""} />
             </div>
           ) : (
-            <div className="text-right font-urdu text-base text-blue-950 leading-loose" dir="rtl">
+            <div className="text-right font-urdu text-sm sm:text-base text-indigo-950 leading-loose" dir="rtl">
               <MathRenderer content={dynamicUrdu.text_ur || enTrans?.text || ""} />
             </div>
           )}
@@ -1032,7 +1168,7 @@ function QuestionCard({
 
       {/* Options Grid (for MCQs) */}
       {question.type === "mcq" && optionsEn.length > 0 && (
-        <div className="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-2 gap-2">
+        <div className="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {optionsEn.map((optEn, optIdx) => {
             const letter = String.fromCharCode(65 + optIdx);
             const isCorrect = question.correct_option === optIdx + 1;
@@ -1041,18 +1177,26 @@ function QuestionCard({
             return (
               <div
                 key={optIdx}
-                className={`p-1.5 rounded-md flex items-center justify-between gap-1 text-[11px] ${
+                className={`p-2 rounded-xl flex items-center justify-between gap-1.5 text-[11px] transition-colors ${
                   isCorrect
-                    ? "bg-emerald-50 text-emerald-800 font-bold border border-emerald-200"
-                    : "text-slate-600 bg-slate-50/50"
+                    ? "bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-900 font-extrabold border-2 border-emerald-400 shadow-2xs"
+                    : "text-slate-700 bg-slate-50 border border-slate-200/80 hover:bg-slate-100"
                 }`}
               >
-                <div className="flex items-center gap-1 overflow-hidden">
-                  <span className="font-extrabold text-slate-500 shrink-0">{letter})</span>
+                <div className="flex items-center gap-1.5 overflow-hidden">
+                  <span
+                    className={`w-5 h-5 rounded-full flex items-center justify-center font-black text-[10px] shrink-0 ${
+                      isCorrect
+                        ? "bg-emerald-600 text-white"
+                        : "bg-slate-200 text-slate-700"
+                    }`}
+                  >
+                    {letter}
+                  </span>
                   <span className="truncate">{optEn}</span>
                 </div>
                 {languageMode === "Bilingual" && optUr && (
-                  <span className="font-urdu text-xs text-slate-700 shrink-0 pr-1" dir="rtl">
+                  <span className="font-urdu text-xs text-slate-800 shrink-0 pr-1" dir="rtl">
                     {optUr}
                   </span>
                 )}
@@ -1061,6 +1205,6 @@ function QuestionCard({
           })}
         </div>
       )}
-    </div>
+    </article>
   );
 }
