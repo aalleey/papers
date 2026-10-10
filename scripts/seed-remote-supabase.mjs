@@ -43,12 +43,15 @@ function toValidUuid(id) {
     .replace(/^q0/g, "aa");
 }
 
-// Load computer 10 ch8 and ch1 data
+// Load computer 10 ch8, ch1, and ch2 data
 const computerCh8Path = path.resolve(__dirname, "../src/lib/data/computer10-ch8.json");
 const computerCh8Data = JSON.parse(fs.readFileSync(computerCh8Path, "utf-8"));
 
 const computerCh1Path = path.resolve(__dirname, "../src/lib/data/computer10-ch1.json");
 const computerCh1Data = JSON.parse(fs.readFileSync(computerCh1Path, "utf-8"));
+
+const computerCh2Path = path.resolve(__dirname, "../src/lib/data/computer10-ch2.json");
+const computerCh2Data = JSON.parse(fs.readFileSync(computerCh2Path, "utf-8"));
 
 // 1. Boards
 const boards = [
@@ -152,8 +155,9 @@ const chapters = [
   { id: toValidUuid("ch100000-0000-0000-0000-000000000005"), subject_id: toValidUuid("s1000000-0000-0000-0000-000000000001"), number: 5, title: "Sets and Functions", title_ur: "سیٹ اور تفاعلات" },
   { id: toValidUuid("ch100000-0000-0000-0000-000000000006"), subject_id: toValidUuid("s1000000-0000-0000-0000-000000000001"), number: 6, title: "Basic Statistics", title_ur: "بنیادی شماریات" },
   { id: toValidUuid("ch100000-0000-0000-0000-000000000007"), subject_id: toValidUuid("s1000000-0000-0000-0000-000000000001"), number: 7, title: "Introduction to Trigonometry", title_ur: "علم المثلث کا تعارف" },
-  { id: computerCh8Data.chapter.id, subject_id: computerCh8Data.chapter.subject_id, number: computerCh8Data.chapter.number, title: computerCh8Data.chapter.title, title_ur: computerCh8Data.chapter.title_ur },
   { id: computerCh1Data.chapter.id, subject_id: computerCh1Data.chapter.subject_id, number: computerCh1Data.chapter.number, title: computerCh1Data.chapter.title, title_ur: computerCh1Data.chapter.title_ur },
+  { id: computerCh2Data.chapter.id, subject_id: computerCh2Data.chapter.subject_id, number: computerCh2Data.chapter.number, title: computerCh2Data.chapter.title, title_ur: computerCh2Data.chapter.title_ur },
+  { id: computerCh8Data.chapter.id, subject_id: computerCh8Data.chapter.subject_id, number: computerCh8Data.chapter.number, title: computerCh8Data.chapter.title, title_ur: computerCh8Data.chapter.title_ur },
   { id: toValidUuid("ch100000-0000-0000-0000-000000000008"), subject_id: toValidUuid("s1000000-0000-0000-0000-000000000004"), number: 8, title: "Digital Entrepreneurship", title_ur: "ڈیجیٹل انٹرپرینیورشپ" },
 ];
 
@@ -166,7 +170,7 @@ const mathTopics = [
   { id: toValidUuid("t1000000-0000-0000-0000-000000000005"), chapter_id: toValidUuid("ch100000-0000-0000-0000-000000000003"), number: 1, title: "Ratio, Proportion and Variations", title_ur: "نسبت، تناسب اور تغیرات" },
   { id: toValidUuid("t1000000-0000-0000-0000-000000000006"), chapter_id: toValidUuid("ch100000-0000-0000-0000-000000000007"), number: 1, title: "Trigonometric Ratios and Identities", title_ur: "مثلثی نسبتیں اور مماثلتیں" },
 ];
-const topics = [...mathTopics, ...computerCh8Data.topics, ...computerCh1Data.topics];
+const topics = [...mathTopics, ...computerCh1Data.topics, ...computerCh2Data.topics, ...computerCh8Data.topics];
 
 // Parse seed.sql for math questions and translations
 const seedSqlPath = path.resolve(__dirname, "../supabase/seed.sql");
@@ -314,7 +318,21 @@ async function runSeed() {
     is_active: q.is_active,
     source_note: q.source_note || null,
   }));
-  const allQuestions = [...mathQuestions, ...comp8Questions, ...comp1Questions];
+  const comp2Questions = computerCh2Data.questions.map((q) => ({
+    id: q.id,
+    chapter_id: q.chapter_id,
+    topic_id: q.topic_id || null,
+    type: q.type,
+    source: q.source,
+    source_ref: q.source_ref || null,
+    concept_tag: q.concept_tag || null,
+    correct_option: q.correct_option || null,
+    marks: q.marks,
+    difficulty: q.difficulty,
+    is_active: q.is_active,
+    source_note: q.source_note || null,
+  }));
+  const allQuestions = [...mathQuestions, ...comp8Questions, ...comp1Questions, ...comp2Questions];
 
   // Chunk questions in batches of 50
   for (let i = 0; i < allQuestions.length; i += 50) {
@@ -328,7 +346,11 @@ async function runSeed() {
   console.log("8. Upserting question translations...");
   const mathTranslations = parseTranslationsFromSql();
   const compTranslations = [];
-  const allCompQuestions = [...computerCh8Data.questions, ...computerCh1Data.questions];
+  const allCompQuestions = [
+    ...computerCh8Data.questions,
+    ...computerCh1Data.questions,
+    ...computerCh2Data.questions,
+  ];
   for (const q of allCompQuestions) {
     if (q.translations && Array.isArray(q.translations)) {
       for (const t of q.translations) {

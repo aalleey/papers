@@ -1,0 +1,4888 @@
+{
+  "source_file": "Select Questions Chapter 02.html",
+  "subject": {
+    "id": "1def1b99-7726-55ec-8b98-17c3f3c85c6a",
+    "course_id": "ca100000-0000-0000-0000-000000000005",
+    "name": "Computer Science",
+    "name_ur": "کمپیوٹر سائنس"
+  },
+  "chapter": {
+    "id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+    "subject_id": "1def1b99-7726-55ec-8b98-17c3f3c85c6a",
+    "number": 2,
+    "title": "System Recovery and Advanced Maintenance",
+    "title_ur": "سسٹم ریکوری اور ایڈوانسڈ مینٹیننس"
+  },
+  "topics": [
+    {
+      "id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "number": 1,
+      "title": "Introduction to Post-Troubleshooting",
+      "title_ur": "پوسٹ ٹربل شوٹنگ کا تعارف"
+    },
+    {
+      "id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "number": 2,
+      "title": "Using Built-in Diagnostic Tools",
+      "title_ur": "بلٹ ان تشخیصی ٹولز کا استعمال"
+    },
+    {
+      "id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "number": 3,
+      "title": "System Recovery Options",
+      "title_ur": "سسٹم ریکوری کے اختیارات"
+    },
+    {
+      "id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "number": 4,
+      "title": "BIOS/UEFI and Boot Process Awareness",
+      "title_ur": "BIOS/UEFI اور بوٹ پروسیس کی آگاہی"
+    },
+    {
+      "id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "number": 5,
+      "title": "Data Recovery Techniques",
+      "title_ur": "ڈیٹا ریکوری کی تکنیکیں"
+    },
+    {
+      "id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "number": 6,
+      "title": "Best Practices for Preventive Maintenance",
+      "title_ur": "حفاظتی دیکھ بھال کے بہترین طریقے"
+    },
+    {
+      "id": "069b44d6-2f22-5221-abc1-6d80e9d6dc33",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "number": 7,
+      "title": "System Documentation and Logs",
+      "title_ur": "سسٹم ڈاکومنٹیشن اور لاگز"
+    }
+  ],
+  "questions": [
+    {
+      "id": "e4560833-8d5d-5122-8b58-36570d67d31a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-1",
+      "concept_tag": "Task Manager purpose",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Task Manager is mainly used to:",
+          "options": [
+            "Monitor running applications",
+            "Clean up disks",
+            "Scan for viruses",
+            "Manage files"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "574e3a08-4ffe-5c8b-a2ac-dab0c73506a5",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-2",
+      "concept_tag": "Safe Mode drivers",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Safe Mode starts Windows with:",
+          "options": [
+            "All drivers and services",
+            "Basic drivers only",
+            "Network services",
+            "Antivirus tools"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "14bd99d2-7794-53c5-ad82-b1d4647fa314",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-3",
+      "concept_tag": "Bootable USB purpose",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Bootable USB drives are used for:",
+          "options": [
+            "Installing games",
+            "System repair and recovery",
+            "Watching videos",
+            "Sending emails"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e0523a5f-c3a8-50ba-b0ed-e6c4231bd6a6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-4",
+      "concept_tag": "UEFI style",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In UEFI systems, a bootable USB must be created in:",
+          "options": [
+            "NTFS format",
+            "MBR style",
+            "GPT style",
+            "ZIP format"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cd44c6c4-cb96-53de-a3c5-6eddf8dbf171",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-5",
+      "concept_tag": "POST timing",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The Power-On Self-Test (POST) is performed:",
+          "options": [
+            "During system shutdown",
+            "After login",
+            "At system startup",
+            "When installing software"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c8779514-eb14-5b74-8c77-5cdafd378c96",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-6",
+      "concept_tag": "Tenorshare purpose",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Tenorshare is a tool used to:",
+          "options": [
+            "Play videos",
+            "Recover lost files",
+            "Create charts",
+            "Monitor CPU"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aa9290a0-cdbf-5462-866e-b89743e0c1ad",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-7",
+      "concept_tag": "File History function",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "File History helps to:",
+          "options": [
+            "Track website history",
+            "Save copies of personal files",
+            "Install apps",
+            "Scan for malware"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2c8559c-26ae-581a-9f5e-3c07d0915ae0",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-8",
+      "concept_tag": "Windows Defender function",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Windows Defender provides:",
+          "options": [
+            "File compression",
+            "Virus protection",
+            "Disk formatting",
+            "Music playback"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2293ce62-03cd-5a75-9b8e-b69e238b94da",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The process of taking actions to ensure a computer works properly after an issue is resolved is called:",
+          "options": [
+            "Troubleshooting",
+            "Post-troubleshooting maintenance",
+            "System installation",
+            "Hardware repair"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "35f7b709-51f1-55f4-aad4-7eb634bad662",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Purpose",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Regular maintenance keeps the system stable and prevents:",
+          "options": [
+            "Software installation",
+            "Internet connection",
+            "Future problems",
+            "User login"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "604b3588-4be6-5a98-9aed-2ba8ee04f04e",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Poor Maintenance",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Build-up of temporary files and unused programs causes ______ performance.",
+          "options": [
+            "Slow",
+            "Fast",
+            "High",
+            "Stable"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d4d3163e-29d1-5ef5-9cfe-5ad39d1b1774",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "System Failure",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If important system updates are not installed, the computer may:",
+          "options": [
+            "Run faster",
+            "Save power",
+            "Clean itself",
+            "Freeze or crash"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3522e9f6-8434-5db3-99eb-f01e79c8533f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Security",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Without regular updates, harmful software like ______ can enter the computer easily.",
+          "options": [
+            "Drivers",
+            "Viruses",
+            "Browsers",
+            "Libraries"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "674a828c-a7c0-5c2d-870f-03f31a4681ed",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Data Loss",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Important files can be lost during hardware failure if there are no:",
+          "options": [
+            "Monitors",
+            "Keyboards",
+            "Backups",
+            "Printers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "117c61d2-a462-5d7c-bb61-3f0edb738f4c",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Hardware Damage",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Dust and overheating can damage hardware if the system lacks proper:",
+          "options": [
+            "Ventilation",
+            "Internet",
+            "Software",
+            "Storage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "23047e6e-57ef-5726-89a9-dd21f52e4698",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Monitoring",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Checking system performance regularly is known as system health:",
+          "options": [
+            "Repairing",
+            "Installation",
+            "Formatting",
+            "Monitoring"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8ddcbdcc-7d0d-5222-9b64-010df2856aef",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Monitoring Tools",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Built-in tools in Windows allow you to check how much memory and ______ are being used.",
+          "options": [
+            "Electricity",
+            "Processing power",
+            "Ink",
+            "Paper"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2008de82-e514-545a-88c7-388fc5e216b4",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Efficiency",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Regular monitoring helps detect small issues before they become:",
+          "options": [
+            "Fast",
+            "Expensive",
+            "Serious",
+            "Deleted"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4a83cce7-3f06-5d7b-8b80-72ecb44cfed8",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Maintenance Example",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If a computer is slow due to full storage, deleting files improves speed for a:",
+          "options": [
+            "Short time",
+            "Long time",
+            "Lifetime",
+            "Few seconds"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "046778e2-475b-58c9-9edc-6d39de6630bf",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Disruptions",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Continuous maintenance ensures better performance and ______ disruptions.",
+          "options": [
+            "More",
+            "Fewer",
+            "Constant",
+            "Immediate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7ee2950e-1b29-5b62-bc6c-cca3c331bb33",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Health identification",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "System health monitoring helps identify programs that may ______ the computer.",
+          "options": [
+            "Upgrade",
+            "Charge",
+            "Repair",
+            "Slow down"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "037a9740-b3bb-52a9-9ef5-22acf560627c",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Ventilation math",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If ventilation efficiency drops to $\\frac{1}{2}$ of normal, the risk of hardware damage:",
+          "options": [
+            "Decreases",
+            "Stops",
+            "Increases",
+            "Stays same"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "140389dc-5813-5446-8f69-db60fc42f547",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Windows activity",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Microsoft Windows includes built-in tools to help monitor system:",
+          "options": [
+            "Furniture",
+            "Activity",
+            "Cables",
+            "Electricity"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f4a32110-8194-5583-8d77-8c24a0d02524",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Tool list",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which of the following is NOT one of the three diagnostic tools introduced in this section?",
+          "options": [
+            "Task Manager",
+            "Disk Defragmenter",
+            "Resource Monitor",
+            "Event Viewer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dd9f9cf2-f6b8-5ff1-8286-0acc0c5995d8",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task Manager shortcut",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which keyboard shortcut is used to open the Task Manager directly?",
+          "options": [
+            "$Alt + F4$",
+            "$Windows + L$",
+            "$Ctrl + Shift + Esc$",
+            "$Ctrl + Alt + Del$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cd229626-5840-5acb-a957-1018907f7cdc",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task Manager monitor",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Task Manager shows real-time information about which of the following?",
+          "options": [
+            "CPU, Memory, and Disk",
+            "Monitor resolution",
+            "Keyboard layout",
+            "Printer ink level"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6a7d1a86-eb5b-50aa-abdd-858079c3bddb",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task Manager tab",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which tab in Task Manager displays detailed graphs for CPU and memory usage?",
+          "options": [
+            "Processes",
+            "Startup",
+            "Users",
+            "Performance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "58f506b3-a313-56fa-8c61-e7b68d0b5984",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Frozen app",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If an application stops responding, you can close it by selecting it and clicking:",
+          "options": [
+            "Delete",
+            "End Task",
+            "Restart",
+            "Refresh"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3ac89f9c-1b9c-508d-b181-d01cdb80c209",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Resource Monitor level",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Compared to Task Manager, Resource Monitor gives a:",
+          "options": [
+            "Simpler view",
+            "Video game interface",
+            "Deeper/Detailed view",
+            "History of internet usage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "213ca884-cfa9-5d3e-b408-2feb5511514a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Resource Monitor command",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To open Resource Monitor via the Run dialog box, you type the command:",
+          "options": [
+            "taskmgr",
+            "eventvwr",
+            "explorer",
+            "resmon"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "045aefae-405b-5e91-b870-d83a2ec28e03",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RM Disk tab",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which tab in Resource Monitor identifies programs reading from or writing to the hard drive?",
+          "options": [
+            "Disk",
+            "CPU",
+            "Network",
+            "Memory"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "936ac963-d59f-5e31-9c12-5309f249e80c",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Event Viewer definition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which tool records detailed logs of system activities, errors, and warnings?",
+          "options": [
+            "Task Manager",
+            "Event Viewer",
+            "Resource Monitor",
+            "Control Panel"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3b603943-a951-52c2-aa42-20e946e18939",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Event Viewer command",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To open Event Viewer, type the command ______ in the Run dialog box.",
+          "options": [
+            "resmon",
+            "taskmgr",
+            "eventvwr",
+            "logviewer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6236588d-f20c-5ea9-9607-b614df45939b",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task Manager access",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "One way to open Task Manager is by right-clicking on the:",
+          "options": [
+            "Desktop icon",
+            "Start button",
+            "Title bar",
+            "Taskbar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a9611349-ef7b-5cd7-9920-a19c20b3e944",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RM Network tab",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which tab in Resource Monitor shows applications sending or receiving data over the internet?",
+          "options": [
+            "Network",
+            "Memory",
+            "CPU",
+            "Disk"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e8555dd7-f76a-5b30-b2d7-60fc69a0630b",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RM and Overheating",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Resource Monitor is especially helpful when the system is:",
+          "options": [
+            "Starting up",
+            "Overheating",
+            "Locked",
+            "Shutting down"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "25f1a731-dd08-5c59-a218-79c188b5558a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task Manager usage",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "You can view programs running silently in the background using:",
+          "options": [
+            "The Browser",
+            "Recycle Bin",
+            "Task Manager",
+            "My Computer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c531922e-665d-59ab-8776-5fefb039012d",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RM Memory tab",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The Memory tab in Resource Monitor displays how much memory is:",
+          "options": [
+            "Installed in total",
+            "Used, free, or reserved",
+            "On the graphics card",
+            "Needed for the next update"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4a1e4b3c-8bbb-5036-af8d-374afa02c466",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Run shortcut",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs16)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The shortcut key to open the 'Run' dialog box is:",
+          "options": [
+            "$Ctrl + R$",
+            "$Alt + R$",
+            "$Shift + R$",
+            "$Windows + R$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bb66e7f4-4fce-587e-ab28-297979bb268f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Tool information",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs17)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Built-in diagnostic tools help identify problems related to:",
+          "options": [
+            "Memory, storage, and processing power",
+            "Color of the desktop",
+            "Screen brightness",
+            "Keyboard sound"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c16bedd9-4a14-5a78-8c66-9a8710bc4ab6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task Manager Tab Content",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs18)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which tab of the Task Manager shows all active programs and their resource usage?",
+          "options": [
+            "History",
+            "Startup",
+            "Processes",
+            "Performance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0cc5c30d-d985-513e-93bf-ce8a889a02d1",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Event Viewer record",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs19)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Event Viewer records logs related to software, hardware, and:",
+          "options": [
+            "Screen resolution",
+            "Security",
+            "Wallpaper",
+            "Keyboard layout"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "40cea6de-7bf7-55af-bf93-ff932aa609de",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Diagnostic definition",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_MCqs20)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Built-in tools give useful information about the computer's:",
+          "options": [
+            "Current state",
+            "Price",
+            "Weight",
+            "Manufacture date"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "acb621c2-5232-5be3-b2b7-8430645e752d",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safe Mode definition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Safe Mode starts Windows with only the most ______ drivers and services.",
+          "options": [
+            "Advanced",
+            "Fundamental",
+            "Graphic-heavy",
+            "Third-party"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6810e2d0-df1f-52ef-97ac-58751bba6d70",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safe Mode access",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "On most modern systems, which key is pressed to enter Safe Mode after restarting from Startup Settings?",
+          "options": [
+            "$F1$",
+            "$F2$",
+            "$F8$",
+            "$F4$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "898044c5-1bd9-59a2-98e5-7e97e12a056c",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safe Mode networking",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To enter Safe Mode with Networking, which key should be pressed instead of $F4$?",
+          "options": [
+            "$F10$",
+            "$F12$",
+            "$F5$",
+            "$F6$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "94969b1a-dd9c-5a89-9406-a16c2c49b124",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Restore Points",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A saved snapshot of your system's settings and files is called a:",
+          "options": [
+            "Restore Point",
+            "System Call",
+            "Metadata",
+            "Bootable Media"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6efc6f03-78af-5072-a5f5-1c6e484242f9",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "System Restore data",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "System Restore allows you to take the computer back to an earlier state without:",
+          "options": [
+            "Restarting",
+            "Using memory",
+            "Deleting personal files",
+            "Using the mouse"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3c86548d-ed0f-52f9-93d0-74497744f152",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "MBR limit",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The Master Boot Record (MBR) partition style supports a disk size up to:",
+          "options": [
+            "$10\\text{ TB}$",
+            "$2\\text{ TB}$",
+            "$500\\text{ GB}$",
+            "$100\\text{ TB}$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5179d282-ee79-56fb-a6b2-dbd7336bf9fa",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "GPT partitions",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "GUID Partition Table (GPT) allows over how many partitions?",
+          "options": [
+            "$4$",
+            "$10$",
+            "$50$",
+            "$100$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "09f04a6c-2224-53c4-912f-07e4486f5092",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Rufus tool",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which free tool is mentioned for creating a bootable USB for Windows?",
+          "options": [
+            "Rufus",
+            "Word",
+            "Resmon",
+            "Eventvwr"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b7fd517d-afd7-5004-8e0f-339b749729e1",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "MBR partitions",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "MBR supports a maximum of ______ primary partitions.",
+          "options": [
+            "$1$",
+            "$2$",
+            "$4$",
+            "$100$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1b0ac92a-9160-576c-a57e-2d47ceecf93a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Older system access",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "On older systems, which key is pressed repeatedly before the Windows logo appears to access Safe Mode?",
+          "options": [
+            "$F5$",
+            "$F8$",
+            "$F10$",
+            "$F12$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "491341f6-ebaf-52de-a4f4-c0cd9707a5d5",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Restore creation",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Restore points are created automatically before:",
+          "options": [
+            "Shutting down",
+            "Opening browser",
+            "Typing text",
+            "System updates"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6bea8dbe-1bfa-5e9c-9a6d-0c6bf212ce76",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "UEFI requirement",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which partition style is required for UEFI-based systems?",
+          "options": [
+            "GPT",
+            "MBR",
+            "FAT32",
+            "NTFS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "72025b09-df90-5959-95e8-6e854e4dc398",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Bootable media usage",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Bootable recovery media is used when the system:",
+          "options": [
+            "Is fast",
+            "Is connected to Wi-Fi",
+            "Fails to start completely",
+            "Is playing music"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "978b855c-8fe1-5f44-ba3a-64c305df6687",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safe mode disabling",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Safe Mode disables unnecessary background programs and:",
+          "options": [
+            "The CPU",
+            "Startup software",
+            "The keyboard",
+            "Hard drive"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "77bd77aa-20cb-529c-9cd0-452fe01dc1cc",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "USB size",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "For creating a recovery drive, Windows usually requires a USB drive of at least:",
+          "options": [
+            "$2\\text{ GB}$",
+            "$4\\text{ GB}$",
+            "$8\\text{ GB}$",
+            "$16\\text{ GB}$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "50c2193b-89dd-5750-b51d-0efe5477701d",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Firmware definition",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Special software built into the motherboard that gives basic instructions on how to start is called:",
+          "options": [
+            "Application software",
+            "Hard drive data",
+            "Firmware",
+            "Operating system"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c76569cb-cd76-564b-8b8e-f12fcc53d681",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "BIOS abbreviation",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "BIOS stands for:",
+          "options": [
+            "Binary Input/Output Software",
+            "Basic Input/Output System",
+            "Built-in Operating Software",
+            "Basic Internal Operating System"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8da2377a-5f45-55f8-8bce-a71bd05ed6e2",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "UEFI mouse support",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which type of firmware supports a graphical menu and uses both mouse and keyboard?",
+          "options": [
+            "FAT32",
+            "NTFS",
+            "BIOS",
+            "UEFI"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c5b8b5bc-9ce8-5565-a210-419a5e6e70c3",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "POST full form",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "POST stands for:",
+          "options": [
+            "Power-On Self-Test",
+            "Process Output Startup Test",
+            "Primary Operating System Task",
+            "Program Output Security Tool"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d3b82899-5083-57d8-b42e-7f5e2b6ad6e0",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "POST Error",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If the RAM is missing during the POST test, the computer will:",
+          "options": [
+            "Start faster",
+            "Show a blue screen",
+            "Beep continuously",
+            "Shut down immediately"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "64ee6a58-ec38-58fb-b5d3-939ac6736e3c",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "UEFI modern use",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "UEFI is used in most modern computers because it is:",
+          "options": [
+            "Slower but cheaper",
+            "Faster and more secure",
+            "Text-only and basic",
+            "Dependent on hard drives"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f55f488e-12e5-5610-a4fe-ec697a2f595f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "BIOS History",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "BIOS was first developed in the:",
+          "options": [
+            "$2000s$",
+            "$1990s$",
+            "$1970s$",
+            "$1980s$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "119e347c-38a2-5593-8698-207de6e22ddb",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Firmware location",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Firmware is not stored on the hard drive; it is built into the:",
+          "options": [
+            "Motherboard",
+            "RAM",
+            "Processor",
+            "Monitor"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b755cf76-6b13-57d4-99e2-e2a3337d6437",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "BIOS keyboard",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Older firmware software (BIOS) works with the ______ only.",
+          "options": [
+            "Mouse",
+            "USB drive",
+            "Keyboard",
+            "Printer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8d744bf3-78b0-5689-a704-d5eaaa65d8b3",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Boot order definition",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The sequence in which the computer looks for a device to load the OS is called:",
+          "options": [
+            "Boot repair",
+            "System call",
+            "POST test",
+            "Boot order"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d54a5699-7ade-571e-a237-d001da9611ce",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Accessing BIOS",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Common keys to enter BIOS/UEFI settings include $F2$, $F10$, $Esc$, or:",
+          "options": [
+            "Enter",
+            "Del",
+            "Shift",
+            "Tab"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0292e9ee-8e39-5dd0-bfdf-911484497af1",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Reset Defaults",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To restore system settings to their original state, select:",
+          "options": [
+            "Load Setup Defaults",
+            "Save and Exit",
+            "Boot Order",
+            "POST test"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "46b7220b-7de0-5dd1-9446-17f995c842ff",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Missing files repair",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Computer start issues due to missing files can be fixed using:",
+          "options": [
+            "Format disk",
+            "BIOS update",
+            "Startup Repair",
+            "POST check"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "28e13ad4-1739-58bc-8862-589be88884bb",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Firmware persistence",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Firmware does not get ______ when the computer is turned off.",
+          "options": [
+            "Modified",
+            "Used",
+            "Accessed",
+            "Deleted"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "25c889f1-4cbd-58bf-8649-cca4b5f7aaa7",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Startup sequence",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The first thing firmware does after the computer is turned on is:",
+          "options": [
+            "Load Windows",
+            "Perform POST",
+            "Open Browser",
+            "Check Network"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abf2d66d-a2cf-571b-aa66-78cec5fbb5fd",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Method identification",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "There are ______ main ways to recover deleted files mentioned in the text.",
+          "options": [
+            "One",
+            "Two",
+            "Three",
+            "Four"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "00c6b42f-5e41-5a99-955f-d72ed95feea5",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Recycle Bin",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In Windows, deleted files usually go to the:",
+          "options": [
+            "Desktop",
+            "Control Panel",
+            "Recycle Bin",
+            "Hard Drive permanently"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bd4391f0-7624-5cd1-8613-db335b008537",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "File History",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which feature in Windows keeps copies of your files at regular intervals?",
+          "options": [
+            "File History",
+            "Task Manager",
+            "Safe Mode",
+            "BIOS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "53bab969-4b8c-5031-b21e-c5b96852fafe",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Previous Versions access",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To access 'Previous Versions', you must right-click the file and choose:",
+          "options": [
+            "Delete",
+            "Open",
+            "Restore",
+            "Properties"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "506c2301-8153-5ca8-aad3-74cf4b344cc9",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Third party tool",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Tenorshare is an example of a ______ recovery program.",
+          "options": [
+            "Built-in",
+            "Third-party",
+            "Hardware",
+            "Firmware"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ddea1c4f-036a-55b4-bf81-32a9706336d6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Scanning",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In Tenorshare, you must click ______ to start searching for lost files.",
+          "options": [
+            "Recover",
+            "Delete",
+            "Scan",
+            "Format"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2d40a2d-2c9b-5d96-9543-bc69e2e86c43",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Recovery Success",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Recovery success depends on whether new data has ______ the lost file.",
+          "options": [
+            "Opened",
+            "Encrypted",
+            "Copied",
+            "Overwritten"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "651b735d-1306-5051-9026-729516488b98",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Success Fraction",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If the success probability is $\\frac{1}{2}$ when a file is deleted recently, it might drop to ______ if overwritten.",
+          "options": [
+            "$0$",
+            "$\\frac{1}{2}$",
+            "$1$",
+            "$10^{2}$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8f0bfe74-a6df-5403-83ff-90d24d708515",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Smart Tip - Software Installation",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "You should never install recovery software on the ______ where the lost file was stored.",
+          "options": [
+            "Network",
+            "Same drive",
+            "External drive",
+            "Cloud storage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6162d452-08a0-5a0a-9bf7-6e57a215fbda",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Permanent Loss",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Files may be permanently lost if the ______ is emptied and no backups exist.",
+          "options": [
+            "RAM",
+            "BIOS",
+            "Recycle Bin",
+            "Folder"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "20c339e1-67f3-54a3-9f50-7c2bf916b6e9",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Device types",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Third-party software can scan hard drives, USBs, and:",
+          "options": [
+            "Monitors",
+            "Printers",
+            "Keyboards",
+            "Memory cards"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cc2fea9f-b54d-55e0-80cd-a1de73b4025a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safest restoration",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The easiest and safest way to restore deleted files is checking the ______ first.",
+          "options": [
+            "Tenorshare",
+            "Recycle Bin",
+            "BIOS Settings",
+            "Command Prompt"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a5b2b312-dec5-5481-9729-d0d1d9ea3506",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Formatted drive",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Recovery is not always possible if the hard drive is:",
+          "options": [
+            "Formatted or damaged",
+            "Newly bought",
+            "Connected to internet",
+            "Empty"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b52c3478-366b-575a-b00a-03651dcb57e2",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Previous Versions tab",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Previous Versions is found within which window?",
+          "options": [
+            "Settings",
+            "Control Panel",
+            "Task Manager",
+            "Properties"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5cd3f961-39d5-57a3-84b6-d192b8682f01",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Backup drive",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "File History requires connecting an external USB or:",
+          "options": [
+            "Speaker",
+            "Scanner",
+            "Hard drive",
+            "Monitor"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d95da5e7-dfab-57e1-a0f9-e7494d14f75c",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Simple tasks done to help avoid bigger computer problems in the future are called:",
+          "options": [
+            "Troubleshooting",
+            "Data recovery",
+            "Preventive maintenance",
+            "System installation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1627acbc-558f-5456-8dde-646d2946f11f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Disk Cleanup built-in",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Disk Cleanup is a ______ Windows tool that helps remove unnecessary files safely.",
+          "options": [
+            "Third-party",
+            "Built-in",
+            "Hardware-based",
+            "Recovered"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bfd2f485-36af-5eb6-a902-2cdee1756591",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Disk Cleanup files",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which of the following is removed by Disk Cleanup?",
+          "options": [
+            "Personal photos",
+            "Operating system",
+            "User accounts",
+            "Temporary internet files and system cache"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "9ee47529-cc32-5b3b-b705-eedfe9a31125",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Typical drive",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which drive is usually selected first for Disk Cleanup in Windows?",
+          "options": [
+            "C:",
+            "D:",
+            "E:",
+            "F:"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5fcef28f-a616-522b-8575-a5e3b8a797df",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Software updates/patches",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Software updates released by developers are also known as:",
+          "options": [
+            "Bugs",
+            "Viruses",
+            "Patches",
+            "Metadata"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2e150875-739a-5497-802b-97ec34424690",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Update purpose",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Patches are released regularly to fix bugs, add features, and:",
+          "options": [
+            "Delete user data",
+            "Improve security",
+            "Slow down the system",
+            "Empty the recycle bin"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ac0f9143-fe0c-5c56-a64f-d0e9ce6083ba",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Update types",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "There are ______ main types of software updates mentioned in the text.",
+          "options": [
+            "Four",
+            "Three",
+            "One",
+            "Two"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1ba74955-6acc-58d2-8c56-f4d465c58337",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Windows Defender",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which built-in security tool protects Windows from viruses and malware?",
+          "options": [
+            "Windows Defender",
+            "Disk Cleanup",
+            "Task Manager",
+            "Event Viewer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b4077c5d-c7dc-5401-9e85-0b6773f38e4f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Defender scan types",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To check common problem areas, Windows Defender offers a:",
+          "options": [
+            "System scan",
+            "Metadata scan",
+            "Quick Scan",
+            "Deep scan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e263174d-bc39-5fe2-83b3-618da8ea79b8",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Real-time protection",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Protection that alerts you if anything suspicious happens in the background is:",
+          "options": [
+            "Manual protection",
+            "Real-time protection",
+            "Post-troubleshooting",
+            "File history"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e0d0f609-d4de-5e34-9815-11bf25b29ac4",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Maintenance calendar",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Setting a regular schedule for basic maintenance tasks is called keeping a:",
+          "options": [
+            "Metadata log",
+            "System call",
+            "Registry",
+            "Maintenance calendar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a642d237-6771-5758-8c5d-6dd2b7f23a5c",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "069b44d6-2f22-5221-abc1-6d80e9d6dc33",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Documentation purpose",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_7_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Documentation makes it easier to ______ computer systems in the future.",
+          "options": [
+            "Sell",
+            "Manage and troubleshoot",
+            "Delete",
+            "Overheat"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a0c14f72-4f5f-552f-9ec4-3f11e2271404",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "069b44d6-2f22-5221-abc1-6d80e9d6dc33",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Records",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_7_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Keeping proper ______ is an important part of a computer system's maintenance.",
+          "options": [
+            "Records",
+            "Fans",
+            "Speakers",
+            "Cables"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "29f3a5fd-bb85-5c00-bfc5-9efc219a0618",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Cleanup efficiency",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If Disk Cleanup clears $2^{10}\\text{ MB}$, how much space is freed in GB?",
+          "options": [
+            "$2\\text{ GB}$",
+            "$0.5\\text{ GB}$",
+            "$1\\text{ GB}$",
+            "$10\\text{ GB}$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "43db74f6-b9f9-5353-89bc-889689b19c6e",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Update navigation",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To check for updates, go to Settings > ______ > Windows Update.",
+          "options": [
+            "Personalization",
+            "Network",
+            "Accounts",
+            "Update & Security"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4f8ed42b-8430-55e8-84f5-f382e39ef5f9",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-1",
+      "concept_tag": "Resource Monitor function",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Write one key function of the Resource Monitor."
+        }
+      ]
+    },
+    {
+      "id": "4eca0268-d057-5425-9aa2-a782c4dc8803",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-2",
+      "concept_tag": "Safe Mode use",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define the use of Safe Mode in system recovery."
+        }
+      ]
+    },
+    {
+      "id": "3bb7e72e-0313-5cc9-94c7-43739f38e5bf",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-3",
+      "concept_tag": "Rufus steps",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List the steps to create a bootable USB using Rufus."
+        }
+      ]
+    },
+    {
+      "id": "4ef0a586-5a9f-5869-a8d9-bed2f046baf2",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-4",
+      "concept_tag": "POST process",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What happens during the Power-On Self-Test (POST)?"
+        }
+      ]
+    },
+    {
+      "id": "b0a93b5f-717a-5dd6-8222-b8141e667c57",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-5",
+      "concept_tag": "Boot order importance",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is the boot order setting important when using recovery tools from a USB drive?"
+        }
+      ]
+    },
+    {
+      "id": "31486543-3c1f-535b-b8db-cc3bbc4715db",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-6",
+      "concept_tag": "Disk cleanup benefits",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List the two benefits of running regular disk cleanup."
+        }
+      ]
+    },
+    {
+      "id": "e27dea2f-83e8-5e3e-acd2-326c6aa23bc6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-7",
+      "concept_tag": "Windows Defender role",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does Windows Defender help in maintaining system health?"
+        }
+      ]
+    },
+    {
+      "id": "8e5f37c3-9cc4-5b53-a2c1-f0b94b7aec6b",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is post-troubleshooting maintenance?"
+        }
+      ]
+    },
+    {
+      "id": "02bb0aa7-a962-5b30-bb87-be668f8a544f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Stability",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is continuous maintenance important for a computer system?"
+        }
+      ]
+    },
+    {
+      "id": "98949cbf-a5b1-5981-9fed-b8b224417db8",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Storage issue",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What happens if unnecessary files are not removed regularly?"
+        }
+      ]
+    },
+    {
+      "id": "7516d4bc-1583-5a16-8aca-324dc5693f23",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Poor maintenance impacts",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List three common problems resulting from a lack of regular maintenance."
+        }
+      ]
+    },
+    {
+      "id": "5c5b6ec3-f5f6-502d-890c-8f2610cdaab6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Performance",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How do background processes affect computer performance if not managed?"
+        }
+      ]
+    },
+    {
+      "id": "2160240e-e666-5380-938e-d8a65eb2631f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "System Failure",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why can a computer fail to start due to poor maintenance?"
+        }
+      ]
+    },
+    {
+      "id": "e3e39707-1b9c-5c41-b7c1-26ceba6f5b0a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Security risk",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does lack of updates create security risks?"
+        }
+      ]
+    },
+    {
+      "id": "8c636d63-b25a-5965-a5db-9a1f5bcf765a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Data Loss",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is making backups considered essential maintenance?"
+        }
+      ]
+    },
+    {
+      "id": "fedffeb4-267b-5eb8-b372-26bfb9b8b3ff",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Hardware Damage",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What environmental factors can damage hardware components?"
+        }
+      ]
+    },
+    {
+      "id": "1d9bc8e6-6153-52db-a2c7-87a25317b749",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Monitoring Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define System Health Monitoring."
+        }
+      ]
+    },
+    {
+      "id": "acbdb426-247c-5f32-9363-869a5cefb59e",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Monitoring Functions",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List two things that built-in monitoring tools in Windows allow you to do."
+        }
+      ]
+    },
+    {
+      "id": "b3c937c9-9f7e-5705-a71e-be1e551527a9",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Resource identification",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How do monitoring tools help in identifying slow performance?"
+        }
+      ]
+    },
+    {
+      "id": "5f81e671-83ee-5176-b040-9cfee087c10e",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Timely Action",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the benefit of detecting small issues early through monitoring?"
+        }
+      ]
+    },
+    {
+      "id": "5c2284fb-6693-5102-abb8-d8dbf248660f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Maintenance Ratio",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If a computer is used for $x$ hours, why is regular maintenance still needed?"
+        }
+      ]
+    },
+    {
+      "id": "56e78919-5345-55fb-a616-67053ee8c393",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "912cbee7-8dc8-55b6-a55f-eedc746b36f8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Hardware Safety",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_1_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can a user prevent hardware damage through maintenance?"
+        }
+      ]
+    },
+    {
+      "id": "d2c52847-4f55-57c8-8617-caf63eb09d67",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Purpose",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the purpose of built-in diagnostic tools in modern operating systems?"
+        }
+      ]
+    },
+    {
+      "id": "1dca726d-0f2a-564e-bc4f-f522dbb692c1",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task Manager definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define Task Manager in Microsoft Windows."
+        }
+      ]
+    },
+    {
+      "id": "4fb97c05-543d-5fbe-b176-54cb6177d6aa",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task Manager tabs",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Distinguish between the 'Processes' and 'Performance' tabs of Task Manager."
+        }
+      ]
+    },
+    {
+      "id": "1597a873-f931-5849-9657-a32db951aea2",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Open Task Manager",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List two simple ways to open Task Manager."
+        }
+      ]
+    },
+    {
+      "id": "f4a58ed3-6eda-58a3-8967-d0b95e080aca",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "End Task function",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "When is the 'End Task' feature helpful in Task Manager?"
+        }
+      ]
+    },
+    {
+      "id": "8c58e512-83e5-550f-af5e-a992c3592c9a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Resource Monitor definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is Resource Monitor?"
+        }
+      ]
+    },
+    {
+      "id": "fbeac29a-7282-5ec8-be51-133dc0aa40c6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Open Resource Monitor",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can you open Resource Monitor?"
+        }
+      ]
+    },
+    {
+      "id": "31229e48-239d-532b-8135-ab2708a2cd5f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RM CPU tab",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What information does the CPU Tab in Resource Monitor provide?"
+        }
+      ]
+    },
+    {
+      "id": "c7a032ec-3f3e-5803-83ea-5ad94201bb61",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RM Memory tab",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Describe the function of the Memory Tab in Resource Monitor."
+        }
+      ]
+    },
+    {
+      "id": "e0ba69fd-5019-5e77-a11e-4afe5960fba3",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RM Disk tab",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the purpose of the Disk Tab in Resource Monitor?"
+        }
+      ]
+    },
+    {
+      "id": "c7ef67e9-efa8-5b5e-ac29-61cd1dfccc25",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "RM Network tab",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain what the Network Tab in Resource Monitor shows."
+        }
+      ]
+    },
+    {
+      "id": "c09b4ea7-b1e9-5c13-891a-d3794ddebcae",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Event Viewer definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the Event Viewer tool used for?"
+        }
+      ]
+    },
+    {
+      "id": "73a73b21-f777-50d2-88a3-5f8a719aa004",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Open Event Viewer",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can a user open the Event Viewer?"
+        }
+      ]
+    },
+    {
+      "id": "385895f4-e345-5b85-8657-b3dbdf0f13d6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Monitoring small issues",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does regular monitoring with diagnostic tools help avoid serious problems?"
+        }
+      ]
+    },
+    {
+      "id": "4b7c5785-ae74-52e0-90e7-af76acc9002e",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Resource Monitor overhearing",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "When is Resource Monitor particularly helpful?"
+        }
+      ]
+    },
+    {
+      "id": "ac4e17f2-eb3e-516f-9408-98e4209c858b",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Task Manager real-time",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ16)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What real-time graphs are available in Task Manager?"
+        }
+      ]
+    },
+    {
+      "id": "6db3d5db-6d3f-5f88-b08b-eca939811d39",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Diagnostic information type",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ17)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Name three areas of problems that diagnostic tools help identify."
+        }
+      ]
+    },
+    {
+      "id": "f13b1818-fbb9-5bb1-b699-20f719f8eb72",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "EV Logs",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ18)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What types of logs does Event Viewer record?"
+        }
+      ]
+    },
+    {
+      "id": "22ee958d-4fd6-5e8f-bec7-51f4a80bfd1e",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Silent programs",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ19)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can you check for programs running silently in the background?"
+        }
+      ]
+    },
+    {
+      "id": "9c348847-b124-5b84-993d-f832db76a9e3",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "456e1f94-f63c-561d-9a72-64deaa03970d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Diagnostic goal",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_2_SQ20)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the ultimate goal of using these built-in tools?"
+        }
+      ]
+    },
+    {
+      "id": "3008f601-3f12-5215-99c1-5844211bde1a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safe Mode definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is Safe Mode?"
+        }
+      ]
+    },
+    {
+      "id": "e33920a9-00b1-550f-aeb6-b3ec5c5ac0d2",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safe Mode timing",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List two situations where Safe Mode is useful."
+        }
+      ]
+    },
+    {
+      "id": "94c4ae25-5c01-5e7d-b0ad-eeba599e9a12",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Networking version",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why would a user choose 'Safe Mode with Networking'?"
+        }
+      ]
+    },
+    {
+      "id": "1a4a4bc8-1405-55bb-82b2-ffd59f833ec5",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safe Mode Precautions",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Mention two precautions to follow while using Safe Mode."
+        }
+      ]
+    },
+    {
+      "id": "27d662ab-f5d5-58b1-af88-336f052fa8f8",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "System Restore definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What does System Restore do?"
+        }
+      ]
+    },
+    {
+      "id": "fb567865-6a3e-595a-a3b6-46e328c4e112",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Restore point definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define a Restore Point."
+        }
+      ]
+    },
+    {
+      "id": "df9d5481-10fd-5833-8f9e-8347a0b0c28e",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Restore creation manual",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can a user manually create a restore point?"
+        }
+      ]
+    },
+    {
+      "id": "71bfff82-f51b-5ed5-b5ba-80a5b5d42d14",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Bootable Media definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is Bootable Recovery Media?"
+        }
+      ]
+    },
+    {
+      "id": "af2ecb4c-e7a2-58f2-bcba-6483788dcff8",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Bootable tools",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List two tools available within built-in recovery after starting from bootable media."
+        }
+      ]
+    },
+    {
+      "id": "56b164cf-caaf-5c76-a114-7b3eef9c8bf2",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Rufus and ISO",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is required to create a bootable USB using Rufus?"
+        }
+      ]
+    },
+    {
+      "id": "f18b3fc3-d401-5718-b462-807c60b7ec45",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "MBR vs GPT",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Differentiate between MBR and GPT partition styles."
+        }
+      ]
+    },
+    {
+      "id": "ea4607ab-a869-53c1-8e08-2de930fbcbe5",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Check partition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can you check the partition style of a drive in Windows?"
+        }
+      ]
+    },
+    {
+      "id": "25e543a4-bdec-55f6-8bbb-d505c78dac50",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Boot mismatch",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What happens if you create an MBR USB for a GPT system?"
+        }
+      ]
+    },
+    {
+      "id": "f271a52e-8240-569e-a513-8b0a644cdf53",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "UEFI mention",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why do modern operating systems prefer GPT over MBR?"
+        }
+      ]
+    },
+    {
+      "id": "c53f528a-5e26-5ce4-b0b8-80a1dd085be4",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "dbec43dd-e781-58dc-b61f-65356142625d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Recovery drive purpose",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_3_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the main objective of creating a recovery drive?"
+        }
+      ]
+    },
+    {
+      "id": "aa851647-ff42-5007-a42b-405b3936bfee",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Firmware definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is firmware and where is it located?"
+        }
+      ]
+    },
+    {
+      "id": "8136d8b6-2e14-512c-a9c0-ac212050be84",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "BIOS vs UEFI",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Differentiate between BIOS and UEFI."
+        }
+      ]
+    },
+    {
+      "id": "5c6bc7b9-6da0-52b0-a74d-108e8b366231",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Full forms",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Write the full forms of BIOS and UEFI."
+        }
+      ]
+    },
+    {
+      "id": "1a359251-dff0-5f75-84ca-a06388d39563",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Firmware Role",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Mention two roles of BIOS/UEFI in starting a computer."
+        }
+      ]
+    },
+    {
+      "id": "e1b73297-9490-5e5b-a9e2-2cddd2f7e48a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "POST definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define the POST test."
+        }
+      ]
+    },
+    {
+      "id": "6285d519-8c6f-58f8-8e82-307c896f4847",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "POST Error example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What happens if hardware is faulty during the POST test? Give an example."
+        }
+      ]
+    },
+    {
+      "id": "948ff652-aec5-5d8b-9604-b43df70da6d6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Accessing settings",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can you open BIOS/UEFI settings?"
+        }
+      ]
+    },
+    {
+      "id": "ab163818-c69c-5f27-ac57-ae19861252c2",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Reset Defaults purpose",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why would a user need to 'Reset to Default' settings in BIOS?"
+        }
+      ]
+    },
+    {
+      "id": "6126830c-7657-5c81-9251-5a4bbbd60c55",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Boot Order definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is meant by 'Boot Order'?"
+        }
+      ]
+    },
+    {
+      "id": "8c9f4d72-b518-5780-be9b-481c176c82f6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Change Boot Order",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How do you change the boot order in BIOS settings?"
+        }
+      ]
+    },
+    {
+      "id": "9e93e07d-0e0e-5f7a-b1f9-0c7ea4194d00",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Boot Repair",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can startup issues due to missing system files be fixed?"
+        }
+      ]
+    },
+    {
+      "id": "1d7ecf2b-2ad7-5737-8516-389cb24aa0fe",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "BIOS History logic",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Compare the eras of BIOS and UEFI development."
+        }
+      ]
+    },
+    {
+      "id": "d9a115af-ed0c-57a1-b957-eb6128dc246a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Firmware persistence check",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Does firmware get deleted when the computer power is turned off?"
+        }
+      ]
+    },
+    {
+      "id": "ca5283af-4332-5a2f-b0ec-8df8a370b4db",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "System settings",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which system settings can a user change through BIOS/UEFI?"
+        }
+      ]
+    },
+    {
+      "id": "cadd059d-8b19-505c-bbaf-62fd41b6211d",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "d370bb98-0c25-5b16-8560-1515be937aba",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Hidden steps",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_4_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What controls the early steps after pressing the power button?"
+        }
+      ]
+    },
+    {
+      "id": "f3ad4e2a-91ec-5662-9230-4a99da37d228",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Two ways",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List the two main ways to recover deleted files."
+        }
+      ]
+    },
+    {
+      "id": "6bb12b28-4eeb-58b7-b7b9-405a9feca071",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Recycle Bin definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does the Recycle Bin help in data recovery?"
+        }
+      ]
+    },
+    {
+      "id": "9a8e38f5-78f9-5527-97b4-7ec50e240021",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "File History definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define File History in Windows."
+        }
+      ]
+    },
+    {
+      "id": "255921a3-1f38-5b2c-abe5-1dd90b40848a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Accessing Previous Versions",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can a user restore a file using 'Previous Versions'?"
+        }
+      ]
+    },
+    {
+      "id": "bd919fd5-1263-505d-8140-9f58ce845584",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Tenorshare usage",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "When should a user try using third-party software like Tenorshare?"
+        }
+      ]
+    },
+    {
+      "id": "0372befa-9027-52da-a1ad-a6ebcc983b70",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Tenorshare devices",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which storage devices can be scanned by Tenorshare?"
+        }
+      ]
+    },
+    {
+      "id": "1fba0131-a698-5160-8927-42ea97c70b22",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Tenorshare steps",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List the four steps to use Tenorshare."
+        }
+      ]
+    },
+    {
+      "id": "891055f7-9861-5ccd-ac16-acd8a85111eb",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Success factors",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What two factors determine recovery success?"
+        }
+      ]
+    },
+    {
+      "id": "1d567799-f226-55d9-96b6-f71b2cbdf9fb",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Recovery limitation 1",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is recovery difficult for files deleted a long time ago?"
+        }
+      ]
+    },
+    {
+      "id": "9681482f-8603-52fc-b909-c58e4cffba0f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Formatted HDD",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Can data always be recovered from a damaged hard drive?"
+        }
+      ]
+    },
+    {
+      "id": "eb15a475-2129-539c-89ec-f76cf1bccc7c",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Smart Tip 1",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Where should you avoid installing recovery software?"
+        }
+      ]
+    },
+    {
+      "id": "346452a0-9cb9-5b49-9bb0-aed611b4432d",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Safe restore tip",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is the Recycle Bin considered the safest way to restore files?"
+        }
+      ]
+    },
+    {
+      "id": "4ab6efd9-e6cf-5477-a8ca-8309c75b837a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Storage Tip",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why should users avoid saving new files to the same drive after deletion?"
+        }
+      ]
+    },
+    {
+      "id": "1c39760b-67b0-5ff6-8cbe-caf9fe6142a5",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Math Probability",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If a file exists in $2^{n}$ blocks, why does fragmentation make recovery hard?"
+        }
+      ]
+    },
+    {
+      "id": "d26ec966-c858-523c-a2e0-fff92e1622de",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "96b5eb05-8793-598c-bc1f-598d257f0e7b",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Enabling File History",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_5_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can a user turn on File History in Windows?"
+        }
+      ]
+    },
+    {
+      "id": "f3eae0f6-7faf-54ff-9df1-80a254c3149b",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Preventive Maintenance Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define preventive maintenance in computers."
+        }
+      ]
+    },
+    {
+      "id": "6b624f17-277c-5ded-8643-64e08518421a",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Disk Cleanup Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the purpose of the Disk Cleanup tool?"
+        }
+      ]
+    },
+    {
+      "id": "39a9b881-631c-5899-ba06-6e724ae6ec08",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Cleanup Files",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List three types of unnecessary files collected by a computer over time."
+        }
+      ]
+    },
+    {
+      "id": "55553f6f-b364-56cc-b3db-72c77242c51f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Patch Management Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are software patches?"
+        }
+      ]
+    },
+    {
+      "id": "719b32ed-5474-56e0-adf5-47ef4cb59a30",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Update Importance",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is keeping your system updated important?"
+        }
+      ]
+    },
+    {
+      "id": "a8eea367-d25c-55b7-9e6e-18d9789953cb",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Update types",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Mention the two types of software updates."
+        }
+      ]
+    },
+    {
+      "id": "15f32d15-cf48-504a-bb63-3af16a47a2d6",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Windows Defender Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is Windows Defender?"
+        }
+      ]
+    },
+    {
+      "id": "edc4a223-a663-5ae9-99fa-1c2ac88ed149",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Defender Scans",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Differentiate between a Quick Scan and a Full Scan in Windows Defender."
+        }
+      ]
+    },
+    {
+      "id": "f0dfe10e-54ef-5cb5-85ba-15e4e073c909",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Real-time Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is real-time protection in Windows Defender?"
+        }
+      ]
+    },
+    {
+      "id": "ef5feb2a-8cd9-5966-87d0-5d32aa94d3d9",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Maintenance Calendar",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is a maintenance calendar?"
+        }
+      ]
+    },
+    {
+      "id": "66adbde5-84f8-59bd-a333-5b7dcc1afe90",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "069b44d6-2f22-5221-abc1-6d80e9d6dc33",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Documentation Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_7_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is system documentation?"
+        }
+      ]
+    },
+    {
+      "id": "2fcc5dcd-f867-56c0-becd-0791c4349f19",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "069b44d6-2f22-5221-abc1-6d80e9d6dc33",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Documentation Benefit",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_7_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is keeping proper records of system maintenance important?"
+        }
+      ]
+    },
+    {
+      "id": "1a30208b-b675-5411-bf64-379e18f60cf5",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Disk Cleanup Step",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can you open the Disk Cleanup tool in Windows?"
+        }
+      ]
+    },
+    {
+      "id": "09f9b04d-abcb-5d36-937a-e912bd879017",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "804ece30-2441-5d01-85e7-fd518c51ab0e",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Update Step",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_6_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give the steps to check for updates in Windows."
+        }
+      ]
+    },
+    {
+      "id": "38c8bfb3-0fd7-516e-aa64-29e94df29b10",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": "069b44d6-2f22-5221-abc1-6d80e9d6dc33",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Log Example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_2_7_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give two examples of actions that should be documented in a maintenance log."
+        }
+      ]
+    },
+    {
+      "id": "e740f0c6-e6b5-541c-b1be-bb9019226aa2",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-1",
+      "concept_tag": "Task Manager and Event Viewer roles",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_LQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the roles of Task Manager and Event Viewer in system maintenance. Give one example for each tool where it can help solve a problem."
+        }
+      ]
+    },
+    {
+      "id": "ac4ce744-3718-54e7-94fd-6763486d950e",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-2",
+      "concept_tag": "System Restore vs Bootable USB",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_LQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Your computer is not starting properly due to a system issue. Describe how System Restore or a bootable recovery USB can be used to fix the problem without deleting personal files."
+        }
+      ]
+    },
+    {
+      "id": "f5366878-aafd-5850-bf86-8281fd6d04b3",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-3",
+      "concept_tag": "Preventive maintenance techniques",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_LQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Briefly explain any two preventive maintenance techniques that help to keep a computer running smoothly."
+        }
+      ]
+    },
+    {
+      "id": "d4e08d2c-18d9-5456-9194-85f80c234fdf",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-4",
+      "concept_tag": "Third-party recovery and limitations",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_LQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain how deleted files can be recovered using a third-party software. Also, discuss why recovery may not always be successful."
+        }
+      ]
+    },
+    {
+      "id": "07231bd7-46a5-58d3-b082-b3bfc74bb85f",
+      "chapter_id": "68fc022a-f4b1-53f8-a133-2946135d88db",
+      "topic_id": null,
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-5",
+      "concept_tag": "Disk Cleanup detailed steps",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 02.html (id Comp10_Ex_2_LQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A classmate wants to clean up disk space after a large Windows update. Explain how to use Disk Cleanup, including the option to remove system files safely."
+        }
+      ]
+    }
+  ],
+  "skipped_duplicates": []
+}

@@ -262,7 +262,7 @@ export default function CsvImportPage() {
                 {file ? file.name : "Click to select a CSV file"}
               </span>
               <p className="text-xs text-slate-400 mt-0.5">
-                Supports .csv files formatted per the official Paper Maker template.
+                Supports .csv files formatted per the official PaperWala template.
               </p>
             </div>
           </label>

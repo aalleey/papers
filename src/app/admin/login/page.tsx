@@ -47,12 +47,15 @@ export default function AdminLoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-xl shadow-emerald-900/40 mb-4 ring-8 ring-emerald-500/10">
             <BookOpen className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">Paper Maker</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center justify-center gap-2">
+            <span>PaperWala</span>
+            <span className="font-urdu text-emerald-400 text-2xl font-normal">پیپر والا</span>
+          </h1>
           <p className="text-sm text-slate-400 mt-1">
             Question Bank & Examination Management System
           </p>
           <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            Phase 1 Admin Portal
+            Official Admin Portal
           </div>
         </div>
 
@@ -136,7 +139,7 @@ export default function AdminLoginPage() {
         </div>
 
         <p className="text-center text-xs text-slate-500 mt-6">
-          Paper Maker &copy; 2026. Tailored for Punjab, Federal, and Provincial Pakistani Boards.
+          PaperWala (پیپر والا) &copy; 2026. Tailored for Punjab, Federal, and Provincial Pakistani Boards.
         </p>
       </div>
     </div>

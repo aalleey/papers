@@ -73,18 +73,28 @@ export default function SelectQuestionsPage() {
     longs: 2,
   });
 
-  // 1. Initial Load: Fetch Chapter 8 (or chapters for Computer Science)
+  // 1. Initial Load: Fetch Chapter 2 (or chapter specified in URL)
   useEffect(() => {
     async function loadData() {
       try {
         setLoading(true);
-        const res = await fetch("/api/paper/questions?chapter_id=ac5b38de-123c-51fc-a96b-1ecaff9762ce");
+        const searchParams = new URLSearchParams(window.location.search);
+        const urlChap = searchParams.get("chapter");
+        const urlChapId = searchParams.get("chapter_id");
+
+        // Map known chapter numbers or use provided chapter_id
+        let initialChapterId = urlChapId || "68fc022a-f4b1-53f8-a133-2946135d88db"; // Default Chapter 2
+        if (urlChap === "1") initialChapterId = "81fef04e-6a53-5018-9051-fdb1c36775d9";
+        if (urlChap === "8") initialChapterId = "ac5b38de-123c-51fc-a96b-1ecaff9762ce";
+        if (urlChap === "2") initialChapterId = "68fc022a-f4b1-53f8-a133-2946135d88db";
+
+        const res = await fetch(`/api/paper/questions?chapter_id=${initialChapterId}`);
         const data = await res.json();
 
         if (data.chapters?.length) {
           setChapters(data.chapters);
-          const ch8 = data.chapters.find((c: Chapter) => c.number === 8) || data.chapters[0];
-          setCurrentChapter(ch8);
+          const activeCh = data.chapters.find((c: Chapter) => c.id === initialChapterId) || data.chapters[0];
+          setCurrentChapter(activeCh);
         }
 
         if (data.topics?.length) {
@@ -123,6 +133,11 @@ export default function SelectQuestionsPage() {
     setCurrentChapter(ch);
     setLoading(true);
     try {
+      // Update browser URL query without reload
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.set("chapter_id", ch.id);
+      window.history.replaceState({}, "", newUrl.toString());
+
       const res = await fetch(`/api/paper/questions?chapter_id=${ch.id}`);
       const data = await res.json();
       if (data.topics) setTopics(data.topics);
@@ -285,7 +300,9 @@ export default function SelectQuestionsPage() {
       <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6 text-slate-700">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
         <h2 className="text-lg font-bold text-slate-800">Loading Question Bank...</h2>
-        <p className="text-xs text-slate-500 mt-1">Fetching Class 10 Computer Science Chapter 8</p>
+        <p className="text-xs text-slate-500 mt-1">
+          Fetching Class 10 Computer Science {currentChapter ? `Unit-${currentChapter.number}` : "Chapter 2"}
+        </p>
       </div>
     );
   }
@@ -312,9 +329,12 @@ export default function SelectQuestionsPage() {
                   <h1 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
                     <span>Select: Computer</span>
                     <span className="font-urdu text-blue-700 text-lg">کمپیوٹر</span>
+                    <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200">
+                      PaperWala پیپر والا
+                    </span>
                   </h1>
                   <div className="text-xs text-slate-500 font-medium">
-                    Punjab Boards &bull; 10th (New) 2026-27 &bull; Unit-8 Digital Entrepreneurship
+                    Punjab Boards &bull; 10th (New) 2026-27 &bull; Unit-{currentChapter?.number || 2}: {currentChapter?.title || "System Recovery and Advanced Maintenance"}
                   </div>
                 </div>
               </div>
@@ -459,8 +479,8 @@ export default function SelectQuestionsPage() {
               </div>
             </div>
 
-            {/* Chapter Header row */}
-            <div className="flex items-center justify-center gap-3 pt-2">
+            {/* Chapter Navigation row (matches ref Chapter Header) */}
+            <div className="flex items-center justify-between gap-3 pt-2 px-1 border-t border-slate-100 mt-2">
               <button
                 onClick={() => {
                   if (!currentChapter) return;
@@ -468,21 +488,23 @@ export default function SelectQuestionsPage() {
                   if (curIdx > 0) handleChapterChange(chapters[curIdx - 1].id);
                 }}
                 disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) <= 0}
-                className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:text-slate-300 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
+                className="px-4 py-1.5 rounded bg-[#1976d2] hover:bg-[#1565c0] text-white disabled:bg-[#cfd8dc] disabled:text-slate-400 font-bold text-xs transition-colors disabled:cursor-not-allowed shadow-sm shrink-0"
               >
                 Prev
               </button>
-              <select
-                value={currentChapter?.id || ""}
-                onChange={(e) => handleChapterChange(e.target.value)}
-                className="font-bold text-slate-800 text-sm bg-slate-100 hover:bg-slate-200 px-4 py-1 rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-center"
-              >
-                {chapters.map((ch) => (
-                  <option key={ch.id} value={ch.id}>
-                    Unit-{ch.number}: {ch.title}
-                  </option>
-                ))}
-              </select>
+              <div className="flex-1 max-w-xl text-center">
+                <select
+                  value={currentChapter?.id || ""}
+                  onChange={(e) => handleChapterChange(e.target.value)}
+                  className="w-full font-bold text-slate-800 text-xs sm:text-sm bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-center"
+                >
+                  {chapters.map((ch) => (
+                    <option key={ch.id} value={ch.id}>
+                      Unit-{ch.number}: {ch.title} {ch.title_ur ? `(${ch.title_ur})` : ""}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <button
                 onClick={() => {
                   if (!currentChapter) return;
@@ -490,7 +512,7 @@ export default function SelectQuestionsPage() {
                   if (curIdx < chapters.length - 1) handleChapterChange(chapters[curIdx + 1].id);
                 }}
                 disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) >= chapters.length - 1}
-                className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:text-slate-300 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
+                className="px-4 py-1.5 rounded bg-[#1976d2] hover:bg-[#1565c0] text-white disabled:bg-[#cfd8dc] disabled:text-slate-400 font-bold text-xs transition-colors disabled:cursor-not-allowed shadow-sm shrink-0"
               >
                 Next
               </button>
@@ -571,7 +593,7 @@ export default function SelectQuestionsPage() {
                       className="rounded text-blue-600 pointer-events-none shrink-0"
                     />
                     <span className="line-clamp-2">
-                      8.{t.number} {t.title}
+                      {/^\d+\./.test(t.title) ? t.title : `${currentChapter?.number || 2}.${t.number} ${t.title}`}
                     </span>
                   </div>
                   <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-medium shrink-0">

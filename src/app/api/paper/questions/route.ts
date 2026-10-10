@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
   try {
     // 1. If subjectId or courseId is given, fetch chapters/topics
-    const [boards, classes, courses, subjects, chapters, topics] = await Promise.all([
+    let [boards, classes, courses, subjects, allChapters, topics] = await Promise.all([
       db.getBoards(),
       db.getClasses(),
       db.getCourses(),
@@ -20,6 +20,15 @@ export async function GET(req: NextRequest) {
       db.getChapters(subjectId),
       db.getTopics(chapterId),
     ]);
+
+    // If subjectId wasn't passed but chapterId was, scope chapters to that chapter's subject
+    let chapters = allChapters;
+    if (!subjectId && chapterId) {
+      const activeCh = allChapters.find((c) => c.id === chapterId);
+      if (activeCh) {
+        chapters = allChapters.filter((c) => c.subject_id === activeCh.subject_id);
+      }
+    }
 
     // 2. Fetch questions
     const questions = await db.getQuestions({

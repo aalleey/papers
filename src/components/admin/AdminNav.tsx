@@ -67,7 +67,7 @@ export function AdminNav({ user }: AdminNavProps) {
             <BookOpen className="w-4 h-4" />
           </div>
           <div>
-            <span className="font-bold text-sm">Paper Maker</span>
+            <span className="font-bold text-sm">PaperWala</span>
             <span className="text-[10px] text-emerald-400 block -mt-0.5">Admin Area</span>
           </div>
         </div>
@@ -102,7 +102,10 @@ export function AdminNav({ user }: AdminNavProps) {
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <div className="font-bold text-white text-base tracking-tight leading-none">Paper Maker</div>
+              <div className="font-bold text-white text-base tracking-tight leading-none flex items-center gap-1.5">
+                <span>PaperWala</span>
+                <span className="font-urdu text-emerald-400 text-sm font-normal">پیپر والا</span>
+              </div>
               <div className="text-[11px] text-emerald-400 font-medium mt-1">Admin Dashboard</div>
             </div>
           </div>

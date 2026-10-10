@@ -38,7 +38,7 @@ export default function PaperEditorPage() {
   const [paperTypeBanner, setPaperTypeBanner] = useState("EXAMINATION 2026-27");
   const [subjectTitle, setSubjectTitle] = useState("Computer کمپوٹر");
   const [classNameText, setClassNameText] = useState("10th");
-  const [syllabusText, setSyllabusText] = useState("Unit-8 Digital Entrepreneurship");
+  const [syllabusText, setSyllabusText] = useState("Unit-2 System Recovery and Advanced Maintenance");
   const [totalMarks, setTotalMarks] = useState<number>(75);
   const [timeDuration, setTimeDuration] = useState("2:30 hrs");
   const [paperDate, setPaperDate] = useState("11-10-2026");
@@ -84,7 +84,7 @@ export default function PaperEditorPage() {
     async function loadData() {
       try {
         setLoading(true);
-        const res = await fetch("/api/paper/questions?chapter_id=ac5b38de-123c-51fc-a96b-1ecaff9762ce");
+        const res = await fetch("/api/paper/questions?chapter_id=68fc022a-f4b1-53f8-a133-2946135d88db");
         const data = await res.json();
         if (data.questions?.length) {
           setBankQuestions(data.questions);
@@ -102,6 +102,13 @@ export default function PaperEditorPage() {
             const parsed = JSON.parse(stored);
             if (Array.isArray(parsed) && parsed.length > 0) {
               setQuestions(parsed);
+              const firstQ = parsed[0];
+              if (firstQ?.chapter_id && data.chapters) {
+                const matchCh = data.chapters.find((c: any) => c.id === firstQ.chapter_id);
+                if (matchCh) {
+                  setSyllabusText(`Unit-${matchCh.number} ${matchCh.title}`);
+                }
+              }
               return;
             }
           } catch {
@@ -109,7 +116,7 @@ export default function PaperEditorPage() {
           }
         }
 
-        // Default set matching Screenshot 2 and Paper Preview & Print.html
+        // Default set matching Chapter 2
         if (data.questions?.length) {
           const defaultMcqs = data.questions.filter((q: Question) => q.type === "mcq").slice(0, 7);
           const defaultShorts = data.questions.filter((q: Question) => q.type === "short").slice(0, 5);
@@ -201,13 +208,18 @@ export default function PaperEditorPage() {
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <span className="text-2xl">🎓</span>
-            <div
-              contentEditable
-              suppressContentEditableWarning
-              onBlur={(e) => setSubjectTitle(e.currentTarget.textContent || subjectTitle)}
-              className="text-base sm:text-lg font-bold text-slate-900 whitespace-nowrap outline-none hover:bg-slate-50 px-1 rounded cursor-text"
-            >
-              Preview - {subjectTitle}
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
+                PaperWala پیپر والا
+              </span>
+              <div
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={(e) => setSubjectTitle(e.currentTarget.textContent || subjectTitle)}
+                className="text-base sm:text-lg font-bold text-slate-900 whitespace-nowrap outline-none hover:bg-slate-50 px-1 rounded cursor-text"
+              >
+                Preview - {subjectTitle}
+              </div>
             </div>
           </div>
 
