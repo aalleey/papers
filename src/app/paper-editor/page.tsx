@@ -1,102 +1,99 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Question } from "@/lib/types";
 import { MathRenderer } from "@/components/MathRenderer";
-import { UrduText } from "@/components/UrduText";
 import { getUrduTranslation } from "@/lib/urdu-translations";
 import {
-  Printer,
   ArrowLeft,
-  Settings,
   Bookmark,
-  Building2,
-  Type,
-  FileCheck,
-  RotateCcw,
+  Printer,
+  Settings,
   Sparkles,
+  Sliders,
+  Type,
+  Building2,
+  HelpCircle,
+  Shuffle,
   Trash2,
   Edit3,
   Check,
   X,
-  Shuffle,
-  ChevronDown,
-  Layers,
-  HelpCircle,
   Eye,
-  Sliders,
+  ChevronDown,
 } from "lucide-react";
 
 export default function PaperEditorPage() {
   const router = useRouter();
 
-  // Data & Selected questions state
+  // Questions state
   const [questions, setQuestions] = useState<Question[]>([]);
   const [bankQuestions, setBankQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Paper header & metadata state (editable inline or via toolbars)
-  const [institutionName, setInstitutionName] = useState("YOUR INSTITUTION NAME");
-  const [examTitle, setExamTitle] = useState("EXAMINATION 2026-27");
-  const [subjectName, setSubjectName] = useState("Computer کمپیوٹر");
-  const [className, setClassName] = useState("10th");
+  // Paper header & parameters (matching Paper Preview & Print.html)
+  const [institutionName, setInstitutionName] = useState("Your Institution Name");
+  const [paperTypeBanner, setPaperTypeBanner] = useState("EXAMINATION 2026-27");
+  const [subjectTitle, setSubjectTitle] = useState("Computer کمپوٹر");
+  const [classNameText, setClassNameText] = useState("10th");
   const [syllabusText, setSyllabusText] = useState("Unit-8 Digital Entrepreneurship");
   const [totalMarks, setTotalMarks] = useState<number>(75);
-  const [examTime, setExamTime] = useState("2:30 hrs");
-  const [examDate, setExamDate] = useState("11-10-2026");
-  const [testNumber, setTestNumber] = useState("01");
+  const [timeDuration, setTimeDuration] = useState("2:30 hrs");
+  const [paperDate, setPaperDate] = useState("11-10-2026");
+  const [testNoText, setTestNoText] = useState("");
 
   // Version variant state (Version A, B, C, D)
   const [paperVersion, setPaperVersion] = useState<"A" | "B" | "C" | "D">("A");
   const [paperCodes, setPaperCodes] = useState<Record<string, string>>({
     A: "3041",
-    B: "4152",
-    C: "5263",
-    D: "6374",
+    B: "3042",
+    C: "3043",
+    D: "3044",
   });
 
-  // Display & Content Options
-  const [boardStyle, setBoardStyle] = useState<"punjab" | "federal" | "minimal">("punjab");
-  const [languageMode, setLanguageMode] = useState<"English" | "Urdu" | "Bilingual">("English");
-  const [fontSize, setFontSize] = useState<"sm" | "base" | "lg">("base");
+  // Ribbon configurations
+  const [headerStyle, setHeaderStyle] = useState<"style1" | "style2">("style1");
+  const [languageMode, setLanguageMode] = useState<"Bilingual" | "English" | "Urdu">("Bilingual");
+
+  // Font & display sizing
+  const [mcqFontSize, setMcqFontSize] = useState<number>(12);
+  const [subFontSize, setSubFontSize] = useState<number>(12);
+  const [titleFontSize, setTitleFontSize] = useState<number>(30);
+
+  // Content display toggles
   const [showOMRSheet, setShowOMRSheet] = useState(true);
   const [showAnswerKey, setShowAnswerKey] = useState(true);
   const [showStudentDetails, setShowStudentDetails] = useState(true);
   const [showInstructionNote, setShowInstructionNote] = useState(true);
 
-  // Modal states
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const [showSizingModal, setShowSizingModal] = useState(false);
-  const [showContentModal, setShowContentModal] = useState(false);
-  const [showInstructionModal, setShowInstructionModal] = useState(false);
-
-  // Active question being edited inline
-  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
-  const [editingText, setEditingText] = useState("");
-
   // Instruction Note text
-  const [instructionNote, setInstructionNote] = useState(
-    "Note: Four possible answers A, B, C and D to each question are given. Fill that circle in front of that question with Marker or Pen ink. Cutting or filling two or more circles will result in zero mark in that question."
+  const [instructionText, setInstructionText] = useState(
+    "Four possible answer a,b,c and d to each question are given. The choice which you think is correct, fill that circle in front of that questions with Marker or Pen ink, Cutting or filling two or more circles will result in zero mark in that question."
   );
 
-  // 1. Initial Load: Read selected questions from sessionStorage or load default set
+  // Active popover dropdown menu state
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  // Print dropdown mode
+  const [printMode, setPrintMode] = useState<"all" | "questions" | "key">("all");
+
+  // 1. Initial Load: Retrieve selected questions from sessionStorage or load default set
   useEffect(() => {
     async function loadData() {
       try {
         setLoading(true);
-        // Load bank questions to support swapping
         const res = await fetch("/api/paper/questions?chapter_id=ac5b38de-123c-51fc-a96b-1ecaff9762ce");
         const data = await res.json();
         if (data.questions?.length) {
           setBankQuestions(data.questions);
         }
 
-        // Check sessionStorage for chosen questions
+        // Check sessionStorage
         const stored = sessionStorage.getItem("papermaker_selected_questions");
         const storedLang = sessionStorage.getItem("papermaker_language_mode");
-        if (storedLang === "Urdu" || storedLang === "Bilingual" || storedLang === "English") {
+        if (storedLang === "Urdu" || storedLang === "English" || storedLang === "Bilingual") {
           setLanguageMode(storedLang);
         }
 
@@ -112,7 +109,7 @@ export default function PaperEditorPage() {
           }
         }
 
-        // If no selection was stored, default to a balanced set matching Screenshot 2 (e.g. 7 MCQs, 5 Shorts, 1 Long)
+        // Default set matching Screenshot 2 and Paper Preview & Print.html
         if (data.questions?.length) {
           const defaultMcqs = data.questions.filter((q: Question) => q.type === "mcq").slice(0, 7);
           const defaultShorts = data.questions.filter((q: Question) => q.type === "short").slice(0, 5);
@@ -120,7 +117,7 @@ export default function PaperEditorPage() {
           setQuestions([...defaultMcqs, ...defaultShorts, ...defaultLongs]);
         }
       } catch (err) {
-        console.error("Failed to load paper editor questions:", err);
+        console.error("Failed to load questions:", err);
       } finally {
         setLoading(false);
       }
@@ -129,100 +126,104 @@ export default function PaperEditorPage() {
     loadData();
   }, []);
 
-  // Split into MCQs, Shorts, Longs
+  // Split questions
   const mcqs = useMemo(() => questions.filter((q) => q.type === "mcq"), [questions]);
   const shorts = useMemo(() => questions.filter((q) => q.type === "short"), [questions]);
   const longs = useMemo(() => questions.filter((q) => q.type === "long"), [questions]);
 
-  // Version shuffler: shuffles options or questions order per version
+  // Version-shuffled MCQs
   const displayedMcqs = useMemo(() => {
     if (paperVersion === "A") return mcqs;
-    // For Version B, C, D, deterministic rotation based on version code
-    const offset = paperVersion === "B" ? 2 : paperVersion === "C" ? 4 : 6;
+    const offset = paperVersion === "B" ? 2 : paperVersion === "C" ? 4 : 5;
     return [...mcqs.slice(offset % mcqs.length), ...mcqs.slice(0, offset % mcqs.length)];
   }, [mcqs, paperVersion]);
 
-  // Dynamic Paper Code
+  // Current Paper Code
   const currentPaperCode = paperCodes[paperVersion] || "3041";
 
-  // Trigger Print dialog
-  const handlePrint = () => {
-    window.print();
+  // Print Action
+  const handlePrint = (mode: "all" | "questions" | "key" = "all") => {
+    setPrintMode(mode);
+    setActiveDropdown(null);
+    setTimeout(() => {
+      window.print();
+    }, 100);
   };
 
-  // Inline delete question
-  const handleDeleteQuestion = (id: string) => {
-    setQuestions((prev) => prev.filter((q) => q.id !== id));
-  };
-
-  // Swap question with an unselected question of the same type from the bank
+  // Swap question
   const handleSwapQuestion = (id: string, type: string) => {
     const currentIds = new Set(questions.map((q) => q.id));
     const available = bankQuestions.filter((q) => q.type === type && !currentIds.has(q.id));
     if (available.length > 0) {
-      const randomReplacement = available[Math.floor(Math.random() * available.length)];
-      setQuestions((prev) => prev.map((q) => (q.id === id ? randomReplacement : q)));
+      const replacement = available[Math.floor(Math.random() * available.length)];
+      setQuestions((prev) => prev.map((q) => (q.id === id ? replacement : q)));
     } else {
-      alert("No alternate questions available in the current chapter for this type.");
+      alert("No additional questions of this type available to swap.");
     }
   };
 
-  // Save inline text edit
-  const handleSaveTextEdit = (id: string) => {
-    setQuestions((prev) =>
-      prev.map((q) => {
-        if (q.id === id) {
-          const updatedTranslations = (q.translations || []).map((t) =>
-            t.language === "en" ? { ...t, text: editingText } : t
-          );
-          return { ...q, translations: updatedTranslations };
-        }
-        return q;
-      })
-    );
-    setEditingQuestionId(null);
+  // Delete question
+  const handleDeleteQuestion = (id: string) => {
+    setQuestions((prev) => prev.filter((q) => q.id !== id));
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6 text-slate-700">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
-        <h2 className="text-lg font-bold text-slate-800">Generating Paper Preview...</h2>
-        <p className="text-xs text-slate-500 mt-1">Formatting authentic examination sheet layout</p>
+        <h2 className="text-lg font-bold text-slate-800">Formatting Examination Paper...</h2>
+        <p className="text-xs text-slate-500 mt-1">Rendering layout from Paper Preview &amp; Print</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#e9ecef] text-slate-900 font-sans pb-24 selection:bg-blue-100">
+    <div
+      onClick={() => setActiveDropdown(null)}
+      className="min-h-screen bg-white text-slate-900 font-sans pb-28 selection:bg-blue-100"
+    >
       {/* =========================================================================
-          TOP ACTION BAR (Toolbar 1 - Exact match to Screenshot 2)
+          TOP APP BAR (Exact match to Paper Preview & Print.html)
           ========================================================================= */}
-      <header className="no-print bg-white border-b border-slate-300 shadow-sm sticky top-0 z-40">
-        <div className="max-w-[1500px] mx-auto px-4 py-2.5 sm:px-6 flex flex-wrap items-center justify-between gap-3">
-          {/* Left Title & Back button */}
-          <div className="flex items-center gap-3">
+      <div
+        className="no-print sticky top-0 z-50 flex flex-col bg-white border-b-2 border-slate-200 shadow-sm px-4 sm:px-6 py-2.5 gap-2.5"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Top Row: Title, Version, and Action Buttons */}
+        <div className="flex flex-wrap items-center justify-between gap-3 w-full">
+          {/* Left: Brand / Title */}
+          <div className="flex items-center gap-2.5 shrink-0">
             <Link
               href="/select-questions"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors"
+              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+              title="Back to Question Selector"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to Selection</span>
             </Link>
-
-            <h1 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-              <span className="text-blue-700 font-extrabold">&bull; Preview - Computer</span>
-              <span className="font-urdu text-blue-800 text-base">کمپیوٹر</span>
-            </h1>
+            <span className="text-2xl">🎓</span>
+            <div
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) => setSubjectTitle(e.currentTarget.textContent || subjectTitle)}
+              className="text-base sm:text-lg font-bold text-slate-900 whitespace-nowrap outline-none hover:bg-slate-50 px-1 rounded cursor-text"
+            >
+              Preview - {subjectTitle}
+            </div>
           </div>
 
-          {/* Center Version Selector */}
-          <div className="flex items-center gap-2 text-xs font-medium">
-            <span className="text-slate-500 font-bold uppercase tracking-wider text-[11px]">VERSION:</span>
+          {/* Center: Version Selector */}
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="paperVersionSelector"
+              className="text-[11px] font-bold text-slate-600 uppercase tracking-wider whitespace-nowrap"
+            >
+              Version:
+            </label>
             <select
+              id="paperVersionSelector"
               value={paperVersion}
               onChange={(e) => setPaperVersion(e.target.value as "A" | "B" | "C" | "D")}
-              className="px-3 py-1.5 rounded-lg border border-slate-300 font-bold text-slate-800 bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="h-9 font-bold text-blue-700 border-2 border-blue-600 rounded-md px-3 text-xs bg-white cursor-pointer outline-none shadow-xs"
             >
               <option value="A">Version A (Code: {paperCodes.A})</option>
               <option value="B">Version B (Code: {paperCodes.B})</option>
@@ -231,233 +232,927 @@ export default function PaperEditorPage() {
             </select>
           </div>
 
-          {/* Right Action Buttons */}
-          <div className="flex items-center gap-2 text-xs font-semibold">
+          {/* Right: Action Buttons */}
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => router.push("/")}
-              className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center gap-1.5 transition-colors"
+              className="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-colors"
             >
-              <Bookmark className="w-3.5 h-3.5 text-slate-500" />
+              <span>📂</span>
               <span>Library</span>
             </button>
 
             <button
-              onClick={() => setShowContentModal(true)}
-              className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center gap-1.5 transition-colors"
+              onClick={() => setActiveDropdown(activeDropdown === "settings" ? null : "settings")}
+              className="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-colors"
             >
-              <Settings className="w-3.5 h-3.5 text-slate-500" />
+              <span>⚙️</span>
               <span>Settings</span>
             </button>
 
             <button
-              onClick={() => alert("Paper configuration saved to your browser favorites!")}
-              className="px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 flex items-center gap-1.5 transition-colors"
+              onClick={() => alert("⭐ Paper design saved to browser favorites!")}
+              className="px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <span>⭐</span>
               <span>Save Favorite</span>
             </button>
 
-            <button
-              onClick={handlePrint}
-              className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-md shadow-emerald-950/20 flex items-center gap-2 transition-all active:scale-[0.98]"
+            {/* Print Dropdown */}
+            <div className="relative inline-flex">
+              <button
+                onClick={() => handlePrint("all")}
+                className="px-4 py-1.5 rounded-l-md bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
+              >
+                <span>🖨️</span>
+                <span>Print PDF</span>
+              </button>
+              <button
+                onClick={() => setActiveDropdown(activeDropdown === "print" ? null : "print")}
+                className="px-2 py-1.5 rounded-r-md bg-blue-700 hover:bg-blue-600 text-white font-bold text-xs border-l border-blue-500 transition-colors"
+                title="Print Options"
+              >
+                <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+
+              {activeDropdown === "print" && (
+                <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-lg shadow-xl py-1 text-xs font-semibold z-50">
+                  <button
+                    onClick={() => handlePrint("all")}
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"
+                  >
+                    <span>📄</span> Print Complete Paper
+                  </button>
+                  <button
+                    onClick={() => handlePrint("questions")}
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"
+                  >
+                    <span>📝</span> Print Questions Only
+                  </button>
+                  <button
+                    onClick={() => handlePrint("key")}
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"
+                  >
+                    <span>🔑</span> Print Answer Key Only
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Configuration Ribbon (Exact layout & colors from Paper Preview & Print.html) */}
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-xs">
+          {/* Left Ribbon Group: Style, Language, Marks, Time, Date */}
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              value={headerStyle}
+              onChange={(e) => setHeaderStyle(e.target.value as "style1" | "style2")}
+              className="h-9 px-3 rounded-md border border-slate-300 font-semibold text-slate-800 bg-white shadow-2xs outline-none focus:border-blue-600"
             >
-              <Printer className="w-4 h-4" />
-              <span>Print PDF</span>
-            </button>
+              <option value="style1">Style 1: Punjab Boards</option>
+              <option value="style2">Style 2: Federal Board</option>
+            </select>
+
+            <select
+              value={languageMode}
+              onChange={(e) => setLanguageMode(e.target.value as "Bilingual" | "English" | "Urdu")}
+              className="h-9 px-3 rounded-md border border-slate-300 font-semibold text-slate-800 bg-white shadow-2xs outline-none focus:border-blue-600"
+            >
+              <option value="Bilingual">Bilingual (English &amp; Urdu)</option>
+              <option value="English">English Only</option>
+              <option value="Urdu">Urdu Only</option>
+            </select>
+
+            <input
+              type="number"
+              value={totalMarks}
+              onChange={(e) => setTotalMarks(Number(e.target.value))}
+              placeholder="Marks (75)"
+              title="Total Marks"
+              className="h-9 w-20 px-2 rounded-md border border-slate-300 font-bold text-center bg-white shadow-2xs outline-none focus:border-blue-600"
+            />
+
+            <input
+              type="text"
+              value={timeDuration}
+              onChange={(e) => setTimeDuration(e.target.value)}
+              placeholder="Time (2:30)"
+              title="Time Duration"
+              className="h-9 w-24 px-2 rounded-md border border-slate-300 font-bold text-center bg-white shadow-2xs outline-none focus:border-blue-600"
+            />
+
+            <input
+              type="text"
+              value={paperDate}
+              onChange={(e) => setPaperDate(e.target.value)}
+              placeholder="Date"
+              title="Paper Date"
+              className="h-9 w-28 px-2 rounded-md border border-slate-300 font-bold text-center bg-white shadow-2xs outline-none focus:border-blue-600"
+            />
           </div>
-        </div>
 
-        {/* =========================================================================
-            SECONDARY TOOLBAR (Style, Language, Marks, Date, Customizer buttons)
-            ========================================================================= */}
-        <div className="bg-slate-50 border-t border-slate-200 py-2 px-4 sm:px-6">
-          <div className="max-w-[1500px] mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
-            {/* Left Controls */}
-            <div className="flex flex-wrap items-center gap-2.5">
-              {/* Style selector */}
-              <select
-                value={boardStyle}
-                onChange={(e) => setBoardStyle(e.target.value as "punjab" | "federal" | "minimal")}
-                className="px-2.5 py-1 rounded border border-slate-300 font-medium text-slate-700 bg-white"
+          {/* Right Ribbon Group: Popovers for Fonts, Content, Profile, Instructions */}
+          <div className="flex flex-wrap items-center gap-2 relative">
+            {/* 1. Fonts & Sizing Popover */}
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveDropdown(activeDropdown === "fonts" ? null : "fonts");
+                }}
+                className="h-9 px-3 rounded-md bg-white border border-slate-300 border-l-4 border-l-blue-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1"
               >
-                <option value="punjab">Style 1: Punjab Boards</option>
-                <option value="federal">Style 2: Federal Board</option>
-                <option value="minimal">Style 3: Standard School</option>
-              </select>
+                <span>📐 Fonts &amp; Sizing ▾</span>
+              </button>
 
-              {/* Language selector */}
-              <select
-                value={languageMode}
-                onChange={(e) => setLanguageMode(e.target.value as "English" | "Urdu" | "Bilingual")}
-                className="px-2.5 py-1 rounded border border-slate-300 font-medium text-slate-700 bg-white"
-              >
-                <option value="English">English Only</option>
-                <option value="Urdu">Urdu Only</option>
-                <option value="Bilingual">Both (Bilingual)</option>
-              </select>
-
-              {/* Total Marks input */}
-              <div className="flex items-center gap-1 bg-white px-2 py-0.5 rounded border border-slate-300">
-                <span className="text-slate-500 text-[11px] font-bold">Marks:</span>
-                <input
-                  type="number"
-                  value={totalMarks}
-                  onChange={(e) => setTotalMarks(Number(e.target.value))}
-                  className="w-12 font-bold text-center outline-none"
-                />
-              </div>
-
-              {/* Time input */}
-              <div className="flex items-center gap-1 bg-white px-2 py-0.5 rounded border border-slate-300">
-                <span className="text-slate-500 text-[11px] font-bold">Time:</span>
-                <input
-                  type="text"
-                  value={examTime}
-                  onChange={(e) => setExamTime(e.target.value)}
-                  className="w-16 font-bold text-center outline-none"
-                />
-              </div>
-
-              {/* Date input */}
-              <div className="flex items-center gap-1 bg-white px-2 py-0.5 rounded border border-slate-300">
-                <span className="text-slate-500 text-[11px] font-bold">Date:</span>
-                <input
-                  type="text"
-                  value={examDate}
-                  onChange={(e) => setExamDate(e.target.value)}
-                  className="w-20 font-bold text-center outline-none"
-                />
-              </div>
+              {activeDropdown === "fonts" && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 top-full mt-2 w-72 bg-white border border-slate-300 rounded-xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
+                >
+                  <div className="font-bold text-slate-800 pb-1 border-b">Layout &amp; Font Sizing</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="font-semibold text-slate-600 block mb-1">MCQ Size (px)</label>
+                      <input
+                        type="number"
+                        min="9"
+                        max="20"
+                        value={mcqFontSize}
+                        onChange={(e) => setMcqFontSize(Number(e.target.value))}
+                        className="w-full p-1.5 border rounded text-center font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-semibold text-slate-600 block mb-1">Subjective (px)</label>
+                      <input
+                        type="number"
+                        min="9"
+                        max="20"
+                        value={subFontSize}
+                        onChange={(e) => setSubFontSize(Number(e.target.value))}
+                        className="w-full p-1.5 border rounded text-center font-bold"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="font-semibold text-slate-600 block mb-1">
+                      Title Size ({titleFontSize}px)
+                    </label>
+                    <input
+                      type="range"
+                      min="20"
+                      max="42"
+                      value={titleFontSize}
+                      onChange={(e) => setTitleFontSize(Number(e.target.value))}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Right Buttons: Fonts & Sizing, Content Options, Profile, Instructions */}
-            <div className="flex flex-wrap items-center gap-2">
+            {/* 2. Content Options Popover */}
+            <div className="relative">
               <button
-                onClick={() => setShowSizingModal(true)}
-                className="px-3 py-1 rounded bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium flex items-center gap-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveDropdown(activeDropdown === "content" ? null : "content");
+                }}
+                className="h-9 px-3 rounded-md bg-white border border-slate-300 border-l-4 border-l-emerald-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1"
               >
-                <Type className="w-3.5 h-3.5 text-slate-500" />
-                <span>Fonts & Sizing</span>
+                <span>⚙️ Content Options ▾</span>
               </button>
 
+              {activeDropdown === "content" && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-300 rounded-xl shadow-2xl p-4 text-xs space-y-2.5 z-50 animate-in fade-in"
+                >
+                  <div className="font-bold text-slate-800 pb-1 border-b">Section Visibility</div>
+                  <label className="flex items-center justify-between cursor-pointer py-1">
+                    <span className="font-semibold text-slate-700">OMR Bubble Sheet</span>
+                    <input
+                      type="checkbox"
+                      checked={showOMRSheet}
+                      onChange={(e) => setShowOMRSheet(e.target.checked)}
+                      className="rounded text-blue-600"
+                    />
+                  </label>
+                  <label className="flex items-center justify-between cursor-pointer py-1">
+                    <span className="font-semibold text-slate-700">Answer Key Table</span>
+                    <input
+                      type="checkbox"
+                      checked={showAnswerKey}
+                      onChange={(e) => setShowAnswerKey(e.target.checked)}
+                      className="rounded text-blue-600"
+                    />
+                  </label>
+                  <label className="flex items-center justify-between cursor-pointer py-1">
+                    <span className="font-semibold text-slate-700">Student Name / Roll No</span>
+                    <input
+                      type="checkbox"
+                      checked={showStudentDetails}
+                      onChange={(e) => setShowStudentDetails(e.target.checked)}
+                      className="rounded text-blue-600"
+                    />
+                  </label>
+                  <label className="flex items-center justify-between cursor-pointer py-1">
+                    <span className="font-semibold text-slate-700">Instructions Note Box</span>
+                    <input
+                      type="checkbox"
+                      checked={showInstructionNote}
+                      onChange={(e) => setShowInstructionNote(e.target.checked)}
+                      className="rounded text-blue-600"
+                    />
+                  </label>
+                </div>
+              )}
+            </div>
+
+            {/* 3. Profile Popover */}
+            <div className="relative">
               <button
-                onClick={() => setShowContentModal(true)}
-                className="px-3 py-1 rounded bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium flex items-center gap-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveDropdown(activeDropdown === "profile" ? null : "profile");
+                }}
+                className="h-9 px-3 rounded-md bg-white border border-slate-300 border-l-4 border-l-amber-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1"
               >
-                <Sliders className="w-3.5 h-3.5 text-slate-500" />
-                <span>Content Options</span>
+                <span>🏫 Profile ▾</span>
               </button>
 
+              {activeDropdown === "profile" && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 top-full mt-2 w-72 bg-white border border-slate-300 rounded-xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
+                >
+                  <div className="font-bold text-slate-800 pb-1 border-b">Institution Header</div>
+                  <div>
+                    <label className="font-semibold text-slate-600 block mb-1">School / College Name</label>
+                    <input
+                      type="text"
+                      value={institutionName}
+                      onChange={(e) => setInstitutionName(e.target.value)}
+                      className="w-full p-1.5 border rounded font-bold uppercase"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-semibold text-slate-600 block mb-1">Examination Title</label>
+                    <input
+                      type="text"
+                      value={paperTypeBanner}
+                      onChange={(e) => setPaperTypeBanner(e.target.value)}
+                      className="w-full p-1.5 border rounded font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-semibold text-slate-600 block mb-1">Syllabus</label>
+                    <input
+                      type="text"
+                      value={syllabusText}
+                      onChange={(e) => setSyllabusText(e.target.value)}
+                      className="w-full p-1.5 border rounded"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 4. Instructions Popover */}
+            <div className="relative">
               <button
-                onClick={() => setShowProfileModal(true)}
-                className="px-3 py-1 rounded bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium flex items-center gap-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveDropdown(activeDropdown === "inst" ? null : "inst");
+                }}
+                className="h-9 px-3 rounded-md bg-white border border-slate-300 border-l-4 border-l-purple-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1"
               >
-                <Building2 className="w-3.5 h-3.5 text-slate-500" />
-                <span>Profile</span>
+                <span>ℹ️ Instructions ▾</span>
               </button>
 
-              <button
-                onClick={() => setShowInstructionModal(true)}
-                className="px-3 py-1 rounded bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium flex items-center gap-1"
-              >
-                <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
-                <span>Instructions</span>
-              </button>
+              {activeDropdown === "inst" && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-300 rounded-xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
+                >
+                  <div className="font-bold text-slate-800 pb-1 border-b">Instruction Note</div>
+                  <textarea
+                    rows={4}
+                    value={instructionText}
+                    onChange={(e) => setInstructionText(e.target.value)}
+                    className="w-full p-2 border rounded leading-relaxed text-[11px]"
+                  />
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => setActiveDropdown(null)}
+                      className="px-3 py-1 bg-blue-600 text-white font-bold rounded text-xs"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* =========================================================================
-          THE AUTHENTIC EXAMINATION PAPER SHEET (Exact match to Screenshot 2)
+          THE AUTHENTIC EXAMINATION PAPER SHEET (A4 Print Layout)
           ========================================================================= */}
-      <main className="max-w-[950px] mx-auto px-4 sm:px-6 pt-6">
-        <div className="exam-sheet-container bg-white border border-slate-800 shadow-2xl p-6 sm:p-10 font-serif text-black leading-tight text-sm space-y-6">
-          {/* 1. INSTITUTION & EXAM HEADER BOX */}
-          <div className="border border-black">
-            {/* Institution Title */}
-            <div className="text-center py-2 border-b border-black">
-              <h2
-                onClick={() => setShowProfileModal(true)}
-                className="text-2xl sm:text-3xl font-black uppercase tracking-wider cursor-pointer hover:bg-amber-50"
-                title="Click to edit Institution Name"
+      <main className="max-w-[850px] mx-auto px-4 sm:px-6 pt-6">
+        <div
+          id="paper-outer-container"
+          className="bg-white border-2 border-black p-6 sm:p-8 shadow-xl text-black leading-tight space-y-4"
+        >
+          {/* Print Mode: Questions Section (Hidden if printMode === 'key') */}
+          {printMode !== "key" && (
+            <div id="paperContent" className="space-y-4" style={{ fontSize: `${mcqFontSize}px` }}>
+              {/* ===================================================================
+                  1. INSTITUTION & EXAM HEADER (Exact layout from Paper Preview & Print.html)
+                  =================================================================== */}
+              <div
+                dir="ltr"
+                style={{
+                  border: "2px solid #000",
+                  display: "flex",
+                  alignItems: "stretch",
+                  width: "100%",
+                  marginBottom: 0,
+                  background: "#fff",
+                  boxSizing: "border-box",
+                  lineHeight: 1.2,
+                }}
               >
-                {institutionName}
-              </h2>
-              <div className="text-xs font-bold tracking-widest mt-0.5">{examTitle}</div>
-            </div>
+                {/* Middle Content Box */}
+                <div
+                  style={{
+                    flexGrow: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    textAlign: "center",
+                    borderRight: "2px solid #000",
+                  }}
+                >
+                  {/* Institution Name */}
+                  <div
+                    contentEditable
+                    suppressContentEditableWarning
+                    onBlur={(e) => setInstitutionName(e.currentTarget.textContent || institutionName)}
+                    style={{
+                      fontSize: `${titleFontSize}px`,
+                      fontWeight: 800,
+                      color: "#1a365d",
+                      padding: "6px 4px 3px 4px",
+                      margin: 0,
+                      textTransform: "uppercase",
+                      outline: "none",
+                    }}
+                    title="Click to edit school name inline"
+                  >
+                    {institutionName}
+                  </div>
 
-            {/* Subject and Class Row */}
-            <div className="text-center py-1 font-bold text-xs border-b border-black bg-slate-50/50">
-              Subject: {subjectName} &nbsp;|&nbsp; Class: {className}
-            </div>
+                  {/* Dark Blue Banner */}
+                  <div
+                    contentEditable
+                    suppressContentEditableWarning
+                    onBlur={(e) => setPaperTypeBanner(e.currentTarget.textContent || paperTypeBanner)}
+                    style={{
+                      backgroundColor: "#1a365d",
+                      color: "#ffffff",
+                      fontWeight: "bold",
+                      fontSize: "12px",
+                      padding: "2px 10px",
+                      borderTop: "1px solid #000",
+                      borderBottom: "1px solid #000",
+                      textAlign: "center",
+                      outline: "none",
+                    }}
+                  >
+                    {paperTypeBanner}
+                  </div>
 
-            {/* Student Name & Syllabus Row */}
-            {showStudentDetails && (
-              <div className="grid grid-cols-2 divide-x divide-black text-xs font-semibold border-b border-black">
-                <div className="p-1.5">
-                  Student Name: <span className="inline-block border-b border-dotted border-black w-3/5 ml-2" />
-                </div>
-                <div className="p-1.5 flex items-center justify-between">
-                  <span>Syllabus: {syllabusText}</span>
-                </div>
-              </div>
-            )}
-
-            {/* Meta Row with Roll No, Time, Marks, Date, Test No & Paper Code */}
-            <div className="flex flex-wrap items-center justify-between text-[11px] font-semibold p-1.5 divide-x-0 sm:divide-x divide-black">
-              <div className="flex flex-wrap items-center gap-3">
-                <span>
-                  Roll No: <span className="inline-block border-b border-dotted border-black w-14" />
-                </span>
-                <span>Time: {examTime}</span>
-                <span>Marks: {totalMarks}</span>
-                <span>Date: {examDate}</span>
-                <span>Test No: {testNumber}</span>
-              </div>
-
-              {/* Paper Code Box */}
-              <div className="flex items-center gap-1.5 pt-1 sm:pt-0">
-                <span className="text-[10px] uppercase font-bold tracking-tight">Paper Code:</span>
-                <div className="flex border border-black text-xs font-bold divide-x divide-black bg-white">
-                  {currentPaperCode.split("").map((digit, dIdx) => (
-                    <span key={dIdx} className="w-5 h-5 flex items-center justify-center font-mono">
-                      {digit}
+                  {/* Subject and Class Details */}
+                  <div
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                      padding: "2px 0",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "15px",
+                      color: "#000",
+                    }}
+                  >
+                    <span>
+                      Subject:{" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => setSubjectTitle(e.currentTarget.textContent || subjectTitle)}
+                        className="outline-none"
+                      >
+                        {subjectTitle}
+                      </span>
                     </span>
-                  ))}
+                    <span>|</span>
+                    <span>
+                      Class:{" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => setClassNameText(e.currentTarget.textContent || classNameText)}
+                        className="outline-none"
+                      >
+                        {classNameText}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Right Paper Code Box */}
+                <div
+                  style={{
+                    width: "110px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "2px",
+                    flexShrink: 0,
+                    background: "#fff",
+                  }}
+                >
+                  <div className="text-center">
+                    <div
+                      contentEditable
+                      suppressContentEditableWarning
+                      className="text-[10px] font-bold uppercase tracking-tight text-center mb-1 outline-none"
+                    >
+                      PAPER CODE
+                    </div>
+                    <div className="flex justify-center gap-0.5">
+                      {currentPaperCode.split("").map((digit, dIdx) => (
+                        <div
+                          key={dIdx}
+                          contentEditable
+                          suppressContentEditableWarning
+                          style={{
+                            width: "20px",
+                            height: "24px",
+                            border: "2px solid #000",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontWeight: "bold",
+                            fontFamily: "Arial",
+                            fontSize: "14px",
+                            outline: "none",
+                          }}
+                        >
+                          {digit}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* 2. INSTRUCTION NOTE BOX */}
-          {showInstructionNote && (
-            <div className="border border-black p-2 text-[11px] leading-relaxed text-black/90">
-              <span className="font-bold underline mr-1">Note:</span>
-              <span>{instructionNote}</span>
-            </div>
-          )}
+              {/* ===================================================================
+                  STUDENT NAME & META TABLE (Exact layout from Paper Preview & Print.html)
+                  =================================================================== */}
+              {showStudentDetails && (
+                <table
+                  className="paper-table"
+                  dir="ltr"
+                  style={{
+                    width: "100%",
+                    border: "2px solid #000",
+                    borderTop: "none",
+                    borderCollapse: "collapse",
+                    fontWeight: "bold",
+                    marginTop: 0,
+                    marginBottom: 0,
+                    fontSize: "13px",
+                    direction: "ltr",
+                  }}
+                >
+                  <tbody>
+                    {/* Row 1: Student Name & Syllabus */}
+                    <tr style={{ borderBottom: "1px solid #000", height: "26px" }}>
+                      <td
+                        style={{
+                          borderRight: "1px solid #000",
+                          padding: "2px 4px",
+                          width: "15%",
+                          background: "#f8f9fa",
+                          textAlign: "left",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <span>Student Name:</span>
+                      </td>
+                      <td
+                        style={{
+                          borderRight: "2px solid #000",
+                          padding: "2px 4px",
+                          width: "35%",
+                          background: "#fff",
+                        }}
+                        contentEditable
+                        suppressContentEditableWarning
+                      />
+                      <td
+                        style={{
+                          borderRight: "1px solid #000",
+                          padding: "2px 4px",
+                          width: "15%",
+                          background: "#fff3e0",
+                          textAlign: "left",
+                          color: "#e65100",
+                        }}
+                      >
+                        <span>Syllabus:</span>
+                      </td>
+                      <td
+                        style={{
+                          padding: "2px 4px",
+                          width: "35%",
+                          background: "#fff",
+                          textAlign: "left",
+                          color: "#333",
+                        }}
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => setSyllabusText(e.currentTarget.textContent || syllabusText)}
+                      >
+                        {syllabusText}
+                      </td>
+                    </tr>
 
-          {/* 3. SECTION - I: OBJECTIVE TYPE (MCQs) */}
-          {displayedMcqs.length > 0 && (
-            <section className="space-y-4">
-              <div className="text-center font-black text-xs uppercase tracking-widest border-y border-black py-1 bg-slate-50/40">
-                SECTION - I
-              </div>
+                    {/* Row 2: Roll No, Time, Marks, Date, Test No */}
+                    <tr style={{ backgroundColor: "#e3f2fd", height: "26px" }}>
+                      <td colSpan={4} style={{ padding: "2px 4px", textAlign: "center", color: "#0d47a1" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                            alignItems: "center",
+                            gap: "8px",
+                            fontSize: "13px",
+                            lineHeight: 1,
+                          }}
+                        >
+                          <span>
+                            Roll No:{" "}
+                            <span
+                              contentEditable
+                              suppressContentEditableWarning
+                              style={{
+                                borderBottom: "1px dashed #0d47a1",
+                                padding: "0 4px",
+                                minWidth: "45px",
+                                display: "inline-block",
+                                outline: "none",
+                              }}
+                            />
+                          </span>
+                          <span>|</span>
+                          <span>
+                            Time:{" "}
+                            <span
+                              contentEditable
+                              suppressContentEditableWarning
+                              onBlur={(e) => setTimeDuration(e.currentTarget.textContent || timeDuration)}
+                              style={{
+                                borderBottom: "1px dashed #0d47a1",
+                                padding: "0 4px",
+                                minWidth: "35px",
+                                display: "inline-block",
+                                outline: "none",
+                              }}
+                            >
+                              {timeDuration}
+                            </span>
+                          </span>
+                          <span>|</span>
+                          <span>
+                            Marks:{" "}
+                            <span
+                              contentEditable
+                              suppressContentEditableWarning
+                              onBlur={(e) => setTotalMarks(Number(e.currentTarget.textContent) || totalMarks)}
+                              style={{
+                                borderBottom: "1px dashed #0d47a1",
+                                padding: "0 4px",
+                                minWidth: "35px",
+                                display: "inline-block",
+                                outline: "none",
+                              }}
+                            >
+                              {totalMarks}
+                            </span>
+                          </span>
+                          <span>|</span>
+                          <span>
+                            Date:{" "}
+                            <span
+                              contentEditable
+                              suppressContentEditableWarning
+                              onBlur={(e) => setPaperDate(e.currentTarget.textContent || paperDate)}
+                              style={{
+                                borderBottom: "1px dashed #0d47a1",
+                                padding: "0 4px",
+                                minWidth: "55px",
+                                display: "inline-block",
+                                outline: "none",
+                              }}
+                            >
+                              {paperDate}
+                            </span>
+                          </span>
+                          <span>|</span>
+                          <span>
+                            Test No.:{" "}
+                            <span
+                              contentEditable
+                              suppressContentEditableWarning
+                              onBlur={(e) => setTestNoText(e.currentTarget.textContent || testNoText)}
+                              style={{
+                                borderBottom: "1px dashed #0d47a1",
+                                padding: "0 4px",
+                                minWidth: "45px",
+                                display: "inline-block",
+                                outline: "none",
+                              }}
+                            >
+                              {testNoText}
+                            </span>
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              )}
 
-              {/* OMR Bubble Sheet Circles Grid (Screenshot 2 Feature!) */}
-              {showOMRSheet && (
-                <div className="border border-black p-3 space-y-2 bg-slate-50/30">
-                  <div className="font-bold text-[11px] uppercase tracking-wide">
+              {/* ===================================================================
+                  INSTRUCTIONS NOTE PANEL
+                  =================================================================== */}
+              {showInstructionNote && (
+                <div
+                  style={{
+                    padding: "4px 0",
+                    margin: "4px 0",
+                    fontSize: "11px",
+                    textAlign: "left",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    lineHeight: 1.3,
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundColor: "#d4efdf",
+                      color: "#196f3d",
+                      padding: "1px 6px",
+                      borderRadius: "3px",
+                      fontWeight: "bold",
+                      marginRight: "6px",
+                      display: "inline-block",
+                      fontSize: "11px",
+                    }}
+                  >
+                    Note:
+                  </span>
+                  <span
+                    contentEditable
+                    suppressContentEditableWarning
+                    onBlur={(e) => setInstructionText(e.currentTarget.textContent || instructionText)}
+                    style={{ color: "#212529", fontWeight: 500, outline: "none" }}
+                  >
+                    {instructionText}
+                  </span>
+                </div>
+              )}
+
+              {/* ===================================================================
+                  SECTION - I: OBJECTIVE TYPE (MCQs)
+                  =================================================================== */}
+              {displayedMcqs.length > 0 && (
+                <div className="section space-y-2">
+                  <div className="text-center font-black text-sm uppercase tracking-wider py-1 border-y border-black bg-slate-50/50">
+                    SECTION - I
+                  </div>
+
+                  <div className="text-center italic font-semibold text-xs text-slate-700">
                     Choose the correct answer from the following.
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-y-2 gap-x-4 text-xs font-mono">
-                    {displayedMcqs.map((_, idx) => {
-                      const num = (idx + 1).toString().padStart(2, "0");
+
+                  {/* OMR Bubble Sheet Table */}
+                  {showOMRSheet && (
+                    <div
+                      style={{
+                        margin: "4px 0",
+                        padding: 0,
+                        direction: "ltr",
+                        maxWidth: "100%",
+                        overflowX: "auto",
+                      }}
+                    >
+                      <table
+                        style={{
+                          width: "100%",
+                          border: "2px solid #0d47a1",
+                          borderCollapse: "collapse",
+                          backgroundColor: "#f8fafc",
+                          direction: "ltr",
+                        }}
+                      >
+                        <tbody>
+                          <tr>
+                            {displayedMcqs.map((_, idx) => (
+                              <td
+                                key={idx}
+                                style={{
+                                  border: "1px solid #cbd5e1",
+                                  padding: "3px 2px",
+                                  verticalAlign: "middle",
+                                  fontSize: "10px",
+                                  textAlign: "center",
+                                  whiteSpace: "nowrap",
+                                  direction: "ltr",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    fontWeight: 800,
+                                    marginRight: "3px",
+                                    fontSize: "10px",
+                                    color: "#1e3a8a",
+                                  }}
+                                >
+                                  {(idx + 1).toString().padStart(2, "0")}.
+                                </span>
+                                <span
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: "13px",
+                                    height: "13px",
+                                    border: "1.5px solid #ef4444",
+                                    color: "#b91c1c",
+                                    backgroundColor: "#fef2f2",
+                                    borderRadius: "50%",
+                                    fontSize: "8px",
+                                    margin: "0 1px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  A
+                                </span>
+                                <span
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: "13px",
+                                    height: "13px",
+                                    border: "1.5px solid #3b82f6",
+                                    color: "#1d4ed8",
+                                    backgroundColor: "#eff6ff",
+                                    borderRadius: "50%",
+                                    fontSize: "8px",
+                                    margin: "0 1px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  B
+                                </span>
+                                <span
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: "13px",
+                                    height: "13px",
+                                    border: "1.5px solid #10b981",
+                                    color: "#047857",
+                                    backgroundColor: "#ecfdf5",
+                                    borderRadius: "50%",
+                                    fontSize: "8px",
+                                    margin: "0 1px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  C
+                                </span>
+                                <span
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: "13px",
+                                    height: "13px",
+                                    border: "1.5px solid #f59e0b",
+                                    color: "#b45309",
+                                    backgroundColor: "#fffbeb",
+                                    borderRadius: "50%",
+                                    fontSize: "8px",
+                                    margin: "0 1px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  D
+                                </span>
+                              </td>
+                            ))}
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {/* MCQs List with 4 options */}
+                  <div className="space-y-2 pt-1">
+                    {displayedMcqs.map((q, idx) => {
+                      const enTrans = q.translations?.find((t) => t.language === "en");
+                      const dynamicUr = getUrduTranslation(enTrans?.text || "", enTrans?.options);
+
                       return (
-                        <div key={idx} className="flex items-center gap-1">
-                          <span className="font-bold text-slate-800 text-[11px] w-6">{num}.</span>
-                          <span className="tracking-tight text-[11px]">◯ A ◯ B ◯ C ◯ D</span>
+                        <div
+                          key={q.id}
+                          className="group relative p-1 hover:bg-slate-50/80 rounded transition-colors"
+                        >
+                          {/* Hover action toolbar for question */}
+                          <div className="no-print absolute top-0 right-0 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-xs px-1.5 py-0.5 z-10 transition-opacity">
+                            <button
+                              onClick={() => handleSwapQuestion(q.id, "mcq")}
+                              className="text-teal-600 hover:text-teal-800 p-0.5"
+                              title="Swap with another MCQ"
+                            >
+                              <Shuffle className="w-3 h-3" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteQuestion(q.id)}
+                              className="text-rose-600 hover:text-rose-800 p-0.5"
+                              title="Delete from paper"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+
+                          {/* Question text */}
+                          <div className="flex items-start gap-1.5 font-bold leading-normal">
+                            <span>{idx + 1}.</span>
+                            <div className="flex-1 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+                              <span
+                                contentEditable
+                                suppressContentEditableWarning
+                                className="outline-none"
+                              >
+                                <MathRenderer content={enTrans?.text || ""} />
+                              </span>
+                              {languageMode === "Bilingual" && dynamicUr.text_ur && (
+                                <span className="font-urdu text-sm text-right pr-2 text-slate-800" dir="rtl">
+                                  {dynamicUr.text_ur}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Options grid */}
+                          {enTrans?.options && enTrans.options.length > 0 && (
+                            <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1 pl-4 text-xs">
+                              {enTrans.options.map((opt, optIdx) => {
+                                const letter = String.fromCharCode(65 + optIdx);
+                                const optUr = dynamicUr.options_ur?.[optIdx];
+
+                                return (
+                                  <div key={optIdx} className="flex items-baseline gap-1 min-w-[22%]">
+                                    <span className="font-bold">({letter})</span>
+                                    <span
+                                      contentEditable
+                                      suppressContentEditableWarning
+                                      className="outline-none"
+                                    >
+                                      {opt}
+                                    </span>
+                                    {languageMode === "Bilingual" && optUr && (
+                                      <span className="font-urdu text-xs ml-1" dir="rtl">
+                                        {optUr}
+                                      </span>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -465,509 +1160,188 @@ export default function PaperEditorPage() {
                 </div>
               )}
 
-              {/* MCQ Questions List */}
-              <div className="space-y-3 pt-1">
-                {displayedMcqs.map((q, idx) => {
-                  const enTrans = q.translations?.find((t) => t.language === "en");
-                  const dynamicUr = getUrduTranslation(enTrans?.text || "", enTrans?.options);
-                  const isEditing = editingQuestionId === q.id;
+              {/* ===================================================================
+                  SECTION - II: SUBJECTIVE TYPE (Short Questions)
+                  =================================================================== */}
+              {shorts.length > 0 && (
+                <div className="section space-y-2 pt-2">
+                  <div className="text-center font-black text-sm uppercase tracking-wider py-1 border-y border-black bg-slate-50/50">
+                    SECTION - II
+                  </div>
 
-                  return (
-                    <div
-                      key={q.id}
-                      className="group relative hover:bg-blue-50/20 p-1.5 rounded transition-colors avoid-break"
-                    >
-                      {/* Interactive Edit / Swap / Delete Controls (Hover on screen only) */}
-                      <div className="no-print absolute top-1 right-1 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-sm px-1.5 py-0.5 z-10 transition-opacity">
-                        <button
-                          onClick={() => {
-                            setEditingQuestionId(q.id);
-                            setEditingText(enTrans?.text || "");
-                          }}
-                          className="text-blue-600 hover:text-blue-800 p-0.5"
-                          title="Edit Question Text"
-                        >
-                          <Edit3 className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => handleSwapQuestion(q.id, "mcq")}
-                          className="text-teal-600 hover:text-teal-800 p-0.5"
-                          title="Swap with another MCQ from bank"
-                        >
-                          <Shuffle className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteQuestion(q.id)}
-                          className="text-rose-600 hover:text-rose-800 p-0.5"
-                          title="Delete question from paper"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
+                  <div
+                    style={{
+                      backgroundColor: "#e0e0e0",
+                      padding: "4px 8px",
+                      borderBottom: "1px solid #000",
+                      textAlign: "left",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    <strong>Q. 2:</strong> Write short answers of the following questions.
+                  </div>
 
-                      {/* Question Text */}
-                      <div className="font-bold leading-normal flex items-start gap-1.5">
-                        <span className="shrink-0">{idx + 1}.</span>
-                        {isEditing ? (
-                          <div className="flex-1 flex items-center gap-2">
-                            <input
-                              type="text"
-                              value={editingText}
-                              onChange={(e) => setEditingText(e.target.value)}
-                              className="w-full px-2 py-1 text-xs border border-blue-500 rounded outline-none font-sans"
-                            />
+                  {/* 2-Column Structured Layout */}
+                  <div
+                    style={{
+                      columnCount: 2,
+                      columnGap: "20px",
+                      padding: "5px 10px",
+                      direction: "ltr",
+                      fontSize: `${subFontSize}px`,
+                    }}
+                  >
+                    {shorts.map((q, idx) => {
+                      const roman = ["(i)", "(ii)", "(iii)", "(iv)", "(v)", "(vi)", "(vii)", "(viii)", "(ix)", "(x)"][idx] || `(${idx + 1})`;
+                      const enTrans = q.translations?.find((t) => t.language === "en");
+
+                      return (
+                        <div
+                          key={q.id}
+                          className="group relative hover:bg-slate-50/80 p-1 rounded transition-colors break-inside-avoid mb-2"
+                        >
+                          <div className="no-print absolute top-0 right-0 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-xs px-1 py-0.5 z-10 transition-opacity">
                             <button
-                              onClick={() => handleSaveTextEdit(q.id)}
-                              className="p-1 bg-emerald-600 text-white rounded hover:bg-emerald-500"
+                              onClick={() => handleSwapQuestion(q.id, "short")}
+                              className="text-teal-600 hover:text-teal-800 p-0.5"
+                              title="Swap with another Short question"
                             >
-                              <Check className="w-3 h-3" />
+                              <Shuffle className="w-3 h-3" />
                             </button>
                             <button
-                              onClick={() => setEditingQuestionId(null)}
-                              className="p-1 bg-slate-300 text-slate-700 rounded hover:bg-slate-400"
+                              onClick={() => handleDeleteQuestion(q.id)}
+                              className="text-rose-600 hover:text-rose-800 p-0.5"
+                              title="Delete from paper"
                             >
-                              <X className="w-3 h-3" />
+                              <Trash2 className="w-3 h-3" />
                             </button>
                           </div>
-                        ) : (
-                          <div className="flex-1 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-                            <span>
+
+                          <div className="flex items-start gap-1 leading-normal">
+                            <span className="font-bold shrink-0">{roman}</span>
+                            <div
+                              contentEditable
+                              suppressContentEditableWarning
+                              className="outline-none font-semibold flex-1"
+                            >
                               <MathRenderer content={enTrans?.text || ""} />
-                            </span>
-                            {languageMode === "Bilingual" && dynamicUr.text_ur && (
-                              <span className="font-urdu text-sm text-right pr-2 text-slate-800" dir="rtl">
-                                {dynamicUr.text_ur}
-                              </span>
-                            )}
+                            </div>
                           </div>
-                        )}
-                      </div>
-
-                      {/* Options List */}
-                      {enTrans?.options && enTrans.options.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 pl-4 text-xs font-normal">
-                          {enTrans.options.map((opt, optIdx) => {
-                            const letter = String.fromCharCode(65 + optIdx);
-                            const optUr = dynamicUr.options_ur?.[optIdx];
-
-                            return (
-                              <div key={optIdx} className="flex items-baseline gap-1">
-                                <span className="font-semibold">({letter})</span>
-                                <span>{opt}</span>
-                                {languageMode === "Bilingual" && optUr && (
-                                  <span className="font-urdu text-xs ml-1" dir="rtl">
-                                    {optUr}
-                                  </span>
-                                )}
-                              </div>
-                            );
-                          })}
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          )}
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
-          {/* 4. SECTION - II: SUBJECTIVE TYPE (Short Questions) */}
-          {shorts.length > 0 && (
-            <section className="space-y-4 pt-2">
-              <div className="text-center font-black text-xs uppercase tracking-widest border-y border-black py-1 bg-slate-50/40">
-                SECTION - II
-              </div>
+              {/* ===================================================================
+                  SECTION - III: LONG QUESTIONS (If chosen)
+                  =================================================================== */}
+              {longs.length > 0 && (
+                <div className="section space-y-2 pt-2">
+                  <div className="text-center font-black text-sm uppercase tracking-wider py-1 border-y border-black bg-slate-50/50">
+                    SECTION - III
+                  </div>
 
-              <div className="font-bold text-xs uppercase">
-                Q. 2: Write short answers of the following questions.
-              </div>
+                  <div
+                    style={{
+                      backgroundColor: "#e0e0e0",
+                      padding: "4px 8px",
+                      borderBottom: "1px solid #000",
+                      textAlign: "left",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    <strong>Q. 3:</strong> Write detailed answers to the following questions.
+                  </div>
 
-              {/* 2-Column Structured Short Questions Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 pt-1">
-                {shorts.map((q, idx) => {
-                  const roman = ["(i)", "(ii)", "(iii)", "(iv)", "(v)", "(vi)", "(vii)", "(viii)", "(ix)", "(x)"][idx] || `(${idx + 1})`;
-                  const enTrans = q.translations?.find((t) => t.language === "en");
-                  const isEditing = editingQuestionId === q.id;
+                  <div className="space-y-2 pt-1 pl-4">
+                    {longs.map((q, idx) => {
+                      const letter = String.fromCharCode(97 + idx);
+                      const enTrans = q.translations?.find((t) => t.language === "en");
 
-                  return (
-                    <div
-                      key={q.id}
-                      className="group relative hover:bg-blue-50/20 p-1.5 rounded transition-colors avoid-break"
-                    >
-                      <div className="no-print absolute top-1 right-1 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-sm px-1.5 py-0.5 z-10 transition-opacity">
-                        <button
-                          onClick={() => {
-                            setEditingQuestionId(q.id);
-                            setEditingText(enTrans?.text || "");
-                          }}
-                          className="text-blue-600 hover:text-blue-800 p-0.5"
-                          title="Edit Question Text"
-                        >
-                          <Edit3 className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => handleSwapQuestion(q.id, "short")}
-                          className="text-teal-600 hover:text-teal-800 p-0.5"
-                          title="Swap with another Short Question"
-                        >
-                          <Shuffle className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteQuestion(q.id)}
-                          className="text-rose-600 hover:text-rose-800 p-0.5"
-                          title="Delete question from paper"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-
-                      <div className="flex items-start gap-1.5 text-xs leading-normal">
-                        <span className="font-bold shrink-0">{roman}</span>
-                        {isEditing ? (
-                          <div className="flex-1 flex items-center gap-2">
-                            <input
-                              type="text"
-                              value={editingText}
-                              onChange={(e) => setEditingText(e.target.value)}
-                              className="w-full px-2 py-1 text-xs border border-blue-500 rounded outline-none font-sans"
-                            />
-                            <button
-                              onClick={() => handleSaveTextEdit(q.id)}
-                              className="p-1 bg-emerald-600 text-white rounded hover:bg-emerald-500"
-                            >
-                              <Check className="w-3 h-3" />
-                            </button>
-                            <button
-                              onClick={() => setEditingQuestionId(null)}
-                              className="p-1 bg-slate-300 text-slate-700 rounded hover:bg-slate-400"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="flex-1 font-medium">
+                      return (
+                        <div key={q.id} className="flex items-start gap-2">
+                          <span className="font-bold">({letter})</span>
+                          <div
+                            contentEditable
+                            suppressContentEditableWarning
+                            className="outline-none font-semibold flex-1 leading-relaxed"
+                          >
                             <MathRenderer content={enTrans?.text || ""} />
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
-          {/* 5. SECTION - III: LONG QUESTIONS (If present) */}
-          {longs.length > 0 && (
-            <section className="space-y-4 pt-2">
-              <div className="text-center font-black text-xs uppercase tracking-widest border-y border-black py-1 bg-slate-50/40">
-                SECTION - III
-              </div>
-
-              <div className="font-bold text-xs uppercase">
-                Q. 3: Write detailed answers to the following questions.
-              </div>
-
-              <div className="space-y-3 pt-1">
-                {longs.map((q, idx) => {
-                  const enTrans = q.translations?.find((t) => t.language === "en");
-                  return (
-                    <div key={q.id} className="p-1.5 flex items-start gap-1.5 text-xs avoid-break">
-                      <span className="font-bold shrink-0">({String.fromCharCode(97 + idx)})</span>
-                      <div className="flex-1 font-medium leading-relaxed">
-                        <MathRenderer content={enTrans?.text || ""} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          )}
-
-          {/* 6. ANSWER KEY TABLE (Screenshot 2 Feature!) */}
-          {showAnswerKey && displayedMcqs.length > 0 && (
-            <section className="pt-6 avoid-break">
-              <div className="text-center font-black text-xs uppercase tracking-widest mb-1">
+          {/* ===================================================================
+              ANSWER KEY SECTION (Print Mode: Key or All)
+              =================================================================== */}
+          {showAnswerKey && displayedMcqs.length > 0 && printMode !== "questions" && (
+            <div
+              className={`pt-6 ${printMode === "all" ? "page-break" : ""}`}
+              style={{ pageBreakBefore: printMode === "all" ? "always" : "auto" }}
+            >
+              <div className="text-center font-black text-sm uppercase tracking-widest mb-0.5">
                 ANSWER KEY
               </div>
-              <div className="text-center text-[10px] text-slate-600 font-bold mb-2">
+              <div className="text-center text-xs text-slate-700 font-bold mb-2">
                 Multiple Choice Questions
               </div>
 
-              {/* Table with columns: Q. No. | Correct Answer | Q. No. | Correct Answer */}
-              <div className="border border-black overflow-hidden">
-                <table className="w-full text-center text-xs divide-y divide-black font-sans">
-                  <thead>
-                    <tr className="bg-slate-100/70 font-bold divide-x divide-black">
-                      <th className="py-1 px-2 w-16">Q. No.</th>
-                      <th className="py-1 px-2">Correct Answer</th>
-                      <th className="py-1 px-2 w-16">Q. No.</th>
-                      <th className="py-1 px-2">Correct Answer</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-black">
-                    {Array.from({ length: Math.ceil(displayedMcqs.length / 2) }).map((_, rIdx) => {
-                      const q1 = displayedMcqs[rIdx];
-                      const q2 = displayedMcqs[rIdx + Math.ceil(displayedMcqs.length / 2)];
+              {/* Boxed Answer Key Table matching Paper Preview & Print.html */}
+              <table
+                className="answer-key-table w-full border-collapse border border-black text-xs font-sans text-center"
+                style={{ direction: "ltr" }}
+              >
+                <thead>
+                  <tr className="bg-slate-200/80 font-bold border-b border-black">
+                    <th className="py-1 px-2 border-r border-black w-16">Q. No.</th>
+                    <th className="py-1 px-2 border-r border-black text-left">Correct Answer</th>
+                    <th className="py-1 px-2 border-r border-black w-16">Q. No.</th>
+                    <th className="py-1 px-2 text-left">Correct Answer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: Math.ceil(displayedMcqs.length / 2) }).map((_, rIdx) => {
+                    const q1 = displayedMcqs[rIdx];
+                    const q2 = displayedMcqs[rIdx + Math.ceil(displayedMcqs.length / 2)];
 
-                      const getAns = (q?: Question) => {
-                        if (!q) return null;
-                        const en = q.translations?.find((t) => t.language === "en");
-                        const optIdx = (q.correct_option || 1) - 1;
-                        const letter = String.fromCharCode(65 + optIdx);
-                        const text = en?.options?.[optIdx] || "";
-                        return `(${letter}) ${text}`;
-                      };
+                    const getAnsText = (q?: Question) => {
+                      if (!q) return "";
+                      const en = q.translations?.find((t) => t.language === "en");
+                      const optIdx = (q.correct_option || 1) - 1;
+                      const letter = String.fromCharCode(65 + optIdx);
+                      const optText = en?.options?.[optIdx] || "";
+                      return `(${letter}) ${optText}`;
+                    };
 
-                      return (
-                        <tr key={rIdx} className="divide-x divide-black text-[11px]">
-                          <td className="py-1 font-mono font-bold">{(rIdx + 1).toString().padStart(2, "0")}</td>
-                          <td className="py-1 px-2 text-left font-medium">{getAns(q1)}</td>
-                          <td className="py-1 font-mono font-bold">
-                            {q2 ? (rIdx + 1 + Math.ceil(displayedMcqs.length / 2)).toString().padStart(2, "0") : ""}
-                          </td>
-                          <td className="py-1 px-2 text-left font-medium">{getAns(q2)}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </section>
+                    return (
+                      <tr key={rIdx} className="border-b border-black/60 text-[11px]">
+                        <td className="py-1 border-r border-black font-bold font-mono">
+                          {(rIdx + 1).toString().padStart(2, "0")}
+                        </td>
+                        <td className="py-1 px-2 border-r border-black text-left font-medium">
+                          {getAnsText(q1)}
+                        </td>
+                        <td className="py-1 border-r border-black font-bold font-mono">
+                          {q2 ? (rIdx + 1 + Math.ceil(displayedMcqs.length / 2)).toString().padStart(2, "0") : ""}
+                        </td>
+                        <td className="py-1 px-2 text-left font-medium">{getAnsText(q2)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </main>
-
-      {/* =========================================================================
-          PROFILE / INSTITUTION MODAL
-          ========================================================================= */}
-      {showProfileModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <h3 className="font-bold text-base flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-blue-600" />
-                <span>Institution Profile</span>
-              </h3>
-              <button onClick={() => setShowProfileModal(false)} className="text-slate-400 p-1">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs font-medium">
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">Institution / School Name:</label>
-                <input
-                  type="text"
-                  value={institutionName}
-                  onChange={(e) => setInstitutionName(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg font-bold"
-                />
-              </div>
-
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">Examination Title:</label>
-                <input
-                  type="text"
-                  value={examTitle}
-                  onChange={(e) => setExamTitle(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg font-bold"
-                />
-              </div>
-
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">Syllabus Text:</label>
-                <input
-                  type="text"
-                  value={syllabusText}
-                  onChange={(e) => setSyllabusText(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg"
-                />
-              </div>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setShowProfileModal(false)}
-                className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg text-xs"
-              >
-                Save Header
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =========================================================================
-          CONTENT OPTIONS MODAL
-          ========================================================================= */}
-      {showContentModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <h3 className="font-bold text-base flex items-center gap-2">
-                <Sliders className="w-5 h-5 text-blue-600" />
-                <span>Content & Display Options</span>
-              </h3>
-              <button onClick={() => setShowContentModal(false)} className="text-slate-400 p-1">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs font-semibold text-slate-700">
-              <label className="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg cursor-pointer">
-                <span>Show OMR Bubble Answer Sheet</span>
-                <input
-                  type="checkbox"
-                  checked={showOMRSheet}
-                  onChange={(e) => setShowOMRSheet(e.target.checked)}
-                  className="rounded text-blue-600"
-                />
-              </label>
-
-              <label className="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg cursor-pointer">
-                <span>Show Answer Key Table</span>
-                <input
-                  type="checkbox"
-                  checked={showAnswerKey}
-                  onChange={(e) => setShowAnswerKey(e.target.checked)}
-                  className="rounded text-blue-600"
-                />
-              </label>
-
-              <label className="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg cursor-pointer">
-                <span>Show Student Details Row (Roll No / Name)</span>
-                <input
-                  type="checkbox"
-                  checked={showStudentDetails}
-                  onChange={(e) => setShowStudentDetails(e.target.checked)}
-                  className="rounded text-blue-600"
-                />
-              </label>
-
-              <label className="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg cursor-pointer">
-                <span>Show Examination Instructions Box</span>
-                <input
-                  type="checkbox"
-                  checked={showInstructionNote}
-                  onChange={(e) => setShowInstructionNote(e.target.checked)}
-                  className="rounded text-blue-600"
-                />
-              </label>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setShowContentModal(false)}
-                className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg text-xs"
-              >
-                Apply Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =========================================================================
-          INSTRUCTIONS MODAL
-          ========================================================================= */}
-      {showInstructionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <h3 className="font-bold text-base flex items-center gap-2">
-                <HelpCircle className="w-5 h-5 text-blue-600" />
-                <span>Examination Instructions</span>
-              </h3>
-              <button onClick={() => setShowInstructionModal(false)} className="text-slate-400 p-1">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div>
-              <label className="block text-slate-700 font-semibold text-xs mb-1">Instruction Note:</label>
-              <textarea
-                rows={4}
-                value={instructionNote}
-                onChange={(e) => setInstructionNote(e.target.value)}
-                className="w-full p-3 border rounded-lg text-xs leading-relaxed"
-              />
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setShowInstructionModal(false)}
-                className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg text-xs"
-              >
-                Save Instructions
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =========================================================================
-          SIZING MODAL
-          ========================================================================= */}
-      {showSizingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <h3 className="font-bold text-base flex items-center gap-2">
-                <Type className="w-5 h-5 text-blue-600" />
-                <span>Fonts & Sizing</span>
-              </h3>
-              <button onClick={() => setShowSizingModal(false)} className="text-slate-400 p-1">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-2 text-xs font-semibold">
-              <label className="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg cursor-pointer">
-                <span>Compact (10pt - fits more questions)</span>
-                <input
-                  type="radio"
-                  name="fsize"
-                  checked={fontSize === "sm"}
-                  onChange={() => setFontSize("sm")}
-                  className="text-blue-600"
-                />
-              </label>
-
-              <label className="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg cursor-pointer">
-                <span>Standard (11pt - standard board exam)</span>
-                <input
-                  type="radio"
-                  name="fsize"
-                  checked={fontSize === "base"}
-                  onChange={() => setFontSize("base")}
-                  className="text-blue-600"
-                />
-              </label>
-
-              <label className="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg cursor-pointer">
-                <span>Spacious (12pt - large print)</span>
-                <input
-                  type="radio"
-                  name="fsize"
-                  checked={fontSize === "lg"}
-                  onChange={() => setFontSize("lg")}
-                  className="text-blue-600"
-                />
-              </label>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setShowSizingModal(false)}
-                className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg text-xs"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
