@@ -30,6 +30,8 @@ import {
   Clock,
   KeyRound,
   ExternalLink,
+  Lock,
+  EyeOff,
 } from "lucide-react";
 import { ClientUser, SubscriptionPlanId, SubscriptionInfo, PLAN_METADATA } from "@/lib/types";
 
@@ -61,6 +63,9 @@ export default function AdminUsersPage() {
   const [filterPlan, setFilterPlan] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
 
+  // Track which client IDs have their password visible in table
+  const [revealedPasswords, setRevealedPasswords] = useState<Set<string>>(new Set());
+
   // Edit Modal State
   const [editingClient, setEditingClient] = useState<ClientUser | null>(null);
   const [editTab, setEditTab] = useState<"profile" | "subscription" | "permissions">("profile");
@@ -70,6 +75,8 @@ export default function AdminUsersPage() {
   const [editFullName, setEditFullName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [editPhone, setEditPhone] = useState("");
+  const [editPassword, setEditPassword] = useState("");
+  const [showEditPassword, setShowEditPassword] = useState(false);
   const [editAcademyName, setEditAcademyName] = useState("");
   const [editNotes, setEditNotes] = useState("");
 
@@ -92,6 +99,8 @@ export default function AdminUsersPage() {
   const [addFullName, setAddFullName] = useState("");
   const [addEmail, setAddEmail] = useState("");
   const [addPhone, setAddPhone] = useState("");
+  const [addPassword, setAddPassword] = useState("");
+  const [showAddPassword, setShowAddPassword] = useState(false);
   const [addAcademyName, setAddAcademyName] = useState("");
   const [addPlanId, setAddPlanId] = useState<SubscriptionPlanId>("standard");
   const [addNotes, setAddNotes] = useState("");
@@ -148,6 +157,8 @@ export default function AdminUsersPage() {
     setEditFullName(c.fullName || "");
     setEditEmail(c.email || "");
     setEditPhone(c.phone || "");
+    setEditPassword(c.password || "");
+    setShowEditPassword(false);
     setEditAcademyName(c.academyName || "");
     setEditNotes(c.notes || "");
 
@@ -163,6 +174,19 @@ export default function AdminUsersPage() {
     setPermUnlimitedExport(Boolean(c.subscription.canUnlimitedExport));
     setPermAllClasses(Boolean(c.subscription.canAccessAllClasses));
     setPermMaxQuestions(c.subscription.maxQuestionsPerPaper || 10);
+  };
+
+  // Toggle reveal password for client in table
+  const toggleRevealPassword = (id: string) => {
+    setRevealedPasswords((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
   };
 
   // Plan Selection changed in Edit Modal: auto-fill preset permissions & expiry
@@ -232,6 +256,7 @@ export default function AdminUsersPage() {
           fullName: editFullName.trim(),
           email: editEmail.trim(),
           phone: editPhone.trim() || null,
+          password: editPassword.trim() || null,
           academyName: editAcademyName.trim() || null,
           notes: editNotes.trim() || null,
           planId: editPlanId,
@@ -281,6 +306,7 @@ export default function AdminUsersPage() {
           fullName: addFullName.trim(),
           email: addEmail.trim(),
           phone: addPhone.trim() || null,
+          password: addPassword.trim() || "eduPass" + Math.floor(1000 + Math.random() * 9000),
           academyName: addAcademyName.trim() || null,
           planId: addPlanId,
           notes: addNotes.trim() || null,
@@ -295,6 +321,8 @@ export default function AdminUsersPage() {
       setAddFullName("");
       setAddEmail("");
       setAddPhone("");
+      setAddPassword("");
+      setShowAddPassword(false);
       setAddAcademyName("");
       setAddNotes("");
       await loadClients();
@@ -633,6 +661,7 @@ export default function AdminUsersPage() {
                 <tr>
                   <th className="py-3.5 px-4">Educator &amp; Academy</th>
                   <th className="py-3.5 px-4">Contact Info</th>
+                  <th className="py-3.5 px-4">User Password</th>
                   <th className="py-3.5 px-4">Current Plan</th>
                   <th className="py-3.5 px-4">Status &amp; Expiry</th>
                   <th className="py-3.5 px-4">Permissions Breakdown</th>
@@ -711,6 +740,34 @@ export default function AdminUsersPage() {
                           ) : (
                             <span className="text-[11px] text-slate-400 italic">No phone added</span>
                           )}
+                        </div>
+                      </td>
+
+                      {/* User Password */}
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-2">
+                          <div className="font-mono text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 flex items-center gap-1.5">
+                            <Lock className="w-3 h-3 text-slate-400" />
+                            <span>
+                              {c.password
+                                ? revealedPasswords.has(c.id)
+                                  ? c.password
+                                  : "••••••••"
+                                : "default123"}
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => toggleRevealPassword(c.id)}
+                            title={revealedPasswords.has(c.id) ? "Hide Password" : "Show Password"}
+                            className="p-1 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+                          >
+                            {revealedPasswords.has(c.id) ? (
+                              <EyeOff className="w-3.5 h-3.5" />
+                            ) : (
+                              <Eye className="w-3.5 h-3.5" />
+                            )}
+                          </button>
                         </div>
                       </td>
 
@@ -985,6 +1042,28 @@ export default function AdminUsersPage() {
                         className="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                         placeholder="0300-1234567"
                       />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">
+                        User Password
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showEditPassword ? "text" : "password"}
+                          value={editPassword}
+                          onChange={(e) => setEditPassword(e.target.value)}
+                          className="w-full p-2.5 pr-10 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 font-mono"
+                          placeholder="Set user password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowEditPassword(!showEditPassword)}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600"
+                        >
+                          {showEditPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -1373,16 +1452,36 @@ export default function AdminUsersPage() {
               </div>
 
               <div>
+                <label className="block font-bold text-slate-700 mb-1">Account Password (Optional - Auto-generated if blank)</label>
+                <div className="relative">
+                  <input
+                    type={showAddPassword ? "text" : "password"}
+                    value={addPassword}
+                    onChange={(e) => setAddPassword(e.target.value)}
+                    placeholder="Enter password (e.g. educator2026)"
+                    className="w-full p-2.5 pr-10 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500/20 font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowAddPassword(!showAddPassword)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600"
+                  >
+                    {showAddPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
                 <label className="block font-bold text-slate-700 mb-1">Assign Initial Plan</label>
                 <select
                   value={addPlanId}
                   onChange={(e) => setAddPlanId(e.target.value as SubscriptionPlanId)}
                   className="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-semibold text-slate-700 focus:ring-2 focus:ring-emerald-500/20"
                 >
+                  <option value="monthly">Monthly Subscription (Rs. 2000 / Month - Unlimited)</option>
                   <option value="standard">Standard Plan (Rs. 2000 - 6 Months)</option>
                   <option value="annual">Annual Premium Plan (Rs. 3000 - 1 Year)</option>
-                  <option value="pay_as_you_go">Go as you pay (Rs. 30 / Paper)</option>
-                  <option value="free">Free Plan (Basic 10 Qs)</option>
+                  <option value="free">Free Plan (Browse Only)</option>
                 </select>
               </div>
 

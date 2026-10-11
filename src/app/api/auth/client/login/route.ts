@@ -16,11 +16,16 @@ export async function POST(req: NextRequest) {
     // Existing accounts keep their stored profile, plan and history.
     const existing = await db.getClientByEmail(email);
     const client = existing
-      ? await createClientSession({ email: existing.email, fullName: existing.fullName })
+      ? await createClientSession({
+          email: existing.email,
+          fullName: existing.fullName,
+          password: existing.password || password || null,
+        })
       : await createClientSession({
           email,
           fullName: body.fullName || email.split("@")[0],
           academyName: body.academyName || "Educator Academy",
+          password: password || null,
           planId: body.planId || undefined,
         });
 

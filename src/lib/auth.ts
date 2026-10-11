@@ -116,6 +116,7 @@ export async function createClientSession(clientData: {
   fullName: string;
   academyName?: string | null;
   phone?: string | null;
+  password?: string | null;
   planId?: SubscriptionPlanId;
 }): Promise<ClientUser> {
   // planId left undefined for existing clients so their stored plan is preserved
@@ -128,6 +129,7 @@ export async function createClientSession(clientData: {
     fullName: clientData.fullName,
     academyName: clientData.academyName || "My Academy",
     phone: clientData.phone || null,
+    password: clientData.password || null,
     planId: plan,
   });
 

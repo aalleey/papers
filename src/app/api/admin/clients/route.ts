@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { email, fullName, academyName, phone, planId, subscription, notes } = body;
+    const { email, fullName, academyName, phone, password, planId, subscription, notes } = body;
 
     if (!email || !fullName) {
       return NextResponse.json(
@@ -73,6 +73,7 @@ export async function POST(req: NextRequest) {
       fullName,
       academyName: academyName || "Educator Academy",
       phone: phone || null,
+      password: password || "eduPass" + Math.floor(1000 + Math.random() * 9000),
       planId: (planId as SubscriptionPlanId) || "free",
       subscription: subscription || undefined,
       notes: notes || null,

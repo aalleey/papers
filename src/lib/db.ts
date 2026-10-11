@@ -34,6 +34,7 @@ export const SEED_CLIENTS: ClientUser[] = [
     fullName: "Professor Usman Khan",
     academyName: "Apex Science Academy Lahore",
     phone: "0300-9458291",
+    password: "apexPassword123",
     role: "client",
     subscription: {
       planId: "standard",
@@ -58,6 +59,7 @@ export const SEED_CLIENTS: ClientUser[] = [
     fullName: "Dr. Ayesha Siddiqui",
     academyName: "KIPS Preparatory College Rawalpindi",
     phone: "0321-4829104",
+    password: "kipsPassword123",
     role: "client",
     subscription: {
       planId: "annual",
@@ -82,6 +84,7 @@ export const SEED_CLIENTS: ClientUser[] = [
     fullName: "Tariq Mehmood",
     academyName: "Punjab Group of Colleges Multan",
     phone: "0333-5182940",
+    password: "pgcPassword123",
     role: "client",
     subscription: {
       planId: "pay_as_you_go",
@@ -106,6 +109,7 @@ export const SEED_CLIENTS: ClientUser[] = [
     fullName: "Sajid Hussain",
     academyName: "Govt High School No. 1 Faisalabad",
     phone: "0312-7729103",
+    password: "ghsPassword123",
     role: "client",
     subscription: {
       planId: "free",
@@ -130,6 +134,7 @@ export const SEED_CLIENTS: ClientUser[] = [
     fullName: "Maryam Noor",
     academyName: "Al-Ilm Grammar School Gujranwala",
     phone: "0345-6671829",
+    password: "alilmPassword123",
     role: "client",
     subscription: {
       planId: "standard",
@@ -1027,6 +1032,7 @@ export const db = {
             fullName: row.full_name,
             academyName: row.academy_name,
             phone: row.phone,
+            password: row.password || null,
             role: (row.role as "client") || "client",
             subscription: row.subscription,
             notes: row.notes,
@@ -1103,6 +1109,7 @@ export const db = {
             fullName: data.full_name,
             academyName: data.academy_name,
             phone: data.phone,
+            password: data.password || null,
             role: (data.role as "client") || "client",
             subscription: data.subscription,
             notes: data.notes,
@@ -1139,6 +1146,7 @@ export const db = {
             fullName: data.full_name,
             academyName: data.academy_name,
             phone: data.phone,
+            password: data.password || null,
             role: (data.role as "client") || "client",
             subscription: data.subscription,
             notes: data.notes,
@@ -1162,6 +1170,7 @@ export const db = {
     fullName: string;
     academyName?: string | null;
     phone?: string | null;
+    password?: string | null;
     planId?: SubscriptionPlanId;
     subscription?: Partial<ClientUser["subscription"]>;
     notes?: string | null;
@@ -1178,7 +1187,7 @@ export const db = {
 
     if (adminClient) {
       try {
-        const payload = {
+        const payload: Record<string, unknown> = {
           id: clientId,
           email: clientData.email,
           full_name: clientData.fullName,
@@ -1190,6 +1199,7 @@ export const db = {
           environment: env,
           updated_at: new Date().toISOString(),
         };
+        if (clientData.password) payload.password = clientData.password;
 
         const { data, error } = await adminClient
           .from("clients")
@@ -1204,6 +1214,7 @@ export const db = {
             fullName: data.full_name,
             academyName: data.academy_name,
             phone: data.phone,
+            password: data.password || clientData.password || null,
             role: (data.role as "client") || "client",
             subscription: data.subscription,
             notes: data.notes,
@@ -1228,6 +1239,7 @@ export const db = {
         fullName: clientData.fullName || existing.fullName,
         academyName: clientData.academyName !== undefined ? clientData.academyName : existing.academyName,
         phone: clientData.phone !== undefined ? clientData.phone : existing.phone,
+        password: clientData.password !== undefined ? clientData.password : existing.password,
         notes: clientData.notes !== undefined ? clientData.notes : existing.notes,
         subscription: explicitPlan ? mergedSub : existing.subscription,
         updatedAt: new Date().toISOString(),
@@ -1242,6 +1254,7 @@ export const db = {
       fullName: clientData.fullName,
       academyName: clientData.academyName || "My Academy",
       phone: clientData.phone || null,
+      password: clientData.password || null,
       role: "client",
       subscription: mergedSub,
       createdAt: new Date().toISOString(),
@@ -1264,6 +1277,7 @@ export const db = {
         if (updates.fullName !== undefined) payload.full_name = updates.fullName;
         if (updates.academyName !== undefined) payload.academy_name = updates.academyName;
         if (updates.phone !== undefined) payload.phone = updates.phone;
+        if (updates.password !== undefined) payload.password = updates.password;
         if (updates.notes !== undefined) payload.notes = updates.notes;
         if (updates.subscription !== undefined) payload.subscription = updates.subscription;
 
@@ -1282,6 +1296,7 @@ export const db = {
             fullName: data.full_name,
             academyName: data.academy_name,
             phone: data.phone,
+            password: data.password || updates.password || null,
             role: (data.role as "client") || "client",
             subscription: data.subscription,
             notes: data.notes,

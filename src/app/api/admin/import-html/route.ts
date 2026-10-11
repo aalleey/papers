@@ -373,26 +373,39 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Deduplicate translationRows by (question_id, language) to strictly obey unique constraint uq_question_language
+    const uniqueTranslationMap = new Map<string, typeof translationRows[0]>();
+    for (const tr of translationRows) {
+      const key = `${tr.question_id}:${tr.language}`;
+      // Keep the most complete / latest translation row
+      uniqueTranslationMap.set(key, tr);
+    }
+    const finalTranslationRows = Array.from(uniqueTranslationMap.values());
+
     // 5. Batch Upsert to Supabase
     if (adminClient) {
       // Upsert questions in chunks of 50
       for (let i = 0; i < questionRows.length; i += 50) {
         const chunk = questionRows.slice(i, i + 50);
-        const { error: qErr } = await adminClient.from("questions").upsert(chunk);
+        const { error: qErr } = await adminClient.from("questions").upsert(chunk, {
+          onConflict: "id",
+        });
         if (qErr) throw new Error(`Questions upsert failed at batch ${i}: ${qErr.message}`);
       }
 
       // Upsert translations in chunks of 50
-      for (let i = 0; i < translationRows.length; i += 50) {
-        const chunk = translationRows.slice(i, i + 50);
-        const { error: tErr } = await adminClient.from("question_translations").upsert(chunk);
+      for (let i = 0; i < finalTranslationRows.length; i += 50) {
+        const chunk = finalTranslationRows.slice(i, i + 50);
+        const { error: tErr } = await adminClient.from("question_translations").upsert(chunk, {
+          onConflict: "question_id,language",
+        });
         if (tErr) throw new Error(`Translations upsert failed at batch ${i}: ${tErr.message}`);
       }
     } else {
       // Fallback local mock store
       for (let i = 0; i < questionRows.length; i++) {
         const qRow = questionRows[i];
-        const trans = translationRows
+        const trans = finalTranslationRows
           .filter((t) => t.question_id === qRow.id)
           .map((t) => ({
             language: t.language,

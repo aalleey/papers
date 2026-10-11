@@ -149,6 +149,7 @@ export interface ClientUser {
   academyName?: string | null;
   phone?: string | null;
   role: "client";
+  password?: string | null;
   subscription: SubscriptionInfo;
   createdAt: string;
   updatedAt?: string;

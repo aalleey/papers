@@ -19,6 +19,9 @@ import {
   Languages,
   BookOpen,
   Zap,
+  Lock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { ClientUser, PaperRecord, ClientPaperStats } from "@/lib/types";
 
@@ -60,6 +63,7 @@ export function ClientProfileView({ client, papers, stats }: Props) {
   const [search, setSearch] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [visible, setVisible] = useState(15);
+  const [showPassword, setShowPassword] = useState(false);
 
   const sub = client.subscription;
   const isSuspended = sub.status === "suspended";
@@ -140,6 +144,25 @@ export function ClientProfileView({ client, papers, stats }: Props) {
               <span className="inline-flex items-center gap-1.5">
                 <Phone className="w-4 h-4 text-emerald-400" />
                 {client.phone || "No phone added"}
+              </span>
+              <span className="inline-flex items-center gap-1.5 bg-white/10 px-2.5 py-0.5 rounded-lg border border-white/10 text-white font-mono">
+                <Lock className="w-3.5 h-3.5 text-amber-300" />
+                <span>Password:</span>
+                <span className="font-bold text-amber-200">
+                  {client.password
+                    ? showPassword
+                      ? client.password
+                      : "••••••••"
+                    : "default123"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="ml-1 p-0.5 text-slate-300 hover:text-white transition-colors"
+                  title={showPassword ? "Hide Password" : "Show Password"}
+                >
+                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                </button>
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CalendarDays className="w-4 h-4 text-emerald-400" />

@@ -6,7 +6,7 @@ import { sendWelcomeEmail } from "@/lib/email";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email, fullName, academyName, phone, planId } = body;
+    const { email, fullName, academyName, phone, password, planId } = body;
 
     if (!email || !fullName) {
       return NextResponse.json({ error: "Name and Email are required" }, { status: 400 });
@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
       fullName,
       academyName: academyName || "My Academy",
       phone: phone || null,
+      password: password || null,
       planId: (planId as SubscriptionPlanId) || "free",
     });
 

@@ -48,6 +48,7 @@ export async function PUT(
       email,
       phone,
       academyName,
+      password,
       notes,
       planId,
       status,
@@ -134,6 +135,7 @@ export async function PUT(
       email: email !== undefined ? email : client.email,
       phone: phone !== undefined ? phone : client.phone,
       academyName: academyName !== undefined ? academyName : client.academyName,
+      password: password !== undefined ? password : client.password,
       notes: notes !== undefined ? notes : client.notes,
       subscription: targetSub,
     });
