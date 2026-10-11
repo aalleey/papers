@@ -6,10 +6,12 @@ import { Board, Course, Subject, Chapter, CsvRowValidationResult } from "@/lib/t
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
 import Link from "next/link";
+import { HtmlQuestionImporter } from "@/components/admin/HtmlQuestionImporter";
 import {
   Upload,
   Download,
   FileSpreadsheet,
+  FileCode,
   AlertCircle,
   CheckCircle2,
   AlertTriangle,
@@ -17,9 +19,12 @@ import {
   RefreshCw,
   Info,
   Check,
+  Sparkles,
 } from "lucide-react";
 
-export default function CsvImportPage() {
+export default function ImportPage() {
+  const [activeTab, setActiveTab] = useState<"html" | "csv">("html");
+
   const [courses, setCourses] = useState<Course[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [selectedCourseId, setSelectedCourseId] = useState("");
@@ -184,29 +189,76 @@ export default function CsvImportPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-        <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <FileSpreadsheet className="w-6 h-6 text-emerald-600" />
-            <span>CSV Question Import</span>
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Batch import multiple exam questions with bilingual text, KaTeX formulas, and MCQ options.
-          </p>
+      {/* Top Navigation Tabs */}
+      <div className="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <button
+            type="button"
+            onClick={() => setActiveTab("html")}
+            className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black tracking-wide transition-all ${
+              activeTab === "html"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+            }`}
+          >
+            <FileCode className="w-4 h-4" />
+            <span>HTML Question Parser</span>
+            <span
+              className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                activeTab === "html"
+                  ? "bg-indigo-500/40 text-indigo-100"
+                  : "bg-indigo-100 text-indigo-700"
+              }`}
+            >
+              New
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("csv")}
+            className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black tracking-wide transition-all ${
+              activeTab === "csv"
+                ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+            }`}
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            <span>CSV Spreadsheet Import</span>
+          </button>
         </div>
 
-        <a
-          href="/api/template/csv"
-          download="paper_maker_questions_template.csv"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-semibold text-xs shadow-sm transition-colors"
-        >
-          <Download className="w-4 h-4" />
-          <span>Download CSV Template</span>
-        </a>
+        {activeTab === "csv" && (
+          <a
+            href="/api/template/csv"
+            download="paper_maker_questions_template.csv"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs shadow-sm transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            <span>Download CSV Template</span>
+          </a>
+        )}
       </div>
 
-      {/* Target Destination & Upload Box */}
+      {/* Tab 1: HTML Question Parser */}
+      {activeTab === "html" ? (
+        <HtmlQuestionImporter />
+      ) : (
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <div>
+              <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
+                <span>CSV Question Import</span>
+              </h1>
+              <p className="text-xs text-slate-500 mt-1">
+                Batch import multiple exam questions with bilingual text, KaTeX formulas, and MCQ options.
+              </p>
+            </div>
+          </div>
+
+          {/* Target Destination & Upload Box */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -484,6 +536,8 @@ export default function CsvImportPage() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
         </div>
       )}
     </div>

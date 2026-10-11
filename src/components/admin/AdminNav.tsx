@@ -28,7 +28,7 @@ interface AdminNavProps {
 const navItems = [
   { href: "/admin/users", label: "Registered Clients", icon: Users },
   { href: "/admin/questions", label: "Questions Bank", icon: HelpCircle },
-  { href: "/admin/import", label: "CSV Import", icon: Upload },
+  { href: "/admin/import", label: "HTML & CSV Import", icon: Upload },
   { href: "/admin/boards", label: "Boards", icon: Globe2 },
   { href: "/admin/courses", label: "Courses", icon: GraduationCap },
   { href: "/admin/subjects", label: "Subjects", icon: Book },
