@@ -101,6 +101,10 @@ export default function AdminUsersPage() {
   const [deletingClient, setDeletingClient] = useState<ClientUser | null>(null);
   const [deleting, setDeleting] = useState(false);
 
+  // Email Preview & Send State
+  const [emailPreviewClient, setEmailPreviewClient] = useState<ClientUser | null>(null);
+  const [sendingEmail, setSendingEmail] = useState(false);
+
   // Feedback Notification
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<"success" | "error">("success");
@@ -819,6 +823,16 @@ export default function AdminUsersPage() {
                           >
                             <Eye className="w-3.5 h-3.5" />
                           </Link>
+
+                          {/* Preview & Resend Welcome Email */}
+                          <button
+                            onClick={() => setEmailPreviewClient(c)}
+                            title="Preview & Send Welcome Email"
+                            className="p-1.5 rounded-lg border border-slate-200 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300 text-slate-600 transition-colors"
+                          >
+                            <Mail className="w-3.5 h-3.5" />
+                          </button>
+
                           {/* Edit Full Profile & Permissions */}
                           <button
                             onClick={() => handleOpenEdit(c)}
@@ -1434,6 +1448,116 @@ export default function AdminUsersPage() {
                 className="py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-md shadow-rose-950/20 disabled:opacity-50"
               >
                 {deleting ? "Deleting..." : "Yes, Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL: WELCOME EMAIL PREVIEW & DISPATCH
+          ========================================================================= */}
+      {emailPreviewClient && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-3xl w-full overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
+            {/* Modal Header */}
+            <div className="p-5 bg-gradient-to-r from-emerald-950 via-slate-900 to-indigo-950 text-white flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-base font-black text-white">Welcome Email Preview &amp; Dispatch</h2>
+                  <p className="text-xs text-slate-300">
+                    To: <span className="font-bold text-emerald-400">{emailPreviewClient.fullName}</span> &lt;{emailPreviewClient.email}&gt;
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setEmailPreviewClient(null)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Email Meta Bar */}
+            <div className="bg-slate-50 border-b border-slate-200 px-6 py-3 text-xs flex flex-wrap items-center justify-between gap-2">
+              <div className="space-y-0.5">
+                <div>
+                  <span className="font-bold text-slate-500">Subject: </span>
+                  <span className="font-semibold text-slate-800">
+                    Welcome to PaperWala (پیپر والا) - Pakistan&apos;s #1 Exam Paper Generator! 🎓
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-500">
+                  <span>Academy: <b>{emailPreviewClient.academyName || "Educator Academy"}</b></span>
+                  <span className="mx-2">&bull;</span>
+                  <span>Plan: <b>{emailPreviewClient.subscription.planName}</b></span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                disabled={sendingEmail}
+                onClick={async () => {
+                  try {
+                    setSendingEmail(true);
+                    const res = await fetch("/api/admin/emails", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ clientId: emailPreviewClient.id }),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || "Failed to send email");
+                    showToast(`Welcome email successfully sent to ${emailPreviewClient.email}!`);
+                    setEmailPreviewClient(null);
+                  } catch (e: unknown) {
+                    const msg = e instanceof Error ? e.message : "Failed to send";
+                    showToast(msg, "error");
+                  } finally {
+                    setSendingEmail(false);
+                  }
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm shadow-emerald-950/20 active:scale-95 transition-all disabled:opacity-50"
+              >
+                {sendingEmail ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Sending Email...</span>
+                  </>
+                ) : (
+                  <>
+                    <Mail className="w-3.5 h-3.5" />
+                    <span>Send Welcome Email Now</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Live Rendered Email HTML Preview (iframe) */}
+            <div className="p-4 bg-slate-100 flex justify-center">
+              <div className="w-full max-w-xl bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <iframe
+                  src={`/api/admin/emails/preview?clientId=${emailPreviewClient.id}`}
+                  title="Welcome Email Preview"
+                  className="w-full h-[480px] border-none"
+                />
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-white border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+              <span>
+                💡 Delivered automatically upon registration. Click <b>Send Welcome Email Now</b> to resend.
+              </span>
+              <button
+                type="button"
+                onClick={() => setEmailPreviewClient(null)}
+                className="px-4 py-2 rounded-xl border border-slate-200 font-bold text-slate-700 hover:bg-slate-50"
+              >
+                Close Preview
               </button>
             </div>
           </div>

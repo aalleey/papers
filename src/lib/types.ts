@@ -377,3 +377,17 @@ export function getPlanPermissions(planId: SubscriptionPlanId): SubscriptionInfo
   }
 }
 
+// Outgoing / Transactional Email Record
+export interface EmailRecord {
+  id: string;
+  to: string;
+  recipientName: string;
+  subject: string;
+  template: "welcome" | "subscription_upgrade" | "custom";
+  status: "sent" | "delivered" | "failed" | "simulated";
+  previewText?: string;
+  htmlContent: string;
+  sentAt: string;
+  error?: string | null;
+}
+

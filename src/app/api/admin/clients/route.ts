@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { SubscriptionPlanId } from "@/lib/types";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -76,6 +77,13 @@ export async function POST(req: NextRequest) {
       subscription: subscription || undefined,
       notes: notes || null,
     });
+
+    // Send Welcome Email to newly registered educator
+    try {
+      await sendWelcomeEmail(client);
+    } catch (emailErr) {
+      console.warn("Failed to dispatch welcome email from admin:", emailErr);
+    }
 
     return NextResponse.json({ success: true, client }, { status: 201 });
   } catch (err: unknown) {

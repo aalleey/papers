@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClientSession } from "@/lib/auth";
 import { SubscriptionPlanId } from "@/lib/types";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,6 +19,13 @@ export async function POST(req: NextRequest) {
       phone: phone || null,
       planId: (planId as SubscriptionPlanId) || "free",
     });
+
+    // Send Welcome Email to the newly registered educator
+    try {
+      await sendWelcomeEmail(client);
+    } catch (emailErr) {
+      console.warn("Failed to dispatch welcome email:", emailErr);
+    }
 
     return NextResponse.json({ success: true, client });
   } catch (error) {

@@ -13,6 +13,7 @@ import {
   getPlanPermissions,
   PaperRecord,
   ClientPaperStats,
+  EmailRecord,
 } from "./types";
 import {
   SEED_BOARDS,
@@ -210,6 +211,7 @@ interface MockStore {
   questions: Question[];
   clients: ClientUser[];
   papers: PaperRecord[];
+  emails: EmailRecord[];
 }
 
 // Global reference to retain state across Next.js dev reloads
@@ -222,6 +224,9 @@ function initMockStore(): MockStore {
     }
     if (!globalForStore.mockStore.papers) {
       globalForStore.mockStore.papers = buildSeedPapers();
+    }
+    if (!globalForStore.mockStore.emails) {
+      globalForStore.mockStore.emails = [];
     }
     return globalForStore.mockStore;
   }
@@ -262,6 +267,7 @@ function initMockStore(): MockStore {
     questions: initialQuestions,
     clients: [...SEED_CLIENTS],
     papers: buildSeedPapers(),
+    emails: [],
   };
 
   globalForStore.mockStore = store;
@@ -1143,5 +1149,36 @@ export const db = {
         .sort((a, b) => b.count - a.count),
       perDay,
     };
+  },
+
+  // =========================================================================
+  // TRANSACTIONAL EMAILS OUTBOX (Welcome & Notifications)
+  // =========================================================================
+
+  async saveEmail(data: Omit<EmailRecord, "id" | "sentAt">): Promise<EmailRecord> {
+    const store = initMockStore();
+    const record: EmailRecord = {
+      ...data,
+      id: `email-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      sentAt: new Date().toISOString(),
+    };
+    store.emails.unshift(record);
+    return JSON.parse(JSON.stringify(record));
+  },
+
+  async getEmails(limit = 100): Promise<EmailRecord[]> {
+    const store = initMockStore();
+    return store.emails
+      .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime())
+      .slice(0, limit)
+      .map((e) => ({ ...e }));
+  },
+
+  async getEmailsByRecipient(to: string): Promise<EmailRecord[]> {
+    const store = initMockStore();
+    return store.emails
+      .filter((e) => e.to.toLowerCase() === to.toLowerCase())
+      .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime())
+      .map((e) => ({ ...e }));
   },
 };
