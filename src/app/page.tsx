@@ -24,6 +24,7 @@ import {
   Clock,
   Award,
   Zap,
+  Crown,
 } from "lucide-react";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
@@ -146,10 +147,26 @@ export default function Home() {
             <a href="#faq" className="hover:text-emerald-400 transition-colors">
               FAQs
             </a>
+            <Link
+              href="/pricing"
+              className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition-colors"
+            >
+              <Crown className="w-3.5 h-3.5" />
+              <span>Pricing &amp; Plans</span>
+            </Link>
           </nav>
 
           {/* Action CTAs */}
           <div className="flex items-center gap-3">
+            <Link
+              href="/pricing"
+              id="nav-pricing-btn"
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition-all"
+            >
+              <Crown className="w-3.5 h-3.5 text-amber-400" />
+              <span>Plans (From Rs. 30)</span>
+            </Link>
+
             <Link
               href="/admin/login"
               id="nav-admin-login-btn"

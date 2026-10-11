@@ -7,10 +7,16 @@ import {
   Question,
   Chapter,
   Topic,
+  ClientUser,
+  SubscriptionPlanId,
+  SUBSCRIPTION_PLANS,
+  getPlanPermissions,
 } from "@/lib/types";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
 import { getUrduTranslation } from "@/lib/urdu-translations";
+import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { ClientAuthModal } from "@/components/ClientAuthModal";
 import {
   ChevronUp,
   ChevronDown,
@@ -33,10 +39,25 @@ import {
   Eye,
   Sliders,
   ChevronRight,
+  Crown,
+  Lock,
+  UserCheck,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 
 export default function SelectQuestionsPage() {
   const router = useRouter();
+
+  // Client authentication & subscription state
+  const [clientUser, setClientUser] = useState<ClientUser | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showSubModal, setShowSubModal] = useState(false);
+  const [subModalTitle, setSubModalTitle] = useState("Unlock Full Examination Features");
+  const [subModalSubtitle, setSubModalSubtitle] = useState(
+    "Choose a subscription plan to generate board-standard papers with your academy branding and answer keys."
+  );
+  const [subModalHighlight, setSubModalHighlight] = useState<SubscriptionPlanId | undefined>("standard");
 
   // Data state
   const [loading, setLoading] = useState(true);
@@ -127,8 +148,30 @@ export default function SelectQuestionsPage() {
       }
     }
 
+    async function loadClientUser() {
+      try {
+        const res = await fetch("/api/auth/client/me");
+        const data = await res.json();
+        if (data.client) {
+          setClientUser(data.client);
+        }
+      } catch (err) {
+        console.error("Failed to load client user:", err);
+      }
+    }
+
     loadData();
+    loadClientUser();
   }, []);
+
+  async function handleLogout() {
+    try {
+      await fetch("/api/auth/client/logout", { method: "POST" });
+      setClientUser(null);
+    } catch (e) {
+      console.error("Failed to log out client", e);
+    }
+  }
 
   async function handleChapterChange(chapterId: string) {
     const ch = chapters.find((c) => c.id === chapterId);
@@ -288,6 +331,25 @@ export default function SelectQuestionsPage() {
 
   // Navigate to Paper Editor
   const handleGeneratePaper = () => {
+    // 1. Must be logged in / have client session
+    if (!clientUser) {
+      setSubModalTitle("Client Login & Subscription Required");
+      setSubModalSubtitle("Please sign in or select a plan to generate and export board examination papers.");
+      setShowAuthModal(true);
+      return;
+    }
+
+    // 2. Free Plan limitation: Free Plan has "Limited MCQ/Short Questions" (max 10) and NO Full Board Pattern Paper
+    if (!clientUser.subscription.canFullBoardPaper && selectedCounts.total > 10) {
+      setSubModalTitle("Full Board Pattern Paper Required");
+      setSubModalSubtitle(
+        `You have selected ${selectedCounts.total} questions. The Free Plan is limited to small tests up to 10 questions. Upgrade to Go as you pay (Rs. 30) or Standard Plan to generate full board pattern papers!`
+      );
+      setSubModalHighlight("pay_as_you_go");
+      setShowSubModal(true);
+      return;
+    }
+
     const selectedList = allQuestions.filter((q) => selectedIds.has(q.id));
     sessionStorage.setItem("papermaker_selected_questions", JSON.stringify(selectedList));
     sessionStorage.setItem("papermaker_language_mode", languageMode);
@@ -356,15 +418,87 @@ export default function SelectQuestionsPage() {
                 </div>
               </div>
 
-              {/* Responsive Quick Action Buttons in Header */}
-              <div className="flex items-center gap-2 self-end md:self-auto">
+              {/* Responsive Quick Action Buttons & Client Subscription Badge in Header */}
+              <div className="flex flex-wrap items-center gap-2 self-end md:self-auto">
+                {/* Client Subscription Status Badge */}
+                {clientUser ? (
+                  <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl p-1 shadow-2xs">
+                    <button
+                      onClick={() => {
+                        setSubModalTitle("Manage Subscription Plan");
+                        setSubModalSubtitle(`Current Plan: ${clientUser.subscription.planName}. Choose a plan below to upgrade or renew.`);
+                        setSubModalHighlight(clientUser.subscription.planId);
+                        setShowSubModal(true);
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-black flex items-center gap-1.5 transition-all shadow-2xs ${
+                        clientUser.subscription.planId === "annual"
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
+                          : clientUser.subscription.planId === "standard"
+                          ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white"
+                          : clientUser.subscription.planId === "pay_as_you_go"
+                          ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                      }`}
+                      title="Click to view plans or upgrade"
+                    >
+                      <Crown className="w-3.5 h-3.5" />
+                      <span>{clientUser.subscription.planName}</span>
+                    </button>
+
+                    {clientUser.subscription.planId === "free" && (
+                      <button
+                        onClick={() => {
+                          setSubModalTitle("Upgrade Your Plan");
+                          setSubModalSubtitle("Unlock Auto Board Pattern Generator, full papers, academy branding, and answer keys!");
+                          setSubModalHighlight("standard");
+                          setShowSubModal(true);
+                        }}
+                        className="px-2 py-0.5 rounded-md bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-black transition-colors"
+                      >
+                        Upgrade
+                      </button>
+                    )}
+
+                    <button
+                      onClick={handleLogout}
+                      className="p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                      title="Log Out"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowAuthModal(true)}
+                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black flex items-center gap-1.5 shadow-sm transition-all"
+                    id="btn-client-login"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    <span>Client Login</span>
+                  </button>
+                )}
+
                 <button
-                  onClick={() => applyCustomPattern(10, 5, 2)}
+                  onClick={() => {
+                    if (!clientUser) {
+                      setShowAuthModal(true);
+                      return;
+                    }
+                    if (!clientUser.subscription.canAutoBoardPattern) {
+                      setSubModalTitle("Auto Board Pattern Generator is Locked");
+                      setSubModalSubtitle("Free Plan only allows manual question selection. Upgrade to Go as you pay (Rs. 30), Standard, or Annual Plan for automatic board selection.");
+                      setSubModalHighlight("standard");
+                      setShowSubModal(true);
+                      return;
+                    }
+                    applyCustomPattern(10, 5, 2);
+                  }}
                   className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-all border border-indigo-200 flex items-center gap-1.5 shadow-2xs"
                   title="Quick Auto Pick (10 MCQs, 5 Shorts, 2 Longs)"
                 >
                   <Zap className="w-3.5 h-3.5 fill-indigo-600 text-indigo-600" />
                   <span>Auto Pick</span>
+                  {!clientUser?.subscription?.canAutoBoardPattern && <Lock className="w-3 h-3 text-indigo-500" />}
                 </button>
 
                 <button
@@ -406,10 +540,24 @@ export default function SelectQuestionsPage() {
                     <input
                       type="checkbox"
                       checked={patternMode === "board"}
-                      onChange={() => setPatternMode(patternMode === "board" ? null : "board")}
+                      onChange={() => {
+                        if (!clientUser) {
+                          setShowAuthModal(true);
+                          return;
+                        }
+                        if (!clientUser.subscription.canAutoBoardPattern) {
+                          setSubModalTitle("Auto Board Pattern Generator is Locked");
+                          setSubModalSubtitle("Free Plan only allows manual question selection. Upgrade to Go as you pay (Rs. 30), Standard, or Annual Plan to generate papers with Board patterns.");
+                          setSubModalHighlight("standard");
+                          setShowSubModal(true);
+                          return;
+                        }
+                        setPatternMode(patternMode === "board" ? null : "board");
+                      }}
                       className="rounded text-amber-600 focus:ring-amber-500 h-3.5 w-3.5"
                     />
                     <span>Board</span>
+                    {!clientUser?.subscription?.canAutoBoardPattern && <Lock className="w-3 h-3 text-amber-600 inline" />}
                   </label>
 
                   <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-amber-900 select-none">
@@ -417,12 +565,24 @@ export default function SelectQuestionsPage() {
                       type="checkbox"
                       checked={patternMode === "auto"}
                       onChange={() => {
+                        if (!clientUser) {
+                          setShowAuthModal(true);
+                          return;
+                        }
+                        if (!clientUser.subscription.canAutoBoardPattern) {
+                          setSubModalTitle("Auto Pattern Selection is Locked");
+                          setSubModalSubtitle("Free Plan only allows manual question selection. Upgrade to Go as you pay (Rs. 30), Standard, or Annual Plan to generate papers automatically.");
+                          setSubModalHighlight("standard");
+                          setShowSubModal(true);
+                          return;
+                        }
                         setPatternMode(patternMode === "auto" ? null : "auto");
                         if (patternMode !== "auto") applyCustomPattern(10, 5, 2);
                       }}
                       className="rounded text-amber-600 focus:ring-amber-500 h-3.5 w-3.5"
                     />
                     <span className="font-bold text-amber-900">Auto (10:5:2)</span>
+                    {!clientUser?.subscription?.canAutoBoardPattern && <Lock className="w-3 h-3 text-amber-600 inline" />}
                   </label>
 
                   <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-amber-900 select-none">
@@ -1049,6 +1209,29 @@ export default function SelectQuestionsPage() {
           </div>
         </div>
       )}
+
+      {/* Client Authentication Modal */}
+      <ClientAuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={(user) => {
+          setClientUser(user);
+          setShowAuthModal(false);
+        }}
+      />
+
+      {/* Subscription Plans Modal */}
+      <SubscriptionModal
+        isOpen={showSubModal}
+        onClose={() => setShowSubModal(false)}
+        onSuccess={(user) => {
+          setClientUser(user);
+          setShowSubModal(false);
+        }}
+        title={subModalTitle}
+        subtitle={subModalSubtitle}
+        highlightPlan={subModalHighlight}
+      />
     </div>
   );
 }
