@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentClient, getCurrentUser } from "@/lib/auth";
+import { isPaidSubscriber } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-// Teacher Paper Maker API: Fetches curriculum hierarchy and questions (Locked until login)
+// Teacher Paper Maker API: Fetches curriculum hierarchy and questions (Locked until registered with active paid subscription)
 export async function GET(req: NextRequest) {
   const [clientUser, adminUser] = await Promise.all([
     getCurrentClient(),
@@ -14,10 +15,23 @@ export async function GET(req: NextRequest) {
   if (!clientUser && !adminUser) {
     return NextResponse.json(
       {
-        error: "Authentication required. Question bank and paper generation are locked until you log in.",
+        error: "Authentication required. Only registered users with an active paid subscription are eligible to generate papers.",
         requireLogin: true,
       },
       { status: 401 }
+    );
+  }
+
+  // Only registered users with an active paid subscription (or admins) are eligible to generate papers
+  if (!isPaidSubscriber(clientUser, adminUser)) {
+    return NextResponse.json(
+      {
+        error: "Paid subscription required. Only registered users with an active paid subscription are eligible to generate papers.",
+        requireSubscription: true,
+        currentPlan: clientUser?.subscription?.planId || "free",
+        paperCredits: clientUser?.subscription?.paperCredits ?? 0,
+      },
+      { status: 403 }
     );
   }
 

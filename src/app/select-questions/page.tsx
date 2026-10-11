@@ -11,6 +11,7 @@ import {
   SubscriptionPlanId,
   SUBSCRIPTION_PLANS,
   getPlanPermissions,
+  isPaidSubscriber,
 } from "@/lib/types";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
@@ -345,11 +346,11 @@ export default function SelectQuestionsPage() {
       return;
     }
 
-    // 2. Free Plan limitation: Free Plan has "Limited MCQ/Short Questions" (max 10) and NO Full Board Pattern Paper
-    if (!clientUser.subscription.canFullBoardPaper && selectedCounts.total > 10) {
-      setSubModalTitle("Full Board Pattern Paper Required");
+    // 2. Paid Subscription Check: Free accounts or 0 credits cannot generate papers
+    if (!isPaidSubscriber(clientUser)) {
+      setSubModalTitle("Paid Subscription Required");
       setSubModalSubtitle(
-        `You have selected ${selectedCounts.total} questions. The Free Plan is limited to small tests up to 10 questions. Upgrade to Go as you pay (Rs. 30) or Standard Plan to generate full board pattern papers!`
+        "Only registered educators with an active paid subscription are eligible to generate examination papers. Upgrade to Go as you pay (Rs. 30), Standard, or Annual Plan to generate papers!"
       );
       setSubModalHighlight("pay_as_you_go");
       setShowSubModal(true);
@@ -480,10 +481,10 @@ export default function SelectQuestionsPage() {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({
-                        planId: "free",
-                        email: "free.teacher@paperwala.world",
-                        fullName: "Free Tier Educator",
-                        academyName: "Government High School",
+                        planId: "pay_as_you_go",
+                        email: "payg.teacher@paperwala.world",
+                        fullName: "Prof. Tariq Mahmood",
+                        academyName: "Punjab Cadet College",
                       }),
                     });
                     const d = await res.json();
@@ -495,9 +496,9 @@ export default function SelectQuestionsPage() {
                     console.error("Demo login failed", e);
                   }
                 }}
-                className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition-all text-center"
+                className="p-2.5 rounded-xl bg-orange-500/15 hover:bg-orange-500/25 border border-orange-500/30 text-orange-300 text-xs font-bold transition-all text-center"
               >
-                Free Plan Demo
+                Go as you pay Demo (Rs. 30)
               </button>
             </div>
           </div>
@@ -510,7 +511,110 @@ export default function SelectQuestionsPage() {
           onSuccess={async (user) => {
             setClientUser(user);
             setShowAuthModal(false);
-            await loadQuestionsForChapter();
+            if (isPaidSubscriber(user)) {
+              await loadQuestionsForChapter();
+            }
+          }}
+        />
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // LOCKED PAYWALL SCREEN: Shown when user is logged in on a FREE account
+  // (Only registered users with a paid subscription are eligible to generate papers)
+  // =========================================================================
+  if (authChecked && clientUser && !isPaidSubscriber(clientUser)) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 flex flex-col items-center justify-center p-4 sm:p-6 text-white relative overflow-hidden font-sans">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-tr from-amber-500/15 via-rose-500/15 to-indigo-500/20 blur-3xl pointer-events-none rounded-full" />
+
+        <div className="relative max-w-2xl w-full bg-slate-900/95 backdrop-blur-2xl border border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-amber-500/15 text-amber-300 border border-amber-500/30">
+              <Lock className="w-3.5 h-3.5 text-amber-400" />
+              <span>Paid Subscription Required to Generate Papers</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Only Paid Subscribers Can Generate Papers
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-lg mx-auto">
+              Logged in as <strong className="text-white">{clientUser.fullName}</strong> ({clientUser.email}) &bull; Current Status: <span className="text-amber-400 font-bold">{clientUser.subscription.planName}</span>. Free accounts cannot generate or export examination papers. Choose a plan below to activate instant generation:
+            </p>
+          </div>
+
+          {/* Monthly Subscription Card */}
+          <div className="max-w-lg mx-auto w-full">
+            <div className="bg-slate-800/90 border-2 border-emerald-500 rounded-3xl p-6 flex flex-col justify-between shadow-2xl shadow-emerald-950/60 relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-slate-950 text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-md">
+                UNLIMITED PAPER GENERATION
+              </div>
+              <div className="space-y-3 text-center pt-2">
+                <span className="text-[11px] font-extrabold text-emerald-400 uppercase tracking-wider">30 Days Full Access</span>
+                <h3 className="font-extrabold text-white text-xl">Monthly Subscription</h3>
+                <div className="flex items-center justify-center gap-2 pt-1">
+                  <span className="text-slate-500 line-through text-base font-bold">Rs. 4,000</span>
+                  <span className="text-3xl sm:text-4xl font-black text-white">Rs. 2,000</span>
+                  <span className="text-xs font-semibold text-slate-400">/ month</span>
+                  <span className="bg-rose-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full ml-1">50% OFF</span>
+                </div>
+                <p className="text-xs text-slate-300 max-w-sm mx-auto">
+                  Unlimited papers for all classes (9th–12th), auto board pattern (ALP), custom academy crest, answer keys &amp; instant PDF export.
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setSubModalTitle("Subscribe to Monthly Plan (Rs. 2,000)");
+                  setSubModalSubtitle("Enjoy 30 days of unlimited paper generation with academy branding & answer keys.");
+                  setSubModalHighlight("monthly");
+                  setShowSubModal(true);
+                }}
+                className="mt-6 w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm transition-all shadow-lg shadow-emerald-500/20 active:scale-95 text-center flex items-center justify-center gap-2"
+              >
+                <Crown className="w-4 h-4 fill-slate-950" />
+                <span>Subscribe Monthly (Rs. 2,000)</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs border-t border-slate-800">
+            <Link
+              href="/pricing"
+              className="text-amber-400 hover:underline font-bold flex items-center gap-1"
+            >
+              <Crown className="w-4 h-4" />
+              <span>Compare All Plan Details &amp; Pricing</span>
+            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/"
+                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-colors"
+              >
+                Back to Home
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 font-bold transition-colors"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Subscription Modal for Upgrading */}
+        <SubscriptionModal
+          isOpen={showSubModal}
+          onClose={() => setShowSubModal(false)}
+          title={subModalTitle}
+          subtitle={subModalSubtitle}
+          highlightPlan={subModalHighlight}
+          onSuccess={async (updatedClient) => {
+            setClientUser(updatedClient);
+            setShowSubModal(false);
+            if (isPaidSubscriber(updatedClient)) {
+              await loadQuestionsForChapter();
+            }
           }}
         />
       </div>

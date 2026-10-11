@@ -81,10 +81,10 @@ export default function RegisterPage() {
         </Link>
 
         <h2 className="text-2xl font-black text-slate-900 tracking-tight pt-2">
-          Create Free Educator Account
+          Create Educator Account
         </h2>
         <p className="text-xs text-slate-500 max-w-sm mx-auto">
-          Start generating board-standard exam papers for your school or academy in just 2 minutes. Free trial included!
+          Register your school or academy to access official curriculum and generate board-standard exam papers.
         </p>
       </div>
 
@@ -181,7 +181,7 @@ export default function RegisterPage() {
               disabled={loading}
               className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-600 text-white font-black text-sm rounded-xl shadow-lg shadow-emerald-700/25 transition-all flex items-center justify-center gap-2 active:scale-[0.99] disabled:opacity-50"
             >
-              <span>{loading ? "Creating your account..." : "Create Account & Start Generating 🚀"}</span>
+              <span>{loading ? "Creating your account..." : "Register Educator Account 🚀"}</span>
               {!loading && <ArrowRight className="w-4 h-4" />}
             </button>
           </form>
@@ -190,7 +190,7 @@ export default function RegisterPage() {
           <div className="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-[11px] text-slate-600 font-medium">
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span>Free 7-Day Access</span>
+              <span>Official BISE Curriculum</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />

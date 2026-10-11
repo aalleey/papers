@@ -25,7 +25,7 @@ export default function PricingPage() {
   const [clientUser, setClientUser] = useState<ClientUser | null>(null);
   const [loadingPlan, setLoadingPlan] = useState<SubscriptionPlanId | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [selectedPlanForAuth, setSelectedPlanForAuth] = useState<SubscriptionPlanId>("standard");
+  const [selectedPlanForAuth, setSelectedPlanForAuth] = useState<SubscriptionPlanId>("monthly");
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
 
   useEffect(() => {
@@ -147,6 +147,11 @@ export default function PricingPage() {
           generating unlimited full Board ALP exam papers with customized branding &amp; answer keys.
         </p>
 
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold max-w-xl mx-auto text-left sm:text-center">
+          <span className="text-amber-600 font-extrabold text-sm shrink-0">🔒</span>
+          <span>Only registered users with an active Monthly Subscription (Rs. 2,000/month) are eligible to generate and print exam papers. Free accounts provide syllabus and question bank browsing.</span>
+        </div>
+
         {successNotice && (
           <div className="p-3 rounded-2xl bg-emerald-100 border-2 border-emerald-400 text-emerald-900 text-sm font-bold flex items-center justify-center gap-2 max-w-md mx-auto animate-in fade-in">
             <CheckCircle2 className="w-5 h-5 text-emerald-600" />
@@ -155,26 +160,27 @@ export default function PricingPage() {
         )}
       </section>
 
-      {/* Pricing Cards Grid (Exact matching screenshots) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+      {/* Pricing Cards Grid */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-4 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
           {/* Card 1: Free Plan */}
-          <div className="bg-white rounded-3xl border-2 border-slate-200 shadow-xl p-6 sm:p-7 flex flex-col justify-between hover:border-slate-300 transition-all relative">
+          <div className="bg-white rounded-3xl border-2 border-slate-200 shadow-lg p-6 sm:p-8 flex flex-col justify-between hover:border-slate-300 transition-all relative">
             <div>
               <div className="text-center pt-3 pb-5 border-b border-slate-100">
-                <h3 className="text-xl font-black text-slate-900">{SUBSCRIPTION_PLANS.free.name}</h3>
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Free Tier</span>
+                <h3 className="text-2xl font-black text-slate-900 mt-1">{SUBSCRIPTION_PLANS.free.name}</h3>
                 <div className="mt-3 flex items-baseline justify-center gap-1">
                   <span className="text-4xl font-black text-slate-900">
                     {SUBSCRIPTION_PLANS.free.priceFormatted}
                   </span>
                 </div>
-                <div className="text-xs font-semibold text-slate-400 mt-1">
+                <div className="text-xs font-semibold text-slate-500 mt-1">
                   {SUBSCRIPTION_PLANS.free.billingPeriod}
                 </div>
               </div>
 
               {/* Feature List */}
-              <ul className="py-6 space-y-3.5 text-xs">
+              <ul className="py-6 space-y-3.5 text-xs sm:text-sm">
                 {SUBSCRIPTION_PLANS.free.features.map((f, i) => (
                   <li key={i} className="flex items-start gap-2.5">
                     {f.included ? (
@@ -193,10 +199,10 @@ export default function PricingPage() {
             <button
               onClick={() => handleSelectPlan("free")}
               disabled={loadingPlan === "free" || clientUser?.subscription.planId === "free"}
-              className={`w-full py-3 px-4 rounded-full font-black text-xs transition-all flex items-center justify-center gap-2 border-2 ${
+              className={`w-full py-3.5 px-4 rounded-2xl font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 border-2 ${
                 clientUser?.subscription.planId === "free"
                   ? "bg-slate-100 text-slate-500 border-slate-200 cursor-default"
-                  : "bg-white hover:bg-blue-50 text-blue-600 border-blue-600 shadow-sm active:scale-95"
+                  : "bg-white hover:bg-slate-50 text-slate-700 border-slate-300 shadow-sm active:scale-95"
               }`}
             >
               <User className="w-4 h-4" />
@@ -206,194 +212,62 @@ export default function PricingPage() {
             </button>
           </div>
 
-          {/* Card 2: Go as you pay */}
-          <div className="bg-white rounded-3xl border-2 border-orange-200 shadow-xl p-6 sm:p-7 flex flex-col justify-between hover:border-orange-300 transition-all relative">
+          {/* Card 2: Monthly Subscription Plan (Featured) */}
+          <div className="bg-gradient-to-b from-emerald-50/50 via-white to-white rounded-3xl border-2 border-emerald-500 shadow-2xl p-6 sm:p-8 flex flex-col justify-between hover:border-emerald-600 transition-all relative ring-4 ring-emerald-500/10">
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
               <span className="bg-[#00a86b] text-white text-[11px] font-black px-4 py-1 rounded-full shadow-md uppercase tracking-wider">
-                BEST FOR ONE-TIME
+                BEST VALUE &bull; UNLIMITED
               </span>
             </div>
 
             <div>
               <div className="text-center pt-3 pb-5 border-b border-slate-100">
-                <h3 className="text-xl font-black text-slate-900">{SUBSCRIPTION_PLANS.pay_as_you_go.name}</h3>
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Full Access</span>
+                <h3 className="text-2xl font-black text-slate-900 mt-1">{SUBSCRIPTION_PLANS.monthly.name}</h3>
                 <div className="mt-3 flex items-baseline justify-center gap-2">
                   <span className="text-2xl font-bold text-slate-400 line-through">
-                    {SUBSCRIPTION_PLANS.pay_as_you_go.originalPriceFormatted}
+                    {SUBSCRIPTION_PLANS.monthly.originalPriceFormatted}
                   </span>
-                  <span className="text-4xl font-black text-slate-900">
-                    {SUBSCRIPTION_PLANS.pay_as_you_go.priceFormatted}
+                  <span className="text-4xl sm:text-5xl font-black text-emerald-950">
+                    {SUBSCRIPTION_PLANS.monthly.priceFormatted}
                   </span>
+                  <span className="text-xs font-bold text-slate-500">/ month</span>
                 </div>
                 <div className="mt-1">
-                  <span className="inline-block bg-[#00a86b] text-white text-xs font-black px-2 py-0.5 rounded">
-                    {SUBSCRIPTION_PLANS.pay_as_you_go.discountBadge}
+                  <span className="inline-block bg-rose-600 text-white text-xs font-black px-2.5 py-0.5 rounded-full shadow-xs">
+                    {SUBSCRIPTION_PLANS.monthly.discountBadge}
                   </span>
                 </div>
-                <div className="text-xs font-semibold text-slate-400 mt-1">
-                  {SUBSCRIPTION_PLANS.pay_as_you_go.billingPeriod}
+                <div className="text-xs font-semibold text-slate-500 mt-1">
+                  {SUBSCRIPTION_PLANS.monthly.billingPeriod}
                 </div>
               </div>
 
               {/* Feature List */}
-              <ul className="py-6 space-y-3.5 text-xs">
-                {SUBSCRIPTION_PLANS.pay_as_you_go.features.map((f, i) => (
+              <ul className="py-6 space-y-3.5 text-xs sm:text-sm">
+                {SUBSCRIPTION_PLANS.monthly.features.map((f, i) => (
                   <li key={i} className="flex items-start gap-2.5">
-                    {f.included ? (
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    ) : (
-                      <X className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" />
-                    )}
-                    <span className={f.included ? "text-slate-700 font-semibold" : "text-slate-400"}>
-                      {f.text}
-                    </span>
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5 stroke-[2.5]" />
+                    <span className="text-slate-800 font-semibold">{f.text}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             <button
-              onClick={() => handleSelectPlan("pay_as_you_go")}
-              disabled={loadingPlan === "pay_as_you_go" || clientUser?.subscription.planId === "pay_as_you_go"}
-              className={`w-full py-3 px-4 rounded-full font-black text-xs transition-all flex items-center justify-center gap-2 shadow-md ${
-                clientUser?.subscription.planId === "pay_as_you_go"
+              onClick={() => handleSelectPlan("monthly")}
+              disabled={loadingPlan === "monthly" || clientUser?.subscription.planId === "monthly"}
+              className={`w-full py-3.5 px-4 rounded-2xl font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-lg ${
+                clientUser?.subscription.planId === "monthly"
                   ? "bg-slate-100 text-slate-500 cursor-default"
-                  : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white active:scale-95 shadow-orange-500/20"
+                  : "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white active:scale-95 shadow-emerald-600/30"
               }`}
             >
-              <Zap className="w-4 h-4 fill-white" />
+              <Crown className="w-4 h-4 fill-white" />
               <span>
-                {clientUser?.subscription.planId === "pay_as_you_go"
-                  ? "Current Plan"
-                  : SUBSCRIPTION_PLANS.pay_as_you_go.ctaText}
-              </span>
-            </button>
-          </div>
-
-          {/* Card 3: Standard Plan */}
-          <div className="bg-white rounded-3xl border-2 border-emerald-300 shadow-xl p-6 sm:p-7 flex flex-col justify-between hover:border-emerald-400 transition-all relative">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-              <span className="bg-[#00a86b] text-white text-[11px] font-black px-4 py-1 rounded-full shadow-md uppercase tracking-wider">
-                BEST VALUE
-              </span>
-            </div>
-
-            <div>
-              <div className="text-center pt-3 pb-5 border-b border-slate-100">
-                <h3 className="text-xl font-black text-slate-900">{SUBSCRIPTION_PLANS.standard.name}</h3>
-                <div className="mt-3 flex items-baseline justify-center gap-2">
-                  <span className="text-2xl font-bold text-slate-400 line-through">
-                    {SUBSCRIPTION_PLANS.standard.originalPriceFormatted}
-                  </span>
-                  <span className="text-4xl font-black text-slate-900">
-                    {SUBSCRIPTION_PLANS.standard.priceFormatted}
-                  </span>
-                </div>
-                <div className="mt-1">
-                  <span className="inline-block bg-rose-600 text-white text-xs font-black px-2 py-0.5 rounded">
-                    {SUBSCRIPTION_PLANS.standard.discountBadge}
-                  </span>
-                </div>
-                <div className="text-xs font-semibold text-slate-400 mt-1">
-                  {SUBSCRIPTION_PLANS.standard.billingPeriod}
-                </div>
-              </div>
-
-              {/* Feature List */}
-              <ul className="py-6 space-y-3.5 text-xs">
-                {SUBSCRIPTION_PLANS.standard.features.map((f, i) => (
-                  <li key={i} className="flex items-start gap-2.5">
-                    {f.included ? (
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    ) : (
-                      <X className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" />
-                    )}
-                    <span className={f.included ? "text-slate-700 font-semibold" : "text-slate-400"}>
-                      {f.text}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              onClick={() => handleSelectPlan("standard")}
-              disabled={loadingPlan === "standard" || clientUser?.subscription.planId === "standard"}
-              className={`w-full py-3 px-4 rounded-full font-black text-xs transition-all flex items-center justify-center gap-2 shadow-md ${
-                clientUser?.subscription.planId === "standard"
-                  ? "bg-slate-100 text-slate-500 cursor-default"
-                  : "bg-[#00a86b] hover:bg-emerald-600 text-white active:scale-95 shadow-emerald-600/20"
-              }`}
-            >
-              <ShoppingCart className="w-4 h-4" />
-              <span>
-                {clientUser?.subscription.planId === "standard"
-                  ? "Current Plan"
-                  : SUBSCRIPTION_PLANS.standard.ctaText}
-              </span>
-            </button>
-          </div>
-
-          {/* Card 4: Annual Premium Plan */}
-          <div className="bg-white rounded-3xl border-2 border-blue-600 shadow-2xl p-6 sm:p-7 flex flex-col justify-between hover:border-blue-700 transition-all relative ring-4 ring-blue-500/10">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-              <span className="bg-[#0066cc] text-white text-[11px] font-black px-4 py-1 rounded-full shadow-md uppercase tracking-wider">
-                MOST POPULAR
-              </span>
-            </div>
-
-            <div>
-              <div className="text-center pt-3 pb-5 border-b border-slate-100">
-                <h3 className="text-xl font-black text-slate-900">{SUBSCRIPTION_PLANS.annual.name}</h3>
-                <div className="mt-3 flex items-baseline justify-center gap-2">
-                  <span className="text-2xl font-bold text-slate-400 line-through">
-                    {SUBSCRIPTION_PLANS.annual.originalPriceFormatted}
-                  </span>
-                  <span className="text-4xl font-black text-slate-900">
-                    {SUBSCRIPTION_PLANS.annual.priceFormatted}
-                  </span>
-                </div>
-                <div className="mt-1">
-                  <span className="inline-block bg-rose-600 text-white text-xs font-black px-2 py-0.5 rounded">
-                    {SUBSCRIPTION_PLANS.annual.discountBadge}
-                  </span>
-                </div>
-                <div className="text-xs font-semibold text-slate-400 mt-1">
-                  {SUBSCRIPTION_PLANS.annual.billingPeriod}
-                </div>
-              </div>
-
-              {/* Feature List */}
-              <ul className="py-6 space-y-3.5 text-xs">
-                {SUBSCRIPTION_PLANS.annual.features.map((f, i) => (
-                  <li key={i} className="flex items-start gap-2.5">
-                    {f.included ? (
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    ) : (
-                      <X className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" />
-                    )}
-                    <span className={f.included ? "text-slate-700 font-semibold" : "text-slate-400"}>
-                      {f.text}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              onClick={() => handleSelectPlan("annual")}
-              disabled={loadingPlan === "annual" || clientUser?.subscription.planId === "annual"}
-              className={`w-full py-3 px-4 rounded-full font-black text-xs transition-all flex items-center justify-center gap-2 shadow-md ${
-                clientUser?.subscription.planId === "annual"
-                  ? "bg-slate-100 text-slate-500 cursor-default"
-                  : "bg-[#0066cc] hover:bg-blue-700 text-white active:scale-95 shadow-blue-600/30"
-              }`}
-            >
-              <Crown className="w-4 h-4" />
-              <span>
-                {clientUser?.subscription.planId === "annual"
-                  ? "Current Plan"
-                  : SUBSCRIPTION_PLANS.annual.ctaText}
+                {clientUser?.subscription.planId === "monthly"
+                  ? "Current Active Plan"
+                  : SUBSCRIPTION_PLANS.monthly.ctaText}
               </span>
             </button>
           </div>

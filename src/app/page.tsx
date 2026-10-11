@@ -33,17 +33,12 @@ import {
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
 import { ClientAuthModal } from "@/components/ClientAuthModal";
-import { ClientUser } from "@/lib/types";
+import { ClientUser, isPaidSubscriber } from "@/lib/types";
 
 export default function Home() {
   const [clientUser, setClientUser] = useState<ClientUser | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<"login" | "signup">("signup");
-
-  // Hero Quick Launcher state
-  const [selectedClass, setSelectedClass] = useState("10");
-  const [selectedSubject, setSelectedSubject] = useState("computer");
-  const [selectedChapter, setSelectedChapter] = useState("3");
 
   // Interactive preview state for the Hero Mock Paper
   const [heroLang, setHeroLang] = useState<"Bilingual" | "English" | "Urdu">("Bilingual");
@@ -148,7 +143,7 @@ export default function Home() {
               className="text-amber-700 hover:text-amber-800 font-extrabold flex items-center gap-1 transition-colors"
             >
               <Crown className="w-3.5 h-3.5 text-amber-600" />
-              <span>Pricing (From Rs. 30)</span>
+              <span>Pricing (Monthly)</span>
             </Link>
             <a href="#faq" className="hover:text-emerald-700 transition-colors">
               FAQs
@@ -193,19 +188,41 @@ export default function Home() {
                   id="nav-client-signup-btn"
                   className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-black transition-all"
                 >
-                  Create Free Account
+                  Register Account
                 </button>
               </div>
             )}
 
-            <Link
-              href="/select-questions?chapter=3"
-              id="nav-generate-paper-btn"
-              className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-md shadow-emerald-700/20 active:scale-[0.98] transition-all"
-            >
-              <Zap className="w-4 h-4 fill-white text-white" />
-              <span>Generate Paper</span>
-            </Link>
+            {clientUser ? (
+              isPaidSubscriber(clientUser) ? (
+                <Link
+                  href="/select-questions?chapter=3"
+                  id="nav-generate-paper-btn"
+                  className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-md shadow-emerald-700/20 active:scale-[0.98] transition-all"
+                >
+                  <Zap className="w-4 h-4 fill-white text-white" />
+                  <span>Generate Paper</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/pricing"
+                  id="nav-generate-paper-btn"
+                  className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-extrabold text-xs shadow-md shadow-orange-700/20 active:scale-[0.98] transition-all"
+                >
+                  <Crown className="w-4 h-4 fill-white text-white" />
+                  <span>Upgrade to Generate</span>
+                </Link>
+              )
+            ) : (
+              <Link
+                href="/pricing"
+                id="nav-generate-paper-btn"
+                className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-md shadow-emerald-700/20 active:scale-[0.98] transition-all"
+              >
+                <Crown className="w-4 h-4 fill-white text-white" />
+                <span>Plans &amp; Pricing</span>
+              </Link>
+            )}
           </div>
         </div>
       </header>
@@ -243,90 +260,114 @@ export default function Home() {
               </p>
 
               {/* =================================================================
-                  HERO 1-CLICK QUICK LAUNCHER WIDGET
+                  PORTAL SHOWCASE & SUBSCRIPTION ACCESS
                   ================================================================= */}
-              <div className="bg-white p-5 sm:p-6 rounded-3xl shadow-xl shadow-slate-200/80 border border-slate-200/90 max-w-3xl mx-auto text-left mt-8 space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                  <div className="flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs font-black flex items-center justify-center">
-                      ⚡
-                    </span>
-                    <span className="text-xs sm:text-sm font-black text-slate-900">
-                      Quick Paper Generator (3 Simple Steps)
-                    </span>
+              <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-slate-200/80 border border-slate-200/90 max-w-3xl mx-auto text-left mt-8 space-y-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-100 gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                      🎓
+                    </div>
+                    <div>
+                      <h2 className="text-sm sm:text-base font-black text-slate-900">
+                        Official BISE Examination Generation System
+                      </h2>
+                      <span className="text-[11px] text-slate-500 font-medium">
+                        For Registered Schools, Academies &amp; Tuition Centers
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
-                    Free Instant Access
+                  <span className="text-[11px] font-black text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200/80">
+                    Paid Subscription Required
                   </span>
                 </div>
 
+                {/* Core Feature Pillars */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {/* Step 1: Class */}
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">
-                      1. Select Class
-                    </label>
-                    <select
-                      value={selectedClass}
-                      onChange={(e) => setSelectedClass(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
-                    >
-                      <option value="10">Class 10th (New 2026-27)</option>
-                      <option value="9">Class 9th</option>
-                    </select>
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-1">
+                    <div className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+                      <span className="text-emerald-600 font-bold">✓</span> 785+ Verified Qs
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      Punjab Board 2026-27 updated syllabus with authentic Urdu Nastaliq &amp; KaTeX Math formulas.
+                    </p>
                   </div>
 
-                  {/* Step 2: Subject */}
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">
-                      2. Select Subject
-                    </label>
-                    <select
-                      value={selectedSubject}
-                      onChange={(e) => setSelectedSubject(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
-                    >
-                      <option value="computer">Computer Science (کمپیوٹر)</option>
-                      <option value="math">Mathematics (ریاضی)</option>
-                      <option value="physics">Physics (طبیعیات)</option>
-                      <option value="biology">Biology (حیاتیات)</option>
-                    </select>
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-1">
+                    <div className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+                      <span className="text-emerald-600 font-bold">✓</span> 4 Shuffled Codes
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      Version A, B, C, D anti-cheating shuffled papers with automatic grading keys &amp; bubble sheets.
+                    </p>
                   </div>
 
-                  {/* Step 3: Chapter */}
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">
-                      3. Select Unit / Chapter
-                    </label>
-                    <select
-                      value={selectedChapter}
-                      onChange={(e) => setSelectedChapter(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
-                    >
-                      <option value="3">Unit 3: Python Programming (147 Qs)</option>
-                      <option value="2">Unit 2: System Recovery (210 Qs)</option>
-                      <option value="1">Unit 1: Operating Systems (223 Qs)</option>
-                      <option value="8">Unit 8: Digital Entrepreneurship (180 Qs)</option>
-                    </select>
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-1">
+                    <div className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+                      <span className="text-emerald-600 font-bold">✓</span> Academy Crest
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      Your customized academy/school name, exam heading, time duration, and watermark.
+                    </p>
                   </div>
                 </div>
 
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 text-xs text-slate-500">
-                    <span className="flex items-center gap-1 text-emerald-700 font-semibold">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> 785 Questions Ready
+                {/* Conditional CTAs based on login & subscription status */}
+                <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-slate-100">
+                  <div className="flex items-center gap-2 text-xs text-slate-600">
+                    <Crown className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>
+                      {clientUser
+                        ? isPaidSubscriber(clientUser)
+                          ? `Active Plan: ${clientUser.subscription.planName}`
+                          : `Current: ${clientUser.subscription.planName} (Paid monthly subscription required to generate)`
+                        : "Monthly Subscription: Rs. 2,000/month &bull; Unlimited Papers &bull; 30 Days Access"}
                     </span>
-                    <span>&bull;</span>
-                    <span>No InPage Needed</span>
                   </div>
 
-                  <Link
-                    href={`/select-questions?chapter=${selectedChapter}`}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm shadow-md shadow-emerald-700/25 transition-all"
-                  >
-                    <span>Start Selecting Questions</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  {clientUser ? (
+                    isPaidSubscriber(clientUser) ? (
+                      <Link
+                        href="/select-questions?chapter=3"
+                        id="hero-generate-paper-btn"
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm shadow-md shadow-emerald-700/25 transition-all"
+                      >
+                        <Zap className="w-4 h-4 fill-white" />
+                        <span>Open Paper Generator</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/pricing"
+                        id="hero-upgrade-plan-btn"
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-black text-xs sm:text-sm shadow-md shadow-orange-700/25 transition-all"
+                      >
+                        <Crown className="w-4 h-4 fill-white" />
+                        <span>Subscribe to Generate (Rs. 2,000/mo)</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    )
+                  ) : (
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                      <Link
+                        href="/pricing"
+                        id="hero-pricing-btn"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-md shadow-emerald-700/25 transition-all"
+                      >
+                        <Crown className="w-3.5 h-3.5 fill-white" />
+                        <span>View Monthly Plan (Rs. 2,000)</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                      <button
+                        onClick={() => openAuth("login")}
+                        id="hero-login-btn"
+                        className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200 transition-colors"
+                      >
+                        <LogIn className="w-3.5 h-3.5" />
+                        <span>Sign In</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -345,8 +386,8 @@ export default function Home() {
                   <div className="text-[11px] text-slate-500 font-medium">A, B, C, D Shuffled</div>
                 </div>
                 <div className="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-xs">
-                  <div className="text-xl sm:text-2xl font-black text-amber-700">100% Free</div>
-                  <div className="text-[11px] text-slate-500 font-medium">Trial Included</div>
+                  <div className="text-xl sm:text-2xl font-black text-emerald-700">Rs. 2,000/mo</div>
+                  <div className="text-[11px] text-slate-500 font-medium">Unlimited Monthly Access</div>
                 </div>
               </div>
             </div>
@@ -416,7 +457,7 @@ export default function Home() {
               Class 10th Computer Science (New 2026-27)
             </h2>
             <p className="text-xs sm:text-sm text-slate-500">
-              Click any chapter below to start generating test papers directly from that unit.
+              Explore board-aligned units. Active paid subscribers can generate complete papers directly from any unit.
             </p>
           </div>
 
@@ -439,10 +480,14 @@ export default function Home() {
                 </div>
               </div>
               <Link
-                href="/select-questions?chapter=3"
-                className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold text-center block transition-colors"
+                href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=3" : "/pricing"}
+                className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
+                  clientUser && isPaidSubscriber(clientUser)
+                    ? "bg-emerald-600 hover:bg-emerald-700"
+                    : "bg-slate-900 hover:bg-slate-800"
+                }`}
               >
-                Select Questions &rarr;
+                {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
               </Link>
             </div>
 
@@ -461,10 +506,14 @@ export default function Home() {
                 </div>
               </div>
               <Link
-                href="/select-questions?chapter=2"
-                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold text-center block transition-colors"
+                href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=2" : "/pricing"}
+                className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
+                  clientUser && isPaidSubscriber(clientUser)
+                    ? "bg-emerald-600 hover:bg-emerald-700"
+                    : "bg-slate-900 hover:bg-slate-800"
+                }`}
               >
-                Select Questions &rarr;
+                {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
               </Link>
             </div>
 
@@ -483,10 +532,14 @@ export default function Home() {
                 </div>
               </div>
               <Link
-                href="/select-questions?chapter=1"
-                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold text-center block transition-colors"
+                href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=1" : "/pricing"}
+                className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
+                  clientUser && isPaidSubscriber(clientUser)
+                    ? "bg-emerald-600 hover:bg-emerald-700"
+                    : "bg-slate-900 hover:bg-slate-800"
+                }`}
               >
-                Select Questions &rarr;
+                {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
               </Link>
             </div>
 
@@ -505,10 +558,14 @@ export default function Home() {
                 </div>
               </div>
               <Link
-                href="/select-questions?chapter=8"
-                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold text-center block transition-colors"
+                href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=8" : "/pricing"}
+                className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
+                  clientUser && isPaidSubscriber(clientUser)
+                    ? "bg-emerald-600 hover:bg-emerald-700"
+                    : "bg-slate-900 hover:bg-slate-800"
+                }`}
               >
-                Select Questions &rarr;
+                {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
               </Link>
             </div>
           </div>
@@ -657,10 +714,10 @@ export default function Home() {
                   <span>Ready for Photocopier &bull; Clean Single or Double Column Printing</span>
                 </div>
                 <Link
-                  href="/select-questions?chapter=3"
+                  href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=3" : "/pricing"}
                   className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-colors flex items-center gap-2"
                 >
-                  <span>Select Questions for this Unit</span>
+                  <span>{clientUser && isPaidSubscriber(clientUser) ? "Select Questions for this Unit" : "Subscribe to Generate Papers"}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -742,23 +799,36 @@ export default function Home() {
                 Start Generating Exam Papers Today
               </h2>
               <p className="text-xs sm:text-sm text-emerald-100">
-                Join thousands of Pakistani schools &amp; academies saving 10+ hours every examination cycle.
+                Join thousands of Pakistani schools &amp; academies saving 10+ hours every examination cycle. Unlimited Monthly Subscription is only Rs. 2,000 / month (50% OFF).
               </p>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <Link
-                href="/select-questions?chapter=3"
-                className="px-8 py-3.5 rounded-2xl bg-white text-emerald-900 hover:bg-emerald-50 font-black text-sm shadow-md transition-all"
-              >
-                Start Generating for Free 🚀
-              </Link>
-              <button
-                onClick={() => openAuth("signup")}
-                className="px-6 py-3.5 rounded-2xl bg-emerald-800/80 hover:bg-emerald-800 text-white font-bold text-sm border border-emerald-500/40 transition-all"
-              >
-                Create Account
-              </button>
+              {clientUser && isPaidSubscriber(clientUser) ? (
+                <Link
+                  href="/select-questions?chapter=3"
+                  className="px-8 py-3.5 rounded-2xl bg-white text-emerald-900 hover:bg-emerald-50 font-black text-sm shadow-md transition-all flex items-center gap-2"
+                >
+                  <Zap className="w-4 h-4 fill-emerald-900" />
+                  <span>Open Question Generator</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/pricing"
+                  className="px-8 py-3.5 rounded-2xl bg-white text-emerald-900 hover:bg-emerald-50 font-black text-sm shadow-md transition-all flex items-center gap-2"
+                >
+                  <Crown className="w-4 h-4 text-emerald-900 fill-emerald-900" />
+                  <span>Subscribe to Generate (Rs. 2,000/mo)</span>
+                </Link>
+              )}
+              {!clientUser && (
+                <button
+                  onClick={() => openAuth("signup")}
+                  className="px-6 py-3.5 rounded-2xl bg-emerald-800/80 hover:bg-emerald-800 text-white font-bold text-sm border border-emerald-500/40 transition-all"
+                >
+                  Register Educator Account
+                </button>
+              )}
             </div>
           </div>
         </section>
@@ -791,7 +861,7 @@ export default function Home() {
                 Sign In
               </Link>
               <Link href="/register" className="hover:text-emerald-700 transition-colors">
-                Register Free
+                Register Account
               </Link>
               <Link href="/admin/login" className="hover:text-emerald-700 transition-colors">
                 Admin Portal

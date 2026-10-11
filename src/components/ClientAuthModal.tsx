@@ -109,11 +109,11 @@ export function ClientAuthModal({
           </div>
 
           <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-            {mode === "signup" ? "Get Started for Free" : "Welcome Back"}
+            {mode === "signup" ? "Register Educator Account" : "Welcome Back"}
           </h2>
           <p className="text-xs text-slate-500 max-w-xs mx-auto">
             {mode === "signup"
-              ? "Join thousands of Pakistani teachers and create your first exam paper in 2 minutes."
+              ? "Join thousands of Pakistani teachers and generate board-standard exam papers."
               : "Sign in to access your papers, question bank, and saved templates."}
           </p>
         </div>
@@ -132,7 +132,7 @@ export function ClientAuthModal({
                 : "hover:text-slate-900 text-slate-500"
             }`}
           >
-            Create Free Account
+            Register Account
           </button>
           <button
             type="button"
@@ -255,7 +255,7 @@ export function ClientAuthModal({
               {loading
                 ? "Please wait..."
                 : mode === "signup"
-                ? "Create Free Account 🚀"
+                ? "Register Account 🚀"
                 : "Sign In to PaperWala"}
             </span>
             {!loading && <ArrowRight className="w-4 h-4" />}
@@ -266,7 +266,7 @@ export function ClientAuthModal({
         <div className="pt-2 border-t border-slate-100 flex items-center justify-around text-[11px] text-slate-500 font-medium">
           <div className="flex items-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>100% Free Trial</span>
+            <span>Official BISE System</span>
           </div>
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -301,7 +301,7 @@ export function ClientAuthModal({
                 }}
                 className="font-bold text-emerald-700 hover:underline"
               >
-                Create a free account in 30 seconds
+                Create an account in 30 seconds
               </button>
             </span>
           )}

@@ -125,7 +125,7 @@ export interface CsvRowValidationResult {
 }
 
 // Client Subscription & Permission System
-export type SubscriptionPlanId = "free" | "pay_as_you_go" | "pay_per_paper" | "standard" | "annual";
+export type SubscriptionPlanId = "free" | "monthly" | "pay_as_you_go" | "pay_per_paper" | "standard" | "annual";
 
 export interface SubscriptionInfo {
   planId: SubscriptionPlanId;
@@ -211,150 +211,162 @@ export interface PlanDetails {
 export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, PlanDetails> = {
   free: {
     id: "free",
-    name: "Free Plan",
+    name: "Free Account",
     priceFormatted: "Rs. 0",
-    billingPeriod: "Lifetime Access",
-    ctaText: "Use Free Plan",
+    billingPeriod: "Browse & Profile Only",
+    ctaText: "Free Account",
     ctaVariant: "outline",
     features: [
-      { text: "Basic Paper Generator", included: true },
-      { text: "Manual Question Selection", included: true },
+      { text: "Curriculum & Question Bank Browser", included: true },
+      { text: "Educator Profile & Dashboard", included: true },
+      { text: "Paper Generation & Export (Paid Only)", included: false },
       { text: "No Academy Branding", included: false },
-      { text: "No Auto-Board Pattern", included: false },
-      { text: "Basic PDF Export", included: true },
-      { text: "Access to All Classes Export", included: true },
-      { text: "Best for small test", included: true },
-      { text: "Limited MCQ/Short Questions", included: true },
-      { text: "Full baord Pattern Paper", included: false },
+      { text: "No Auto-Board Pattern (ALP)", included: false },
+      { text: "No Answer Keys & Bubble Sheets", included: false },
     ],
   },
-  pay_as_you_go: {
-    id: "pay_as_you_go",
-    name: "Go as you pay",
-    tag: "BEST FOR ONE-TIME",
-    priceFormatted: "Rs. 30",
-    originalPriceFormatted: "Rs. 100",
-    discountBadge: "70% OFF",
-    billingPeriod: "Per Single Paper",
-    ctaText: "Pay & Generate (Rs. 30)",
-    ctaVariant: "orange",
+  monthly: {
+    id: "monthly",
+    name: "Monthly Subscription",
+    tag: "BEST VALUE & UNLIMITED",
+    priceFormatted: "Rs. 2000",
+    originalPriceFormatted: "Rs. 4000",
+    discountBadge: "50% OFF",
+    billingPeriod: "Monthly Access (30 Days)",
+    ctaText: "Subscribe Monthly (Rs. 2000)",
+    ctaVariant: "green",
     features: [
-      { text: "Pay & Generate Instantly", included: true },
-      { text: "Your Academy Name & Logo", included: true },
-      { text: "Latest Board Pattern (ALP)", included: true },
-      { text: "High Quality PDF Export", included: true },
-      { text: "Includes Answer Key", included: true },
-      { text: "Best for Guest Teachers", included: true },
-      { text: "Full baord Pattern Paper", included: true },
-    ],
-  },
-  pay_per_paper: {
-    id: "pay_per_paper",
-    name: "Go as you pay",
-    tag: "BEST FOR ONE-TIME",
-    priceFormatted: "Rs. 30",
-    originalPriceFormatted: "Rs. 100",
-    discountBadge: "70% OFF",
-    billingPeriod: "Per Single Paper",
-    ctaText: "Pay & Generate (Rs. 30)",
-    ctaVariant: "orange",
-    features: [
-      { text: "Pay & Generate Instantly", included: true },
-      { text: "Your Academy Name & Logo", included: true },
-      { text: "Latest Board Pattern (ALP)", included: true },
-      { text: "High Quality PDF Export", included: true },
-      { text: "Includes Answer Key", included: true },
-      { text: "Best for Guest Teachers", included: true },
-      { text: "Full baord Pattern Paper", included: true },
+      { text: "Unlimited Paper Generation", included: true },
+      { text: "Auto Board Pattern Generator (ALP)", included: true },
+      { text: "Your Academy Name & Crest Branding", included: true },
+      { text: "Answer Keys & Student Bubble Sheets", included: true },
+      { text: "Access to All Classes (9th, 10th, 11th, 12th)", included: true },
+      { text: "High Quality PDF Export (A4 & Legal)", included: true },
+      { text: "Priority WhatsApp Customer Support", included: true },
+      { text: "Best for All Academies & Schools", included: true },
     ],
   },
   standard: {
     id: "standard",
-    name: "Standard Plan",
-    tag: "BEST VALUE",
+    name: "Monthly Subscription",
+    tag: "BEST VALUE & UNLIMITED",
     priceFormatted: "Rs. 2000",
     originalPriceFormatted: "Rs. 4000",
     discountBadge: "50% OFF",
-    billingPeriod: "6 Months Access",
-    ctaText: "Buy Standard Plan",
+    billingPeriod: "Monthly Access (30 Days)",
+    ctaText: "Subscribe Monthly (Rs. 2000)",
     ctaVariant: "green",
     features: [
-      { text: "Auto Board Pattern Generator", included: true },
-      { text: "Your Academy Name & Logo", included: true },
-      { text: "Answer Keys for All Tests", included: true },
-      { text: "Access to All Classes (9th-12th)", included: true },
-      { text: "Priority Customer Support", included: true },
+      { text: "Unlimited Paper Generation", included: true },
+      { text: "Auto Board Pattern Generator (ALP)", included: true },
+      { text: "Your Academy Name & Crest Branding", included: true },
+      { text: "Answer Keys & Student Bubble Sheets", included: true },
+      { text: "Access to All Classes (9th, 10th, 11th, 12th)", included: true },
+      { text: "High Quality PDF Export (A4 & Legal)", included: true },
+      { text: "Priority WhatsApp Customer Support", included: true },
       { text: "Best for All Academies & Schools", included: true },
     ],
   },
   annual: {
     id: "annual",
-    name: "Annual Premium Plan",
-    tag: "MOST POPULAR",
-    priceFormatted: "Rs. 3000",
-    originalPriceFormatted: "Rs. 7000",
+    name: "Monthly Subscription",
+    tag: "BEST VALUE & UNLIMITED",
+    priceFormatted: "Rs. 2000",
+    originalPriceFormatted: "Rs. 4000",
     discountBadge: "50% OFF",
-    billingPeriod: "1 Year Full Access",
-    ctaText: "Buy Annual Plan",
-    ctaVariant: "blue",
+    billingPeriod: "Monthly Access (30 Days)",
+    ctaText: "Subscribe Monthly (Rs. 2000)",
+    ctaVariant: "green",
     features: [
-      { text: "Everything in Standard Plan", included: true },
-      { text: "12 Months Full Premium Access", included: true },
-      { text: "Android App Premium Access", included: true },
-      { text: "Full Whatsapp Support", included: true },
       { text: "Unlimited Paper Generation", included: true },
-      { text: "Best for Big Academies & Schools", included: true },
+      { text: "Auto Board Pattern Generator (ALP)", included: true },
+      { text: "Your Academy Name & Crest Branding", included: true },
+      { text: "Answer Keys & Student Bubble Sheets", included: true },
+      { text: "Access to All Classes (9th, 10th, 11th, 12th)", included: true },
+      { text: "High Quality PDF Export (A4 & Legal)", included: true },
+      { text: "Priority WhatsApp Customer Support", included: true },
+      { text: "Best for All Academies & Schools", included: true },
+    ],
+  },
+  pay_as_you_go: {
+    id: "pay_as_you_go",
+    name: "Monthly Subscription",
+    tag: "BEST VALUE & UNLIMITED",
+    priceFormatted: "Rs. 2000",
+    originalPriceFormatted: "Rs. 4000",
+    discountBadge: "50% OFF",
+    billingPeriod: "Monthly Access (30 Days)",
+    ctaText: "Subscribe Monthly (Rs. 2000)",
+    ctaVariant: "green",
+    features: [
+      { text: "Unlimited Paper Generation", included: true },
+      { text: "Auto Board Pattern Generator (ALP)", included: true },
+      { text: "Your Academy Name & Crest Branding", included: true },
+      { text: "Answer Keys & Student Bubble Sheets", included: true },
+      { text: "Access to All Classes (9th, 10th, 11th, 12th)", included: true },
+      { text: "High Quality PDF Export (A4 & Legal)", included: true },
+      { text: "Priority WhatsApp Customer Support", included: true },
+      { text: "Best for All Academies & Schools", included: true },
+    ],
+  },
+  pay_per_paper: {
+    id: "pay_per_paper",
+    name: "Monthly Subscription",
+    tag: "BEST VALUE & UNLIMITED",
+    priceFormatted: "Rs. 2000",
+    originalPriceFormatted: "Rs. 4000",
+    discountBadge: "50% OFF",
+    billingPeriod: "Monthly Access (30 Days)",
+    ctaText: "Subscribe Monthly (Rs. 2000)",
+    ctaVariant: "green",
+    features: [
+      { text: "Unlimited Paper Generation", included: true },
+      { text: "Auto Board Pattern Generator (ALP)", included: true },
+      { text: "Your Academy Name & Crest Branding", included: true },
+      { text: "Answer Keys & Student Bubble Sheets", included: true },
+      { text: "Access to All Classes (9th, 10th, 11th, 12th)", included: true },
+      { text: "High Quality PDF Export (A4 & Legal)", included: true },
+      { text: "Priority WhatsApp Customer Support", included: true },
+      { text: "Best for All Academies & Schools", included: true },
     ],
   },
 };
 
 export const PLAN_METADATA = SUBSCRIPTION_PLANS;
 
+export function isPaidSubscriber(client?: ClientUser | null, adminUser?: unknown): boolean {
+  if (adminUser) return true;
+  if (!client || !client.subscription) return false;
+  if (client.subscription.status !== "active") return false;
+  const plan = client.subscription.planId;
+  if (plan === "free") return false;
+  if (plan === "monthly" || plan === "standard" || plan === "annual") {
+    return true;
+  }
+  if (plan === "pay_as_you_go" || plan === "pay_per_paper") {
+    return (client.subscription.paperCredits ?? 0) > 0 || true; // covered under active paid
+  }
+  return true;
+}
+
 export function getPlanPermissions(planId: SubscriptionPlanId): SubscriptionInfo {
   switch (planId) {
-    case "annual":
-      return {
-        planId: "annual",
-        planName: "Annual Premium Plan",
-        status: "active",
-        expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-        paperCredits: 999999,
-        canAutoBoardPattern: true,
-        canCustomBranding: true,
-        canExportAnswerKey: true,
-        canFullBoardPaper: true,
-        canUnlimitedExport: true,
-        canAccessAllClasses: true,
-        maxQuestionsPerPaper: 100,
-      };
+    case "monthly":
     case "standard":
-      return {
-        planId: "standard",
-        planName: "Standard Plan",
-        status: "active",
-        expiresAt: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString(),
-        paperCredits: 999999,
-        canAutoBoardPattern: true,
-        canCustomBranding: true,
-        canExportAnswerKey: true,
-        canFullBoardPaper: true,
-        canUnlimitedExport: true,
-        canAccessAllClasses: true,
-        maxQuestionsPerPaper: 100,
-      };
+    case "annual":
     case "pay_as_you_go":
     case "pay_per_paper":
       return {
-        planId: "pay_as_you_go",
-        planName: "Go as you pay",
+        planId: "monthly",
+        planName: "Monthly Subscription",
         status: "active",
-        expiresAt: null,
-        paperCredits: 5,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        paperCredits: 999999,
         canAutoBoardPattern: true,
         canCustomBranding: true,
         canExportAnswerKey: true,
         canFullBoardPaper: true,
-        canUnlimitedExport: false,
+        canUnlimitedExport: true,
         canAccessAllClasses: true,
         maxQuestionsPerPaper: 100,
       };
@@ -362,7 +374,7 @@ export function getPlanPermissions(planId: SubscriptionPlanId): SubscriptionInfo
     default:
       return {
         planId: "free",
-        planName: "Free Plan",
+        planName: "Free Account",
         status: "active",
         expiresAt: null,
         paperCredits: 0,
@@ -371,8 +383,8 @@ export function getPlanPermissions(planId: SubscriptionPlanId): SubscriptionInfo
         canExportAnswerKey: false,
         canFullBoardPaper: false,
         canUnlimitedExport: false,
-        canAccessAllClasses: true,
-        maxQuestionsPerPaper: 10,
+        canAccessAllClasses: false,
+        maxQuestionsPerPaper: 0,
       };
   }
 }

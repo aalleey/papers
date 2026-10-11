@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentClient } from "@/lib/auth";
+import { getCurrentClient, getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { isPaidSubscriber } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -21,14 +22,26 @@ export async function GET() {
 
 // POST /api/papers - record a paper the client just generated / printed
 export async function POST(req: NextRequest) {
-  const client = await getCurrentClient();
-  if (!client) {
+  const [client, admin] = await Promise.all([
+    getCurrentClient(),
+    getCurrentUser(),
+  ]);
+
+  if (!client && !admin) {
     return NextResponse.json({ error: "Login required.", requireLogin: true }, { status: 401 });
   }
 
-  if (client.subscription.status === "suspended") {
-    return NextResponse.json({ error: "Account suspended." }, { status: 403 });
+  if (client && !isPaidSubscriber(client, admin)) {
+    return NextResponse.json(
+      {
+        error: "Paid subscription required. Only registered users with an active paid subscription can generate or save papers.",
+        requireSubscription: true,
+      },
+      { status: 403 }
+    );
   }
+
+  const targetClientId = client ? client.id : "admin";
 
   try {
     const b = await req.json();
@@ -42,9 +55,9 @@ export async function POST(req: NextRequest) {
     const exportMode = ["all", "questions", "key"].includes(b.exportMode) ? b.exportMode : "all";
 
     const paper = await db.savePaper({
-      clientId: client.id,
+      clientId: targetClientId,
       title: String(b.title || "Untitled Paper").slice(0, 150),
-      institution: String(b.institution || client.academyName || "").slice(0, 150),
+      institution: String(b.institution || client?.academyName || "").slice(0, 150),
       subject: String(b.subject || "General").slice(0, 80),
       className: String(b.className || "").slice(0, 30),
       syllabus: String(b.syllabus || "").slice(0, 200),
@@ -60,7 +73,7 @@ export async function POST(req: NextRequest) {
 
     // Pay-as-you-go: consume one paper credit per generated paper
     let updatedClient = client;
-    if (client.subscription.planId === "pay_as_you_go" && client.subscription.paperCredits > 0) {
+    if (client && client.subscription.planId === "pay_as_you_go" && client.subscription.paperCredits > 0) {
       const updated = await db.updateClient(client.id, {
         subscription: {
           ...client.subscription,
