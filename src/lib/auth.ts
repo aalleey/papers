@@ -118,7 +118,8 @@ export async function createClientSession(clientData: {
   phone?: string | null;
   planId?: SubscriptionPlanId;
 }): Promise<ClientUser> {
-  const plan = clientData.planId || "free";
+  // planId left undefined for existing clients so their stored plan is preserved
+  const plan = clientData.planId;
 
   // Persist into central DB store
   const user = await db.saveClient({

@@ -155,6 +155,41 @@ export interface ClientUser {
   notes?: string | null;
 }
 
+export type PaperExportMode = "all" | "questions" | "key";
+
+// A generated / printed paper in a client's history
+export interface PaperRecord {
+  id: string;
+  clientId: string;
+  title: string;
+  institution: string;
+  subject: string;
+  className: string;
+  syllabus: string;
+  mcqCount: number;
+  shortCount: number;
+  longCount: number;
+  questionCount: number;
+  totalMarks: number;
+  languageMode: "Bilingual" | "English" | "Urdu";
+  version: string;
+  exportMode: PaperExportMode;
+  createdAt: string;
+}
+
+export interface ClientPaperStats {
+  totalPapers: number;
+  papersThisMonth: number;
+  papersThisWeek: number;
+  totalQuestions: number;
+  totalMarks: number;
+  withAnswerKey: number;
+  lastPaperAt: string | null;
+  bySubject: { subject: string; count: number }[];
+  byLanguage: { language: string; count: number }[];
+  perDay: { date: string; count: number }[]; // last 14 days
+}
+
 export interface PlanFeature {
   text: string;
   included: boolean;

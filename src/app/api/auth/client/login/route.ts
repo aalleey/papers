@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClientSession } from "@/lib/auth";
+import { db } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,12 +13,16 @@ export async function POST(req: NextRequest) {
 
     // Client Authentication
     // Allow any valid email or test demo accounts
-    const client = await createClientSession({
-      email,
-      fullName: body.fullName || email.split("@")[0],
-      academyName: body.academyName || "Educator Academy",
-      planId: body.planId || "free",
-    });
+    // Existing accounts keep their stored profile, plan and history.
+    const existing = await db.getClientByEmail(email);
+    const client = existing
+      ? await createClientSession({ email: existing.email, fullName: existing.fullName })
+      : await createClientSession({
+          email,
+          fullName: body.fullName || email.split("@")[0],
+          academyName: body.academyName || "Educator Academy",
+          planId: body.planId || undefined,
+        });
 
     return NextResponse.json({ success: true, client });
   } catch (error) {

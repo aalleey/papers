@@ -193,11 +193,18 @@ export default function Home() {
           <div className="flex items-center gap-3">
             {clientUser ? (
               <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold shadow-xs">
-                <Crown className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-slate-200">{clientUser.fullName.split(" ")[0]}</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold border border-emerald-500/30">
-                  {clientUser.subscription.planName}
-                </span>
+                <Link
+                  href="/profile"
+                  id="nav-my-profile-link"
+                  title="My Profile & Paper History"
+                  className="inline-flex items-center gap-2 hover:opacity-90"
+                >
+                  <Crown className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="text-slate-200">{clientUser.fullName.split(" ")[0]}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold border border-emerald-500/30">
+                    {clientUser.subscription.planName}
+                  </span>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="p-1 text-slate-500 hover:text-rose-400 transition-colors ml-0.5"

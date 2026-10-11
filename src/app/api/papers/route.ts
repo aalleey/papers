@@ -1,0 +1,78 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getCurrentClient } from "@/lib/auth";
+import { db } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
+
+// GET /api/papers - the logged-in client's own paper history + stats
+export async function GET() {
+  const client = await getCurrentClient();
+  if (!client) {
+    return NextResponse.json({ error: "Login required.", requireLogin: true }, { status: 401 });
+  }
+
+  const [papers, stats] = await Promise.all([
+    db.getPapersByClient(client.id),
+    db.getClientPaperStats(client.id),
+  ]);
+
+  return NextResponse.json({ client, papers, stats });
+}
+
+// POST /api/papers - record a paper the client just generated / printed
+export async function POST(req: NextRequest) {
+  const client = await getCurrentClient();
+  if (!client) {
+    return NextResponse.json({ error: "Login required.", requireLogin: true }, { status: 401 });
+  }
+
+  if (client.subscription.status === "suspended") {
+    return NextResponse.json({ error: "Account suspended." }, { status: 403 });
+  }
+
+  try {
+    const b = await req.json();
+    const mcqCount = Math.max(0, Number(b.mcqCount) || 0);
+    const shortCount = Math.max(0, Number(b.shortCount) || 0);
+    const longCount = Math.max(0, Number(b.longCount) || 0);
+
+    const language = ["Bilingual", "English", "Urdu"].includes(b.languageMode)
+      ? b.languageMode
+      : "Bilingual";
+    const exportMode = ["all", "questions", "key"].includes(b.exportMode) ? b.exportMode : "all";
+
+    const paper = await db.savePaper({
+      clientId: client.id,
+      title: String(b.title || "Untitled Paper").slice(0, 150),
+      institution: String(b.institution || client.academyName || "").slice(0, 150),
+      subject: String(b.subject || "General").slice(0, 80),
+      className: String(b.className || "").slice(0, 30),
+      syllabus: String(b.syllabus || "").slice(0, 200),
+      mcqCount,
+      shortCount,
+      longCount,
+      questionCount: mcqCount + shortCount + longCount,
+      totalMarks: Math.max(0, Number(b.totalMarks) || 0),
+      languageMode: language,
+      version: String(b.version || "A").slice(0, 2),
+      exportMode,
+    });
+
+    // Pay-as-you-go: consume one paper credit per generated paper
+    let updatedClient = client;
+    if (client.subscription.planId === "pay_as_you_go" && client.subscription.paperCredits > 0) {
+      const updated = await db.updateClient(client.id, {
+        subscription: {
+          ...client.subscription,
+          paperCredits: client.subscription.paperCredits - 1,
+        },
+      });
+      if (updated) updatedClient = updated;
+    }
+
+    return NextResponse.json({ success: true, paper, client: updatedClient }, { status: 201 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to save paper";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

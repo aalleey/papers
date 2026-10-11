@@ -217,6 +217,40 @@ export default function PaperEditorPage() {
       return;
     }
 
+    // 3. Pay-as-you-go needs credits
+    if (clientUser.subscription.planId === "pay_as_you_go" && clientUser.subscription.paperCredits <= 0) {
+      setSubModalTitle("No Paper Credits Left");
+      setSubModalSubtitle("You have used all your Go as you pay credits (Rs. 30 per paper). Buy more or switch to Standard / Annual for unlimited papers.");
+      setSubModalHighlight("standard");
+      setShowSubModal(true);
+      return;
+    }
+
+    // 4. Save to the client's paper history (non-blocking for printing)
+    fetch("/api/papers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: testNoText ? `${testNoText} - ${subjectTitle}` : `${paperTypeBanner} - ${subjectTitle}`,
+        institution: institutionName,
+        subject: subjectTitle.replace(/[^\x20-\x7E]/g, "").trim() || subjectTitle,
+        className: classNameText,
+        syllabus: syllabusText,
+        mcqCount: mcqs.length,
+        shortCount: shorts.length,
+        longCount: longs.length,
+        totalMarks,
+        languageMode,
+        version: paperVersion,
+        exportMode: mode,
+      }),
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.client) setClientUser(d.client);
+      })
+      .catch((e) => console.error("Failed to record paper history", e));
+
     setPrintMode(mode);
     setActiveDropdown(null);
     setTimeout(() => {

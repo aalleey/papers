@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import {
+  Eye,
   Users,
   Search,
   Plus,
@@ -657,7 +659,12 @@ export default function AdminUsersPage() {
                           </div>
                           <div>
                             <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                              <span>{c.fullName}</span>
+                              <Link
+                                href={`/admin/users/${c.id}`}
+                                className="hover:text-emerald-700 hover:underline"
+                              >
+                                {c.fullName}
+                              </Link>
                               {c.subscription.planId === "annual" && (
                                 <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                               )}
@@ -804,6 +811,14 @@ export default function AdminUsersPage() {
                       {/* Actions */}
                       <td className="py-3.5 px-4 text-right">
                         <div className="inline-flex items-center gap-1">
+                          {/* View profile & paper history */}
+                          <Link
+                            href={`/admin/users/${c.id}`}
+                            title="View Profile & Paper History"
+                            className="p-1.5 rounded-lg border border-slate-200 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300 text-slate-600 transition-colors"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </Link>
                           {/* Edit Full Profile & Permissions */}
                           <button
                             onClick={() => handleOpenEdit(c)}

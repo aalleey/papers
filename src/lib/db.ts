@@ -11,6 +11,8 @@ import {
   ClientUser,
   SubscriptionPlanId,
   getPlanPermissions,
+  PaperRecord,
+  ClientPaperStats,
 } from "./types";
 import {
   SEED_BOARDS,
@@ -147,6 +149,56 @@ export const SEED_CLIENTS: ClientUser[] = [
   },
 ];
 
+// Generates believable demo paper history for seeded clients
+function buildSeedPapers(): PaperRecord[] {
+  const specs: { clientId: string; count: number; spanDays: number }[] = [
+    { clientId: "client-seed-001", count: 22, spanDays: 38 },
+    { clientId: "client-seed-002", count: 31, spanDays: 52 },
+    { clientId: "client-seed-003", count: 7, spanDays: 14 },
+    { clientId: "client-seed-004", count: 3, spanDays: 4 },
+    { clientId: "client-seed-005", count: 12, spanDays: 180 },
+  ];
+  const subjects = ["Computer Science", "Computer Science", "Mathematics", "Physics"];
+  const syllabi = [
+    "Unit-1 Operating Systems",
+    "Unit-2 System Recovery and Advanced Maintenance",
+    "Unit-8 Digital Entrepreneurship",
+    "Quadratic Equations",
+  ];
+  const langs: PaperRecord["languageMode"][] = ["Bilingual", "Bilingual", "English", "Urdu"];
+  const modes: PaperRecord["exportMode"][] = ["all", "questions", "all", "key"];
+  const out: PaperRecord[] = [];
+  const client = (id: string) => SEED_CLIENTS.find((c) => c.id === id)!;
+
+  specs.forEach((s) => {
+    for (let i = 0; i < s.count; i++) {
+      const mcq = 7 + (i % 3) * 2;
+      const short = 5 + (i % 2);
+      const long = 1 + (i % 2);
+      const days = (i / Math.max(1, s.count - 1)) * s.spanDays;
+      out.push({
+        id: `paper-${s.clientId}-${i + 1}`,
+        clientId: s.clientId,
+        title: `Test No. ${s.count - i} - ${subjects[i % subjects.length]}`,
+        institution: client(s.clientId).academyName || "Educator Academy",
+        subject: subjects[i % subjects.length],
+        className: "10th",
+        syllabus: syllabi[i % syllabi.length],
+        mcqCount: mcq,
+        shortCount: short,
+        longCount: long,
+        questionCount: mcq + short + long,
+        totalMarks: mcq + short * 2 + long * 5,
+        languageMode: langs[i % langs.length],
+        version: ["A", "B", "C", "D"][i % 4],
+        exportMode: modes[i % modes.length],
+        createdAt: new Date(Date.now() - days * 24 * 60 * 60 * 1000 - i * 3600000).toISOString(),
+      });
+    }
+  });
+  return out;
+}
+
 // In-memory / development store initialized from seed data
 interface MockStore {
   boards: Board[];
@@ -157,6 +209,7 @@ interface MockStore {
   topics: Topic[];
   questions: Question[];
   clients: ClientUser[];
+  papers: PaperRecord[];
 }
 
 // Global reference to retain state across Next.js dev reloads
@@ -166,6 +219,9 @@ function initMockStore(): MockStore {
   if (globalForStore.mockStore) {
     if (!globalForStore.mockStore.clients) {
       globalForStore.mockStore.clients = [...SEED_CLIENTS];
+    }
+    if (!globalForStore.mockStore.papers) {
+      globalForStore.mockStore.papers = buildSeedPapers();
     }
     return globalForStore.mockStore;
   }
@@ -205,6 +261,7 @@ function initMockStore(): MockStore {
     topics: [...SEED_TOPICS],
     questions: initialQuestions,
     clients: [...SEED_CLIENTS],
+    papers: buildSeedPapers(),
   };
 
   globalForStore.mockStore = store;
@@ -954,6 +1011,7 @@ export const db = {
       (c) => c.email.toLowerCase() === clientData.email.toLowerCase()
     );
 
+    const explicitPlan = clientData.planId !== undefined || clientData.subscription !== undefined;
     const defaultSub = getPlanPermissions(clientData.planId || "free");
     const mergedSub = clientData.subscription
       ? { ...defaultSub, ...clientData.subscription }
@@ -967,7 +1025,7 @@ export const db = {
         academyName: clientData.academyName !== undefined ? clientData.academyName : existing.academyName,
         phone: clientData.phone !== undefined ? clientData.phone : existing.phone,
         notes: clientData.notes !== undefined ? clientData.notes : existing.notes,
-        subscription: mergedSub,
+        subscription: explicitPlan ? mergedSub : existing.subscription,
         updatedAt: new Date().toISOString(),
       };
       store.clients[existingIndex] = updated;
@@ -1015,6 +1073,75 @@ export const db = {
     const store = initMockStore();
     const prevLen = store.clients.length;
     store.clients = store.clients.filter((c) => c.id !== id);
+    store.papers = store.papers.filter((p) => p.clientId !== id);
     return store.clients.length < prevLen;
+  },
+
+  // =========================================================================
+  // PAPER GENERATION HISTORY
+  // =========================================================================
+
+  async savePaper(data: Omit<PaperRecord, "id" | "createdAt">): Promise<PaperRecord> {
+    const store = initMockStore();
+    const record: PaperRecord = {
+      ...data,
+      id: `paper-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      createdAt: new Date().toISOString(),
+    };
+    store.papers.unshift(record);
+    return JSON.parse(JSON.stringify(record));
+  },
+
+  async getPapersByClient(clientId: string, limit = 200): Promise<PaperRecord[]> {
+    const store = initMockStore();
+    return store.papers
+      .filter((p) => p.clientId === clientId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, limit)
+      .map((p) => ({ ...p }));
+  },
+
+  async getClientPaperStats(clientId: string): Promise<ClientPaperStats> {
+    const papers = await this.getPapersByClient(clientId, 10000);
+    const now = Date.now();
+    const DAY = 24 * 60 * 60 * 1000;
+
+    const bySubject = new Map<string, number>();
+    const byLanguage = new Map<string, number>();
+    papers.forEach((p) => {
+      bySubject.set(p.subject, (bySubject.get(p.subject) || 0) + 1);
+      byLanguage.set(p.languageMode, (byLanguage.get(p.languageMode) || 0) + 1);
+    });
+
+    const perDay: { date: string; count: number }[] = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(now - i * DAY);
+      const key = d.toISOString().substring(0, 10);
+      perDay.push({
+        date: key,
+        count: papers.filter((p) => p.createdAt.substring(0, 10) === key).length,
+      });
+    }
+
+    const monthStart = new Date();
+    monthStart.setDate(1);
+    monthStart.setHours(0, 0, 0, 0);
+
+    return {
+      totalPapers: papers.length,
+      papersThisMonth: papers.filter((p) => new Date(p.createdAt) >= monthStart).length,
+      papersThisWeek: papers.filter((p) => now - new Date(p.createdAt).getTime() <= 7 * DAY).length,
+      totalQuestions: papers.reduce((s, p) => s + p.questionCount, 0),
+      totalMarks: papers.reduce((s, p) => s + p.totalMarks, 0),
+      withAnswerKey: papers.filter((p) => p.exportMode === "key" || p.exportMode === "all").length,
+      lastPaperAt: papers[0]?.createdAt || null,
+      bySubject: [...bySubject.entries()]
+        .map(([subject, count]) => ({ subject, count }))
+        .sort((a, b) => b.count - a.count),
+      byLanguage: [...byLanguage.entries()]
+        .map(([language, count]) => ({ language, count }))
+        .sort((a, b) => b.count - a.count),
+      perDay,
+    };
   },
 };
