@@ -214,16 +214,28 @@ interface MockStore {
   emails: EmailRecord[];
 }
 
+// Helper to determine whether the app is executing in live production mode
+export function isProductionEnvironment(): boolean {
+  return process.env.NODE_ENV === "production" && process.env.ENABLE_DEMO_SEED !== "true";
+}
+
+// Returns the active partition environment for user & client data: 'production' or 'development'
+export function getCurrentDataEnvironment(): "production" | "development" {
+  return isProductionEnvironment() ? "production" : "development";
+}
+
 // Global reference to retain state across Next.js dev reloads
 const globalForStore = globalThis as unknown as { mockStore?: MockStore };
 
 function initMockStore(): MockStore {
+  const isProd = isProductionEnvironment();
+
   if (globalForStore.mockStore) {
     if (!globalForStore.mockStore.clients) {
-      globalForStore.mockStore.clients = [...SEED_CLIENTS];
+      globalForStore.mockStore.clients = isProd ? [] : [...SEED_CLIENTS];
     }
     if (!globalForStore.mockStore.papers) {
-      globalForStore.mockStore.papers = buildSeedPapers();
+      globalForStore.mockStore.papers = isProd ? [] : buildSeedPapers();
     }
     if (!globalForStore.mockStore.emails) {
       globalForStore.mockStore.emails = [];
@@ -265,8 +277,8 @@ function initMockStore(): MockStore {
     chapters: [...SEED_CHAPTERS],
     topics: [...SEED_TOPICS],
     questions: initialQuestions,
-    clients: [...SEED_CLIENTS],
-    papers: buildSeedPapers(),
+    clients: isProd ? [] : [...SEED_CLIENTS],
+    papers: isProd ? [] : buildSeedPapers(),
     emails: [],
   };
 
@@ -962,6 +974,52 @@ export const db = {
   // =========================================================================
 
   async getClients(params?: { search?: string; planId?: string; status?: string }): Promise<ClientUser[]> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+
+    if (adminClient) {
+      try {
+        let q = adminClient.from("clients").select("*").eq("environment", env);
+        if (params?.planId && params.planId !== "all") {
+          q = q.eq("subscription->>planId", params.planId);
+        }
+        const { data, error } = await q.order("created_at", { ascending: false });
+        if (!error && data) {
+          let clients: ClientUser[] = data.map((row) => ({
+            id: row.id,
+            email: row.email,
+            fullName: row.full_name,
+            academyName: row.academy_name,
+            phone: row.phone,
+            role: (row.role as "client") || "client",
+            subscription: row.subscription,
+            notes: row.notes,
+            createdAt: row.created_at,
+            updatedAt: row.updated_at,
+          }));
+
+          if (params?.search) {
+            const query = params.search.toLowerCase().trim();
+            clients = clients.filter(
+              (c) =>
+                c.fullName.toLowerCase().includes(query) ||
+                c.email.toLowerCase().includes(query) ||
+                (c.phone && c.phone.toLowerCase().includes(query)) ||
+                (c.academyName && c.academyName.toLowerCase().includes(query))
+            );
+          }
+
+          if (params?.status && params.status !== "all") {
+            clients = clients.filter((c) => c.subscription.status === params.status);
+          }
+
+          return clients;
+        }
+      } catch {
+        // Fallback to in-memory store if table not created yet
+      }
+    }
+
     const store = initMockStore();
     let clients = [...store.clients];
 
@@ -991,12 +1049,72 @@ export const db = {
   },
 
   async getClientById(id: string): Promise<ClientUser | null> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+
+    if (adminClient) {
+      try {
+        const { data, error } = await adminClient
+          .from("clients")
+          .select("*")
+          .eq("id", id)
+          .eq("environment", env)
+          .single();
+        if (!error && data) {
+          return {
+            id: data.id,
+            email: data.email,
+            fullName: data.full_name,
+            academyName: data.academy_name,
+            phone: data.phone,
+            role: (data.role as "client") || "client",
+            subscription: data.subscription,
+            notes: data.notes,
+            createdAt: data.created_at,
+            updatedAt: data.updated_at,
+          };
+        }
+      } catch {
+        // Fallback to in-memory store
+      }
+    }
+
     const store = initMockStore();
     const client = store.clients.find((c) => c.id === id);
     return client ? JSON.parse(JSON.stringify(client)) : null;
   },
 
   async getClientByEmail(email: string): Promise<ClientUser | null> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+
+    if (adminClient) {
+      try {
+        const { data, error } = await adminClient
+          .from("clients")
+          .select("*")
+          .ilike("email", email)
+          .eq("environment", env)
+          .maybeSingle();
+        if (!error && data) {
+          return {
+            id: data.id,
+            email: data.email,
+            fullName: data.full_name,
+            academyName: data.academy_name,
+            phone: data.phone,
+            role: (data.role as "client") || "client",
+            subscription: data.subscription,
+            notes: data.notes,
+            createdAt: data.created_at,
+            updatedAt: data.updated_at,
+          };
+        }
+      } catch {
+        // Fallback to in-memory store
+      }
+    }
+
     const store = initMockStore();
     const client = store.clients.find((c) => c.email.toLowerCase() === email.toLowerCase());
     return client ? JSON.parse(JSON.stringify(client)) : null;
@@ -1012,16 +1130,60 @@ export const db = {
     subscription?: Partial<ClientUser["subscription"]>;
     notes?: string | null;
   }): Promise<ClientUser> {
-    const store = initMockStore();
-    const existingIndex = store.clients.findIndex(
-      (c) => c.email.toLowerCase() === clientData.email.toLowerCase()
-    );
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
 
     const explicitPlan = clientData.planId !== undefined || clientData.subscription !== undefined;
     const defaultSub = getPlanPermissions(clientData.planId || "free");
     const mergedSub = clientData.subscription
       ? { ...defaultSub, ...clientData.subscription }
       : defaultSub;
+    const clientId = clientData.id || `client-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+
+    if (adminClient) {
+      try {
+        const payload = {
+          id: clientId,
+          email: clientData.email,
+          full_name: clientData.fullName,
+          academy_name: clientData.academyName || "My Academy",
+          phone: clientData.phone || null,
+          role: "client",
+          subscription: mergedSub,
+          notes: clientData.notes || null,
+          environment: env,
+          updated_at: new Date().toISOString(),
+        };
+
+        const { data, error } = await adminClient
+          .from("clients")
+          .upsert(payload)
+          .select()
+          .single();
+
+        if (!error && data) {
+          return {
+            id: data.id,
+            email: data.email,
+            fullName: data.full_name,
+            academyName: data.academy_name,
+            phone: data.phone,
+            role: (data.role as "client") || "client",
+            subscription: data.subscription,
+            notes: data.notes,
+            createdAt: data.created_at,
+            updatedAt: data.updated_at,
+          };
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
+    const store = initMockStore();
+    const existingIndex = store.clients.findIndex(
+      (c) => c.email.toLowerCase() === clientData.email.toLowerCase()
+    );
 
     if (existingIndex >= 0) {
       const existing = store.clients[existingIndex];
@@ -1039,7 +1201,7 @@ export const db = {
     }
 
     const newClient: ClientUser = {
-      id: clientData.id || `client-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      id: clientId,
       email: clientData.email,
       fullName: clientData.fullName,
       academyName: clientData.academyName || "My Academy",
@@ -1055,6 +1217,47 @@ export const db = {
   },
 
   async updateClient(id: string, updates: Partial<ClientUser>): Promise<ClientUser | null> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+
+    if (adminClient) {
+      try {
+        const payload: Record<string, unknown> = {
+          updated_at: new Date().toISOString(),
+        };
+        if (updates.fullName !== undefined) payload.full_name = updates.fullName;
+        if (updates.academyName !== undefined) payload.academy_name = updates.academyName;
+        if (updates.phone !== undefined) payload.phone = updates.phone;
+        if (updates.notes !== undefined) payload.notes = updates.notes;
+        if (updates.subscription !== undefined) payload.subscription = updates.subscription;
+
+        const { data, error } = await adminClient
+          .from("clients")
+          .update(payload)
+          .eq("id", id)
+          .eq("environment", env)
+          .select()
+          .single();
+
+        if (!error && data) {
+          return {
+            id: data.id,
+            email: data.email,
+            fullName: data.full_name,
+            academyName: data.academy_name,
+            phone: data.phone,
+            role: (data.role as "client") || "client",
+            subscription: data.subscription,
+            notes: data.notes,
+            createdAt: data.created_at,
+            updatedAt: data.updated_at,
+          };
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
     const store = initMockStore();
     const index = store.clients.findIndex((c) => c.id === id);
     if (index === -1) return null;
@@ -1063,7 +1266,7 @@ export const db = {
     const updated: ClientUser = {
       ...current,
       ...updates,
-      id: current.id, // Preserve id
+      id: current.id,
       role: "client",
       subscription: updates.subscription
         ? { ...current.subscription, ...updates.subscription }
@@ -1076,6 +1279,22 @@ export const db = {
   },
 
   async deleteClient(id: string): Promise<boolean> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+
+    if (adminClient) {
+      try {
+        const { error } = await adminClient
+          .from("clients")
+          .delete()
+          .eq("id", id)
+          .eq("environment", env);
+        if (!error) return true;
+      } catch {
+        // Fallback to store
+      }
+    }
+
     const store = initMockStore();
     const prevLen = store.clients.length;
     store.clients = store.clients.filter((c) => c.id !== id);
@@ -1088,17 +1307,109 @@ export const db = {
   // =========================================================================
 
   async savePaper(data: Omit<PaperRecord, "id" | "createdAt">): Promise<PaperRecord> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+    const id = `paper-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    const createdAt = new Date().toISOString();
+
+    if (adminClient) {
+      try {
+        const payload = {
+          id,
+          client_id: data.clientId,
+          title: data.title,
+          institution: data.institution,
+          subject: data.subject,
+          class_name: data.className,
+          syllabus: data.syllabus,
+          mcq_count: data.mcqCount,
+          short_count: data.shortCount,
+          long_count: data.longCount,
+          question_count: data.questionCount,
+          total_marks: data.totalMarks,
+          language_mode: data.languageMode,
+          version: data.version,
+          export_mode: data.exportMode,
+          environment: env,
+          created_at: createdAt,
+        };
+
+        const { data: inserted, error } = await adminClient
+          .from("papers")
+          .insert(payload)
+          .select()
+          .single();
+
+        if (!error && inserted) {
+          return {
+            id: inserted.id,
+            clientId: inserted.client_id,
+            title: inserted.title,
+            institution: inserted.institution,
+            subject: inserted.subject,
+            className: inserted.class_name,
+            syllabus: inserted.syllabus,
+            mcqCount: inserted.mcq_count,
+            shortCount: inserted.short_count,
+            longCount: inserted.long_count,
+            questionCount: inserted.question_count,
+            totalMarks: inserted.total_marks,
+            languageMode: inserted.language_mode,
+            version: inserted.version,
+            exportMode: inserted.export_mode,
+            createdAt: inserted.created_at,
+          };
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
     const store = initMockStore();
-    const record: PaperRecord = {
-      ...data,
-      id: `paper-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      createdAt: new Date().toISOString(),
-    };
+    const record: PaperRecord = { ...data, id, createdAt };
     store.papers.unshift(record);
     return JSON.parse(JSON.stringify(record));
   },
 
   async getPapersByClient(clientId: string, limit = 200): Promise<PaperRecord[]> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+
+    if (adminClient) {
+      try {
+        const { data, error } = await adminClient
+          .from("papers")
+          .select("*")
+          .eq("client_id", clientId)
+          .eq("environment", env)
+          .order("created_at", { ascending: false })
+          .limit(limit);
+
+        if (!error && data) {
+          return data.map((row) => ({
+            id: row.id,
+            clientId: row.client_id,
+            title: row.title,
+            institution: row.institution,
+            subject: row.subject,
+            className: row.class_name,
+            syllabus: row.syllabus,
+            mcqCount: row.mcq_count,
+            shortCount: row.short_count,
+            longCount: row.long_count,
+            questionCount: row.question_count,
+            totalMarks: row.total_marks,
+            languageMode: row.language_mode,
+            version: row.version,
+            exportMode: row.export_mode,
+            createdAt: row.created_at,
+          }));
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
     const store = initMockStore();
     return store.papers
       .filter((p) => p.clientId === clientId)
@@ -1156,17 +1467,90 @@ export const db = {
   // =========================================================================
 
   async saveEmail(data: Omit<EmailRecord, "id" | "sentAt">): Promise<EmailRecord> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+    const id = `email-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    const sentAt = new Date().toISOString();
+
+    if (adminClient) {
+      try {
+        const payload = {
+          id,
+          recipient_email: data.to,
+          recipient_name: data.recipientName,
+          subject: data.subject,
+          template: data.template,
+          status: data.status,
+          preview_text: data.previewText,
+          html_content: data.htmlContent,
+          error: data.error || null,
+          environment: env,
+          created_at: sentAt,
+        };
+
+        const { data: inserted, error } = await adminClient
+          .from("email_outbox")
+          .insert(payload)
+          .select()
+          .single();
+
+        if (!error && inserted) {
+          return {
+            id: inserted.id,
+            to: inserted.recipient_email,
+            recipientName: inserted.recipient_name,
+            subject: inserted.subject,
+            template: inserted.template,
+            status: inserted.status,
+            previewText: inserted.preview_text,
+            htmlContent: inserted.html_content,
+            sentAt: inserted.created_at,
+            error: inserted.error,
+          };
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
     const store = initMockStore();
-    const record: EmailRecord = {
-      ...data,
-      id: `email-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      sentAt: new Date().toISOString(),
-    };
+    const record: EmailRecord = { ...data, id, sentAt };
     store.emails.unshift(record);
     return JSON.parse(JSON.stringify(record));
   },
 
   async getEmails(limit = 100): Promise<EmailRecord[]> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+
+    if (adminClient) {
+      try {
+        const { data, error } = await adminClient
+          .from("email_outbox")
+          .select("*")
+          .eq("environment", env)
+          .order("created_at", { ascending: false })
+          .limit(limit);
+
+        if (!error && data) {
+          return data.map((row) => ({
+            id: row.id,
+            to: row.recipient_email,
+            recipientName: row.recipient_name,
+            subject: row.subject,
+            template: row.template,
+            status: row.status,
+            previewText: row.preview_text,
+            htmlContent: row.html_content,
+            sentAt: row.created_at,
+            error: row.error,
+          }));
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
     const store = initMockStore();
     return store.emails
       .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime())
@@ -1175,6 +1559,37 @@ export const db = {
   },
 
   async getEmailsByRecipient(to: string): Promise<EmailRecord[]> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+
+    if (adminClient) {
+      try {
+        const { data, error } = await adminClient
+          .from("email_outbox")
+          .select("*")
+          .ilike("recipient_email", to)
+          .eq("environment", env)
+          .order("created_at", { ascending: false });
+
+        if (!error && data) {
+          return data.map((row) => ({
+            id: row.id,
+            to: row.recipient_email,
+            recipientName: row.recipient_name,
+            subject: row.subject,
+            template: row.template,
+            status: row.status,
+            previewText: row.preview_text,
+            htmlContent: row.html_content,
+            sentAt: row.created_at,
+            error: row.error,
+          }));
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
     const store = initMockStore();
     return store.emails
       .filter((e) => e.to.toLowerCase() === to.toLowerCase())
