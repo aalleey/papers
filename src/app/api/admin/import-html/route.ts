@@ -91,22 +91,49 @@ export async function POST(req: NextRequest) {
       ? existingSubjectQuestions.filter((q) => q.chapter_id === chapter.id)
       : [];
 
-    // Annotate questions with duplicate flags
-    const existingEnTexts = new Set(
-      chapterExistingQuestions
-        .map((q) => q.translations?.find((t) => t.language === "en")?.text.trim().toLowerCase())
-        .filter(Boolean)
-    );
+    // Annotate questions with duplicate and Urdu enrichment flags
+    const existingByEn = new Map<string, any>();
+    const existingByUr = new Map<string, any>();
+    const existingById = new Map<string, any>();
+
+    for (const eq of chapterExistingQuestions) {
+      const enT = eq.translations?.find((t: any) => t.language === "en");
+      if (enT?.text) existingByEn.set(enT.text.trim().toLowerCase(), eq);
+
+      const urT = eq.translations?.find((t: any) => t.language === "ur");
+      if (urT?.text) existingByUr.set(urT.text.trim().toLowerCase(), eq);
+
+      if (eq.source_note) {
+        const m = eq.source_note.match(/(?:id|ID:?)\s*([A-Za-z0-9_\-]+)/);
+        if (m) existingById.set(m[1], eq);
+      }
+    }
 
     const questionsWithDuplicates = parseResult.questions.map((q) => {
-      const isDup = existingEnTexts.has(q.text_en.trim().toLowerCase());
+      let matched = existingById.get(q.original_id) || null;
+      if (!matched && q.text_en) {
+        matched = existingByEn.get(q.text_en.trim().toLowerCase()) || null;
+      }
+      if (!matched && q.text_ur) {
+        matched = existingByUr.get(q.text_ur.trim().toLowerCase()) || null;
+      }
+
+      const isDup = Boolean(matched);
+      const existingUrTrans = matched?.translations?.find((t: any) => t.language === "ur");
+      const hasExistingUrdu = Boolean(existingUrTrans?.text?.trim());
+      const willEnrichUrdu = Boolean(matched && !hasExistingUrdu && q.text_ur && q.text_ur.trim());
+
       return {
         ...q,
         isDuplicate: isDup,
+        matchedExistingId: matched?.id || null,
+        hasExistingUrdu,
+        willEnrichUrdu,
       };
     });
 
     const duplicateCount = questionsWithDuplicates.filter((q) => q.isDuplicate).length;
+    const enrichUrduCount = questionsWithDuplicates.filter((q) => q.willEnrichUrdu).length;
 
     // ------------------------------------------------------------------
     // ACTION: PREVIEW
@@ -126,6 +153,7 @@ export async function POST(req: NextRequest) {
         stats: {
           ...parseResult.stats,
           duplicateCount,
+          enrichUrduCount,
         },
       });
     }
@@ -214,22 +242,40 @@ export async function POST(req: NextRequest) {
       topicIdMap.set(top.title.trim().toLowerCase(), top.id);
     }
 
-    // 3. Filter Questions to Import
+    // 3. Filter Questions to Import & Enrich
     const filterSet = selectedOriginalIds ? new Set(selectedOriginalIds) : null;
-    let questionsToImport = questionsWithDuplicates.filter((q) => {
-      if (filterSet && !filterSet.has(q.original_id)) return false;
-      if (skipDuplicates && q.isDuplicate) return false;
-      return true;
-    });
+    const newQuestionsToCreate: typeof questionsWithDuplicates = [];
+    const existingToEnrichUrdu: Array<{
+      existingId: string;
+      q: ParsedQuestionItem;
+    }> = [];
 
-    // Remove duplicates within the batch itself
-    const seenBatch = new Set<string>();
-    questionsToImport = questionsToImport.filter((q) => {
-      const key = q.text_en.trim().toLowerCase();
-      if (seenBatch.has(key)) return false;
-      seenBatch.add(key);
-      return true;
-    });
+    const seenNewKeys = new Set<string>();
+
+    for (const q of questionsWithDuplicates) {
+      if (filterSet && !filterSet.has(q.original_id)) continue;
+
+      if (q.matchedExistingId) {
+        // Question already exists in target chapter
+        if (q.text_ur && q.text_ur.trim()) {
+          existingToEnrichUrdu.push({ existingId: q.matchedExistingId, q });
+        }
+        if (!skipDuplicates) {
+          const key = (q.text_en || q.text_ur).trim().toLowerCase();
+          if (!seenNewKeys.has(key)) {
+            seenNewKeys.add(key);
+            newQuestionsToCreate.push(q);
+          }
+        }
+      } else {
+        // Brand new question
+        const key = (q.text_en || q.text_ur).trim().toLowerCase();
+        if (!seenNewKeys.has(key)) {
+          seenNewKeys.add(key);
+          newQuestionsToCreate.push(q);
+        }
+      }
+    }
 
     // 4. Prepare Question and Translation Payloads
     const questionRows: Array<{
@@ -256,8 +302,8 @@ export async function POST(req: NextRequest) {
       answer: string | null;
     }> = [];
 
-    for (const q of questionsToImport) {
-      const qId = uuid(`question:${q.original_id}`);
+    for (const q of newQuestionsToCreate) {
+      const qId = q.matchedExistingId || uuid(`question:${q.original_id}`);
       let assignedTopicId: string | null = null;
 
       if (q.topic_number && topicIdMap.has(q.topic_number)) {
@@ -282,14 +328,16 @@ export async function POST(req: NextRequest) {
       });
 
       // English Translation
-      translationRows.push({
-        id: uuid(`${qId}:trans:en`),
-        question_id: qId,
-        language: "en",
-        text: q.text_en,
-        options: q.type === "mcq" && q.options_en ? JSON.stringify(q.options_en) : null,
-        answer: null,
-      });
+      if (q.text_en && q.text_en.trim()) {
+        translationRows.push({
+          id: uuid(`${qId}:trans:en`),
+          question_id: qId,
+          language: "en",
+          text: q.text_en,
+          options: q.type === "mcq" && q.options_en ? JSON.stringify(q.options_en) : null,
+          answer: null,
+        });
+      }
 
       // Urdu Translation (if available)
       if (q.text_ur && q.text_ur.trim()) {
@@ -305,6 +353,24 @@ export async function POST(req: NextRequest) {
           answer: null,
         });
       }
+    }
+
+    // Attach Urdu translations for existing questions
+    for (const item of existingToEnrichUrdu) {
+      const q = item.q;
+      const targetQId = item.existingId;
+
+      translationRows.push({
+        id: uuid(`${targetQId}:trans:ur`),
+        question_id: targetQId,
+        language: "ur",
+        text: q.text_ur,
+        options:
+          q.type === "mcq"
+            ? JSON.stringify(q.options_ur || q.options_en || [])
+            : null,
+        answer: null,
+      });
     }
 
     // 5. Batch Upsert to Supabase
@@ -351,6 +417,25 @@ export async function POST(req: NextRequest) {
           translations: trans,
         });
       }
+
+      for (const item of existingToEnrichUrdu) {
+        const q = item.q;
+        const targetQId = item.existingId;
+        const existingQ = chapterExistingQuestions.find((eq: any) => eq.id === targetQId);
+        if (existingQ) {
+          const trans = (existingQ.translations || []).filter((t: any) => t.language !== "ur");
+          trans.push({
+            language: "ur",
+            text: q.text_ur,
+            options: q.type === "mcq" ? q.options_ur || q.options_en || null : null,
+            answer: null,
+          });
+          await db.saveQuestion({
+            ...existingQ,
+            translations: trans,
+          });
+        }
+      }
     }
 
     return NextResponse.json({
@@ -358,12 +443,14 @@ export async function POST(req: NextRequest) {
       chapterId: targetChapterId,
       chapterNumber: chNum,
       chapterTitle: finalChTitle,
-      importedCount: questionRows.length,
-      skippedDuplicates: parseResult.questions.length - questionRows.length,
+      importedCount: newQuestionsToCreate.length,
+      enrichedUrduCount: existingToEnrichUrdu.length,
+      skippedDuplicates:
+        parseResult.questions.length - newQuestionsToCreate.length - existingToEnrichUrdu.length,
       totalParsed: parseResult.questions.length,
-      mcqCount: questionRows.filter((q) => q.type === "mcq").length,
-      shortCount: questionRows.filter((q) => q.type === "short").length,
-      longCount: questionRows.filter((q) => q.type === "long").length,
+      mcqCount: parseResult.questions.filter((q) => q.type === "mcq").length,
+      shortCount: parseResult.questions.filter((q) => q.type === "short").length,
+      longCount: parseResult.questions.filter((q) => q.type === "long").length,
     });
   } catch (err: unknown) {
     console.error("HTML Import error:", err);

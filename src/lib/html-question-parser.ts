@@ -1,5 +1,6 @@
 // src/lib/html-question-parser.ts
 // Universal parser for Paper Generator HTML files (e.g. "Select Questions Chapter XX.html")
+import { getUrduTranslation } from "./urdu-translations";
 
 export interface ParsedTopicDef {
   number: number;
@@ -121,40 +122,9 @@ export function hasUrdu(text: string): boolean {
   return /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/.test(text);
 }
 
-// Extract bilingual text parts from an HTML snippet
-export function extractBilingual(fragment: string): { en: string; ur: string } {
-  if (!fragment) return { en: "", ur: "" };
-
-  // 1. Direct search for english-part and urdu-part/urdu-text
-  const enMatch = fragment.match(/<div class="english-part[^"]*">([\s\S]*?)<\/div>/i);
-  const urMatch = fragment.match(/<div class="(?:urdu-part|urdu-text)[^"]*">([\s\S]*?)<\/div>/i);
-
-  if (enMatch || urMatch) {
-    const en = enMatch ? cleanHtmlText(enMatch[1]) : "";
-    const ur = urMatch ? cleanHtmlText(urMatch[1]) : "";
-    return { en, ur };
-  }
-
-  // 2. Check for span or div with urdu-text class
-  const spanUrdu = fragment.match(/<(?:span|div|p)\s+class="[^"]*urdu-text[^"]*">([\s\S]*?)<\/(?:span|div|p)>/i);
-  if (spanUrdu) {
-    const ur = cleanHtmlText(spanUrdu[1]);
-    const withoutUrdu = fragment.replace(spanUrdu[0], "");
-    const en = cleanHtmlText(withoutUrdu);
-    return { en, ur };
-  }
-
-  // 3. Fallback: Monolingual text
-  const cleaned = cleanHtmlText(fragment);
-  if (hasUrdu(cleaned)) {
-    return { en: "", ur: cleaned };
-  }
-  return { en: cleaned, ur: "" };
-}
-
 // Helper to extract inner content of a div that may contain nested divs
 export function extractBalancedDiv(block: string, startClassPattern: string): string | null {
-  const match = block.match(new RegExp(`<div\\s+class="[^"]*\\b${startClassPattern}\\b[^"]*"[^>]*>`, "i"));
+  const match = block.match(new RegExp(`<div\\s+class="[^"]*\\b(?:${startClassPattern})\\b[^"]*"[^>]*>`, "i"));
   if (!match || match.index === undefined) return null;
 
   const tagOpenEnd = match.index + match[0].length;
@@ -174,6 +144,47 @@ export function extractBalancedDiv(block: string, startClassPattern: string): st
     }
   }
   return null;
+}
+
+// Extract bilingual text parts from an HTML snippet
+export function extractBilingual(fragment: string): { en: string; ur: string } {
+  if (!fragment) return { en: "", ur: "" };
+
+  // 1. Balanced search for english-part and urdu-part/urdu-text
+  const balancedEn = extractBalancedDiv(fragment, "english-part");
+  const balancedUr = extractBalancedDiv(fragment, "urdu-part|urdu-text");
+
+  if (balancedEn !== null || balancedUr !== null) {
+    const en = balancedEn !== null ? cleanHtmlText(balancedEn) : "";
+    const ur = balancedUr !== null ? cleanHtmlText(balancedUr) : "";
+    return { en, ur };
+  }
+
+  // 2. Direct regex search for <div/span/p> tagged with english-part and urdu-part/urdu-text
+  const enMatch = fragment.match(/<(?:div|span|p)[^>]*class="[^"]*\benglish-part\b[^"]*"[^>]*>([\s\S]*?)<\/(?:div|span|p)>/i);
+  const urMatch = fragment.match(/<(?:div|span|p)[^>]*class="[^"]*\b(?:urdu-part|urdu-text)\b[^"]*"[^>]*>([\s\S]*?)<\/(?:div|span|p)>/i);
+
+  if (enMatch || urMatch) {
+    const en = enMatch ? cleanHtmlText(enMatch[1]) : "";
+    const ur = urMatch ? cleanHtmlText(urMatch[1]) : "";
+    return { en, ur };
+  }
+
+  // 3. Check for RTL elements
+  const rtlMatch = fragment.match(/<(?:div|span|p)[^>]*(?:class="[^"]*\brtl\b[^"]*"|dir="rtl")[^>]*>([\s\S]*?)<\/(?:div|span|p)>/i);
+  if (rtlMatch) {
+    const ur = cleanHtmlText(rtlMatch[1]);
+    const withoutRtl = fragment.replace(rtlMatch[0], "");
+    const en = cleanHtmlText(withoutRtl);
+    return { en, ur };
+  }
+
+  // 4. Fallback: Monolingual text (check if it contains Urdu Unicode characters)
+  const cleaned = cleanHtmlText(fragment);
+  if (hasUrdu(cleaned)) {
+    return { en: "", ur: cleaned };
+  }
+  return { en: cleaned, ur: "" };
 }
 
 // Extract tag content by class
@@ -343,6 +354,11 @@ export function parseQuestionsHtml(htmlContent: string): HtmlParseResult {
       const bi = extractBilingual(qTextInner);
       textEn = bi.en;
       textUr = bi.ur;
+
+      // If the question text element or card has rtl or urdu-text class, ensure textUr is captured
+      if (!textUr && (cur.classes.includes("rtl") || cur.classes.includes("urdu") || hasUrdu(qTextInner))) {
+        textUr = cleanHtmlText(qTextInner);
+      }
     } else {
       warnings.push("Missing question text element");
     }
@@ -353,24 +369,54 @@ export function parseQuestionsHtml(htmlContent: string): HtmlParseResult {
     let correctOption: number | null = null;
 
     if (qType === "mcq") {
-      const optMatches = [...block.matchAll(/<li class="option\b([^"]*)">\s*<b>[A-D]\)<\/b>\s*([\s\S]*?)<\/li>/gi)];
+      // Find all option elements: primary <li class="option...">...</li>
+      let optMatches = [
+        ...block.matchAll(/<li\b[^>]*class="([^"]*\boption\b[^"]*)"[^>]*>([\s\S]*?)<\/li>/gi),
+      ];
 
-      if (optMatches.length === 4) {
+      // Fallback if structured with div.option
+      if (optMatches.length === 0) {
+        optMatches = [
+          ...block.matchAll(/<div\b[^>]*class="([^"]*\boption\b[^"]*)"[^>]*>([\s\S]*?)<\/div>/gi),
+        ];
+      }
+
+      if (optMatches.length >= 2) {
         const enArr: string[] = [];
         const urArr: string[] = [];
         let hasAnyUr = false;
 
-        optMatches.forEach((om, optIdx) => {
-          const isCorrect = om[1].includes("correct-option");
+        optMatches.slice(0, 4).forEach((om, optIdx) => {
+          const optClasses = om[1] || "";
+          const optInnerHtml = om[2] || "";
+
+          // Check if marked as correct option
+          const isCorrect =
+            optClasses.includes("correct-option") ||
+            /class="[^"]*\bcorrect-option\b[^"]*"/i.test(optInnerHtml) ||
+            /data-correct="true"/i.test(optInnerHtml);
+
           if (isCorrect) correctOption = optIdx + 1;
 
-          const biOpt = extractBilingual(om[2]);
-          enArr.push(biOpt.en || biOpt.ur);
-          if (biOpt.ur) {
-            urArr.push(biOpt.ur);
+          // Strip option label prefix like "A)", "<b>A)</b>", "(الف)", "<b>الف)</b>", "1.", etc.
+          const cleanedOptHtml = optInnerHtml
+            .replace(
+              /^\s*<(?:b|strong|span)\b[^>]*>\s*(?:[A-Da-d1-4]|[ابجد]|الف|بے|جیم|دال|\([A-Da-d1-4ابجد]\)|\((?:الف|بے|جیم|دال)\)|(?:[A-Da-d1-4]|[ابجد]|الف|بے|جیم|دال)[\.\-\)])\s*<\/(?:b|strong|span)>\s*/i,
+              ""
+            )
+            .replace(
+              /^\s*(?:[A-Da-d1-4]|[ابجد]|الف|بے|جیم|دال|\([A-Da-d1-4ابجد]\)|\((?:الف|بے|جیم|دال)\)|(?:[A-Da-d1-4]|[ابجد]|الف|بے|جیم|دال)[\.\-\)])\s*/i,
+              ""
+            );
+
+          const biOpt = extractBilingual(cleanedOptHtml);
+          const optEn = biOpt.en || biOpt.ur;
+          const optUr = biOpt.ur || biOpt.en;
+
+          enArr.push(optEn);
+          urArr.push(optUr);
+          if (biOpt.ur || hasUrdu(cleanedOptHtml)) {
             hasAnyUr = true;
-          } else {
-            urArr.push(biOpt.en);
           }
         });
 
@@ -383,6 +429,17 @@ export function parseQuestionsHtml(htmlContent: string): HtmlParseResult {
         }
       } else {
         warnings.push(`Expected 4 options, found ${optMatches.length}`);
+      }
+    }
+
+    // Dictionary fallback for known Urdu translations
+    if (!textUr && textEn) {
+      const dictUr = getUrduTranslation(textEn, optionsEn);
+      if (dictUr && dictUr.text_ur) {
+        textUr = dictUr.text_ur;
+        if (dictUr.options_ur && dictUr.options_ur.length > 0 && (!optionsUr || optionsUr.length === 0)) {
+          optionsUr = dictUr.options_ur;
+        }
       }
     }
 

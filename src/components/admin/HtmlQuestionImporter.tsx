@@ -32,6 +32,9 @@ import {
 
 interface QuestionWithDuplicate extends ParsedQuestionItem {
   isDuplicate?: boolean;
+  matchedExistingId?: string | null;
+  hasExistingUrdu?: boolean;
+  willEnrichUrdu?: boolean;
 }
 
 export function HtmlQuestionImporter() {
@@ -70,6 +73,7 @@ export function HtmlQuestionImporter() {
     long: number;
     bilingual: number;
     duplicateCount: number;
+    enrichUrduCount?: number;
     warningsCount: number;
   } | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -87,6 +91,7 @@ export function HtmlQuestionImporter() {
     chapterNumber: number;
     chapterTitle: string;
     importedCount: number;
+    enrichedUrduCount?: number;
     skippedDuplicates: number;
     totalParsed: number;
     mcqCount: number;
@@ -434,6 +439,11 @@ export function HtmlQuestionImporter() {
                 <span className="px-3 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-bold">
                   {importResult.longCount} Long Questions
                 </span>
+                {Boolean(importResult.enrichedUrduCount && importResult.enrichedUrduCount > 0) && (
+                  <span className="px-3 py-1 rounded-lg bg-teal-100 text-teal-800 text-xs font-bold border border-teal-200">
+                    ✨ {importResult.enrichedUrduCount} Questions Enriched with Urdu!
+                  </span>
+                )}
                 {importResult.skippedDuplicates > 0 && (
                   <span className="px-3 py-1 rounded-lg bg-amber-100 text-amber-800 text-xs font-bold">
                     {importResult.skippedDuplicates} Duplicates Skipped
@@ -725,7 +735,14 @@ export function HtmlQuestionImporter() {
                   className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                 />
                 <span>
-                  Skip duplicate questions (<span className="text-amber-700 font-bold">{stats.duplicateCount}</span> detected)
+                  Skip duplicate questions (
+                  <span className="text-amber-700 font-bold">{stats.duplicateCount}</span> in bank
+                  {Boolean(stats.enrichUrduCount && stats.enrichUrduCount > 0) && (
+                    <span className="text-emerald-700 font-bold ml-1">
+                      — {stats.enrichUrduCount} will be updated with missing Urdu
+                    </span>
+                  )}
+                  )
                 </span>
               </label>
             </div>
@@ -758,15 +775,21 @@ export function HtmlQuestionImporter() {
             </div>
 
             <div className="bg-amber-50/70 p-4 rounded-xl border border-amber-100 shadow-sm">
-              <div className="text-xs text-amber-700 font-bold uppercase tracking-wider">Bilingual</div>
+              <div className="text-xs text-amber-700 font-bold uppercase tracking-wider">Bilingual / Urdu</div>
               <div className="text-2xl font-black text-amber-900 mt-1">{stats.bilingual}</div>
-              <div className="text-[11px] text-amber-600 mt-0.5">with Nastaliq Urdu</div>
+              <div className="text-[11px] text-amber-600 mt-0.5">
+                {stats.bilingual > 0 ? "with Nastaliq Urdu" : "English only"}
+              </div>
             </div>
 
             <div className="bg-rose-50/70 p-4 rounded-xl border border-rose-100 shadow-sm">
               <div className="text-xs text-rose-700 font-bold uppercase tracking-wider">Duplicates</div>
               <div className="text-2xl font-black text-rose-900 mt-1">{stats.duplicateCount}</div>
-              <div className="text-[11px] text-rose-600 mt-0.5">already in bank</div>
+              <div className="text-[11px] text-rose-600 mt-0.5">
+                {Boolean(stats.enrichUrduCount && stats.enrichUrduCount > 0)
+                  ? `${stats.enrichUrduCount} will gain Urdu`
+                  : "already in bank"}
+              </div>
             </div>
           </div>
 
@@ -919,9 +942,17 @@ export function HtmlQuestionImporter() {
                               </span>
                             )}
 
-                            {q.isDuplicate && (
-                              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-700">
-                                ⚠️ Duplicate in DB
+                            {q.willEnrichUrdu ? (
+                              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-teal-100 text-teal-800 border border-teal-200">
+                                ✨ Adds Urdu Translation
+                              </span>
+                            ) : q.isDuplicate ? (
+                              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800">
+                                {q.hasExistingUrdu ? "✓ In Bank (Urdu Ready)" : "⚠️ In Bank (English Only)"}
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                                ✨ New Question
                               </span>
                             )}
 
