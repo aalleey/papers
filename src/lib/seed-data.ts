@@ -1,4 +1,7 @@
 import computerCh8Data from "./data/computer10-ch8.json";
+import computerCh1Data from "./data/computer10-ch1.json";
+import computerCh2Data from "./data/computer10-ch2.json";
+import computerCh3Data from "./data/computer10-ch3.json";
 
 export interface SeedBoard {
   id: string;
@@ -204,6 +207,27 @@ export const SEED_CHAPTERS: SeedChapter[] = [
     title_ur: "علم المثلث کا تعارف",
   },
   {
+    id: computerCh1Data.chapter.id,
+    subject_id: computerCh1Data.chapter.subject_id,
+    number: computerCh1Data.chapter.number,
+    title: computerCh1Data.chapter.title,
+    title_ur: computerCh1Data.chapter.title_ur || "آپریٹنگ سسٹمز",
+  },
+  {
+    id: computerCh2Data.chapter.id,
+    subject_id: computerCh2Data.chapter.subject_id,
+    number: computerCh2Data.chapter.number,
+    title: computerCh2Data.chapter.title,
+    title_ur: computerCh2Data.chapter.title_ur || "سسٹم ریکوری اور ایڈوانسڈ مینٹیننس",
+  },
+  {
+    id: computerCh3Data.chapter.id,
+    subject_id: computerCh3Data.chapter.subject_id,
+    number: computerCh3Data.chapter.number,
+    title: computerCh3Data.chapter.title,
+    title_ur: computerCh3Data.chapter.title_ur || "پائتھن پروگرامنگ کا تعارف",
+  },
+  {
     id: computerCh8Data.chapter.id,
     subject_id: computerCh8Data.chapter.subject_id,
     number: computerCh8Data.chapter.number,
@@ -262,6 +286,9 @@ export const SEED_TOPICS: SeedTopic[] = [
     title: "Trigonometric Ratios and Identities",
     title_ur: "مثلثی نسبتیں اور مماثلتیں",
   },
+  ...(computerCh1Data.topics as SeedTopic[]),
+  ...(computerCh2Data.topics as SeedTopic[]),
+  ...(computerCh3Data.topics as SeedTopic[]),
   ...(computerCh8Data.topics as SeedTopic[]),
 ];
 
@@ -1041,5 +1068,8 @@ const SAMPLE_MATH_QUESTIONS: SeedQuestion[] = [
 
 export const SEED_QUESTIONS: SeedQuestion[] = [
   ...SAMPLE_MATH_QUESTIONS,
+  ...(computerCh1Data.questions as unknown as SeedQuestion[]),
+  ...(computerCh2Data.questions as unknown as SeedQuestion[]),
+  ...(computerCh3Data.questions as unknown as SeedQuestion[]),
   ...(computerCh8Data.questions as unknown as SeedQuestion[]),
 ];

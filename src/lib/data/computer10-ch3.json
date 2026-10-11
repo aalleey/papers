@@ -1,0 +1,3416 @@
+{
+  "source_file": "Select Questions Chapter 03.html",
+  "subject": {
+    "id": "1def1b99-7726-55ec-8b98-17c3f3c85c6a",
+    "course_id": "ca100000-0000-0000-0000-000000000005",
+    "name": "Computer Science",
+    "name_ur": "کمپیوٹر سائنس"
+  },
+  "chapter": {
+    "id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+    "subject_id": "1def1b99-7726-55ec-8b98-17c3f3c85c6a",
+    "number": 3,
+    "title": "Introduction to Python Programming",
+    "title_ur": "پائتھن پروگرامنگ کا تعارف"
+  },
+  "topics": [
+    {
+      "id": "a4ddb76c-bb8f-5c6e-a302-b70dd970472d",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "number": 1,
+      "title": "Introduction to Python Programming",
+      "title_ur": "پائتھن پروگرامنگ کا تعارف"
+    },
+    {
+      "id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "number": 2,
+      "title": "Basic Programming Concepts",
+      "title_ur": "بنیادی پروگرامنگ کے تصورات"
+    },
+    {
+      "id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "number": 3,
+      "title": "Basic Python Syntax and Structure",
+      "title_ur": "بنیادی پائتھن سنٹیکس اور ساخت"
+    },
+    {
+      "id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "number": 4,
+      "title": "Operators and Expressions",
+      "title_ur": "آپریٹرز اور ایکسپریشنز"
+    },
+    {
+      "id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "number": 5,
+      "title": "Exercise Questions",
+      "title_ur": "مشقی سوالات"
+    }
+  ],
+  "questions": [
+    {
+      "id": "6aeb2ff6-19f0-5c90-ab7b-de87b490fd8a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-1",
+      "concept_tag": "Programming Process",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which of the following steps is NOT part of the basic programming process?",
+          "options": [
+            "Write Code",
+            "Compile/Interpret",
+            "Execute",
+            "Ignore Errors"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c22c7d16-aa22-5685-bb79-3141dffe4406",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-2",
+      "concept_tag": "Installation",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What should you do when installing Python to run it from the command line more easily?",
+          "options": [
+            "Uncheck \"Add Python to PATH\"",
+            "Choose a different IDE",
+            "Check \"Add Python to PATH\"",
+            "Install only the IDE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d5015c22-dbce-5b23-9a28-7c9e5df6d6bb",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-3",
+      "concept_tag": "Floor Division",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What will be the output of: print( $10 // 3$ )?",
+          "options": [
+            "3.333",
+            "3",
+            "1",
+            "4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b8e7ba1e-3ef9-5793-b2a1-5b8e1d3e42cd",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-4",
+      "concept_tag": "Input Return Type",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What does the input() function return?",
+          "options": [
+            "Integer",
+            "Float",
+            "String",
+            "Boolean"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5f3d5ff9-50ac-54c0-8c38-0fdfa92f1046",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-5",
+      "concept_tag": "Precedence",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which operator has the highest precedence in Python?",
+          "options": [
+            "Addition (+)",
+            "Multiplication (*)",
+            "Exponentiation (**)",
+            "Parentheses ()"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "610dc87b-1e1e-51f8-87d2-1426e28c3806",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-6",
+      "concept_tag": "Logical Evaluation",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the result of $5 > 3$ and $2 ?",
+          "options": [
+            "True",
+            "False",
+            "Error",
+            "None"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8ff4cf5b-09f7-52d3-a172-95dec683b515",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-7",
+      "concept_tag": "Assignment Operator",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What does the $+=$ operator do?",
+          "options": [
+            "Adds two numbers",
+            "Compares values",
+            "Adds and assigns",
+            "Multiplies values"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "93018886-610c-5c62-8f75-8c9e527252b1",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-8",
+      "concept_tag": "Type Casting",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which function converts string to integer?",
+          "options": [
+            "str()",
+            "int()",
+            "float()",
+            "input()"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "76324b3a-3b02-54e7-bdc2-4334e4e6138b",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-9",
+      "concept_tag": "Output Logic",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the output of the below code?\nage = 25; print(\" Age : \", age)",
+          "options": [
+            "Age : 25",
+            "25",
+            "Age",
+            "age"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5b5472f5-a2e9-5637-b205-f8ce824b847a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "mcq",
+      "source": "exercise",
+      "source_ref": "Ex MCQ-10",
+      "concept_tag": "Comment Symbol",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which symbol is used for comments in Python?",
+          "options": [
+            "//",
+            "/*",
+            "#",
+            "--"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4f2de4f5-8542-5540-80c2-830ea152bc44",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "a4ddb76c-bb8f-5c6e-a302-b70dd970472d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Language Level",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Python is a widely-used ______ programming language.",
+          "options": [
+            "Low-level",
+            "High-level",
+            "Machine",
+            "Assembly"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "53dd90c9-5a4f-5d2c-a3b4-65a04d14243c",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "a4ddb76c-bb8f-5c6e-a302-b70dd970472d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Characteristics",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Python is famous for its:",
+          "options": [
+            "Complexity",
+            "Hard-to-read syntax",
+            "Simplicity and readability",
+            "Limited applications"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b9ebbcdc-3f93-5758-8190-22488bef57c3",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "a4ddb76c-bb8f-5c6e-a302-b70dd970472d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Applicability",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Python is applicable in which of the following fields?",
+          "options": [
+            "Web development",
+            "Data analysis",
+            "Artificial intelligence",
+            "All of these"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dd411d66-524c-5787-ac47-325ae37fe6e9",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The process of creating a set of instructions for a computer is called:",
+          "options": [
+            "Formatting",
+            "Computer programming",
+            "Hardware assembly",
+            "Web browsing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5ba5fe91-7a50-5cce-849f-7701fa4e0d02",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Environment",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Preparing a computer to write, run, and debug Python code is called setting up a:",
+          "options": [
+            "Development environment",
+            "Binary system",
+            "Network call",
+            "File system"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "133b864f-a12b-5990-a92a-36c85468c31c",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "PATH",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "During installation, checking which box makes it easier to run Python from the command line?",
+          "options": [
+            "Install Now",
+            "Disable Malware",
+            "Add Python to PATH",
+            "Close Setup"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f4c13cd7-3be3-5051-8ea3-0748fc3d6953",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Website",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The official website to download Python is:",
+          "options": [
+            "www.google.com",
+            "www.pycharm.com",
+            "www.github.com",
+            "www.python.org"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3af6364c-1335-5324-9d42-ef491a06d0a3",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "IDE included",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which IDE is included by default with the Python installation?",
+          "options": [
+            "VS Code",
+            "IDLE",
+            "PyCharm",
+            "Notepad"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3bb08693-0719-5ce6-a6c2-b1c4f81bfdf6",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "PyCharm versions",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "PyCharm is available in a free ______ edition and a paid Professional edition.",
+          "options": [
+            "Standard",
+            "Student",
+            "Community",
+            "Lite"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e1a72a89-cf42-5c0e-a635-cabf678ecdd9",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "File extension",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Python files are typically saved with the extension:",
+          "options": [
+            ".py",
+            ".txt",
+            ".exe",
+            ".html"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ba88a3e0-20ea-5d37-a6a8-dba4bd05c36f",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Google Colab",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Google Colab is a free ______ platform for using Python.",
+          "options": [
+            "Hardware",
+            "Cloud-based",
+            "Offline",
+            "Firmware"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fe43d060-8028-5d46-a945-843c9fd65660",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Colab Libraries",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which of the following is a popular library pre-installed in Google Colab?",
+          "options": [
+            "BIOS",
+            "Kernel",
+            "MS Word",
+            "NumPy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f432cc5d-0f6f-50c9-811d-456eb240938a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Testing",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To output text in Python, we use the ______ function.",
+          "options": [
+            "input()",
+            "output()",
+            "print()",
+            "write()"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b0899aae-d4a5-5f6b-9bbb-a0eeb535d2ff",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Colab requirement",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To get started with Google Colab, you need a ______ account.",
+          "options": [
+            "Google",
+            "Microsoft",
+            "JetBrains",
+            "Python"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5584b96c-900e-51a5-8bf2-212dfe6e5ecb",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Colab benefit",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Google Colab is ideal for machines with ______ resources.",
+          "options": [
+            "Unlimited",
+            "Limited",
+            "No",
+            "Binary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "493afbfd-64ee-50f4-8051-c4c3eb9a7126",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "kaTeX fraction demo",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs16)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If a data analysis library reduces processing time by $\\frac{1}{4}$, the efficiency is:",
+          "options": [
+            "Lower",
+            "Same",
+            "Zero",
+            "Higher"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d53ceca7-828b-5e9b-bae1-d1fd29604285",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "kaTeX power demo",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs17)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In a computer with $2^{10}$ MB RAM, Python's IDLE runs:",
+          "options": [
+            "Not at all",
+            "Only in binary",
+            "Smoothly",
+            "With error"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e3082b8a-4096-538e-940a-e4cbf32c1439",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Interpreter setup",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs18)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In PyCharm, you must choose the path to your Python executable in the ______ menu.",
+          "options": [
+            "Recycle Bin",
+            "Project Interpreter",
+            "BIOS",
+            "Task Manager"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "388a8679-c088-5011-8b2c-d8723023a641",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Colab cells",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs19)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In Google Colab, you can write and execute Python code in:",
+          "options": [
+            "Cells",
+            "Tables",
+            "Drivers",
+            "Shortcuts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "34648f47-1885-50ee-80bb-0f6d793ba6aa",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "a4ddb76c-bb8f-5c6e-a302-b70dd970472d",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "User-friendly",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_MCqs20)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Python's ______ nature helps you get started quickly.",
+          "options": [
+            "Hostile",
+            "User-friendly",
+            "Unsafe",
+            "Complex"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5ac0caf4-042a-54af-a0c8-ad01db470c99",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Comment Symbol",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Single-line comments in Python start with which symbol?",
+          "options": [
+            "@",
+            "//",
+            "#",
+            "/*"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "50ab7279-a2f1-5974-9391-a2ed282a6d22",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Variable Start",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A variable name in Python must begin with a letter or a/an:",
+          "options": [
+            "Digit (0-9)",
+            "Underscore ( _ )",
+            "Space ( )",
+            "Mathematical operator"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7d587113-76cd-5cef-ad7d-1f8aded439a3",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Case Sensitivity",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Variable names in Python are ______, meaning 'age' and 'Age' are different.",
+          "options": [
+            "Flexible",
+            "Static",
+            "Case-insensitive",
+            "Case-sensitive"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f044969c-9d57-5642-b7dc-6d1a01c66d28",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Reserved words",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which of the following cannot be used as a variable name?",
+          "options": [
+            "while",
+            "my_age",
+            "data123",
+            "total_sum"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ab1fa26b-fa4e-523b-975c-b6050e8d4af5",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Integer Type",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which variable type is used to store whole numbers?",
+          "options": [
+            "float",
+            "str",
+            "int",
+            "bool"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ba18a4d3-1ac7-5f05-99dd-6e3d24e09030",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Float Type",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Decimal numbers like $19.99$ are stored in which variable type?",
+          "options": [
+            "int",
+            "float",
+            "str",
+            "Boolean"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8467ab0b-7238-5570-9e77-f90ea75dc31f",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Boolean Values",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A Boolean (bool) variable can store which values?",
+          "options": [
+            "Decimal numbers",
+            "Long text",
+            "Any whole number",
+            "True or False"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c9fa2e87-638b-5b1f-91fe-2739f9217231",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Input Function",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which function is used to get data from the user?",
+          "options": [
+            "input()",
+            "print()",
+            "get()",
+            "scanf()"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c46c8a59-3f49-52d9-becd-77b288d491c0",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Type Conversion",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "To convert user input into a decimal number, which function is used?",
+          "options": [
+            "int()",
+            "str()",
+            "float()",
+            "bool()"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "da579214-fb1a-58b3-9438-6739ab193f19",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Indentation",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In Python, ______ defines the structure and scope of your code.",
+          "options": [
+            "Variables",
+            "Indentation",
+            "Comments",
+            "Brackets"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1d001413-9d8d-5496-8186-30e7f02b59f6",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "String conversion",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Text data like \"Ali\" belongs to which data type?",
+          "options": [
+            "int",
+            "float",
+            "bool",
+            "str"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "217c6ea2-602a-51ac-a342-15d8426d103c",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Triple Quotes",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Multiline string literals ignored at runtime are often used as comments with:",
+          "options": [
+            "Triple Quotes ('''...''')",
+            "Single Hash (#)",
+            "Double Slashes (//)",
+            "Brackets (...)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "35173fda-1035-59a9-b9e0-068703f39a69",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Output arguments",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The print() function can take ______ argument(s) and display them.",
+          "options": [
+            "Only one",
+            "Zero",
+            "One or more",
+            "Maximum two"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "14f479d8-f9bb-5b7c-bcd9-60d5b29ef80a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Logic error check",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If the probability of an error due to indentation is $\\frac{1}{n}$, incorrect indentation may cause:",
+          "options": [
+            "Hardware speed",
+            "Errors (Bugs)",
+            "Virus protection",
+            "Internet speed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4f853f4b-e9ce-5db4-a71a-2271835a721c",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "kaTeX Power demo",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A variable can store $2^{16}$ bits of information in certain systems; what is it called?",
+          "options": [
+            "Translator",
+            "Kernel",
+            "BIOS",
+            "Storage container"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "58c1ef5f-4a1a-5812-b13a-4c964cf373d2",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Symbols that perform operations on operands are called:",
+          "options": [
+            "Variables",
+            "Operators",
+            "Expressions",
+            "Constants"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5ebc463c-490e-5498-943c-fe8cea055fbf",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Expression Def",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "A combination of operators and values that produces a result is known as an:",
+          "options": [
+            "Operand",
+            "Argument",
+            "Expression",
+            "Function"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a745eee2-0fe5-57c7-8ee1-ef59f7d16241",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Exponentiation",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which operator is used for exponentiation (power) in Python?",
+          "options": [
+            "**",
+            "^",
+            "//",
+            "%"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f9e7bc3f-9dd1-5b24-873b-9b58dc3e6bed",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Floor Division",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The operator '//' is used for:",
+          "options": [
+            "Division",
+            "Modulus",
+            "Multiplication",
+            "Floor division"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "87d4ecd2-20a6-5748-b452-07104e3dc3ad",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Modulus Result",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the result of the expression $10 \\% 3$?",
+          "options": [
+            "$3$",
+            "$1$",
+            "$0$",
+            "$3.33$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "23ec6af4-c122-579c-9b10-f8f8bf1c8939",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Floor Result",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the output of $10 // 3$ in Python?",
+          "options": [
+            "$3.3333333333333335$",
+            "$1$",
+            "$3$",
+            "$0$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "678bbb78-7355-5f3b-a6f2-47d23a4009ad",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Comparison Return",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Comparison operators return which type of value?",
+          "options": [
+            "Integer",
+            "Float",
+            "String",
+            "Boolean (True or False)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "44ade77d-e4b2-5c19-8b45-55b6a5a9565f",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Equality",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which symbol is used to check for equality between two values?",
+          "options": [
+            "=",
+            "==",
+            "!=",
+            "==="
+          ]
+        }
+      ]
+    },
+    {
+      "id": "241b895f-4d84-51dd-88de-92cc1bb57d2a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Not equal",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The operator for 'Not equal to' in Python is:",
+          "options": [
+            "!=",
+            "<>",
+            "not==",
+            "/="
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c0efc871-d835-5838-a7dd-9e3c0815db1d",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Assignment",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which operator is used to assign values to variables?",
+          "options": [
+            "==",
+            "assign",
+            "=",
+            "->"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2c2dfb66-f257-563f-9398-d6dfef27d142",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Compound Addition",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If $a=10$ and $b=5$, what is the value of 'a' after $a += b$?",
+          "options": [
+            "$10$",
+            "$15$",
+            "$5$",
+            "$50$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b6d6032e-7e79-532b-b8b3-6e7429bc1f54",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Logical AND",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In logical AND, the result is True only if:",
+          "options": [
+            "One expression is True",
+            "Both expressions are False",
+            "One expression is False",
+            "Both expressions are True"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0b29092c-a18a-53d8-aac3-ed381feaad28",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Logical NOT",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The logical operator 'not' returns True if the operand is:",
+          "options": [
+            "True",
+            "False",
+            "Zero",
+            "None"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1b4b9b11-3ec9-52a7-b1f4-37ee1f98c15f",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Precedence Parentheses",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which of the following has the highest precedence in Python?",
+          "options": [
+            "Addition (+)",
+            "Multiplication (*)",
+            "Parentheses ()",
+            "Exponentiation (**)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b4c72718-b629-5ee1-af14-808d2eb2803b",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Exponentiation Precedence",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "After parentheses, which operator is evaluated next in precedence?",
+          "options": [
+            "**",
+            "//",
+            "+",
+            "-"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "59bdfdae-f1cf-58cd-9f97-25b8219007a5",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Calculation",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs16)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the output of $3 + 2 * 5$?",
+          "options": [
+            "$25$",
+            "$13$",
+            "$15$",
+            "$10$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "27e5eed3-0642-59c1-8b6e-60379f395856",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Calculation Brackets",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs17)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the output of $(3 + 2) * 5$?",
+          "options": [
+            "$13$",
+            "$10$",
+            "$20$",
+            "$25$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2b2752ad-b045-551c-b43c-e26755ec9fd4",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "String Interpolation",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs18)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "In Python, which prefix before a string is used for interpolation?",
+          "options": [
+            "s",
+            "i",
+            "f",
+            "p"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e5b92ca1-dcbf-597b-8a54-6acbc18292d2",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Associativity",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs19)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Exponentiation operator (**) is ______ associative.",
+          "options": [
+            "Left to Right",
+            "Right to Left",
+            "Unidirectional",
+            "None"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bb9ba52e-377d-5629-ad99-d6cd1264ef70",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Floor result type",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs20)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "The result of $15 / 3$ is:",
+          "options": [
+            "$5.0$",
+            "$5$",
+            "$0$",
+            "$15$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b56033a2-903f-52cd-9d11-7fd8c2abad5d",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Boolean logic",
+      "correct_option": 4,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs21)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "True or False results in:",
+          "options": [
+            "False",
+            "None",
+            "Error",
+            "True"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ad000f68-1b92-50d1-bc4a-0a770daab3e9",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Modulo Precedence",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs22)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which operator group has higher precedence than Addition/Subtraction?",
+          "options": [
+            "Assignment",
+            "Multiplication, Division, Modulus",
+            "None",
+            "Logical OR"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c381a76c-d632-55da-b3c8-612d73aa48c6",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Calculation complex",
+      "correct_option": 3,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs23)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is $2 ** 3 ** 2$? (Hint: Right associative)",
+          "options": [
+            "$64$",
+            "$12$",
+            "$512$",
+            "$18$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0fa8829d-4faa-536a-b9ae-850cdca4941b",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Compound Exponentiation",
+      "correct_option": 1,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs24)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If $a=2$ and $b=3$, $a **= b$ makes 'a' equal to:",
+          "options": [
+            "$8$",
+            "$6$",
+            "$2$",
+            "$1$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "98024545-c1eb-5fe5-858c-ff76f8d3cf5c",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "mcq",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Logic Comparison",
+      "correct_option": 2,
+      "marks": 1,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_MCqs25)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Result of $10 != 5$ is:",
+          "options": [
+            "False",
+            "True",
+            "$10$",
+            "$5$"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "132eb1a1-c367-5b67-8d7a-ac67c978dba5",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-1",
+      "concept_tag": "Comments importance",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why are comments important in programming?"
+        }
+      ]
+    },
+    {
+      "id": "68d2cd02-b21c-560d-8f4b-108c8e1860fd",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-2",
+      "concept_tag": "Data types",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Discuss three basic data types in python."
+        }
+      ]
+    },
+    {
+      "id": "b0fc43cf-e62e-58bc-a0b2-91e23cd6c6ee",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-3",
+      "concept_tag": "int vs float",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Describe the difference between integer and float data types in Python."
+        }
+      ]
+    },
+    {
+      "id": "7a2d708a-dfd2-5c4f-95a1-406875e9f2fc",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-4",
+      "concept_tag": "Conditional Logic",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does the if statement differ from the if-else statement?"
+        }
+      ]
+    },
+    {
+      "id": "df656534-aa95-5b2c-b7c6-5c3955477cc1",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-5",
+      "concept_tag": "Logical Operators",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are logical operators and name all three?"
+        }
+      ]
+    },
+    {
+      "id": "630ab5d9-6f41-5b94-bc40-9b2a26209d83",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-6",
+      "concept_tag": "User Input",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How do you get user input in Python?"
+        }
+      ]
+    },
+    {
+      "id": "11e4bf50-34ab-51c5-bdb6-761db9c7438c",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-7",
+      "concept_tag": "Print statement",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the purpose of print() statement in Python?"
+        }
+      ]
+    },
+    {
+      "id": "b18f361b-d225-5a6b-838e-4cdf3506e749",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-8",
+      "concept_tag": "Precedence concept",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is operator precedence? Give an example."
+        }
+      ]
+    },
+    {
+      "id": "249756b1-3be3-5fd2-b4a7-06a1efc544fb",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "short",
+      "source": "exercise",
+      "source_ref": "Ex SQ-9",
+      "concept_tag": "Variable Rules",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Write any three main rules for naming variables in Python?"
+        }
+      ]
+    },
+    {
+      "id": "d56393ff-d968-50ea-879b-7212a25aa91f",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "a4ddb76c-bb8f-5c6e-a302-b70dd970472d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is Python programming language?"
+        }
+      ]
+    },
+    {
+      "id": "4c48c893-6691-539c-ab3c-1b7ed91c5c5a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "a4ddb76c-bb8f-5c6e-a302-b70dd970472d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Applications",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List three fields where Python is used."
+        }
+      ]
+    },
+    {
+      "id": "2ef54d7f-9d43-5ab5-99e2-9f58e04a8b0c",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Programming Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define computer programming."
+        }
+      ]
+    },
+    {
+      "id": "2cdd0c6b-973b-54b0-aed4-dbdd578ab511",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Analogy",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the direction analogy for computer programming."
+        }
+      ]
+    },
+    {
+      "id": "f988faab-6949-5054-a08f-a1aee24aa045",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Development Environment Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is a development environment?"
+        }
+      ]
+    },
+    {
+      "id": "eebe0f4d-bba3-5362-9279-37956fa95d2d",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "PATH Importance",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is 'Add Python to PATH' important during installation?"
+        }
+      ]
+    },
+    {
+      "id": "15af90fe-ab4b-5369-a789-8c28713eeea5",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "IDE Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What does IDE stand for and give two examples."
+        }
+      ]
+    },
+    {
+      "id": "59a870b9-0059-5a42-8f5c-76dee3f4030a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "PyCharm Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Describe PyCharm IDE."
+        }
+      ]
+    },
+    {
+      "id": "102cb490-db2d-53c9-a447-ae21913eae89",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Python Website",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Where can you download the latest version of Python?"
+        }
+      ]
+    },
+    {
+      "id": "8241f336-c978-5cf5-8894-cc3c7a917468",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Interpreter path",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How do you configure the IDE with Python in PyCharm?"
+        }
+      ]
+    },
+    {
+      "id": "c4e64fb5-979b-503d-be81-bb374e9e1d58",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Testing code",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can you test if your IDE is correctly configured?"
+        }
+      ]
+    },
+    {
+      "id": "25963aae-c40a-5c97-a511-2bcc12b43f5a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Google Colab Def",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is Google Colab?"
+        }
+      ]
+    },
+    {
+      "id": "27e3dbda-5ab5-5e07-9996-80d1f2a2f392",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Colab Benefit",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "State a major benefit of using Google Colab for beginners."
+        }
+      ]
+    },
+    {
+      "id": "4a115042-5451-5a49-9119-bd47b34edb97",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Colab Libraries List",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Name three popular libraries pre-installed in Google Colab."
+        }
+      ]
+    },
+    {
+      "id": "6fd8e5c4-2e1b-5c5c-a611-ccf584a82e5f",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Colab start",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How can a user start using Google Colab?"
+        }
+      ]
+    },
+    {
+      "id": "2f080cdb-91e3-5363-a93e-eb2e61816655",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "IDLE mention",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ16)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is IDLE in the context of Python?"
+        }
+      ]
+    },
+    {
+      "id": "0c2481e1-2a40-5285-b0fb-52e20766ebcd",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "KaTeX fraction sq",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ17)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If code execution takes $\\frac{1}{100}$ second, how fast is it?"
+        }
+      ]
+    },
+    {
+      "id": "905a0779-868c-5152-b8d9-94d392cfba20",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "KaTeX power sq",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ18)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How much space does a small Python script of $2^{5}$ KB take?"
+        }
+      ]
+    },
+    {
+      "id": "e02e6865-acc5-5315-8d1d-63e8111afcef",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "978b1756-db48-59dd-b044-b236379f0fb1",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Debugging",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ19)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is debugging in programming?"
+        }
+      ]
+    },
+    {
+      "id": "2f8f7f1e-bb30-5684-b303-7feee91973f7",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "a4ddb76c-bb8f-5c6e-a302-b70dd970472d",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Simplicity",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_1_SQ20)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why is Python recommended for beginners?"
+        }
+      ]
+    },
+    {
+      "id": "228af8f7-2228-57fe-b1dd-9a10867bdcd7",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Comments definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are Python comments and how are they used?"
+        }
+      ]
+    },
+    {
+      "id": "d5aab78a-d6eb-58bb-a77a-91cf7538917d",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Variable definition",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define a variable in Python."
+        }
+      ]
+    },
+    {
+      "id": "339506d9-7230-5dc0-8d32-586112b1ca8f",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Naming Rules",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "State any two rules for naming variables in Python."
+        }
+      ]
+    },
+    {
+      "id": "04007fd6-003b-5dd6-ad0f-690680e7007f",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Case Sensitivity",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is meant by variable names being case-sensitive?"
+        }
+      ]
+    },
+    {
+      "id": "676e8b7c-d101-51b1-9fe4-912a49988a34",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Integer Type",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Describe the 'Integer' variable type."
+        }
+      ]
+    },
+    {
+      "id": "27c8d440-270b-53e6-bf5b-de062b8300f6",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Float Type",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are floating-point variables?"
+        }
+      ]
+    },
+    {
+      "id": "ca25bc5b-96a2-573f-90f2-383ae5698b24",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "String Type",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define the 'String' variable type with an example."
+        }
+      ]
+    },
+    {
+      "id": "1d6122a5-41ba-5ec0-95da-d7ddcdc8a405",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Boolean Type",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are Boolean variables?"
+        }
+      ]
+    },
+    {
+      "id": "ca1bc754-a9a0-5e35-aa64-ddd8d4415cc0",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "input() function",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the function of input() in Python."
+        }
+      ]
+    },
+    {
+      "id": "d0509710-78d6-564d-86da-f4fabc926a3d",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "print() function",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the purpose of the print() function?"
+        }
+      ]
+    },
+    {
+      "id": "badbbbf2-aa19-54f3-82ea-b72aab4fdb0a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Type Conversion reason",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why are int() or float() functions used with input()?"
+        }
+      ]
+    },
+    {
+      "id": "0305f002-698a-5c34-9fc3-5aa550da022a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Reserved words examples",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List four reserved words in Python."
+        }
+      ]
+    },
+    {
+      "id": "0ef7cc70-078e-5bfb-89cf-22982820848a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Indentation role",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the importance of indentation in Python?"
+        }
+      ]
+    },
+    {
+      "id": "22bfb2e2-15ce-5c63-8633-15307f8a0051",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Multiline comment literals",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How are multiline comments represented using triple quotes?"
+        }
+      ]
+    },
+    {
+      "id": "f6134bff-95c9-5096-bfb4-bc49ef1a2eab",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8e474597-f239-5386-8d5f-7a5375656fc5",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Syntax demo",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_2_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Give an example of a simple Python print statement."
+        }
+      ]
+    },
+    {
+      "id": "9a330747-fd13-5c2e-8039-8128471efb41",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition Operator",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define Operators in Python."
+        }
+      ]
+    },
+    {
+      "id": "0b469d04-9abc-50e8-b133-1bae681b94a2",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Definition Expression",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is an expression?"
+        }
+      ]
+    },
+    {
+      "id": "3b29aa44-2f53-5bfe-a729-42a764397fcd",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Arithmetic List",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List any four arithmetic operators in Python."
+        }
+      ]
+    },
+    {
+      "id": "41b847e8-14c4-5dbf-b5eb-237697b499f0",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Modulus Function",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the purpose of the Modulus (%) operator?"
+        }
+      ]
+    },
+    {
+      "id": "1158c031-afa0-5cc6-ad1f-0f3381ed2b50",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Floor Division Function",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain Floor Division (//) in Python."
+        }
+      ]
+    },
+    {
+      "id": "1284c9cc-a2d8-5b0b-83ba-32749bed735a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Exponentiation Operator",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which operator is used for power calculations? Give an example."
+        }
+      ]
+    },
+    {
+      "id": "43326781-d47c-5425-8611-589e407e2b94",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Comparison list",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "List three comparison operators and their symbols."
+        }
+      ]
+    },
+    {
+      "id": "fe53990a-6158-561e-8182-e1dbff644505",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Comparison output",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are the possible results of a comparison operation?"
+        }
+      ]
+    },
+    {
+      "id": "8edfc436-6746-5e49-b007-4fa3e1770bcf",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Assignment operator",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ09)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the main assignment operator in Python?"
+        }
+      ]
+    },
+    {
+      "id": "aa88839b-d467-5a73-8f37-e107438a1c31",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Compound Assignment",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ10)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define compound assignment operators."
+        }
+      ]
+    },
+    {
+      "id": "785add7b-f8ad-553e-b6fb-32fb4b638635",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Logical list",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ11)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Name the most common logical operators."
+        }
+      ]
+    },
+    {
+      "id": "19a6860a-b30c-5adf-aecd-a80e79595da2",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Logical OR logic",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ12)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "How does the logical OR operator work?"
+        }
+      ]
+    },
+    {
+      "id": "04ee7a58-b57d-5c67-9763-2675ba484df9",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Logical NOT logic",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ13)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the function of the logical 'not' operator?"
+        }
+      ]
+    },
+    {
+      "id": "9ff8510c-8746-50a5-ae4c-29787941c86b",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Operator Precedence",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ14)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Define Operator Precedence."
+        }
+      ]
+    },
+    {
+      "id": "47d5f503-2df3-535a-8589-bf5d630288f2",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Parentheses Role",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ15)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Why are parentheses important in an expression?"
+        }
+      ]
+    },
+    {
+      "id": "aaa576fb-0d06-52aa-a257-0a67c5bbd318",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Precedence Exponent",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ16)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Between multiplication (*) and exponentiation (**), which one is evaluated first?"
+        }
+      ]
+    },
+    {
+      "id": "3469012a-3bba-5ca1-a0ec-f282d38acfc0",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Precedence Addition/Mult",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ17)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Which arithmetic operators have the lowest precedence?"
+        }
+      ]
+    },
+    {
+      "id": "cb296c74-2b9d-5fa3-a391-3cf159e445c3",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Right Associativity",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ18)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is meant by Right Associativity for the ** operator?"
+        }
+      ]
+    },
+    {
+      "id": "eb2e3f86-6c35-5537-8499-ce312afb5900",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "F-string Purpose",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ19)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the use of the prefix 'f' before a string in Python?"
+        }
+      ]
+    },
+    {
+      "id": "2dde283e-b43b-5b2f-a372-bf0fe580d350",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Div vs Floor Div",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ20)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Differentiate between the output of / and // operators."
+        }
+      ]
+    },
+    {
+      "id": "c6cc89ef-3e8c-5054-bd18-23304c4569ca",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Compound example mult",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ21)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "If $x = 10$, what does $x *= 3$ do?"
+        }
+      ]
+    },
+    {
+      "id": "dcbf8ad7-8bc3-5bfc-963a-0b2b7db715ce",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Inequality example",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ22)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the result of $15 >= 15$ and why?"
+        }
+      ]
+    },
+    {
+      "id": "960c2afc-d261-5126-afca-9de00e1a2633",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Modulo Precedence Calculation",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ23)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Evaluate $17 \\% 5 * 2$ based on precedence."
+        }
+      ]
+    },
+    {
+      "id": "4dcdadcc-7585-5cae-ad8e-a1901d908b04",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Comparison logic 0",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ24)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Is the result of $10 == 10.0$ True or False in Python?"
+        }
+      ]
+    },
+    {
+      "id": "9a12ffa5-cd0d-58e6-a9db-4c37d15733b1",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "f9574aa1-677a-5b8b-aba7-2d76caa3a5b8",
+      "type": "short",
+      "source": "extra",
+      "source_ref": null,
+      "concept_tag": "Logical truth and-or",
+      "correct_option": null,
+      "marks": 2,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_3_3_SQ25)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What is the result of (True or False) and False?"
+        }
+      ]
+    },
+    {
+      "id": "17125879-9e40-5470-a48b-cbf9e3c53444",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-1",
+      "concept_tag": "Data types detailed",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_LQ01)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are the basic data types in Python? Explain integers, floats, strings, and Booleans with examples."
+        }
+      ]
+    },
+    {
+      "id": "ad7eb4eb-a4a6-5bfa-954b-cf12ff789da1",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-2",
+      "concept_tag": "Arithmetic Operators",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_LQ02)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "What are arithmetic operators in Python? Provide examples of each operator and explain when you would use them."
+        }
+      ]
+    },
+    {
+      "id": "442c5ff2-fa61-5824-9b12-277b7ff3351a",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-3",
+      "concept_tag": "IO functions",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_LQ03)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain the input() and print() functions with examples."
+        }
+      ]
+    },
+    {
+      "id": "8701c6b1-94cb-5658-be73-5de8f0c65a4d",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-4",
+      "concept_tag": "Comparison and Logical",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_LQ04)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Explain how comparison and logical operators work together in conditional statements. Provide a practical example."
+        }
+      ]
+    },
+    {
+      "id": "819f95a8-644a-502e-a0ba-6ab298726fab",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-5",
+      "concept_tag": "Program Greeting",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_LQ05)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Write a program in Python that will take a name from user and display greeting message to the given name."
+        }
+      ]
+    },
+    {
+      "id": "40a1e594-4fdb-544a-bfea-6d3d95498aff",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-6",
+      "concept_tag": "Program Sum",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_LQ06)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Write a program in python that takes two numbers from user and display their sum."
+        }
+      ]
+    },
+    {
+      "id": "5a112539-cbfa-5b24-9fb0-c145d53ad97c",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-7",
+      "concept_tag": "Program Average",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_LQ07)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Write a program in python that five numbers from user and display their average."
+        }
+      ]
+    },
+    {
+      "id": "8ee6adde-07f3-5fda-b8f6-87eb86a0a142",
+      "chapter_id": "bd6c341e-e709-5551-959a-84c2a20e57f5",
+      "topic_id": "8008e8ba-f71d-518e-a009-b0aba1e35afd",
+      "type": "long",
+      "source": "exercise",
+      "source_ref": "Ex LQ-8",
+      "concept_tag": "Expression Solving",
+      "correct_option": null,
+      "marks": 5,
+      "difficulty": "medium",
+      "is_active": true,
+      "source_note": "Imported from Select Questions Chapter 03.html (id Comp10_Ex_3_LQ08)",
+      "translations": [
+        {
+          "language": "en",
+          "text": "Solve the following expressions:\na) $8 + 3 * 4 - 2 ** 2$\nb) $20 \\% 7 * 3 + 10 // 3$\nc) $2 * 3 ** 2 \\% 4 + 10 - 6 / 2$"
+        }
+      ]
+    }
+  ],
+  "skipped_duplicates": []
+}

@@ -656,7 +656,25 @@ export const db = {
 
       const { data, error } = await q.order("created_at", { ascending: false });
       if (!error && data && data.length > 0) {
-        let results = data as Question[];
+        let results = (data as any[]).map((row) => ({
+          ...row,
+          translations: (row.translations || []).map((t: any) => ({
+            ...t,
+            options:
+              typeof t.options === "string"
+                ? (() => {
+                    try {
+                      return JSON.parse(t.options);
+                    } catch {
+                      return [];
+                    }
+                  })()
+                : Array.isArray(t.options)
+                ? t.options
+                : null,
+          })),
+        })) as Question[];
+
         if (filters?.search) {
           const s = filters.search.toLowerCase();
           results = results.filter((item) => {
@@ -682,7 +700,25 @@ export const db = {
 
       const { data, error } = await q.order("created_at", { ascending: false });
       if (!error && data && data.length > 0) {
-        let results = data as Question[];
+        let results = (data as any[]).map((row) => ({
+          ...row,
+          translations: (row.translations || []).map((t: any) => ({
+            ...t,
+            options:
+              typeof t.options === "string"
+                ? (() => {
+                    try {
+                      return JSON.parse(t.options);
+                    } catch {
+                      return [];
+                    }
+                  })()
+                : Array.isArray(t.options)
+                ? t.options
+                : null,
+          })),
+        })) as Question[];
+
         if (filters?.search) {
           const s = filters.search.toLowerCase();
           results = results.filter((item) => {

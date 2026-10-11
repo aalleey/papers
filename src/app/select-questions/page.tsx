@@ -108,10 +108,11 @@ export default function SelectQuestionsPage() {
       const urlChap = searchParams.get("chapter");
       const urlChapId = searchParams.get("chapter_id");
 
-      let initialChapterId = chapterOverride || urlChapId || "68fc022a-f4b1-53f8-a133-2946135d88db"; // Default Chapter 2
+      let initialChapterId = chapterOverride || urlChapId || "bd6c341e-e709-5551-959a-84c2a20e57f5"; // Default Chapter 3
       if (urlChap === "1") initialChapterId = "81fef04e-6a53-5018-9051-fdb1c36775d9";
-      if (urlChap === "8") initialChapterId = "ac5b38de-123c-51fc-a96b-1ecaff9762ce";
       if (urlChap === "2") initialChapterId = "68fc022a-f4b1-53f8-a133-2946135d88db";
+      if (urlChap === "3") initialChapterId = "bd6c341e-e709-5551-959a-84c2a20e57f5";
+      if (urlChap === "8") initialChapterId = "ac5b38de-123c-51fc-a96b-1ecaff9762ce";
 
       const res = await fetch(`/api/paper/questions?chapter_id=${initialChapterId}`);
       if (res.status === 401) {
@@ -1406,8 +1407,33 @@ function QuestionCard({
   const showEnglish = languageMode === "English" || languageMode === "Bilingual";
   const showUrdu = languageMode === "Urdu" || languageMode === "Bilingual";
 
-  const optionsEn = enTrans?.options || [];
-  const optionsUr = dynamicUrdu.options_ur || [];
+  const optionsEn: string[] = useMemo(() => {
+    const raw = enTrans?.options;
+    if (Array.isArray(raw)) return raw;
+    if (typeof raw === "string") {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  }, [enTrans?.options]);
+
+  const optionsUr: string[] = useMemo(() => {
+    const raw = dynamicUrdu.options_ur;
+    if (Array.isArray(raw)) return raw;
+    if (typeof raw === "string") {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  }, [dynamicUrdu.options_ur]);
 
   return (
     <article
