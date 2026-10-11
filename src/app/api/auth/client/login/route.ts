@@ -8,29 +8,49 @@ export async function POST(req: NextRequest) {
     const { email, password } = body;
 
     if (!email) {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+      return NextResponse.json({ error: "Email or phone is required." }, { status: 400 });
     }
 
-    // Client Authentication
-    // Allow any valid email or test demo accounts
-    // Existing accounts keep their stored profile, plan and history.
+    if (!password) {
+      return NextResponse.json({ error: "Password is required." }, { status: 400 });
+    }
+
+    // 1. Check if user exists in database
     const existing = await db.getClientByEmail(email);
-    const client = existing
-      ? await createClientSession({
-          email: existing.email,
-          fullName: existing.fullName,
-          password: existing.password || password || null,
-        })
-      : await createClientSession({
-          email,
-          fullName: body.fullName || email.split("@")[0],
-          academyName: body.academyName || "Educator Academy",
-          password: password || null,
-          planId: body.planId || undefined,
-        });
+
+    if (!existing) {
+      return NextResponse.json(
+        { error: "No account found with this email or phone. Please register first." },
+        { status: 404 }
+      );
+    }
+
+    // 2. Check password
+    // If account has a stored password, verify it matches
+    if (existing.password && existing.password !== password) {
+      return NextResponse.json(
+        { error: "Incorrect password. Please try again." },
+        { status: 401 }
+      );
+    }
+
+    // If account was created without a password (legacy demo), save the entered password
+    if (!existing.password) {
+      await db.updateClient(existing.id, { password });
+    }
+
+    // 3. Create active session for the verified client
+    const client = await createClientSession({
+      id: existing.id,
+      email: existing.email,
+      fullName: existing.fullName,
+      academyName: existing.academyName,
+      phone: existing.phone,
+      password: existing.password || password,
+    });
 
     return NextResponse.json({ success: true, client });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to login" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to login. Please try again." }, { status: 500 });
   }
 }

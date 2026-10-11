@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClientSession } from "@/lib/auth";
 import { SubscriptionPlanId } from "@/lib/types";
 import { sendWelcomeEmail } from "@/lib/email";
+import { db } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,7 +10,23 @@ export async function POST(req: NextRequest) {
     const { email, fullName, academyName, phone, password, planId } = body;
 
     if (!email || !fullName) {
-      return NextResponse.json({ error: "Name and Email are required" }, { status: 400 });
+      return NextResponse.json({ error: "Name and Email are required." }, { status: 400 });
+    }
+
+    if (!password || password.length < 6) {
+      return NextResponse.json(
+        { error: "Password must be at least 6 characters." },
+        { status: 400 }
+      );
+    }
+
+    // Check if account already exists
+    const existing = await db.getClientByEmail(email);
+    if (existing) {
+      return NextResponse.json(
+        { error: "An account with this email or phone already exists. Please sign in instead." },
+        { status: 409 }
+      );
     }
 
     const client = await createClientSession({
