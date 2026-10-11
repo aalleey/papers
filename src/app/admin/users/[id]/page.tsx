@@ -36,6 +36,32 @@ export default function AdminClientProfilePage({
     load();
   }, [id]);
 
+  const handleQuickApprove = async () => {
+    if (!client) return;
+    try {
+      const res = await fetch(`/api/admin/clients/${client.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: "active",
+          isVerified: true,
+          planId: client.subscription.planId === "free" ? "standard" : client.subscription.planId,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to approve account");
+      const updatedData = await res.json();
+      if (updatedData.client) {
+        setClient(updatedData.client);
+      }
+    } catch (e) {
+      alert("Failed to approve account: " + (e instanceof Error ? e.message : "Unknown error"));
+    }
+  };
+
+  const isPending =
+    client &&
+    (client.subscription?.status === "pending_verification" || client.isVerified === false);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -52,6 +78,28 @@ export default function AdminClientProfilePage({
           <Edit2 className="w-3.5 h-3.5" /> Edit profile &amp; permissions in list
         </Link>
       </div>
+
+      {isPending && (
+        <div className="p-4 rounded-2xl bg-amber-500 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg shadow-amber-500/20">
+          <div className="space-y-0.5">
+            <div className="font-black text-sm flex items-center gap-1.5">
+              <span>⚠️ Application on HOLD — Pending Admin Approval</span>
+            </div>
+            <p className="text-xs text-amber-100 font-medium">
+              Educator has submitted Raast payment to 03092770207
+              {client.paymentSubmission?.transactionRef && ` (TID: ${client.paymentSubmission.transactionRef})`}
+              . Approve to activate paper generator access.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleQuickApprove}
+            className="px-4 py-2 rounded-xl bg-white text-slate-900 hover:bg-emerald-50 hover:text-emerald-800 font-black text-xs shadow-md transition-colors shrink-0"
+          >
+            ✓ Approve &amp; Activate Now
+          </button>
+        </div>
+      )}
 
       {loading ? (
         <div className="py-32 flex justify-center">

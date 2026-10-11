@@ -1020,27 +1020,40 @@ export const db = {
 
     if (adminClient) {
       try {
-        let q = adminClient.from("clients").select("*").eq("environment", env);
+        let q = adminClient.from("clients").select("*");
+        if (isProductionEnvironment()) {
+          q = q.eq("environment", "production");
+        }
         if (params?.planId && params.planId !== "all") {
           q = q.eq("subscription->>planId", params.planId);
         }
         const { data, error } = await q.order("created_at", { ascending: false });
         if (!error && data) {
-          let clients: ClientUser[] = data.map((row) => ({
-            id: row.id,
-            email: row.email,
-            fullName: row.full_name,
-            academyName: row.academy_name,
-            phone: row.phone,
-            password: row.password || null,
-            role: (row.role as "client") || "client",
-            subscription: row.subscription,
-            paymentSubmission: row.payment_submission || null,
-            isVerified: row.is_verified ?? false,
-            notes: row.notes,
-            createdAt: row.created_at,
-            updatedAt: row.updated_at,
-          }));
+          let clients: ClientUser[] = data.map((row) => {
+            const sub = (row.subscription || {}) as any;
+            const password = sub.password || row.password || null;
+            const paymentSubmission = sub.paymentSubmission || row.payment_submission || null;
+            const isVerified = sub.isVerified !== undefined ? sub.isVerified : (row.is_verified ?? (sub.status === "active"));
+
+            return {
+              id: row.id,
+              email: row.email,
+              fullName: row.full_name,
+              academyName: row.academy_name,
+              phone: row.phone,
+              password,
+              role: (row.role as "client") || "client",
+              subscription: {
+                ...sub,
+                status: sub.status || "active",
+              },
+              paymentSubmission,
+              isVerified,
+              notes: row.notes,
+              createdAt: row.created_at,
+              updatedAt: row.updated_at,
+            };
+          });
 
           if (params?.search) {
             const query = params.search.toLowerCase().trim();
@@ -1049,12 +1062,19 @@ export const db = {
                 c.fullName.toLowerCase().includes(query) ||
                 c.email.toLowerCase().includes(query) ||
                 (c.phone && c.phone.toLowerCase().includes(query)) ||
-                (c.academyName && c.academyName.toLowerCase().includes(query))
+                (c.academyName && c.academyName.toLowerCase().includes(query)) ||
+                (c.paymentSubmission?.transactionRef && c.paymentSubmission.transactionRef.toLowerCase().includes(query))
             );
           }
 
           if (params?.status && params.status !== "all") {
-            clients = clients.filter((c) => c.subscription.status === params.status);
+            if (params.status === "pending_verification") {
+              clients = clients.filter((c) => c.subscription.status === "pending_verification" || c.isVerified === false);
+            } else if (params.status === "active") {
+              clients = clients.filter((c) => c.subscription.status === "active" && c.isVerified !== false);
+            } else {
+              clients = clients.filter((c) => c.subscription.status === params.status);
+            }
           }
 
           return clients;
@@ -1074,7 +1094,8 @@ export const db = {
           c.fullName.toLowerCase().includes(q) ||
           c.email.toLowerCase().includes(q) ||
           (c.phone && c.phone.toLowerCase().includes(q)) ||
-          (c.academyName && c.academyName.toLowerCase().includes(q))
+          (c.academyName && c.academyName.toLowerCase().includes(q)) ||
+          (c.paymentSubmission?.transactionRef && c.paymentSubmission.transactionRef.toLowerCase().includes(q))
       );
     }
 
@@ -1083,7 +1104,13 @@ export const db = {
     }
 
     if (params?.status && params.status !== "all") {
-      clients = clients.filter((c) => c.subscription.status === params.status);
+      if (params.status === "pending_verification") {
+        clients = clients.filter((c) => c.subscription.status === "pending_verification" || c.isVerified === false);
+      } else if (params.status === "active") {
+        clients = clients.filter((c) => c.subscription.status === "active" && c.isVerified !== false);
+      } else {
+        clients = clients.filter((c) => c.subscription.status === params.status);
+      }
     }
 
     // Sort by createdAt descending (newest registered first)
@@ -1094,7 +1121,6 @@ export const db = {
 
   async getClientById(id: string): Promise<ClientUser | null> {
     const adminClient = createAdminSupabaseClient();
-    const env = getCurrentDataEnvironment();
 
     if (adminClient) {
       try {
@@ -1102,20 +1128,27 @@ export const db = {
           .from("clients")
           .select("*")
           .eq("id", id)
-          .eq("environment", env)
-          .single();
+          .maybeSingle();
         if (!error && data) {
+          const sub = (data.subscription || {}) as any;
+          const password = sub.password || data.password || null;
+          const paymentSubmission = sub.paymentSubmission || data.payment_submission || null;
+          const isVerified = sub.isVerified !== undefined ? sub.isVerified : (data.is_verified ?? (sub.status === "active"));
+
           return {
             id: data.id,
             email: data.email,
             fullName: data.full_name,
             academyName: data.academy_name,
             phone: data.phone,
-            password: data.password || null,
+            password,
             role: (data.role as "client") || "client",
-            subscription: data.subscription,
-            paymentSubmission: data.payment_submission || null,
-            isVerified: data.is_verified ?? false,
+            subscription: {
+              ...sub,
+              status: sub.status || "active",
+            },
+            paymentSubmission,
+            isVerified,
             notes: data.notes,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
@@ -1133,7 +1166,6 @@ export const db = {
 
   async getClientByEmail(email: string): Promise<ClientUser | null> {
     const adminClient = createAdminSupabaseClient();
-    const env = getCurrentDataEnvironment();
 
     if (adminClient) {
       try {
@@ -1141,20 +1173,27 @@ export const db = {
           .from("clients")
           .select("*")
           .ilike("email", email)
-          .eq("environment", env)
           .maybeSingle();
         if (!error && data) {
+          const sub = (data.subscription || {}) as any;
+          const password = sub.password || data.password || null;
+          const paymentSubmission = sub.paymentSubmission || data.payment_submission || null;
+          const isVerified = sub.isVerified !== undefined ? sub.isVerified : (data.is_verified ?? (sub.status === "active"));
+
           return {
             id: data.id,
             email: data.email,
             fullName: data.full_name,
             academyName: data.academy_name,
             phone: data.phone,
-            password: data.password || null,
+            password,
             role: (data.role as "client") || "client",
-            subscription: data.subscription,
-            paymentSubmission: data.payment_submission || null,
-            isVerified: data.is_verified ?? false,
+            subscription: {
+              ...sub,
+              status: sub.status || "active",
+            },
+            paymentSubmission,
+            isVerified,
             notes: data.notes,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
@@ -1187,10 +1226,21 @@ export const db = {
     const env = getCurrentDataEnvironment();
 
     const explicitPlan = clientData.planId !== undefined || clientData.subscription !== undefined;
-    const defaultSub = getPlanPermissions(clientData.planId || "free");
-    const mergedSub = clientData.subscription
-      ? { ...defaultSub, ...clientData.subscription }
-      : defaultSub;
+    const defaultSub = getPlanPermissions(clientData.planId || "standard");
+    const password = clientData.password || (clientData.subscription as any)?.password || null;
+    const isVerified = clientData.isVerified !== undefined
+      ? clientData.isVerified
+      : (clientData.subscription?.status === "active");
+    const paymentSubmission = clientData.paymentSubmission || (clientData.subscription as any)?.paymentSubmission || null;
+
+    const mergedSub: Record<string, unknown> = {
+      ...defaultSub,
+      ...(clientData.subscription || {}),
+      password,
+      isVerified,
+      paymentSubmission,
+    };
+
     const clientId = clientData.id || `client-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
 
     if (adminClient) {
@@ -1203,13 +1253,10 @@ export const db = {
           phone: clientData.phone || null,
           role: "client",
           subscription: mergedSub,
-          payment_submission: clientData.paymentSubmission || null,
-          is_verified: clientData.isVerified ?? false,
           notes: clientData.notes || null,
           environment: env,
           updated_at: new Date().toISOString(),
         };
-        if (clientData.password) payload.password = clientData.password;
 
         const { data, error } = await adminClient
           .from("clients")
@@ -1218,24 +1265,27 @@ export const db = {
           .single();
 
         if (!error && data) {
+          const sub = (data.subscription || {}) as any;
           return {
             id: data.id,
             email: data.email,
             fullName: data.full_name,
             academyName: data.academy_name,
             phone: data.phone,
-            password: data.password || clientData.password || null,
+            password: sub.password || password || null,
             role: (data.role as "client") || "client",
-            subscription: data.subscription,
-            paymentSubmission: data.payment_submission || clientData.paymentSubmission || null,
-            isVerified: data.is_verified ?? clientData.isVerified ?? false,
+            subscription: sub,
+            paymentSubmission: sub.paymentSubmission || paymentSubmission || null,
+            isVerified: sub.isVerified ?? isVerified ?? false,
             notes: data.notes,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
           };
+        } else if (error) {
+          console.error("Supabase saveClient error:", error);
         }
-      } catch {
-        // Fallback to store
+      } catch (err) {
+        console.error("Supabase saveClient catch error:", err);
       }
     }
 
@@ -1251,11 +1301,11 @@ export const db = {
         fullName: clientData.fullName || existing.fullName,
         academyName: clientData.academyName !== undefined ? clientData.academyName : existing.academyName,
         phone: clientData.phone !== undefined ? clientData.phone : existing.phone,
-        password: clientData.password !== undefined ? clientData.password : existing.password,
+        password: password !== undefined ? password : existing.password,
         notes: clientData.notes !== undefined ? clientData.notes : existing.notes,
-        subscription: explicitPlan ? mergedSub : existing.subscription,
-        paymentSubmission: clientData.paymentSubmission !== undefined ? clientData.paymentSubmission : existing.paymentSubmission,
-        isVerified: clientData.isVerified !== undefined ? clientData.isVerified : existing.isVerified,
+        subscription: (explicitPlan ? mergedSub : existing.subscription) as any,
+        paymentSubmission: paymentSubmission !== undefined ? paymentSubmission : existing.paymentSubmission,
+        isVerified: isVerified !== undefined ? isVerified : existing.isVerified,
         updatedAt: new Date().toISOString(),
       };
       store.clients[existingIndex] = updated;
@@ -1268,11 +1318,11 @@ export const db = {
       fullName: clientData.fullName,
       academyName: clientData.academyName || "My Academy",
       phone: clientData.phone || null,
-      password: clientData.password || null,
+      password,
       role: "client",
-      subscription: mergedSub,
-      paymentSubmission: clientData.paymentSubmission || null,
-      isVerified: clientData.isVerified ?? false,
+      subscription: mergedSub as any,
+      paymentSubmission,
+      isVerified,
       createdAt: new Date().toISOString(),
       notes: clientData.notes || null,
     };
@@ -1283,49 +1333,78 @@ export const db = {
 
   async updateClient(id: string, updates: Partial<ClientUser>): Promise<ClientUser | null> {
     const adminClient = createAdminSupabaseClient();
-    const env = getCurrentDataEnvironment();
 
     if (adminClient) {
       try {
+        // Fetch current row from Supabase to preserve existing subscription fields
+        const { data: existing } = await adminClient
+          .from("clients")
+          .select("*")
+          .eq("id", id)
+          .maybeSingle();
+
+        const currentSub = (existing?.subscription || {}) as any;
+        const finalPassword = updates.password !== undefined
+          ? updates.password
+          : (currentSub.password || null);
+        const finalIsVerified = updates.isVerified !== undefined
+          ? updates.isVerified
+          : (updates.subscription?.status === "active" ? true : (currentSub.isVerified ?? false));
+        const finalPaymentSub = updates.paymentSubmission !== undefined
+          ? updates.paymentSubmission
+          : (currentSub.paymentSubmission || null);
+
+        const mergedSub: Record<string, unknown> = {
+          ...currentSub,
+          ...(updates.subscription || {}),
+          password: finalPassword,
+          isVerified: finalIsVerified,
+          paymentSubmission: finalPaymentSub,
+        };
+
+        if (updates.isVerified === true || updates.subscription?.status === "active") {
+          mergedSub.isVerified = true;
+          mergedSub.status = "active";
+        }
+
         const payload: Record<string, unknown> = {
           updated_at: new Date().toISOString(),
+          subscription: mergedSub,
         };
         if (updates.fullName !== undefined) payload.full_name = updates.fullName;
         if (updates.academyName !== undefined) payload.academy_name = updates.academyName;
         if (updates.phone !== undefined) payload.phone = updates.phone;
-        if (updates.password !== undefined) payload.password = updates.password;
         if (updates.notes !== undefined) payload.notes = updates.notes;
-        if (updates.subscription !== undefined) payload.subscription = updates.subscription;
-        if (updates.paymentSubmission !== undefined) payload.payment_submission = updates.paymentSubmission;
-        if (updates.isVerified !== undefined) payload.is_verified = updates.isVerified;
 
         const { data, error } = await adminClient
           .from("clients")
           .update(payload)
           .eq("id", id)
-          .eq("environment", env)
           .select()
           .single();
 
         if (!error && data) {
+          const sub = (data.subscription || {}) as any;
           return {
             id: data.id,
             email: data.email,
             fullName: data.full_name,
             academyName: data.academy_name,
             phone: data.phone,
-            password: data.password || updates.password || null,
+            password: sub.password || finalPassword || null,
             role: (data.role as "client") || "client",
-            subscription: data.subscription,
-            paymentSubmission: data.payment_submission || updates.paymentSubmission || null,
-            isVerified: data.is_verified ?? updates.isVerified ?? false,
+            subscription: sub,
+            paymentSubmission: sub.paymentSubmission || finalPaymentSub || null,
+            isVerified: sub.isVerified ?? finalIsVerified ?? false,
             notes: data.notes,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
           };
+        } else if (error) {
+          console.error("Supabase updateClient error:", error);
         }
-      } catch {
-        // Fallback to store
+      } catch (err) {
+        console.error("Supabase updateClient catch error:", err);
       }
     }
 
@@ -1334,16 +1413,37 @@ export const db = {
     if (index === -1) return null;
 
     const current = store.clients[index];
+    const currentSub = (current.subscription || {}) as any;
+    const finalPassword = updates.password !== undefined ? updates.password : current.password;
+    const finalIsVerified = updates.isVerified !== undefined
+      ? updates.isVerified
+      : (updates.subscription?.status === "active" ? true : current.isVerified);
+    const finalPaymentSub = updates.paymentSubmission !== undefined
+      ? updates.paymentSubmission
+      : current.paymentSubmission;
+
+    const mergedSub = {
+      ...currentSub,
+      ...(updates.subscription || {}),
+      password: finalPassword,
+      isVerified: finalIsVerified,
+      paymentSubmission: finalPaymentSub,
+    };
+
+    if (updates.isVerified === true || updates.subscription?.status === "active") {
+      mergedSub.isVerified = true;
+      mergedSub.status = "active";
+    }
+
     const updated: ClientUser = {
       ...current,
       ...updates,
       id: current.id,
       role: "client",
-      subscription: updates.subscription
-        ? { ...current.subscription, ...updates.subscription }
-        : current.subscription,
-      paymentSubmission: updates.paymentSubmission !== undefined ? updates.paymentSubmission : current.paymentSubmission,
-      isVerified: updates.isVerified !== undefined ? updates.isVerified : current.isVerified,
+      password: finalPassword,
+      subscription: mergedSub as any,
+      paymentSubmission: finalPaymentSub,
+      isVerified: finalIsVerified,
       updatedAt: new Date().toISOString(),
     };
 
@@ -1353,15 +1453,13 @@ export const db = {
 
   async deleteClient(id: string): Promise<boolean> {
     const adminClient = createAdminSupabaseClient();
-    const env = getCurrentDataEnvironment();
 
     if (adminClient) {
       try {
         const { error } = await adminClient
           .from("clients")
           .delete()
-          .eq("id", id)
-          .eq("environment", env);
+          .eq("id", id);
         if (!error) return true;
       } catch {
         // Fallback to store
