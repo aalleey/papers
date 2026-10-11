@@ -29,6 +29,10 @@ import {
   Lock,
   LogIn,
   LogOut,
+  Columns,
+  FileText,
+  Maximize2,
+  Layout,
 } from "lucide-react";
 
 export default function PaperEditorPage() {
@@ -73,6 +77,46 @@ export default function PaperEditorPage() {
   // Ribbon configurations
   const [headerStyle, setHeaderStyle] = useState<"style1" | "style2">("style1");
   const [languageMode, setLanguageMode] = useState<"Bilingual" | "English" | "Urdu">("Bilingual");
+
+  // Paper Layout & Size configurations (User Selectable & Persisted in localStorage)
+  const [paperSize, setPaperSize] = useState<"a4" | "letter" | "legal">("a4");
+  const [testDensity, setTestDensity] = useState<"1_per_page" | "2_per_page">("1_per_page");
+
+  // Load layout preferences from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedPaperSize = localStorage.getItem("paperwala_paper_size");
+      if (savedPaperSize === "a4" || savedPaperSize === "letter" || savedPaperSize === "legal") {
+        setPaperSize(savedPaperSize);
+      }
+      const savedTestDensity = localStorage.getItem("paperwala_test_density");
+      if (savedTestDensity === "1_per_page" || savedTestDensity === "2_per_page") {
+        setTestDensity(savedTestDensity);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  // Update & persist paper size
+  const updatePaperSize = (size: "a4" | "letter" | "legal") => {
+    setPaperSize(size);
+    try {
+      localStorage.setItem("paperwala_paper_size", size);
+    } catch {
+      // ignore
+    }
+  };
+
+  // Update & persist test density
+  const updateTestDensity = (density: "1_per_page" | "2_per_page") => {
+    setTestDensity(density);
+    try {
+      localStorage.setItem("paperwala_test_density", density);
+    } catch {
+      // ignore
+    }
+  };
 
   // Font & display sizing
   const [mcqFontSize, setMcqFontSize] = useState<number>(12);
@@ -769,6 +813,43 @@ export default function PaperEditorPage() {
               title="Paper Date"
               className="h-9 w-28 px-2 rounded-md border border-slate-300 font-bold text-center bg-white shadow-2xs outline-none focus:border-blue-600"
             />
+
+            {/* Paper Size Selector (A4, Letter, Legal - Persisted) */}
+            <div className="flex items-center gap-1 bg-white border border-slate-300 rounded-md px-2 h-9 shadow-2xs">
+              <span className="text-slate-500 font-bold flex items-center gap-1">
+                <FileText className="w-3.5 h-3.5 text-blue-600" />
+                <span className="hidden xl:inline">Size:</span>
+              </span>
+              <select
+                value={paperSize}
+                onChange={(e) => updatePaperSize(e.target.value as "a4" | "letter" | "legal")}
+                className="font-bold text-slate-800 bg-transparent outline-none cursor-pointer"
+                title="Select paper print size (A4, Letter, Legal) - Saved for future sessions"
+                id="select-paper-size"
+              >
+                <option value="a4">A4 (210×297mm)</option>
+                <option value="letter">Letter (8.5×11")</option>
+                <option value="legal">Legal (8.5×14")</option>
+              </select>
+            </div>
+
+            {/* Test Density / Page Layout (1 test on page or 2 tests on 1 page - Persisted) */}
+            <div className="flex items-center gap-1 bg-white border border-slate-300 rounded-md px-2 h-9 shadow-2xs">
+              <span className="text-slate-500 font-bold flex items-center gap-1">
+                <Columns className="w-3.5 h-3.5 text-emerald-600" />
+                <span className="hidden xl:inline">Layout:</span>
+              </span>
+              <select
+                value={testDensity}
+                onChange={(e) => updateTestDensity(e.target.value as "1_per_page" | "2_per_page")}
+                className="font-bold text-slate-800 bg-transparent outline-none cursor-pointer"
+                title="Select tests per page (1 test or 2 tests side-by-side on 1 page) - Saved for future sessions"
+                id="select-test-density"
+              >
+                <option value="1_per_page">1 Test / Page (Standard)</option>
+                <option value="2_per_page">2 Tests on 1 Page (Half-Page / Duplex)</option>
+              </select>
+            </div>
           </div>
 
           {/* Right Ribbon Group: Popovers for Fonts, Content, Profile, Instructions */}
@@ -1017,21 +1098,30 @@ export default function PaperEditorPage() {
       </div>
 
       {/* =========================================================================
-          THE AUTHENTIC EXAMINATION PAPER SHEET (A4 Print Layout)
+          THE AUTHENTIC EXAMINATION PAPER SHEET (A4 / Letter / Legal Print Layout)
           ========================================================================= */}
-      <main className="max-w-[850px] mx-auto px-4 sm:px-6 pt-6">
-        <div
-          id="paper-outer-container"
-          className="bg-white border-2 border-black p-6 sm:p-8 shadow-xl text-black leading-tight space-y-4"
-        >
-          {/* Print Mode: Questions Section (Hidden if printMode === 'key') */}
-          {printMode !== "key" && (
-            <div id="paperContent" className="space-y-4" style={{ fontSize: `${mcqFontSize}px` }}>
-              {/* ===================================================================
-                  1. INSTITUTION & EXAM HEADER (Exact layout from Paper Preview & Print.html)
-                  =================================================================== */}
+      {(() => {
+        const renderExamPaperSheet = (copyIndex = 1) => (
+          <div
+            id={copyIndex === 1 ? "paper-outer-container" : `paper-outer-container-copy-${copyIndex}`}
+            className={`paper-sheet bg-white border-2 border-black ${
+              testDensity === "2_per_page"
+                ? "p-3 sm:p-4 text-[10.5px] space-y-2.5 shadow-md"
+                : "p-6 sm:p-8 text-black space-y-4 shadow-xl"
+            } leading-tight`}
+          >
+            {/* Print Mode: Questions Section (Hidden if printMode === 'key') */}
+            {printMode !== "key" && (
               <div
-                dir="ltr"
+                id={copyIndex === 1 ? "paperContent" : `paperContent-copy-${copyIndex}`}
+                className={testDensity === "2_per_page" ? "space-y-2.5" : "space-y-4"}
+                style={{ fontSize: `${testDensity === "2_per_page" ? Math.max(9, mcqFontSize - 2) : mcqFontSize}px` }}
+              >
+                {/* ===================================================================
+                    1. INSTITUTION & EXAM HEADER (Exact layout from Paper Preview & Print.html)
+                    =================================================================== */}
+                <div
+                  dir="ltr"
                 style={{
                   border: "2px solid #000",
                   display: "flex",
@@ -1808,7 +1898,93 @@ export default function PaperEditorPage() {
             </div>
           )}
         </div>
-      </main>
+      );
+
+      // Wrapper dimensions based on Paper Size selection
+      const paperSizeClasses =
+        paperSize === "letter"
+          ? "max-w-[830px]"
+          : paperSize === "legal"
+          ? "max-w-[850px]"
+          : "max-w-[850px]"; // default A4
+
+      return (
+        <main
+          className={`mx-auto px-2 sm:px-6 pt-6 transition-all ${
+            testDensity === "2_per_page" ? "max-w-[1740px]" : paperSizeClasses
+          }`}
+        >
+          {testDensity === "2_per_page" ? (
+            <div>
+              {/* Informational Banner for 2 Tests on 1 Page Layout */}
+              <div className="no-print mb-3 py-2 px-3 bg-emerald-50 border border-emerald-300 rounded-lg text-xs font-bold text-emerald-800 flex items-center justify-between shadow-2xs">
+                <span className="flex items-center gap-1.5">
+                  <Columns className="w-4 h-4 text-emerald-600" />
+                  <span>2 Tests on 1 Page Mode: Both identical copies fit side-by-side on one paper sheet. Perfect for cutting in half or save paper.</span>
+                </span>
+                <span className="text-[11px] bg-emerald-200/80 px-2 py-0.5 rounded text-emerald-950 font-black">
+                  Paper: {paperSize.toUpperCase()} (Landscape 2-Up)
+                </span>
+              </div>
+
+              {/* Side-by-side Duplex Grid for 2 Tests on 1 Page */}
+              <div className="duplex-container grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                <div className="duplex-column">{renderExamPaperSheet(1)}</div>
+                <div className="duplex-column">{renderExamPaperSheet(2)}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="single-test-container">
+              {renderExamPaperSheet(1)}
+            </div>
+          )}
+
+          {/* Dynamic Print Styles for Paper Size & 2-Up Layout */}
+          <style jsx global>{`
+            @media print {
+              @page {
+                size: ${
+                  testDensity === "2_per_page"
+                    ? `${paperSize === "letter" ? "letter" : paperSize === "legal" ? "legal" : "A4"} landscape`
+                    : `${paperSize === "letter" ? "letter" : paperSize === "legal" ? "legal" : "A4"} portrait`
+                };
+                margin: ${testDensity === "2_per_page" ? "6mm 8mm" : "8mm 10mm"};
+              }
+              ${
+                testDensity === "2_per_page"
+                  ? `
+                .duplex-container {
+                  display: grid !important;
+                  grid-template-columns: 1fr 1fr !important;
+                  gap: 14px !important;
+                  width: 100% !important;
+                  max-width: 100% !important;
+                }
+                .duplex-column {
+                  width: 100% !important;
+                  overflow: hidden !important;
+                }
+                .paper-sheet {
+                  padding: 10px !important;
+                  box-shadow: none !important;
+                  border: 1.5px solid #000 !important;
+                }
+              `
+                  : `
+                .single-test-container {
+                  width: 100% !important;
+                  max-width: 100% !important;
+                }
+                .paper-sheet {
+                  box-shadow: none !important;
+                }
+              `
+              }
+            }
+          `}</style>
+        </main>
+      );
+    })()}
 
       {/* Client Authentication Modal */}
       <ClientAuthModal

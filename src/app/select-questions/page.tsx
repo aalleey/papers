@@ -7,6 +7,9 @@ import {
   Question,
   Chapter,
   Topic,
+  Subject,
+  ClassItem,
+  Course,
   ClientUser,
   SubscriptionPlanId,
   SUBSCRIPTION_PLANS,
@@ -45,6 +48,7 @@ import {
   UserCheck,
   LogIn,
   LogOut,
+  GraduationCap,
 } from "lucide-react";
 
 export default function SelectQuestionsPage() {
@@ -62,6 +66,12 @@ export default function SelectQuestionsPage() {
 
   // Data state
   const [loading, setLoading] = useState(true);
+  const [classesList, setClassesList] = useState<ClassItem[]>([]);
+  const [selectedClassId, setSelectedClassId] = useState<string>("");
+  const [coursesList, setCoursesList] = useState<Course[]>([]);
+  const [allSubjectsList, setAllSubjectsList] = useState<Subject[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -101,21 +111,34 @@ export default function SelectQuestionsPage() {
 
   const [authChecked, setAuthChecked] = useState(false);
 
-  // Load questions for a specific chapter (Only accessible if logged in)
-  async function loadQuestionsForChapter(chapterOverride?: string) {
+  // Load questions for a specific class, subject, and chapter (Only accessible if logged in)
+  async function loadQuestionsData(
+    classOverride?: string,
+    subjectOverride?: string,
+    chapterOverride?: string
+  ) {
     try {
       setLoading(true);
       const searchParams = new URLSearchParams(window.location.search);
+      const urlClassId = searchParams.get("class_id") || searchParams.get("classId");
+      const urlSubId = searchParams.get("subject_id") || searchParams.get("subjectId");
       const urlChap = searchParams.get("chapter");
-      const urlChapId = searchParams.get("chapter_id");
+      const urlChapId = searchParams.get("chapter_id") || searchParams.get("chapterId");
 
-      let initialChapterId = chapterOverride || urlChapId || "bd6c341e-e709-5551-959a-84c2a20e57f5"; // Default Chapter 3
-      if (urlChap === "1") initialChapterId = "81fef04e-6a53-5018-9051-fdb1c36775d9";
-      if (urlChap === "2") initialChapterId = "68fc022a-f4b1-53f8-a133-2946135d88db";
-      if (urlChap === "3") initialChapterId = "bd6c341e-e709-5551-959a-84c2a20e57f5";
-      if (urlChap === "8") initialChapterId = "ac5b38de-123c-51fc-a96b-1ecaff9762ce";
+      let targetClassId = classOverride !== undefined ? classOverride : (urlClassId || selectedClassId || "");
+      let targetSubId = subjectOverride !== undefined ? subjectOverride : (urlSubId || currentSubject?.id || "");
+      let targetChapId = chapterOverride !== undefined ? chapterOverride : (urlChapId || "");
 
-      const res = await fetch(`/api/paper/questions?chapter_id=${initialChapterId}`);
+      if (urlChap === "1" && !targetChapId) targetChapId = "81fef04e-6a53-5018-9051-fdb1c36775d9";
+      if (urlChap === "2" && !targetChapId) targetChapId = "68fc022a-f4b1-53f8-a133-2946135d88db";
+      if (urlChap === "3" && !targetChapId) targetChapId = "bd6c341e-e709-5551-959a-84c2a20e57f5";
+      if (urlChap === "8" && !targetChapId) targetChapId = "ac5b38de-123c-51fc-a96b-1ecaff9762ce";
+
+      const queryParams = new URLSearchParams();
+      if (targetSubId) queryParams.set("subject_id", targetSubId);
+      if (targetChapId) queryParams.set("chapter_id", targetChapId);
+
+      const res = await fetch(`/api/paper/questions?${queryParams.toString()}`);
       if (res.status === 401) {
         setClientUser(null);
         setAllQuestions([]);
@@ -123,18 +146,86 @@ export default function SelectQuestionsPage() {
       }
 
       const data = await res.json();
-      if (data.chapters?.length) {
-        setChapters(data.chapters);
-        const activeCh = data.chapters.find((c: Chapter) => c.id === initialChapterId) || data.chapters[0];
-        setCurrentChapter(activeCh);
+
+      // 1. Process Classes & Courses
+      if (data.classes?.length) {
+        setClassesList(data.classes);
       }
+      if (data.courses?.length) {
+        setCoursesList(data.courses);
+      }
+
+      // 2. Process All Subjects
+      const rawSubjects: Subject[] = data.subjects || [];
+      setAllSubjectsList(rawSubjects);
+
+      // Determine active class
+      let activeClass = targetClassId;
+      if (!activeClass && data.classes?.length) {
+        // Find if targetSubId belongs to a course with a class
+        if (targetSubId) {
+          const matchedSub = rawSubjects.find((s) => s.id === targetSubId);
+          if (matchedSub && data.courses) {
+            const matchedCourse = data.courses.find((c: Course) => c.id === matchedSub.course_id);
+            if (matchedCourse) activeClass = matchedCourse.class_id;
+          }
+        }
+        if (!activeClass) {
+          // Default to class 10 if exists, or first class
+          const class10 = data.classes.find((c: ClassItem) => c.numeric_order === 10 || c.name.includes("10"));
+          activeClass = class10 ? class10.id : data.classes[0].id;
+        }
+      }
+      setSelectedClassId(activeClass);
+
+      // Filter subjects for the active class (via course_id)
+      let classFilteredSubjects = rawSubjects;
+      if (activeClass && data.courses?.length) {
+        const classCourseIds = new Set(
+          data.courses.filter((c: Course) => c.class_id === activeClass).map((c: Course) => c.id)
+        );
+        const filtered = rawSubjects.filter((s) => classCourseIds.has(s.course_id));
+        if (filtered.length > 0) {
+          classFilteredSubjects = filtered;
+        }
+      }
+      setSubjects(classFilteredSubjects);
+
+      // Determine active Subject
+      let activeSub = classFilteredSubjects.find((s: Subject) => s.id === targetSubId);
+      if (!activeSub && classFilteredSubjects.length > 0) {
+        activeSub = classFilteredSubjects[0];
+      }
+      setCurrentSubject(activeSub || null);
+      targetSubId = activeSub?.id || "";
+
+      // 3. Process Chapters (filter by active subject)
+      let availableChapters: Chapter[] = data.chapters || [];
+      if (targetSubId && availableChapters.length > 0) {
+        const subChapters = availableChapters.filter((c: Chapter) => c.subject_id === targetSubId);
+        if (subChapters.length > 0) {
+          availableChapters = subChapters;
+        }
+      }
+      setChapters(availableChapters);
+
+      let activeCh = availableChapters.find((c: Chapter) => c.id === targetChapId);
+      if (!activeCh && availableChapters.length > 0) {
+        activeCh = availableChapters[0];
+      }
+      setCurrentChapter(activeCh || null);
 
       if (data.topics?.length) {
         setTopics(data.topics);
+      } else {
+        setTopics([]);
       }
 
+      // 3. Process Questions
       if (data.questions?.length) {
         setAllQuestions(data.questions);
+      } else {
+        setAllQuestions([]);
       }
 
       // Check if there are previously selected questions in sessionStorage
@@ -165,7 +256,7 @@ export default function SelectQuestionsPage() {
         const authData = await authRes.json();
         if (authData.client) {
           setClientUser(authData.client);
-          await loadQuestionsForChapter();
+          await loadQuestionsData();
         } else {
           setClientUser(null);
           setLoading(false);
@@ -192,6 +283,29 @@ export default function SelectQuestionsPage() {
     }
   }
 
+  async function handleClassChange(classId: string) {
+    setSelectedClassId(classId);
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set("class_id", classId);
+    newUrl.searchParams.delete("subject_id");
+    newUrl.searchParams.delete("chapter_id");
+    newUrl.searchParams.delete("chapter");
+    window.history.replaceState({}, "", newUrl.toString());
+    await loadQuestionsData(classId, "", "");
+  }
+
+  async function handleSubjectChange(subjectId: string) {
+    const sub = subjects.find((s) => s.id === subjectId) || allSubjectsList.find((s) => s.id === subjectId);
+    if (!sub) return;
+    setCurrentSubject(sub);
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set("subject_id", sub.id);
+    newUrl.searchParams.delete("chapter_id");
+    newUrl.searchParams.delete("chapter");
+    window.history.replaceState({}, "", newUrl.toString());
+    await loadQuestionsData(selectedClassId, sub.id, "");
+  }
+
   async function handleChapterChange(chapterId: string) {
     const ch = chapters.find((c) => c.id === chapterId);
     if (!ch) return;
@@ -199,7 +313,7 @@ export default function SelectQuestionsPage() {
     const newUrl = new URL(window.location.href);
     newUrl.searchParams.set("chapter_id", ch.id);
     window.history.replaceState({}, "", newUrl.toString());
-    await loadQuestionsForChapter(ch.id);
+    await loadQuestionsData(selectedClassId, currentSubject?.id || ch.subject_id, ch.id);
   }
 
   // Sync selection to sessionStorage
@@ -463,7 +577,7 @@ export default function SelectQuestionsPage() {
                     const d = await res.json();
                     if (d.client) {
                       setClientUser(d.client);
-                      await loadQuestionsForChapter();
+                      await loadQuestionsData();
                     }
                   } catch (e) {
                     console.error("Demo login failed", e);
@@ -490,7 +604,7 @@ export default function SelectQuestionsPage() {
                     const d = await res.json();
                     if (d.client) {
                       setClientUser(d.client);
-                      await loadQuestionsForChapter();
+                      await loadQuestionsData();
                     }
                   } catch (e) {
                     console.error("Demo login failed", e);
@@ -512,7 +626,7 @@ export default function SelectQuestionsPage() {
             setClientUser(user);
             setShowAuthModal(false);
             if (isPaidSubscriber(user)) {
-              await loadQuestionsForChapter();
+              await loadQuestionsData();
             }
           }}
         />
@@ -613,7 +727,7 @@ export default function SelectQuestionsPage() {
             setClientUser(updatedClient);
             setShowSubModal(false);
             if (isPaidSubscriber(updatedClient)) {
-              await loadQuestionsForChapter();
+              await loadQuestionsData();
             }
           }}
         />
@@ -645,9 +759,11 @@ export default function SelectQuestionsPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <h1 className="text-base sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-1.5">
                       <span className="bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-700 bg-clip-text text-transparent">
-                        Select: Computer
+                        Select: {currentSubject ? currentSubject.name : "Questions"}
                       </span>
-                      <span className="font-urdu text-blue-700 text-base sm:text-lg">کمپیوٹر</span>
+                      {currentSubject?.name_ur && (
+                        <span className="font-urdu text-blue-700 text-base sm:text-lg">{currentSubject.name_ur}</span>
+                      )}
                     </h1>
                     <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold px-2.5 py-0.5 rounded-full shadow-xs">
                       <Sparkles className="w-3 h-3 text-emerald-200" />
@@ -655,10 +771,14 @@ export default function SelectQuestionsPage() {
                     </span>
                   </div>
                   <div className="text-[11px] sm:text-xs text-slate-500 font-semibold mt-0.5 flex flex-wrap items-center gap-1">
-                    <span>Punjab Boards &bull; 10th (New) 2026-27 &bull;</span>
-                    <span className="text-indigo-600 font-bold">
-                      Unit-{currentChapter?.number || 2}: {currentChapter?.title || "System Recovery"}
+                    <span>
+                      Punjab Boards &bull; {classesList.find((c) => c.id === selectedClassId)?.name || "Class 10th"} &bull;
                     </span>
+                    {currentChapter && (
+                      <span className="text-indigo-600 font-bold">
+                        Unit-{currentChapter.number}: {currentChapter.title}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -925,50 +1045,106 @@ export default function SelectQuestionsPage() {
               </div>
             </div>
 
-            {/* Chapter Navigation Bar (Matches Ref Chapter Header with high vibrance) */}
-            <div className="flex items-center justify-between gap-2 sm:gap-4 pt-2 border-t border-slate-100">
-              <button
-                onClick={() => {
-                  if (!currentChapter) return;
-                  const curIdx = chapters.findIndex((c) => c.id === currentChapter.id);
-                  if (curIdx > 0) handleChapterChange(chapters[curIdx - 1].id);
-                }}
-                disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) <= 0}
-                className="px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1"
-                id="btn-prev-chapter"
-              >
-                <span>&larr;</span>
-                <span className="hidden sm:inline">Prev</span>
-              </button>
+            {/* Class, Subject & Chapter Navigation Bar */}
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 pt-2 border-t border-slate-100">
+              {/* Class & Subject Selectors */}
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                {/* 1. Class Selector */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1 shrink-0">
+                    <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Class:</span>
+                  </span>
+                  <select
+                    value={selectedClassId}
+                    onChange={(e) => handleClassChange(e.target.value)}
+                    className="font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-blue-50/90 to-indigo-50/70 hover:bg-blue-100/70 px-2.5 py-1.5 sm:py-2 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-xs min-w-[110px]"
+                    id="select-class-dropdown"
+                  >
+                    {classesList.map((cls) => (
+                      <option key={cls.id} value={cls.id}>
+                        {cls.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              <div className="flex-1 max-w-xl text-center">
-                <select
-                  value={currentChapter?.id || ""}
-                  onChange={(e) => handleChapterChange(e.target.value)}
-                  className="w-full font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-slate-50 to-indigo-50/50 hover:bg-slate-100 px-3 py-1.5 sm:py-2 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer text-center shadow-xs"
-                  id="select-chapter-dropdown"
-                >
-                  {chapters.map((ch) => (
-                    <option key={ch.id} value={ch.id}>
-                      Unit-{ch.number}: {ch.title} {ch.title_ur ? `(${ch.title_ur})` : ""}
-                    </option>
-                  ))}
-                </select>
+                {/* 2. Subject Selector */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1 shrink-0">
+                    <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Subject:</span>
+                  </span>
+                  <select
+                    value={currentSubject?.id || ""}
+                    onChange={(e) => handleSubjectChange(e.target.value)}
+                    className="font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-indigo-50/80 to-blue-50/60 hover:bg-indigo-100/70 px-2.5 py-1.5 sm:py-2 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer shadow-xs min-w-[150px]"
+                    id="select-subject-dropdown"
+                  >
+                    {subjects.length === 0 ? (
+                      <option value="">No subjects in class</option>
+                    ) : (
+                      subjects.map((sub) => (
+                        <option key={sub.id} value={sub.id}>
+                          {sub.name} {sub.name_ur ? `(${sub.name_ur})` : ""}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </div>
               </div>
 
-              <button
-                onClick={() => {
-                  if (!currentChapter) return;
-                  const curIdx = chapters.findIndex((c) => c.id === currentChapter.id);
-                  if (curIdx < chapters.length - 1) handleChapterChange(chapters[curIdx + 1].id);
-                }}
-                disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) >= chapters.length - 1}
-                className="px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1"
-                id="btn-next-chapter"
-              >
-                <span className="hidden sm:inline">Next</span>
-                <span>&rarr;</span>
-              </button>
+              {/* Chapter Navigation & Selector */}
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-1 max-w-2xl sm:justify-end">
+                <button
+                  onClick={() => {
+                    if (!currentChapter) return;
+                    const curIdx = chapters.findIndex((c) => c.id === currentChapter.id);
+                    if (curIdx > 0) handleChapterChange(chapters[curIdx - 1].id);
+                  }}
+                  disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) <= 0}
+                  className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1"
+                  id="btn-prev-chapter"
+                  title="Previous Chapter"
+                >
+                  <span>&larr;</span>
+                  <span className="hidden md:inline">Prev</span>
+                </button>
+
+                <div className="flex-1 text-center">
+                  <select
+                    value={currentChapter?.id || ""}
+                    onChange={(e) => handleChapterChange(e.target.value)}
+                    className="w-full font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-slate-50 to-indigo-50/50 hover:bg-slate-100 px-3 py-1.5 sm:py-2 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer text-center shadow-xs"
+                    id="select-chapter-dropdown"
+                  >
+                    {chapters.length === 0 ? (
+                      <option value="">No chapters available</option>
+                    ) : (
+                      chapters.map((ch) => (
+                        <option key={ch.id} value={ch.id}>
+                          Unit-{ch.number}: {ch.title} {ch.title_ur ? `(${ch.title_ur})` : ""}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </div>
+
+                <button
+                  onClick={() => {
+                    if (!currentChapter) return;
+                    const curIdx = chapters.findIndex((c) => c.id === currentChapter.id);
+                    if (curIdx < chapters.length - 1) handleChapterChange(chapters[curIdx + 1].id);
+                  }}
+                  disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) >= chapters.length - 1}
+                  className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1"
+                  id="btn-next-chapter"
+                  title="Next Chapter"
+                >
+                  <span className="hidden md:inline">Next</span>
+                  <span>&rarr;</span>
+                </button>
+              </div>
             </div>
           </div>
         )}
