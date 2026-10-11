@@ -35,7 +35,11 @@ export async function POST(req: NextRequest) {
       academyName: academyName || "My Academy",
       phone: phone || null,
       password: password || null,
-      planId: (planId as SubscriptionPlanId) || "free",
+      planId: (planId as SubscriptionPlanId) || "standard",
+      subscription: {
+        status: "pending_verification",
+      },
+      isVerified: false,
     });
 
     // Send Welcome Email to the newly registered educator
@@ -45,7 +49,7 @@ export async function POST(req: NextRequest) {
       console.warn("Failed to dispatch welcome email:", emailErr);
     }
 
-    return NextResponse.json({ success: true, client });
+    return NextResponse.json({ success: true, client, requireVerification: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to sign up" }, { status: 500 });
   }

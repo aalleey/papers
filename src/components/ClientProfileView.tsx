@@ -66,6 +66,7 @@ export function ClientProfileView({ client, papers, stats }: Props) {
   const [showPassword, setShowPassword] = useState(false);
 
   const sub = client.subscription;
+  const isPending = sub.status === "pending_verification" || client.isVerified === false;
   const isSuspended = sub.status === "suspended";
   const isExpired = sub.status === "expired";
 
@@ -117,7 +118,11 @@ export function ClientProfileView({ client, papers, stats }: Props) {
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight">{client.fullName}</h1>
               {sub.planId === "annual" && <Crown className="w-5 h-5 text-amber-400 fill-amber-400" />}
-              {isSuspended ? (
+              {isPending ? (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-black bg-amber-500/30 text-amber-300 border border-amber-500/50 animate-pulse">
+                  <Clock className="w-3 h-3 text-amber-300" /> HOLD (PENDING APPROVAL)
+                </span>
+              ) : isSuspended ? (
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
                   <XCircle className="w-3 h-3" /> SUSPENDED
                 </span>
@@ -171,6 +176,27 @@ export function ClientProfileView({ client, papers, stats }: Props) {
             </div>
             {client.notes && (
               <p className="text-[11px] text-slate-400 italic">Note: {client.notes}</p>
+            )}
+
+            {client.paymentSubmission && (
+              <div className="mt-3 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="space-y-0.5">
+                  <span className="font-bold text-amber-300 block">
+                    ⚡ Raast Payment Proof Submitted
+                  </span>
+                  <div className="text-[11px] text-amber-100 flex flex-wrap items-center gap-3 font-mono">
+                    <span>Target Raast ID: <strong>03092770207</strong></span>
+                    <span>TID: <strong className="text-white underline">{client.paymentSubmission.transactionRef}</strong></span>
+                    {client.paymentSubmission.amount && <span>Amount: <strong>Rs. {client.paymentSubmission.amount}</strong></span>}
+                    {client.paymentSubmission.senderName && <span>Sender: <strong>{client.paymentSubmission.senderName}</strong></span>}
+                  </div>
+                </div>
+                {isPending && (
+                  <span className="self-start sm:self-center px-3 py-1 rounded-xl bg-emerald-600 text-white font-bold text-xs shrink-0">
+                    Awaiting Admin Approval
+                  </span>
+                )}
+              </div>
             )}
           </div>
 

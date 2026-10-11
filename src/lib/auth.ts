@@ -118,6 +118,9 @@ export async function createClientSession(clientData: {
   phone?: string | null;
   password?: string | null;
   planId?: SubscriptionPlanId;
+  subscription?: Partial<ClientUser["subscription"]>;
+  paymentSubmission?: ClientUser["paymentSubmission"];
+  isVerified?: boolean;
 }): Promise<ClientUser> {
   // planId left undefined for existing clients so their stored plan is preserved
   const plan = clientData.planId;
@@ -131,6 +134,9 @@ export async function createClientSession(clientData: {
     phone: clientData.phone || null,
     password: clientData.password || null,
     planId: plan,
+    subscription: clientData.subscription,
+    paymentSubmission: clientData.paymentSubmission,
+    isVerified: clientData.isVerified,
   });
 
   const cookieStore = await cookies();

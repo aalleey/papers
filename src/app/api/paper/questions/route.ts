@@ -22,6 +22,17 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  // Check if profile is on hold awaiting admin verification
+  if (clientUser && !adminUser && (clientUser.subscription.status === "pending_verification" || clientUser.isVerified === false)) {
+    return NextResponse.json(
+      {
+        error: "Your account is on hold pending payment verification. Please wait until admin approves your application.",
+        pendingVerification: true,
+      },
+      { status: 403 }
+    );
+  }
+
   // Only registered users with an active paid subscription (or admins) are eligible to generate papers
   if (!isPaidSubscriber(clientUser, adminUser)) {
     return NextResponse.json(

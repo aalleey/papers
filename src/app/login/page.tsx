@@ -46,6 +46,17 @@ export default function LoginPage() {
         return;
       }
 
+      // If educator profile is pending verification, route to verification hold page
+      if (
+        data.client?.subscription?.status === "pending_verification" ||
+        data.client?.isVerified === false ||
+        data.isPendingVerification
+      ) {
+        router.push("/verification-pending");
+        router.refresh();
+        return;
+      }
+
       router.push("/select-questions");
       router.refresh();
     } catch {

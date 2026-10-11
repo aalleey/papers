@@ -61,6 +61,12 @@ export default function PaperEditorPage() {
   const [classNameText, setClassNameText] = useState("10th");
   const [syllabusText, setSyllabusText] = useState("Unit-2 System Recovery and Advanced Maintenance");
   const [totalMarks, setTotalMarks] = useState<number>(75);
+  const [mcqMarksPerQ, setMcqMarksPerQ] = useState<number>(1);
+  const [shortMarksPerQ, setShortMarksPerQ] = useState<number>(2);
+  const [longMarksPerQ, setLongMarksPerQ] = useState<number>(5);
+  const [mcqTotalMarksOverride, setMcqTotalMarksOverride] = useState<number | null>(null);
+  const [shortTotalMarksOverride, setShortTotalMarksOverride] = useState<number | null>(null);
+  const [longTotalMarksOverride, setLongTotalMarksOverride] = useState<number | null>(null);
   const [timeDuration, setTimeDuration] = useState("2:30 hrs");
   const [paperDate, setPaperDate] = useState("11-10-2026");
   const [testNoText, setTestNoText] = useState("");
@@ -198,6 +204,13 @@ export default function PaperEditorPage() {
         const res = await fetch("/api/auth/client/me");
         const data = await res.json();
         if (data.client) {
+          if (
+            data.client.subscription?.status === "pending_verification" ||
+            data.client.isVerified === false
+          ) {
+            router.push("/verification-pending");
+            return;
+          }
           setClientUser(data.client);
           if (data.client.academyName && data.client.subscription.canCustomBranding) {
             setInstitutionName(data.client.academyName);
@@ -241,6 +254,30 @@ export default function PaperEditorPage() {
 
   // Current Paper Code
   const currentPaperCode = paperCodes[paperVersion] || "3041";
+
+  // Section Marks (editable with default formula: count * marksPerQ)
+  const effectiveMcqMarks = useMemo(() => {
+    if (mcqTotalMarksOverride !== null) return mcqTotalMarksOverride;
+    return displayedMcqs.length * mcqMarksPerQ;
+  }, [mcqTotalMarksOverride, displayedMcqs.length, mcqMarksPerQ]);
+
+  const effectiveShortMarks = useMemo(() => {
+    if (shortTotalMarksOverride !== null) return shortTotalMarksOverride;
+    return shorts.length * shortMarksPerQ;
+  }, [shortTotalMarksOverride, shorts.length, shortMarksPerQ]);
+
+  const effectiveLongMarks = useMemo(() => {
+    if (longTotalMarksOverride !== null) return longTotalMarksOverride;
+    return longs.length * longMarksPerQ;
+  }, [longTotalMarksOverride, longs.length, longMarksPerQ]);
+
+  // Sync totalMarks if paper has questions
+  useEffect(() => {
+    const computedTotal = effectiveMcqMarks + effectiveShortMarks + effectiveLongMarks;
+    if (computedTotal > 0) {
+      setTotalMarks(computedTotal);
+    }
+  }, [effectiveMcqMarks, effectiveShortMarks, effectiveLongMarks]);
 
   // Print Action
   const handlePrint = (mode: "all" | "questions" | "key" = "all") => {
@@ -1502,15 +1539,47 @@ export default function PaperEditorPage() {
                   =================================================================== */}
               {displayedMcqs.length > 0 && (
                 <div className="section space-y-2">
-                  <div className="text-center font-black text-sm uppercase tracking-wider py-1 border-y border-black bg-slate-50/50">
-                    SECTION - I
+                  <div className="flex items-center justify-between font-black text-xs sm:text-sm uppercase tracking-wider py-1 px-2 border-y border-black bg-slate-50/50">
+                    <span className="font-extrabold">SECTION - I: OBJECTIVE TYPE</span>
+                    <span className="font-bold normal-case text-slate-800 text-[11px] sm:text-xs">
+                      [ {displayedMcqs.length} MCQs &times;{" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => {
+                          const val = Number(e.currentTarget.textContent) || 1;
+                          setMcqMarksPerQ(val);
+                          setMcqTotalMarksOverride(val * displayedMcqs.length);
+                        }}
+                        className="underline decoration-dotted cursor-text hover:bg-amber-100 px-0.5 rounded outline-none font-black text-blue-800"
+                        title="Click to edit MCQ marks per question"
+                      >
+                        {mcqMarksPerQ}
+                      </span>{" "}
+                      ={" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => setMcqTotalMarksOverride(Number(e.currentTarget.textContent) || effectiveMcqMarks)}
+                        className="underline decoration-dotted cursor-text hover:bg-amber-100 px-0.5 rounded outline-none font-black text-blue-900"
+                        title="Click to edit total MCQ marks"
+                      >
+                        {effectiveMcqMarks}
+                      </span>{" "}
+                      Marks ]
+                    </span>
                   </div>
 
-                  <div className="text-center italic font-semibold text-xs text-slate-700">
-                    Choose the correct answer from the following.
+                  <div className="flex items-center justify-between text-xs text-slate-700 font-semibold px-1">
+                    <span className="italic">
+                      <strong>Q. 1:</strong> Choose the correct answer from the following.
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-600">
+                      (Marks: {effectiveMcqMarks})
+                    </span>
                   </div>
 
-                  {/* OMR Bubble Sheet Table */}
+                  {/* Compact Column-Wise OMR Bubble Sheet */}
                   {showOMRSheet && (
                     <div
                       style={{
@@ -1518,120 +1587,53 @@ export default function PaperEditorPage() {
                         padding: 0,
                         direction: "ltr",
                         maxWidth: "100%",
-                        overflowX: "auto",
                       }}
                     >
-                      <table
-                        style={{
-                          width: "100%",
-                          border: "2px solid #0d47a1",
-                          borderCollapse: "collapse",
-                          backgroundColor: "#f8fafc",
-                          direction: "ltr",
-                        }}
-                      >
-                        <tbody>
-                          <tr>
-                            {displayedMcqs.map((_, idx) => (
-                              <td
-                                key={idx}
-                                style={{
-                                  border: "1px solid #cbd5e1",
-                                  padding: "3px 2px",
-                                  verticalAlign: "middle",
-                                  fontSize: "10px",
-                                  textAlign: "center",
-                                  whiteSpace: "nowrap",
-                                  direction: "ltr",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    fontWeight: 800,
-                                    marginRight: "3px",
-                                    fontSize: "10px",
-                                    color: "#1e3a8a",
-                                  }}
-                                >
-                                  {(idx + 1).toString().padStart(2, "0")}.
-                                </span>
-                                <span
-                                  style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    width: "13px",
-                                    height: "13px",
-                                    border: "1.5px solid #ef4444",
-                                    color: "#b91c1c",
-                                    backgroundColor: "#fef2f2",
-                                    borderRadius: "50%",
-                                    fontSize: "8px",
-                                    margin: "0 1px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
+                      <div className="bg-slate-50/80 border border-blue-900 rounded-sm p-1.5 shadow-2xs">
+                        <div className="text-[10px] font-black uppercase text-blue-900 tracking-wider mb-1 flex items-center justify-between border-b border-blue-200 pb-0.5">
+                          <span>OMR ANSWER SHEET (ROLL NO / BUBBLE GRID)</span>
+                          <span className="text-[9px] font-normal lowercase text-slate-500">fill one circle per question</span>
+                        </div>
+                        <div
+                          className="grid gap-x-2 gap-y-0.5"
+                          style={{
+                            gridTemplateColumns: `repeat(${
+                              displayedMcqs.length <= 5
+                                ? displayedMcqs.length
+                                : displayedMcqs.length <= 10
+                                ? 5
+                                : displayedMcqs.length <= 15
+                                ? 5
+                                : 6
+                            }, minmax(0, 1fr))`,
+                          }}
+                        >
+                          {displayedMcqs.map((_, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between bg-white border border-slate-200 rounded px-1 py-0.5 text-[9.5px] leading-none"
+                            >
+                              <span className="font-extrabold text-blue-950 text-[9.5px] min-w-[16px]">
+                                {(idx + 1).toString().padStart(2, "0")}.
+                              </span>
+                              <div className="inline-flex items-center gap-0.5">
+                                <span className="inline-flex items-center justify-center w-3 h-3 rounded-full border border-red-500 text-red-600 bg-red-50 text-[7px] font-black hover:bg-red-500 hover:text-white transition-colors cursor-pointer">
                                   A
                                 </span>
-                                <span
-                                  style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    width: "13px",
-                                    height: "13px",
-                                    border: "1.5px solid #3b82f6",
-                                    color: "#1d4ed8",
-                                    backgroundColor: "#eff6ff",
-                                    borderRadius: "50%",
-                                    fontSize: "8px",
-                                    margin: "0 1px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
+                                <span className="inline-flex items-center justify-center w-3 h-3 rounded-full border border-blue-500 text-blue-600 bg-blue-50 text-[7px] font-black hover:bg-blue-500 hover:text-white transition-colors cursor-pointer">
                                   B
                                 </span>
-                                <span
-                                  style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    width: "13px",
-                                    height: "13px",
-                                    border: "1.5px solid #10b981",
-                                    color: "#047857",
-                                    backgroundColor: "#ecfdf5",
-                                    borderRadius: "50%",
-                                    fontSize: "8px",
-                                    margin: "0 1px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
+                                <span className="inline-flex items-center justify-center w-3 h-3 rounded-full border border-emerald-500 text-emerald-600 bg-emerald-50 text-[7px] font-black hover:bg-emerald-500 hover:text-white transition-colors cursor-pointer">
                                   C
                                 </span>
-                                <span
-                                  style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    width: "13px",
-                                    height: "13px",
-                                    border: "1.5px solid #f59e0b",
-                                    color: "#b45309",
-                                    backgroundColor: "#fffbeb",
-                                    borderRadius: "50%",
-                                    fontSize: "8px",
-                                    margin: "0 1px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
+                                <span className="inline-flex items-center justify-center w-3 h-3 rounded-full border border-amber-500 text-amber-600 bg-amber-50 text-[7px] font-black hover:bg-amber-500 hover:text-white transition-colors cursor-pointer">
                                   D
                                 </span>
-                              </td>
-                            ))}
-                          </tr>
-                        </tbody>
-                      </table>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   )}
 
@@ -1722,8 +1724,35 @@ export default function PaperEditorPage() {
                   =================================================================== */}
               {shorts.length > 0 && (
                 <div className="section space-y-2 pt-2">
-                  <div className="text-center font-black text-sm uppercase tracking-wider py-1 border-y border-black bg-slate-50/50">
-                    SECTION - II
+                  <div className="flex items-center justify-between font-black text-xs sm:text-sm uppercase tracking-wider py-1 px-2 border-y border-black bg-slate-50/50">
+                    <span className="font-extrabold">SECTION - II: SUBJECTIVE TYPE</span>
+                    <span className="font-bold normal-case text-slate-800 text-[11px] sm:text-xs">
+                      [ {shorts.length} Shorts &times;{" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => {
+                          const val = Number(e.currentTarget.textContent) || 2;
+                          setShortMarksPerQ(val);
+                          setShortTotalMarksOverride(val * shorts.length);
+                        }}
+                        className="underline decoration-dotted cursor-text hover:bg-amber-100 px-0.5 rounded outline-none font-black text-emerald-800"
+                        title="Click to edit short marks per question"
+                      >
+                        {shortMarksPerQ}
+                      </span>{" "}
+                      ={" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => setShortTotalMarksOverride(Number(e.currentTarget.textContent) || effectiveShortMarks)}
+                        className="underline decoration-dotted cursor-text hover:bg-amber-100 px-0.5 rounded outline-none font-black text-emerald-900"
+                        title="Click to edit total short questions marks"
+                      >
+                        {effectiveShortMarks}
+                      </span>{" "}
+                      Marks ]
+                    </span>
                   </div>
 
                   <div
@@ -1731,11 +1760,27 @@ export default function PaperEditorPage() {
                       backgroundColor: "#e0e0e0",
                       padding: "4px 8px",
                       borderBottom: "1px solid #000",
-                      textAlign: "left",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                       fontWeight: "bold",
                     }}
                   >
-                    <strong>Q. 2:</strong> Write short answers of the following questions.
+                    <span>
+                      <strong>Q. 2:</strong> Write short answers of the following questions.
+                    </span>
+                    <span className="text-xs font-black text-slate-800">
+                      (Marks:{" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => setShortTotalMarksOverride(Number(e.currentTarget.textContent) || effectiveShortMarks)}
+                        className="underline decoration-dotted outline-none"
+                      >
+                        {effectiveShortMarks}
+                      </span>
+                      )
+                    </span>
                   </div>
 
                   {/* 2-Column Structured Layout */}
@@ -1796,8 +1841,35 @@ export default function PaperEditorPage() {
                   =================================================================== */}
               {longs.length > 0 && (
                 <div className="section space-y-2 pt-2">
-                  <div className="text-center font-black text-sm uppercase tracking-wider py-1 border-y border-black bg-slate-50/50">
-                    SECTION - III
+                  <div className="flex items-center justify-between font-black text-xs sm:text-sm uppercase tracking-wider py-1 px-2 border-y border-black bg-slate-50/50">
+                    <span className="font-extrabold">SECTION - III: DETAILED QUESTIONS</span>
+                    <span className="font-bold normal-case text-slate-800 text-[11px] sm:text-xs">
+                      [ {longs.length} Longs &times;{" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => {
+                          const val = Number(e.currentTarget.textContent) || 5;
+                          setLongMarksPerQ(val);
+                          setLongTotalMarksOverride(val * longs.length);
+                        }}
+                        className="underline decoration-dotted cursor-text hover:bg-amber-100 px-0.5 rounded outline-none font-black text-purple-800"
+                        title="Click to edit long marks per question"
+                      >
+                        {longMarksPerQ}
+                      </span>{" "}
+                      ={" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => setLongTotalMarksOverride(Number(e.currentTarget.textContent) || effectiveLongMarks)}
+                        className="underline decoration-dotted cursor-text hover:bg-amber-100 px-0.5 rounded outline-none font-black text-purple-900"
+                        title="Click to edit total long questions marks"
+                      >
+                        {effectiveLongMarks}
+                      </span>{" "}
+                      Marks ]
+                    </span>
                   </div>
 
                   <div
@@ -1805,11 +1877,27 @@ export default function PaperEditorPage() {
                       backgroundColor: "#e0e0e0",
                       padding: "4px 8px",
                       borderBottom: "1px solid #000",
-                      textAlign: "left",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                       fontWeight: "bold",
                     }}
                   >
-                    <strong>Q. 3:</strong> Write detailed answers to the following questions.
+                    <span>
+                      <strong>Q. 3:</strong> Write detailed answers to the following questions.
+                    </span>
+                    <span className="text-xs font-black text-slate-800">
+                      (Marks:{" "}
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => setLongTotalMarksOverride(Number(e.currentTarget.textContent) || effectiveLongMarks)}
+                        className="underline decoration-dotted outline-none"
+                      >
+                        {effectiveLongMarks}
+                      </span>
+                      )
+                    </span>
                   </div>
 
                   <div className="space-y-2 pt-1 pl-4">

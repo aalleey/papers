@@ -127,10 +127,22 @@ export interface CsvRowValidationResult {
 // Client Subscription & Permission System
 export type SubscriptionPlanId = "free" | "monthly" | "pay_as_you_go" | "pay_per_paper" | "standard" | "annual";
 
+export interface PaymentSubmission {
+  method: "raast";
+  raastId: string;
+  senderPhone?: string;
+  senderName?: string;
+  amount?: string;
+  transactionRef: string;
+  submittedAt: string;
+  planRequested?: SubscriptionPlanId;
+  notes?: string;
+}
+
 export interface SubscriptionInfo {
   planId: SubscriptionPlanId;
   planName: string;
-  status: "active" | "expired" | "trial" | "suspended";
+  status: "active" | "expired" | "trial" | "suspended" | "pending_verification";
   expiresAt: string | null;
   paperCredits: number;
   canAutoBoardPattern: boolean;
@@ -151,6 +163,8 @@ export interface ClientUser {
   role: "client";
   password?: string | null;
   subscription: SubscriptionInfo;
+  paymentSubmission?: PaymentSubmission | null;
+  isVerified?: boolean;
   createdAt: string;
   updatedAt?: string;
   notes?: string | null;

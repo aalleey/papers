@@ -255,6 +255,14 @@ export default function SelectQuestionsPage() {
         const authRes = await fetch("/api/auth/client/me");
         const authData = await authRes.json();
         if (authData.client) {
+          // If account is on hold pending admin verification, redirect to verification pending screen
+          if (
+            authData.client.subscription?.status === "pending_verification" ||
+            authData.client.isVerified === false
+          ) {
+            router.push("/verification-pending");
+            return;
+          }
           setClientUser(authData.client);
           await loadQuestionsData();
         } else {

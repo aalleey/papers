@@ -1,0 +1,9 @@
+
+node_modules/
+build/
+dist/
+.next/
+.dart_tool/
+.flutter-plugins/
+coverage/
+.git/

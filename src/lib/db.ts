@@ -1035,6 +1035,8 @@ export const db = {
             password: row.password || null,
             role: (row.role as "client") || "client",
             subscription: row.subscription,
+            paymentSubmission: row.payment_submission || null,
+            isVerified: row.is_verified ?? false,
             notes: row.notes,
             createdAt: row.created_at,
             updatedAt: row.updated_at,
@@ -1112,6 +1114,8 @@ export const db = {
             password: data.password || null,
             role: (data.role as "client") || "client",
             subscription: data.subscription,
+            paymentSubmission: data.payment_submission || null,
+            isVerified: data.is_verified ?? false,
             notes: data.notes,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
@@ -1149,6 +1153,8 @@ export const db = {
             password: data.password || null,
             role: (data.role as "client") || "client",
             subscription: data.subscription,
+            paymentSubmission: data.payment_submission || null,
+            isVerified: data.is_verified ?? false,
             notes: data.notes,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
@@ -1173,6 +1179,8 @@ export const db = {
     password?: string | null;
     planId?: SubscriptionPlanId;
     subscription?: Partial<ClientUser["subscription"]>;
+    paymentSubmission?: ClientUser["paymentSubmission"];
+    isVerified?: boolean;
     notes?: string | null;
   }): Promise<ClientUser> {
     const adminClient = createAdminSupabaseClient();
@@ -1195,6 +1203,8 @@ export const db = {
           phone: clientData.phone || null,
           role: "client",
           subscription: mergedSub,
+          payment_submission: clientData.paymentSubmission || null,
+          is_verified: clientData.isVerified ?? false,
           notes: clientData.notes || null,
           environment: env,
           updated_at: new Date().toISOString(),
@@ -1217,6 +1227,8 @@ export const db = {
             password: data.password || clientData.password || null,
             role: (data.role as "client") || "client",
             subscription: data.subscription,
+            paymentSubmission: data.payment_submission || clientData.paymentSubmission || null,
+            isVerified: data.is_verified ?? clientData.isVerified ?? false,
             notes: data.notes,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
@@ -1242,6 +1254,8 @@ export const db = {
         password: clientData.password !== undefined ? clientData.password : existing.password,
         notes: clientData.notes !== undefined ? clientData.notes : existing.notes,
         subscription: explicitPlan ? mergedSub : existing.subscription,
+        paymentSubmission: clientData.paymentSubmission !== undefined ? clientData.paymentSubmission : existing.paymentSubmission,
+        isVerified: clientData.isVerified !== undefined ? clientData.isVerified : existing.isVerified,
         updatedAt: new Date().toISOString(),
       };
       store.clients[existingIndex] = updated;
@@ -1257,6 +1271,8 @@ export const db = {
       password: clientData.password || null,
       role: "client",
       subscription: mergedSub,
+      paymentSubmission: clientData.paymentSubmission || null,
+      isVerified: clientData.isVerified ?? false,
       createdAt: new Date().toISOString(),
       notes: clientData.notes || null,
     };
@@ -1280,6 +1296,8 @@ export const db = {
         if (updates.password !== undefined) payload.password = updates.password;
         if (updates.notes !== undefined) payload.notes = updates.notes;
         if (updates.subscription !== undefined) payload.subscription = updates.subscription;
+        if (updates.paymentSubmission !== undefined) payload.payment_submission = updates.paymentSubmission;
+        if (updates.isVerified !== undefined) payload.is_verified = updates.isVerified;
 
         const { data, error } = await adminClient
           .from("clients")
@@ -1299,6 +1317,8 @@ export const db = {
             password: data.password || updates.password || null,
             role: (data.role as "client") || "client",
             subscription: data.subscription,
+            paymentSubmission: data.payment_submission || updates.paymentSubmission || null,
+            isVerified: data.is_verified ?? updates.isVerified ?? false,
             notes: data.notes,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
@@ -1322,6 +1342,8 @@ export const db = {
       subscription: updates.subscription
         ? { ...current.subscription, ...updates.subscription }
         : current.subscription,
+      paymentSubmission: updates.paymentSubmission !== undefined ? updates.paymentSubmission : current.paymentSubmission,
+      isVerified: updates.isVerified !== undefined ? updates.isVerified : current.isVerified,
       updatedAt: new Date().toISOString(),
     };
 

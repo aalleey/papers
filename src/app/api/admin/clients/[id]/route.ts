@@ -55,6 +55,8 @@ export async function PUT(
       expiresAt,
       paperCredits,
       permissions,
+      isVerified,
+      paymentSubmission,
     } = body;
 
     // Check email uniqueness if email is changed
@@ -138,6 +140,8 @@ export async function PUT(
       password: password !== undefined ? password : client.password,
       notes: notes !== undefined ? notes : client.notes,
       subscription: targetSub,
+      isVerified: isVerified !== undefined ? isVerified : status === "active" ? true : client.isVerified,
+      paymentSubmission: paymentSubmission !== undefined ? paymentSubmission : client.paymentSubmission,
     });
 
     return NextResponse.json({ success: true, client: updated });

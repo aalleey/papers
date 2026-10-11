@@ -75,7 +75,21 @@ export function ClientAuthModal({
         return;
       }
 
+      if (mode === "signup") {
+        // Direct new signups to the registration & Raast payment flow
+        window.location.href = "/register";
+        return;
+      }
+
       if (data.client) {
+        if (
+          data.client?.subscription?.status === "pending_verification" ||
+          data.client?.isVerified === false ||
+          data.isPendingVerification
+        ) {
+          window.location.href = "/verification-pending";
+          return;
+        }
         onSuccess(data.client);
         onClose();
       }

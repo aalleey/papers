@@ -31,6 +31,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Login required.", requireLogin: true }, { status: 401 });
   }
 
+  if (client && !admin && (client.subscription.status === "pending_verification" || client.isVerified === false)) {
+    return NextResponse.json(
+      {
+        error: "Your account is on hold pending admin payment verification.",
+        pendingVerification: true,
+      },
+      { status: 403 }
+    );
+  }
+
   if (client && !isPaidSubscriber(client, admin)) {
     return NextResponse.json(
       {

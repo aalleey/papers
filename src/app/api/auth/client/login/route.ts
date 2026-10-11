@@ -47,9 +47,16 @@ export async function POST(req: NextRequest) {
       academyName: existing.academyName,
       phone: existing.phone,
       password: existing.password || password,
+      subscription: existing.subscription,
+      paymentSubmission: existing.paymentSubmission,
+      isVerified: existing.isVerified,
     });
 
-    return NextResponse.json({ success: true, client });
+    return NextResponse.json({
+      success: true,
+      client,
+      isPendingVerification: existing.subscription.status === "pending_verification" || existing.isVerified === false,
+    });
   } catch (error) {
     return NextResponse.json({ error: "Failed to login. Please try again." }, { status: 500 });
   }

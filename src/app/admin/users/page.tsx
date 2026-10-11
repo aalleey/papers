@@ -38,6 +38,7 @@ import { ClientUser, SubscriptionPlanId, SubscriptionInfo, PLAN_METADATA } from 
 interface StatsData {
   total: number;
   active: number;
+  pendingVerification: number;
   free: number;
   paid: number;
   standard: number;
@@ -51,6 +52,7 @@ export default function AdminUsersPage() {
   const [stats, setStats] = useState<StatsData>({
     total: 0,
     active: 0,
+    pendingVerification: 0,
     free: 0,
     paid: 0,
     standard: 0,
@@ -81,7 +83,7 @@ export default function AdminUsersPage() {
   const [editNotes, setEditNotes] = useState("");
 
   const [editPlanId, setEditPlanId] = useState<SubscriptionPlanId>("free");
-  const [editStatus, setEditStatus] = useState<"active" | "expired" | "trial" | "suspended">("active");
+  const [editStatus, setEditStatus] = useState<"active" | "expired" | "trial" | "suspended" | "pending_verification">("active");
   const [editExpiresAt, setEditExpiresAt] = useState<string>("");
   const [editPaperCredits, setEditPaperCredits] = useState<number>(0);
 
@@ -334,6 +336,26 @@ export default function AdminUsersPage() {
     }
   };
 
+  // Approve Application & Payment Verification Quick Action
+  const handleApproveClient = async (c: ClientUser) => {
+    try {
+      const res = await fetch(`/api/admin/clients/${c.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: "active",
+          isVerified: true,
+          planId: c.subscription.planId === "free" ? "standard" : c.subscription.planId,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to approve account");
+      showToast(`Account for "${c.fullName}" has been APPROVED and ACTIVATED! 🎉`);
+      await loadClients();
+    } catch (err) {
+      showToast("Failed to approve account", "error");
+    }
+  };
+
   // Toggle Suspend / Activate Quick Action
   const handleToggleSuspend = async (c: ClientUser) => {
     const newStatus = c.subscription.status === "suspended" ? "active" : "suspended";
@@ -500,84 +522,112 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Summary KPI Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         {/* Total Clients */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
               Total Clients
             </span>
-            <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
-              <Users className="w-4 h-4" />
+            <div className="p-1.5 rounded-xl bg-blue-50 text-blue-600">
+              <Users className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-slate-900">{stats.total}</span>
-            <span className="text-xs text-slate-400 font-medium">registered</span>
+          <div className="mt-2 flex items-baseline gap-1.5">
+            <span className="text-xl sm:text-2xl font-black text-slate-900">{stats.total}</span>
+            <span className="text-[11px] text-slate-400 font-medium">registered</span>
           </div>
-          <div className="mt-2 text-[11px] text-slate-500 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-blue-500" />
+          <div className="mt-1.5 text-[10px] text-slate-500 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
             <span>{stats.active} Active accounts</span>
           </div>
         </div>
 
-        {/* Paid / Pro Subscribers */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+        {/* Pending Verification Hold */}
+        <div
+          onClick={() => setFilterStatus("pending_verification")}
+          className={`p-4 rounded-2xl border shadow-sm relative overflow-hidden cursor-pointer transition-all ${
+            stats.pendingVerification > 0
+              ? "bg-amber-500/10 border-amber-300 ring-2 ring-amber-400/20"
+              : "bg-white border-slate-200"
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Paid Subscriptions
+            <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">
+              Pending Approval
             </span>
-            <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
-              <Crown className="w-4 h-4" />
+            <div className="p-1.5 rounded-xl bg-amber-100 text-amber-700">
+              <Clock className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-amber-600">{stats.paid}</span>
-            <span className="text-xs text-amber-700 font-medium">pro members</span>
+          <div className="mt-2 flex items-baseline gap-1.5">
+            <span className="text-xl sm:text-2xl font-black text-amber-600">
+              {stats.pendingVerification}
+            </span>
+            <span className="text-[11px] text-amber-800 font-bold">on hold</span>
           </div>
-          <div className="mt-2 text-[11px] text-slate-500 flex items-center gap-1">
-            <span className="text-emerald-600 font-bold">{stats.standard} Standard</span>
+          <div className="mt-1.5 text-[10px] text-amber-700 font-medium">
+            Raast 03092770207 review
+          </div>
+        </div>
+
+        {/* Paid / Pro Subscribers */}
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Paid Pro
+            </span>
+            <div className="p-1.5 rounded-xl bg-amber-50 text-amber-600">
+              <Crown className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="mt-2 flex items-baseline gap-1.5">
+            <span className="text-xl sm:text-2xl font-black text-amber-600">{stats.paid}</span>
+            <span className="text-[11px] text-amber-700 font-medium">pro members</span>
+          </div>
+          <div className="mt-1.5 text-[10px] text-slate-500 flex items-center gap-1">
+            <span className="text-emerald-600 font-bold">{stats.standard} Std</span>
             <span>&bull;</span>
-            <span className="text-blue-600 font-bold">{stats.annual} Annual</span>
+            <span className="text-blue-600 font-bold">{stats.annual} Ann</span>
           </div>
         </div>
 
         {/* Free Plan Educators */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Free Tier Users
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Free Tier
             </span>
-            <div className="p-2 rounded-xl bg-slate-100 text-slate-600">
-              <School className="w-4 h-4" />
+            <div className="p-1.5 rounded-xl bg-slate-100 text-slate-600">
+              <School className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-slate-800">{stats.free}</span>
-            <span className="text-xs text-slate-400 font-medium">basic educators</span>
+          <div className="mt-2 flex items-baseline gap-1.5">
+            <span className="text-xl sm:text-2xl font-black text-slate-800">{stats.free}</span>
+            <span className="text-[11px] text-slate-400 font-medium">basic</span>
           </div>
-          <div className="mt-2 text-[11px] text-slate-500 flex items-center gap-1">
+          <div className="mt-1.5 text-[10px] text-slate-500 flex items-center gap-1">
             <span>Pay-per-paper: </span>
             <span className="font-bold text-orange-600">{stats.payAsYouGo}</span>
           </div>
         </div>
 
         {/* Suspended Accounts */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Suspended / Expired
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Suspended
             </span>
-            <div className="p-2 rounded-xl bg-rose-50 text-rose-600">
-              <ShieldAlert className="w-4 h-4" />
+            <div className="p-1.5 rounded-xl bg-rose-50 text-rose-600">
+              <ShieldAlert className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-rose-600">{stats.suspended}</span>
-            <span className="text-xs text-rose-700 font-medium">locked</span>
+          <div className="mt-2 flex items-baseline gap-1.5">
+            <span className="text-xl sm:text-2xl font-black text-rose-600">{stats.suspended}</span>
+            <span className="text-[11px] text-rose-700 font-medium">locked</span>
           </div>
-          <div className="mt-2 text-[11px] text-slate-500">
-            <span>Requires admin activation or renewal</span>
+          <div className="mt-1.5 text-[10px] text-slate-500 truncate">
+            Requires admin action
           </div>
         </div>
       </div>
@@ -591,7 +641,7 @@ export default function AdminUsersPage() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by educator name, email, phone / WhatsApp, or academy..."
+            placeholder="Search by educator name, email, phone / WhatsApp, TID, or academy..."
             className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
           />
           {searchTerm && (
@@ -631,6 +681,7 @@ export default function AdminUsersPage() {
               className="py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             >
               <option value="all">All Statuses</option>
+              <option value="pending_verification">⏳ Pending Approval (Hold)</option>
               <option value="active">Active</option>
               <option value="suspended">Suspended</option>
               <option value="expired">Expired</option>
@@ -674,6 +725,7 @@ export default function AdminUsersPage() {
                     name: c.subscription.planName || c.subscription.planId,
                     priceFormatted: "Custom",
                   };
+                  const isPending = c.subscription.status === "pending_verification" || c.isVerified === false;
                   const isSuspended = c.subscription.status === "suspended";
                   const isExpired = c.subscription.status === "expired";
 
@@ -681,13 +733,21 @@ export default function AdminUsersPage() {
                     <tr
                       key={c.id}
                       className={`hover:bg-slate-50/80 transition-colors ${
-                        isSuspended ? "bg-rose-50/30" : ""
+                        isPending
+                          ? "bg-amber-50/40 border-l-4 border-l-amber-500"
+                          : isSuspended
+                          ? "bg-rose-50/30"
+                          : ""
                       }`}
                     >
                       {/* Educator & Academy */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 text-white font-black flex items-center justify-center text-sm shrink-0 shadow-sm">
+                          <div className={`w-10 h-10 rounded-2xl text-white font-black flex items-center justify-center text-sm shrink-0 shadow-sm ${
+                            isPending
+                              ? "bg-gradient-to-tr from-amber-500 to-orange-500"
+                              : "bg-gradient-to-tr from-emerald-500 to-teal-600"
+                          }`}>
                             {c.fullName.charAt(0).toUpperCase()}
                           </div>
                           <div>
@@ -701,6 +761,11 @@ export default function AdminUsersPage() {
                               {c.subscription.planId === "annual" && (
                                 <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                               )}
+                              {isPending && (
+                                <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase bg-amber-500 text-white tracking-wider">
+                                  HOLD
+                                </span>
+                              )}
                             </div>
                             <div className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
                               <School className="w-3 h-3 text-slate-400" />
@@ -708,6 +773,13 @@ export default function AdminUsersPage() {
                                 {c.academyName || "Educator Academy"}
                               </span>
                             </div>
+                            {c.paymentSubmission && (
+                              <div className="mt-1 flex items-center gap-1.5 text-[10px] text-amber-900 bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200 font-mono">
+                                <span>⚡ Raast TID:</span>
+                                <strong className="font-bold">{c.paymentSubmission.transactionRef}</strong>
+                                {c.paymentSubmission.amount && <span>(Rs. {c.paymentSubmission.amount})</span>}
+                              </div>
+                            )}
                             {c.notes && (
                               <div className="text-[10px] text-slate-400 italic mt-0.5 max-w-[200px] truncate">
                                 {c.notes}
@@ -805,7 +877,12 @@ export default function AdminUsersPage() {
                       <td className="py-3.5 px-4">
                         <div className="space-y-1">
                           <div>
-                            {isSuspended ? (
+                            {isPending ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300 animate-pulse">
+                                <Clock className="w-3 h-3 text-amber-700" />
+                                <span>HOLD (NEEDS APPROVAL)</span>
+                              </span>
+                            ) : isSuspended ? (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
                                 <XCircle className="w-3 h-3" />
                                 <span>SUSPENDED</span>
@@ -872,6 +949,18 @@ export default function AdminUsersPage() {
                       {/* Actions */}
                       <td className="py-3.5 px-4 text-right">
                         <div className="inline-flex items-center gap-1">
+                          {/* One-Click APPROVE button for pending accounts */}
+                          {isPending && (
+                            <button
+                              onClick={() => handleApproveClient(c)}
+                              title="Approve Raast Payment & Activate Account"
+                              className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center gap-1 shadow-sm transition-all active:scale-95 mr-1"
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Approve</span>
+                            </button>
+                          )}
+
                           {/* View profile & paper history */}
                           <Link
                             href={`/admin/users/${c.id}`}
@@ -1141,6 +1230,7 @@ export default function AdminUsersPage() {
                         className="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-semibold text-slate-700 focus:ring-2 focus:ring-emerald-500/20"
                       >
                         <option value="active">Active (Normal Access)</option>
+                        <option value="pending_verification">Pending Approval (Hold Verification)</option>
                         <option value="suspended">Suspended (Access Locked)</option>
                         <option value="expired">Expired (Requires Renewal)</option>
                         <option value="trial">Trial Period</option>

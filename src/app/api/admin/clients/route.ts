@@ -25,7 +25,8 @@ export async function GET(req: NextRequest) {
     // Summary statistics for admin dashboard
     const stats = {
       total: allClients.length,
-      active: allClients.filter((c) => c.subscription.status === "active").length,
+      active: allClients.filter((c) => c.subscription.status === "active" && c.isVerified !== false).length,
+      pendingVerification: allClients.filter((c) => c.subscription.status === "pending_verification" || c.isVerified === false).length,
       free: allClients.filter((c) => c.subscription.planId === "free").length,
       paid: allClients.filter((c) => c.subscription.planId !== "free").length,
       standard: allClients.filter((c) => c.subscription.planId === "standard").length,
