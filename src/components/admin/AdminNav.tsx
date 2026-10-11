@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   UserShield,
+  Users,
 } from "lucide-react";
 
 interface AdminNavProps {
@@ -25,6 +26,7 @@ interface AdminNavProps {
 }
 
 const navItems = [
+  { href: "/admin/users", label: "Registered Clients", icon: Users },
   { href: "/admin/questions", label: "Questions Bank", icon: HelpCircle },
   { href: "/admin/import", label: "CSV Import", icon: Upload },
   { href: "/admin/boards", label: "Boards", icon: Globe2 },

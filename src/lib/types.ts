@@ -130,7 +130,7 @@ export type SubscriptionPlanId = "free" | "pay_as_you_go" | "pay_per_paper" | "s
 export interface SubscriptionInfo {
   planId: SubscriptionPlanId;
   planName: string;
-  status: "active" | "expired" | "trial";
+  status: "active" | "expired" | "trial" | "suspended";
   expiresAt: string | null;
   paperCredits: number;
   canAutoBoardPattern: boolean;
@@ -151,6 +151,8 @@ export interface ClientUser {
   role: "client";
   subscription: SubscriptionInfo;
   createdAt: string;
+  updatedAt?: string;
+  notes?: string | null;
 }
 
 export interface PlanFeature {
@@ -270,6 +272,8 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, PlanDetails> = {
     ],
   },
 };
+
+export const PLAN_METADATA = SUBSCRIPTION_PLANS;
 
 export function getPlanPermissions(planId: SubscriptionPlanId): SubscriptionInfo {
   switch (planId) {

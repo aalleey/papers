@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { createServerSupabaseClient } from "./supabase/server";
 import { ClientUser, SubscriptionPlanId, getPlanPermissions } from "./types";
+import { db } from "./db";
 
 export interface AuthUser {
   id: string;
@@ -95,6 +96,11 @@ export async function getCurrentClient(): Promise<ClientUser | null> {
     try {
       const parsed = JSON.parse(clientCookie) as ClientUser;
       if (parsed && parsed.role === "client") {
+        // Query live database store to reflect any admin updates (plan, permissions, expiry)
+        const live = (await db.getClientById(parsed.id)) || (await db.getClientByEmail(parsed.email));
+        if (live) {
+          return live;
+        }
         return parsed;
       }
     } catch {
@@ -113,16 +119,16 @@ export async function createClientSession(clientData: {
   planId?: SubscriptionPlanId;
 }): Promise<ClientUser> {
   const plan = clientData.planId || "free";
-  const user: ClientUser = {
-    id: clientData.id || `client-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+
+  // Persist into central DB store
+  const user = await db.saveClient({
+    id: clientData.id,
     email: clientData.email,
     fullName: clientData.fullName,
     academyName: clientData.academyName || "My Academy",
     phone: clientData.phone || null,
-    role: "client",
-    subscription: getPlanPermissions(plan),
-    createdAt: new Date().toISOString(),
-  };
+    planId: plan,
+  });
 
   const cookieStore = await cookies();
   cookieStore.set(CLIENT_COOKIE, JSON.stringify(user), {
@@ -140,10 +146,15 @@ export async function updateClientSubscription(planId: SubscriptionPlanId): Prom
   const current = await getCurrentClient();
   if (!current) return null;
 
-  current.subscription = getPlanPermissions(planId);
+  const newSub = getPlanPermissions(planId);
+  const updated = await db.updateClient(current.id, {
+    subscription: newSub,
+  });
+
+  const finalUser = updated || { ...current, subscription: newSub };
 
   const cookieStore = await cookies();
-  cookieStore.set(CLIENT_COOKIE, JSON.stringify(current), {
+  cookieStore.set(CLIENT_COOKIE, JSON.stringify(finalUser), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -151,7 +162,7 @@ export async function updateClientSubscription(planId: SubscriptionPlanId): Prom
     maxAge: 60 * 60 * 24 * 30,
   });
 
-  return current;
+  return finalUser;
 }
 
 export async function clearClientSession(): Promise<void> {

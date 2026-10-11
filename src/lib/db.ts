@@ -8,6 +8,9 @@ import {
   Question,
   QuestionTranslation,
   CsvImportRow,
+  ClientUser,
+  SubscriptionPlanId,
+  getPlanPermissions,
 } from "./types";
 import {
   SEED_BOARDS,
@@ -21,6 +24,129 @@ import {
 import { createServerSupabaseClient } from "./supabase/server";
 import { createAdminSupabaseClient } from "./supabase/admin";
 
+export const SEED_CLIENTS: ClientUser[] = [
+  {
+    id: "client-seed-001",
+    email: "usman.khan@apexacademy.edu.pk",
+    fullName: "Professor Usman Khan",
+    academyName: "Apex Science Academy Lahore",
+    phone: "0300-9458291",
+    role: "client",
+    subscription: {
+      planId: "standard",
+      planName: "Standard Plan",
+      status: "active",
+      expiresAt: new Date(Date.now() + 140 * 24 * 60 * 60 * 1000).toISOString(),
+      paperCredits: 999999,
+      canAutoBoardPattern: true,
+      canCustomBranding: true,
+      canExportAnswerKey: true,
+      canFullBoardPaper: true,
+      canUnlimitedExport: true,
+      canAccessAllClasses: true,
+      maxQuestionsPerPaper: 100,
+    },
+    createdAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString(),
+    notes: "Senior Educator • Matric & FSc Board Examination Specialist",
+  },
+  {
+    id: "client-seed-002",
+    email: "ayesha.s@kips.edu.pk",
+    fullName: "Dr. Ayesha Siddiqui",
+    academyName: "KIPS Preparatory College Rawalpindi",
+    phone: "0321-4829104",
+    role: "client",
+    subscription: {
+      planId: "annual",
+      planName: "Annual Premium Plan",
+      status: "active",
+      expiresAt: new Date(Date.now() + 310 * 24 * 60 * 60 * 1000).toISOString(),
+      paperCredits: 999999,
+      canAutoBoardPattern: true,
+      canCustomBranding: true,
+      canExportAnswerKey: true,
+      canFullBoardPaper: true,
+      canUnlimitedExport: true,
+      canAccessAllClasses: true,
+      maxQuestionsPerPaper: 100,
+    },
+    createdAt: new Date(Date.now() - 55 * 24 * 60 * 60 * 1000).toISOString(),
+    notes: "Annual Subscriber • 200+ students per batch",
+  },
+  {
+    id: "client-seed-003",
+    email: "tariq.educator@punjabcollege.pk",
+    fullName: "Tariq Mehmood",
+    academyName: "Punjab Group of Colleges Multan",
+    phone: "0333-5182940",
+    role: "client",
+    subscription: {
+      planId: "pay_as_you_go",
+      planName: "Go as you pay",
+      status: "active",
+      expiresAt: null,
+      paperCredits: 12,
+      canAutoBoardPattern: true,
+      canCustomBranding: true,
+      canExportAnswerKey: true,
+      canFullBoardPaper: true,
+      canUnlimitedExport: false,
+      canAccessAllClasses: true,
+      maxQuestionsPerPaper: 100,
+    },
+    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+    notes: "Pay-as-you-go customer with 12 remaining paper credits",
+  },
+  {
+    id: "client-seed-004",
+    email: "sajid.hussain@ghs.gov.pk",
+    fullName: "Sajid Hussain",
+    academyName: "Govt High School No. 1 Faisalabad",
+    phone: "0312-7729103",
+    role: "client",
+    subscription: {
+      planId: "free",
+      planName: "Free Plan",
+      status: "active",
+      expiresAt: null,
+      paperCredits: 0,
+      canAutoBoardPattern: false,
+      canCustomBranding: false,
+      canExportAnswerKey: false,
+      canFullBoardPaper: false,
+      canUnlimitedExport: false,
+      canAccessAllClasses: true,
+      maxQuestionsPerPaper: 10,
+    },
+    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    notes: "Free Tier Educator exploring computer science unit 2",
+  },
+  {
+    id: "client-seed-005",
+    email: "maryam.noor@alilm.edu.pk",
+    fullName: "Maryam Noor",
+    academyName: "Al-Ilm Grammar School Gujranwala",
+    phone: "0345-6671829",
+    role: "client",
+    subscription: {
+      planId: "standard",
+      planName: "Standard Plan",
+      status: "suspended",
+      expiresAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      paperCredits: 0,
+      canAutoBoardPattern: true,
+      canCustomBranding: true,
+      canExportAnswerKey: true,
+      canFullBoardPaper: true,
+      canUnlimitedExport: true,
+      canAccessAllClasses: true,
+      maxQuestionsPerPaper: 100,
+    },
+    createdAt: new Date(Date.now() - 190 * 24 * 60 * 60 * 1000).toISOString(),
+    notes: "Account suspended due to expired term - pending renewal",
+  },
+];
+
 // In-memory / development store initialized from seed data
 interface MockStore {
   boards: Board[];
@@ -30,6 +156,7 @@ interface MockStore {
   chapters: Chapter[];
   topics: Topic[];
   questions: Question[];
+  clients: ClientUser[];
 }
 
 // Global reference to retain state across Next.js dev reloads
@@ -37,6 +164,9 @@ const globalForStore = globalThis as unknown as { mockStore?: MockStore };
 
 function initMockStore(): MockStore {
   if (globalForStore.mockStore) {
+    if (!globalForStore.mockStore.clients) {
+      globalForStore.mockStore.clients = [...SEED_CLIENTS];
+    }
     return globalForStore.mockStore;
   }
 
@@ -74,6 +204,7 @@ function initMockStore(): MockStore {
     chapters: [...SEED_CHAPTERS],
     topics: [...SEED_TOPICS],
     questions: initialQuestions,
+    clients: [...SEED_CLIENTS],
   };
 
   globalForStore.mockStore = store;
@@ -761,5 +892,129 @@ export const db = {
     }
 
     return { importedCount, skippedDuplicates, errors };
+  },
+
+  // =========================================================================
+  // CLIENT USERS & SUBSCRIPTION MANAGEMENT (Admin Control & Persistence)
+  // =========================================================================
+
+  async getClients(params?: { search?: string; planId?: string; status?: string }): Promise<ClientUser[]> {
+    const store = initMockStore();
+    let clients = [...store.clients];
+
+    if (params?.search) {
+      const q = params.search.toLowerCase().trim();
+      clients = clients.filter(
+        (c) =>
+          c.fullName.toLowerCase().includes(q) ||
+          c.email.toLowerCase().includes(q) ||
+          (c.phone && c.phone.toLowerCase().includes(q)) ||
+          (c.academyName && c.academyName.toLowerCase().includes(q))
+      );
+    }
+
+    if (params?.planId && params.planId !== "all") {
+      clients = clients.filter((c) => c.subscription.planId === params.planId);
+    }
+
+    if (params?.status && params.status !== "all") {
+      clients = clients.filter((c) => c.subscription.status === params.status);
+    }
+
+    // Sort by createdAt descending (newest registered first)
+    return clients.sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  },
+
+  async getClientById(id: string): Promise<ClientUser | null> {
+    const store = initMockStore();
+    const client = store.clients.find((c) => c.id === id);
+    return client ? JSON.parse(JSON.stringify(client)) : null;
+  },
+
+  async getClientByEmail(email: string): Promise<ClientUser | null> {
+    const store = initMockStore();
+    const client = store.clients.find((c) => c.email.toLowerCase() === email.toLowerCase());
+    return client ? JSON.parse(JSON.stringify(client)) : null;
+  },
+
+  async saveClient(clientData: {
+    id?: string;
+    email: string;
+    fullName: string;
+    academyName?: string | null;
+    phone?: string | null;
+    planId?: SubscriptionPlanId;
+    subscription?: Partial<ClientUser["subscription"]>;
+    notes?: string | null;
+  }): Promise<ClientUser> {
+    const store = initMockStore();
+    const existingIndex = store.clients.findIndex(
+      (c) => c.email.toLowerCase() === clientData.email.toLowerCase()
+    );
+
+    const defaultSub = getPlanPermissions(clientData.planId || "free");
+    const mergedSub = clientData.subscription
+      ? { ...defaultSub, ...clientData.subscription }
+      : defaultSub;
+
+    if (existingIndex >= 0) {
+      const existing = store.clients[existingIndex];
+      const updated: ClientUser = {
+        ...existing,
+        fullName: clientData.fullName || existing.fullName,
+        academyName: clientData.academyName !== undefined ? clientData.academyName : existing.academyName,
+        phone: clientData.phone !== undefined ? clientData.phone : existing.phone,
+        notes: clientData.notes !== undefined ? clientData.notes : existing.notes,
+        subscription: mergedSub,
+        updatedAt: new Date().toISOString(),
+      };
+      store.clients[existingIndex] = updated;
+      return JSON.parse(JSON.stringify(updated));
+    }
+
+    const newClient: ClientUser = {
+      id: clientData.id || `client-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      email: clientData.email,
+      fullName: clientData.fullName,
+      academyName: clientData.academyName || "My Academy",
+      phone: clientData.phone || null,
+      role: "client",
+      subscription: mergedSub,
+      createdAt: new Date().toISOString(),
+      notes: clientData.notes || null,
+    };
+
+    store.clients.unshift(newClient);
+    return JSON.parse(JSON.stringify(newClient));
+  },
+
+  async updateClient(id: string, updates: Partial<ClientUser>): Promise<ClientUser | null> {
+    const store = initMockStore();
+    const index = store.clients.findIndex((c) => c.id === id);
+    if (index === -1) return null;
+
+    const current = store.clients[index];
+    const updated: ClientUser = {
+      ...current,
+      ...updates,
+      id: current.id, // Preserve id
+      role: "client",
+      subscription: updates.subscription
+        ? { ...current.subscription, ...updates.subscription }
+        : current.subscription,
+      updatedAt: new Date().toISOString(),
+    };
+
+    store.clients[index] = updated;
+    return JSON.parse(JSON.stringify(updated));
+  },
+
+  async deleteClient(id: string): Promise<boolean> {
+    const store = initMockStore();
+    const prevLen = store.clients.length;
+    store.clients = store.clients.filter((c) => c.id !== id);
+    return store.clients.length < prevLen;
   },
 };
