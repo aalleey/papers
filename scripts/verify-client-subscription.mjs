@@ -18,6 +18,13 @@ async function main() {
   assert.strictEqual(meData1.client, null, "Should return client: null when unauthenticated");
   console.log("   --> PASS: Unauthenticated visitor correctly reported as null");
 
+  console.log("\n1b. Testing: Locked /api/paper/questions while logged out...");
+  const lockedQuestionsRes = await fetch(`${BASE_URL}/api/paper/questions`);
+  assert.strictEqual(lockedQuestionsRes.status, 401, "Should return 401 for unauthenticated request to /api/paper/questions");
+  const lockedQuestionsData = await lockedQuestionsRes.json();
+  assert.strictEqual(lockedQuestionsData.requireLogin, true, "Should flag requireLogin: true");
+  console.log("   --> PASS: /api/paper/questions is strictly locked (401 Unauthorized) when logged out!");
+
   // 2. Signup a new client (Free Plan)
   console.log("\n2. Testing: Client signup (Default Free Plan)...");
   const testEmail = `educator_${Date.now()}@testacademy.pk`;
@@ -58,6 +65,16 @@ async function main() {
   const meData2 = await meRes2.json();
   assert.strictEqual(meData2.client?.email, testEmail);
   console.log("   --> PASS: Client session verified via cookie!");
+
+  console.log("\n3b. Testing: Unlocked /api/paper/questions with client session cookie...");
+  const unlockedRes = await fetch(`${BASE_URL}/api/paper/questions`, {
+    headers: { Cookie: clientCookie },
+  });
+  assert.strictEqual(unlockedRes.status, 200, "Should return 200 for authenticated client");
+  const unlockedData = await unlockedRes.json();
+  assert.ok(Array.isArray(unlockedData.chapters), "Should return chapters array");
+  assert.ok(Array.isArray(unlockedData.questions), "Should return questions array");
+  console.log(`   --> PASS: /api/paper/questions successfully unlocked! Loaded ${unlockedData.chapters.length} chapters and ${unlockedData.questions.length} questions.`);
 
   // 4. Upgrade to 'pay_as_you_go' (Go as you pay - Rs. 30)
   console.log("\n4. Testing: Upgrade to 'pay_as_you_go' (Rs. 30 per paper)...");

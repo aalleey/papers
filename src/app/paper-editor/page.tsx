@@ -43,6 +43,7 @@ export default function PaperEditorPage() {
     "Choose a subscription plan to generate board-standard papers with your academy branding and answer keys."
   );
   const [subModalHighlight, setSubModalHighlight] = useState<SubscriptionPlanId | undefined>("standard");
+  const [authChecked, setAuthChecked] = useState(false);
 
   // Questions state
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -95,59 +96,61 @@ export default function PaperEditorPage() {
   // Print dropdown mode
   const [printMode, setPrintMode] = useState<"all" | "questions" | "key">("all");
 
-  // 1. Initial Load: Retrieve selected questions from sessionStorage or load default set
+  // 1. Load editor data helper function
+  async function loadEditorData() {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/paper/questions?chapter_id=68fc022a-f4b1-53f8-a133-2946135d88db");
+      const data = await res.json();
+      if (data.questions?.length) {
+        setBankQuestions(data.questions);
+      }
+
+      // Check sessionStorage
+      const stored = sessionStorage.getItem("papermaker_selected_questions");
+      const storedLang = sessionStorage.getItem("papermaker_language_mode");
+      if (storedLang === "Urdu" || storedLang === "English" || storedLang === "Bilingual") {
+        setLanguageMode(storedLang);
+      }
+
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setQuestions(parsed);
+            const firstQ = parsed[0];
+            if (firstQ?.chapter_id && data.chapters) {
+              const matchCh = data.chapters.find((c: any) => c.id === firstQ.chapter_id);
+              if (matchCh) {
+                setSyllabusText(`Unit-${matchCh.number} ${matchCh.title}`);
+              }
+            }
+            return;
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      // Default set matching Chapter 2
+      if (data.questions?.length) {
+        const defaultMcqs = data.questions.filter((q: Question) => q.type === "mcq").slice(0, 7);
+        const defaultShorts = data.questions.filter((q: Question) => q.type === "short").slice(0, 5);
+        const defaultLongs = data.questions.filter((q: Question) => q.type === "long").slice(0, 1);
+        setQuestions([...defaultMcqs, ...defaultShorts, ...defaultLongs]);
+      }
+    } catch (err) {
+      console.error("Failed to load questions:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Initial Load: Check client authentication
   useEffect(() => {
-    async function loadData() {
+    async function init() {
       try {
         setLoading(true);
-        const res = await fetch("/api/paper/questions?chapter_id=68fc022a-f4b1-53f8-a133-2946135d88db");
-        const data = await res.json();
-        if (data.questions?.length) {
-          setBankQuestions(data.questions);
-        }
-
-        // Check sessionStorage
-        const stored = sessionStorage.getItem("papermaker_selected_questions");
-        const storedLang = sessionStorage.getItem("papermaker_language_mode");
-        if (storedLang === "Urdu" || storedLang === "English" || storedLang === "Bilingual") {
-          setLanguageMode(storedLang);
-        }
-
-        if (stored) {
-          try {
-            const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              setQuestions(parsed);
-              const firstQ = parsed[0];
-              if (firstQ?.chapter_id && data.chapters) {
-                const matchCh = data.chapters.find((c: any) => c.id === firstQ.chapter_id);
-                if (matchCh) {
-                  setSyllabusText(`Unit-${matchCh.number} ${matchCh.title}`);
-                }
-              }
-              return;
-            }
-          } catch {
-            // ignore
-          }
-        }
-
-        // Default set matching Chapter 2
-        if (data.questions?.length) {
-          const defaultMcqs = data.questions.filter((q: Question) => q.type === "mcq").slice(0, 7);
-          const defaultShorts = data.questions.filter((q: Question) => q.type === "short").slice(0, 5);
-          const defaultLongs = data.questions.filter((q: Question) => q.type === "long").slice(0, 1);
-          setQuestions([...defaultMcqs, ...defaultShorts, ...defaultLongs]);
-        }
-      } catch (err) {
-        console.error("Failed to load questions:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    async function loadClientUser() {
-      try {
         const res = await fetch("/api/auth/client/me");
         const data = await res.json();
         if (data.client) {
@@ -155,14 +158,20 @@ export default function PaperEditorPage() {
           if (data.client.academyName && data.client.subscription.canCustomBranding) {
             setInstitutionName(data.client.academyName);
           }
+          await loadEditorData();
+        } else {
+          setClientUser(null);
+          setLoading(false);
         }
       } catch (err) {
         console.error("Failed to load client user:", err);
+        setLoading(false);
+      } finally {
+        setAuthChecked(true);
       }
     }
 
-    loadData();
-    loadClientUser();
+    init();
   }, []);
 
   async function handleLogout() {
@@ -232,12 +241,149 @@ export default function PaperEditorPage() {
     setQuestions((prev) => prev.filter((q) => q.id !== id));
   };
 
-  if (loading) {
+  if (!authChecked || (loading && clientUser)) {
     return (
       <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6 text-slate-700">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
         <h2 className="text-lg font-bold text-slate-800">Formatting Examination Paper...</h2>
         <p className="text-xs text-slate-500 mt-1">Rendering layout from Paper Preview &amp; Print</p>
+      </div>
+    );
+  }
+
+  // LOCKED SCREEN: Shown when user is not logged in
+  if (authChecked && !clientUser) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 sm:p-6 text-white relative overflow-hidden">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-blue-600/20 via-indigo-600/20 to-teal-500/15 blur-3xl pointer-events-none rounded-full" />
+
+        <div className="relative max-w-lg w-full bg-slate-900/95 backdrop-blur-xl border border-blue-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+          <div className="relative mx-auto w-20 h-20">
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-amber-500 to-rose-600 blur-lg opacity-60 animate-pulse" />
+            <div className="relative w-full h-full rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-center shadow-xl ring-4 ring-blue-500/30">
+              <Lock className="w-9 h-9 text-white stroke-[2.5]" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-amber-500/15 text-amber-300 border border-amber-500/30">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Authentication Required &bull; Everything Locked</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Examination Paper Editor is Locked
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-sm mx-auto">
+              Please sign in with your educator account to customize questions, edit institution headers, and print examination papers.
+            </p>
+          </div>
+
+          <div className="space-y-2.5 pt-2">
+            <button
+              onClick={() => setShowAuthModal(true)}
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm shadow-xl shadow-blue-950/50 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              id="btn-editor-lock-login"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Log In to Unlock Paper Editor</span>
+            </button>
+
+            <div className="grid grid-cols-2 gap-2 text-xs font-bold">
+              <Link
+                href="/pricing"
+                className="py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span>View Plans</span>
+              </Link>
+              <Link
+                href="/select-questions"
+                className="py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Question Bank</span>
+              </Link>
+            </div>
+
+            <div className="pt-4 border-t border-slate-800 text-left">
+              <span className="text-[11px] font-bold text-slate-400 block mb-2 text-center">
+                ⚡ Instant 1-Click Sandbox Login:
+              </span>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await fetch("/api/auth/client/subscription", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          planId: "standard",
+                          email: "demo.teacher@paperwala.world",
+                          fullName: "Professor Usman Khan",
+                          academyName: "Apex Science Academy Lahore",
+                        }),
+                      });
+                      const d = await res.json();
+                      if (d.client) {
+                        setClientUser(d.client);
+                        if (d.client.academyName && d.client.subscription.canCustomBranding) {
+                          setInstitutionName(d.client.academyName);
+                        }
+                        await loadEditorData();
+                      }
+                    } catch (e) {
+                      console.error("Demo login failed", e);
+                    }
+                  }}
+                  className="p-2.5 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-blue-300 text-xs font-extrabold transition-all text-center"
+                >
+                  Standard Plan Demo
+                </button>
+
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await fetch("/api/auth/client/subscription", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          planId: "free",
+                          email: "free.teacher@paperwala.world",
+                          fullName: "Free Tier Educator",
+                          academyName: "Government High School",
+                        }),
+                      });
+                      const d = await res.json();
+                      if (d.client) {
+                        setClientUser(d.client);
+                        await loadEditorData();
+                      }
+                    } catch (e) {
+                      console.error("Demo login failed", e);
+                    }
+                  }}
+                  className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition-all text-center"
+                >
+                  Free Plan Demo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Client Auth Modal */}
+        <ClientAuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={async (user) => {
+            setClientUser(user);
+            setShowAuthModal(false);
+            if (user.academyName && user.subscription.canCustomBranding) {
+              setInstitutionName(user.academyName);
+            }
+            await loadEditorData();
+          }}
+        />
       </div>
     );
   }

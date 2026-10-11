@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   BookOpen,
@@ -25,11 +25,20 @@ import {
   Award,
   Zap,
   Crown,
+  LogIn,
+  LogOut,
+  User,
+  Lock,
 } from "lucide-react";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
+import { ClientAuthModal } from "@/components/ClientAuthModal";
+import { ClientUser } from "@/lib/types";
 
 export default function Home() {
+  const [clientUser, setClientUser] = useState<ClientUser | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
   // Interactive preview state for the Hero Mock Paper
   const [heroLang, setHeroLang] = useState<"Bilingual" | "English" | "Urdu">("Bilingual");
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
@@ -101,6 +110,30 @@ export default function Home() {
     ],
   };
 
+  useEffect(() => {
+    async function loadClient() {
+      try {
+        const res = await fetch("/api/auth/client/me");
+        const data = await res.json();
+        if (data.client) {
+          setClientUser(data.client);
+        }
+      } catch (err) {
+        console.error("Failed to load client on home:", err);
+      }
+    }
+    loadClient();
+  }, []);
+
+  async function handleLogout() {
+    try {
+      await fetch("/api/auth/client/logout", { method: "POST" });
+      setClientUser(null);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white font-sans">
       {/* Inject JSON-LD Schema for Search Engines */}
@@ -158,6 +191,32 @@ export default function Home() {
 
           {/* Action CTAs */}
           <div className="flex items-center gap-3">
+            {clientUser ? (
+              <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold shadow-xs">
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-slate-200">{clientUser.fullName.split(" ")[0]}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold border border-emerald-500/30">
+                  {clientUser.subscription.planName}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="p-1 text-slate-500 hover:text-rose-400 transition-colors ml-0.5"
+                  title="Log Out"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                id="nav-client-login-btn"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-bold transition-all shadow-sm"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Client Login</span>
+              </button>
+            )}
+
             <Link
               href="/pricing"
               id="nav-pricing-btn"
@@ -914,6 +973,16 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Client Authentication Modal */}
+      <ClientAuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={(user) => {
+          setClientUser(user);
+          setShowAuthModal(false);
+        }}
+      />
     </div>
   );
 }

@@ -98,76 +98,93 @@ export default function SelectQuestionsPage() {
     longs: 2,
   });
 
-  // 1. Initial Load: Fetch Chapter 2 (or chapter specified in URL)
+  const [authChecked, setAuthChecked] = useState(false);
+
+  // Load questions for a specific chapter (Only accessible if logged in)
+  async function loadQuestionsForChapter(chapterOverride?: string) {
+    try {
+      setLoading(true);
+      const searchParams = new URLSearchParams(window.location.search);
+      const urlChap = searchParams.get("chapter");
+      const urlChapId = searchParams.get("chapter_id");
+
+      let initialChapterId = chapterOverride || urlChapId || "68fc022a-f4b1-53f8-a133-2946135d88db"; // Default Chapter 2
+      if (urlChap === "1") initialChapterId = "81fef04e-6a53-5018-9051-fdb1c36775d9";
+      if (urlChap === "8") initialChapterId = "ac5b38de-123c-51fc-a96b-1ecaff9762ce";
+      if (urlChap === "2") initialChapterId = "68fc022a-f4b1-53f8-a133-2946135d88db";
+
+      const res = await fetch(`/api/paper/questions?chapter_id=${initialChapterId}`);
+      if (res.status === 401) {
+        setClientUser(null);
+        setAllQuestions([]);
+        return;
+      }
+
+      const data = await res.json();
+      if (data.chapters?.length) {
+        setChapters(data.chapters);
+        const activeCh = data.chapters.find((c: Chapter) => c.id === initialChapterId) || data.chapters[0];
+        setCurrentChapter(activeCh);
+      }
+
+      if (data.topics?.length) {
+        setTopics(data.topics);
+      }
+
+      if (data.questions?.length) {
+        setAllQuestions(data.questions);
+      }
+
+      // Check if there are previously selected questions in sessionStorage
+      const saved = sessionStorage.getItem("papermaker_selected_ids");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setSelectedIds(new Set(parsed));
+          }
+        } catch {
+          // ignore
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load questions:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // 1. Initial Load: Check Auth First (Lock everything until user is logged in)
   useEffect(() => {
-    async function loadData() {
+    async function init() {
       try {
         setLoading(true);
-        const searchParams = new URLSearchParams(window.location.search);
-        const urlChap = searchParams.get("chapter");
-        const urlChapId = searchParams.get("chapter_id");
-
-        let initialChapterId = urlChapId || "68fc022a-f4b1-53f8-a133-2946135d88db"; // Default Chapter 2
-        if (urlChap === "1") initialChapterId = "81fef04e-6a53-5018-9051-fdb1c36775d9";
-        if (urlChap === "8") initialChapterId = "ac5b38de-123c-51fc-a96b-1ecaff9762ce";
-        if (urlChap === "2") initialChapterId = "68fc022a-f4b1-53f8-a133-2946135d88db";
-
-        const res = await fetch(`/api/paper/questions?chapter_id=${initialChapterId}`);
-        const data = await res.json();
-
-        if (data.chapters?.length) {
-          setChapters(data.chapters);
-          const activeCh = data.chapters.find((c: Chapter) => c.id === initialChapterId) || data.chapters[0];
-          setCurrentChapter(activeCh);
-        }
-
-        if (data.topics?.length) {
-          setTopics(data.topics);
-        }
-
-        if (data.questions?.length) {
-          setAllQuestions(data.questions);
-        }
-
-        // Check if there are previously selected questions in sessionStorage
-        const saved = sessionStorage.getItem("papermaker_selected_ids");
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              setSelectedIds(new Set(parsed));
-            }
-          } catch {
-            // ignore
-          }
+        const authRes = await fetch("/api/auth/client/me");
+        const authData = await authRes.json();
+        if (authData.client) {
+          setClientUser(authData.client);
+          await loadQuestionsForChapter();
+        } else {
+          setClientUser(null);
+          setLoading(false);
         }
       } catch (err) {
-        console.error("Failed to load questions:", err);
-      } finally {
+        console.error("Failed to check auth state:", err);
         setLoading(false);
+      } finally {
+        setAuthChecked(true);
       }
     }
 
-    async function loadClientUser() {
-      try {
-        const res = await fetch("/api/auth/client/me");
-        const data = await res.json();
-        if (data.client) {
-          setClientUser(data.client);
-        }
-      } catch (err) {
-        console.error("Failed to load client user:", err);
-      }
-    }
-
-    loadData();
-    loadClientUser();
+    init();
   }, []);
 
   async function handleLogout() {
     try {
       await fetch("/api/auth/client/logout", { method: "POST" });
       setClientUser(null);
+      setAllQuestions([]);
+      setSelectedIds(new Set());
     } catch (e) {
       console.error("Failed to log out client", e);
     }
@@ -177,22 +194,10 @@ export default function SelectQuestionsPage() {
     const ch = chapters.find((c) => c.id === chapterId);
     if (!ch) return;
     setCurrentChapter(ch);
-    setLoading(true);
-    try {
-      const newUrl = new URL(window.location.href);
-      newUrl.searchParams.set("chapter_id", ch.id);
-      window.history.replaceState({}, "", newUrl.toString());
-
-      const res = await fetch(`/api/paper/questions?chapter_id=${ch.id}`);
-      const data = await res.json();
-      if (data.topics) setTopics(data.topics);
-      if (data.questions) setAllQuestions(data.questions);
-      setSelectedTopicFilters(new Set(["ALL"]));
-    } catch (e) {
-      console.error("Failed to load chapter questions", e);
-    } finally {
-      setLoading(false);
-    }
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set("chapter_id", ch.id);
+    window.history.replaceState({}, "", newUrl.toString());
+    await loadQuestionsForChapter(ch.id);
   }
 
   // Sync selection to sessionStorage
@@ -356,7 +361,7 @@ export default function SelectQuestionsPage() {
     router.push("/paper-editor");
   };
 
-  if (loading) {
+  if (!authChecked || (loading && clientUser)) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex flex-col items-center justify-center p-6 text-white">
         <div className="relative">
@@ -370,8 +375,143 @@ export default function SelectQuestionsPage() {
           <span className="font-urdu text-emerald-400 text-lg">پیپر والا</span>
         </h2>
         <p className="text-xs text-slate-400 mt-2 font-medium">
-          Fetching Class 10 Computer Science {currentChapter ? `Unit-${currentChapter.number}` : "Chapter 2"}
+          Fetching Punjab Board Curriculum &bull; Class 10
         </p>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // LOCKED PORTAL SCREEN: Shown when user is not logged in
+  // =========================================================================
+  if (authChecked && !clientUser) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 flex flex-col items-center justify-center p-4 sm:p-6 text-white relative overflow-hidden">
+        {/* Glow ambient background effects */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-tr from-emerald-600/20 via-indigo-600/25 to-teal-500/15 blur-3xl pointer-events-none rounded-full" />
+
+        <div className="relative max-w-lg w-full bg-slate-900/95 backdrop-blur-2xl border border-indigo-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+          <div className="relative mx-auto w-20 h-20">
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-amber-500 to-rose-600 blur-lg opacity-60 animate-pulse" />
+            <div className="relative w-full h-full rounded-3xl bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-600 flex items-center justify-center shadow-xl ring-4 ring-amber-500/30">
+              <Lock className="w-9 h-9 text-white stroke-[2.5]" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-amber-500/15 text-amber-300 border border-amber-500/30">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Authentication Required &bull; Everything Locked</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Question Bank &amp; Paper Maker is Locked
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-sm mx-auto">
+              Please sign in with your educator account to access the question bank, select syllabus chapters, and generate board-standard papers.
+            </p>
+          </div>
+
+          <div className="space-y-2.5 pt-2">
+            <button
+              onClick={() => setShowAuthModal(true)}
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm shadow-xl shadow-emerald-950/50 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              id="btn-lock-login"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Log In to Unlock Generator</span>
+            </button>
+
+            <div className="grid grid-cols-2 gap-2 text-xs font-bold">
+              <Link
+                href="/pricing"
+                className="py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span>View Plans</span>
+              </Link>
+              <Link
+                href="/"
+                className="py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Home Page</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Quick 1-Click Demo Testing */}
+          <div className="pt-4 border-t border-slate-800 text-left">
+            <span className="text-[11px] font-bold text-slate-400 block mb-2 text-center">
+              ⚡ Instant 1-Click Sandbox Login:
+            </span>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await fetch("/api/auth/client/subscription", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        planId: "standard",
+                        email: "demo.teacher@paperwala.world",
+                        fullName: "Professor Usman Khan",
+                        academyName: "Apex Science Academy Lahore",
+                      }),
+                    });
+                    const d = await res.json();
+                    if (d.client) {
+                      setClientUser(d.client);
+                      await loadQuestionsForChapter();
+                    }
+                  } catch (e) {
+                    console.error("Demo login failed", e);
+                  }
+                }}
+                className="p-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-extrabold transition-all text-center"
+              >
+                Standard Plan Demo
+              </button>
+
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await fetch("/api/auth/client/subscription", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        planId: "free",
+                        email: "free.teacher@paperwala.world",
+                        fullName: "Free Tier Educator",
+                        academyName: "Government High School",
+                      }),
+                    });
+                    const d = await res.json();
+                    if (d.client) {
+                      setClientUser(d.client);
+                      await loadQuestionsForChapter();
+                    }
+                  } catch (e) {
+                    console.error("Demo login failed", e);
+                  }
+                }}
+                className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition-all text-center"
+              >
+                Free Plan Demo
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Client Auth Modal */}
+        <ClientAuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={async (user) => {
+            setClientUser(user);
+            setShowAuthModal(false);
+            await loadQuestionsForChapter();
+          }}
+        />
       </div>
     );
   }

@@ -1,10 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { getCurrentClient, getCurrentUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-// Public / Teacher Paper Maker API: Fetches curriculum hierarchy and questions
+// Teacher Paper Maker API: Fetches curriculum hierarchy and questions (Locked until login)
 export async function GET(req: NextRequest) {
+  const [clientUser, adminUser] = await Promise.all([
+    getCurrentClient(),
+    getCurrentUser(),
+  ]);
+
+  if (!clientUser && !adminUser) {
+    return NextResponse.json(
+      {
+        error: "Authentication required. Question bank and paper generation are locked until you log in.",
+        requireLogin: true,
+      },
+      { status: 401 }
+    );
+  }
+
   const { searchParams } = new URL(req.url);
   const chapterId = searchParams.get("chapterId") || searchParams.get("chapter_id") || undefined;
   const courseId = searchParams.get("courseId") || searchParams.get("course_id") || undefined;
