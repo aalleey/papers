@@ -20,8 +20,8 @@
 /* Examination Paper Print Styles */
 @media print {
   @page {
-    size: A4 portrait;
-    margin: 8mm 10mm;
+    /* Base default print margin - orientation is governed dynamically by active paper mode */
+    margin: 4mm 6mm;
   }
 
   body {
@@ -60,4 +60,368 @@
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
+
+  /* Fixed Watermark repeating on each printed page */
+  .watermark-container.print-fixed {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: -1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    pointer-events: none !important;
+  }
+
+  /* Fixed Stylish Border repeating on each printed page */
+  .page-frame {
+    position: fixed !important;
+    top: 2mm !important;
+    left: 2mm !important;
+    right: 2mm !important;
+    bottom: 2mm !important;
+    border: 2px solid #000 !important;
+    z-index: 9999 !important;
+    pointer-events: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .page-frame::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    border: 1px solid #000;
+  }
+}
+
+/* --- FEDERAL BOARD STYLES (.fb-table) --- */
+.fb-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1.5px solid #000;
+}
+
+.fb-table th,
+.fb-table td {
+  border: 1px solid #000;
+  padding: 4px 6px !important;
+  vertical-align: top;
+  margin: 0 !important;
+}
+
+.fb-num-col {
+  width: 36px;
+  text-align: center;
+  font-weight: bold;
+  vertical-align: middle !important;
+}
+
+.fb-or-col {
+  width: 38px;
+  text-align: center;
+  background-color: #f2f2f2;
+  font-weight: bold;
+  vertical-align: middle !important;
+}
+
+.fb-question-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fb-eng-part {
+  text-align: left;
+  line-height: 1.35;
+}
+
+.fb-urdu-part {
+  text-align: right;
+  direction: rtl;
+  font-family: var(--font-urdu), "Noto Nastaliq Urdu", serif;
+  line-height: 1.7;
+}
+
+/* --- BILINGUAL TABLE STYLES --- */
+.bilingual-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1px;
+}
+
+.bilingual-table td {
+  border: none;
+  padding: 2px 5px !important;
+  vertical-align: top;
+  line-height: 1.4 !important;
+}
+
+.bilingual-eng {
+  width: 50%;
+  text-align: left !important;
+  direction: ltr !important;
+}
+
+.bilingual-urdu {
+  width: 50%;
+  text-align: right !important;
+  direction: rtl !important;
+  font-family: var(--font-urdu), "Noto Nastaliq Urdu", serif;
+  line-height: 1.75;
+}
+
+/* --- BUBBLE SHEET (OMR GRID) --- */
+.bubble-sheet-container {
+  margin: 2px 0;
+  padding: 0;
+  direction: ltr !important;
+  max-width: 100%;
+}
+
+.bubble-sheet-table {
+  width: 100%;
+  border: 1.5px solid #0d47a1;
+  border-collapse: collapse;
+  background-color: #f8fafc;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  direction: ltr !important;
+}
+
+.bubble-sheet-table td {
+  border: 1px solid #cbd5e1;
+  padding: 3px 2px !important;
+  vertical-align: middle;
+  font-size: 9.5px;
+  text-align: center !important;
+  white-space: nowrap !important;
+  direction: ltr !important;
+}
+
+.q-num-bubble {
+  font-weight: 800;
+  font-family: monospace;
+  color: #0d47a1;
+  margin-right: 3px;
+}
+
+.bubble-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1.2px solid #000;
+  font-size: 7.5px;
+  font-weight: bold;
+  line-height: 1;
+  margin: 0 1px;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* --- WATERMARK STYLES --- */
+.watermark-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.watermark-text {
+  font-size: 54px;
+  font-weight: 900;
+  color: #000;
+  transform: rotate(-35deg);
+  white-space: normal;
+  text-align: center;
+  max-width: 85%;
+  word-wrap: break-word;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.watermark-img {
+  max-width: 70%;
+  max-height: 60%;
+  object-fit: contain;
+  filter: grayscale(100%);
+}
+
+/* --- STYLISH PAGE BORDER --- */
+.page-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid #000;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.page-frame::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  border: 1px solid #000;
+}
+
+/* --- DUPLEX 2-UP AUTO DUPLICATION CUT LINE & SIDE-BY-SIDE LAYOUT --- */
+.duplex-container {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 16px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  align-items: start !important;
+  box-sizing: border-box !important;
+}
+
+.duplex-column {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+}
+
+.cut-line-indicator {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.cut-line-indicator::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-bottom: 2px dashed #000;
+}
+
+.cut-line-indicator span {
+  position: relative;
+  background: #fff;
+  padding: 0 10px;
+  font-size: 9pt;
+  font-weight: bold;
+  color: #222;
+}
+
+/* Print specific rules for 2-up Duplex side-by-side on A4 */
+@media print {
+  .duplex-container {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 6mm !important;
+    row-gap: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .duplex-column {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .duplex-column:first-child {
+    padding-right: 3mm !important;
+    border-right: 1.5px dashed #000 !important;
+  }
+
+  .duplex-column:last-child {
+    padding-left: 3mm !important;
+  }
+
+  .compact-2up {
+    padding: 2.5mm 3.5mm !important;
+    font-size: 8.5pt !important;
+    line-height: 1.2 !important;
+    border: 1.5px solid #000 !important;
+    box-shadow: none !important;
+  }
+
+  .compact-2up .paper-table {
+    font-size: 8pt !important;
+  }
+
+  .compact-2up .paper-table tr {
+    height: 18px !important;
+  }
+
+  .compact-2up .paper-table td {
+    padding: 1px 3px !important;
+  }
+
+  .compact-2up .instructions-panel {
+    padding: 1px 0 !important;
+    font-size: 7.5pt !important;
+  }
+
+  .compact-2up .objective-section {
+    padding-top: 1px !important;
+    font-size: 8.5pt !important;
+  }
+
+  .compact-2up .subjective-section {
+    padding-top: 2px !important;
+    font-size: 8.5pt !important;
+  }
+
+  .compact-2up .bubble-sheet-table td {
+    padding: 1px !important;
+    font-size: 7.5pt !important;
+  }
+
+  .compact-2up .bubble-circle {
+    width: 10px !important;
+    height: 10px !important;
+    font-size: 6.5pt !important;
+  }
+}
+
+/* --- CUSTOM HEADER BANNER --- */
+.custom-header-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0px;
+}
+
+.custom-header-img-rendered {
+  height: auto;
+  display: block;
+  object-fit: contain;
 }

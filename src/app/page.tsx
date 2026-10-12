@@ -38,7 +38,6 @@ import { ClientUser, isPaidSubscriber } from "@/lib/types";
 export default function Home() {
   const [clientUser, setClientUser] = useState<ClientUser | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authModalMode, setAuthModalMode] = useState<"login" | "signup">("signup");
 
   // Interactive preview state for the Hero Mock Paper
   const [heroLang, setHeroLang] = useState<"Bilingual" | "English" | "Urdu">("Bilingual");
@@ -94,8 +93,7 @@ export default function Home() {
     }
   }
 
-  const openAuth = (mode: "login" | "signup") => {
-    setAuthModalMode(mode);
+  const openAuth = () => {
     setShowAuthModal(true);
   };
 
@@ -177,19 +175,19 @@ export default function Home() {
             ) : (
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => openAuth("login")}
+                  onClick={() => openAuth()}
                   id="nav-client-login-btn"
                   className="px-3.5 py-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 text-xs font-bold transition-all"
                 >
                   Sign In
                 </button>
-                <button
-                  onClick={() => openAuth("signup")}
+                <Link
+                  href="/register"
                   id="nav-client-signup-btn"
                   className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-black transition-all"
                 >
                   Register Account
-                </button>
+                </Link>
               </div>
             )}
 
@@ -359,7 +357,7 @@ export default function Home() {
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                       <button
-                        onClick={() => openAuth("login")}
+                        onClick={() => openAuth()}
                         id="hero-login-btn"
                         className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200 transition-colors"
                       >
@@ -822,12 +820,12 @@ export default function Home() {
                 </Link>
               )}
               {!clientUser && (
-                <button
-                  onClick={() => openAuth("signup")}
-                  className="px-6 py-3.5 rounded-2xl bg-emerald-800/80 hover:bg-emerald-800 text-white font-bold text-sm border border-emerald-500/40 transition-all"
+                <Link
+                  href="/register"
+                  className="px-6 py-3.5 rounded-2xl bg-emerald-800/80 hover:bg-emerald-800 text-white font-bold text-sm border border-emerald-500/40 transition-all inline-flex items-center justify-center"
                 >
                   Register Educator Account
-                </button>
+                </Link>
               )}
             </div>
           </div>
@@ -883,7 +881,6 @@ export default function Home() {
       {/* Client Authentication Modal */}
       <ClientAuthModal
         isOpen={showAuthModal}
-        initialMode={authModalMode}
         onClose={() => setShowAuthModal(false)}
         onSuccess={(user) => {
           setClientUser(user);
