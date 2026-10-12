@@ -37,10 +37,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/admin/login`,
+      url: `${baseUrl}/login`,
       lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.4,
+      priority: 0.5,
     },
   ];
 }

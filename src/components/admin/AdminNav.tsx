@@ -41,22 +41,16 @@ export function AdminNav({ user }: AdminNavProps) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // If on login page, do not render sidebar
-  const isLoginPage = pathname === "/admin/login";
-
   useEffect(() => {
-    if (!isLoginPage && (!user || user.role !== "admin")) {
-      router.push("/admin/login");
+    if (!user || user.role !== "admin") {
+      router.push("/login");
     }
-  }, [user, isLoginPage, router]);
-
-  if (isLoginPage) {
-    return null;
-  }
+  }, [user, router]);
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/admin/login");
+    await fetch("/api/auth/client/logout", { method: "POST" });
+    router.push("/login");
     router.refresh();
   };
 

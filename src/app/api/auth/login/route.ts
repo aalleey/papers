@@ -44,8 +44,12 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true, user: authData.user });
       }
 
-      // If Supabase returned an error and it's not a demo fallback email
-      if (email !== "admin@papermaker.pk" && email !== "admin@example.com") {
+      // If Supabase returned an error and it's not a fallback admin email
+      if (
+        email.toLowerCase() !== "ali.khaliq50@gmail.com" &&
+        email !== "admin@papermaker.pk" &&
+        email !== "admin@example.com"
+      ) {
         return NextResponse.json(
           { error: authError?.message || "Invalid email or password" },
           { status: 401 }
@@ -53,9 +57,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2. Fallback / Seed Admin verification for local dev
-    // Accept demo admin credentials
+    // 2. Default Admin verification
     if (
+      (email.toLowerCase() === "ali.khaliq50@gmail.com" && password === "laptop321") ||
       (email === "admin@papermaker.pk" || email === "admin@example.com" || email.startsWith("admin")) &&
       (password === "admin123" || password.length >= 6)
     ) {
@@ -64,7 +68,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: "Invalid email or password. Use admin@papermaker.pk / admin123" },
+      { error: "Invalid email or password." },
       { status: 401 }
     );
   } catch (error) {

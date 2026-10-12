@@ -33,6 +33,7 @@ export function ClientAuthModal({
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [adminClient, setAdminClient] = useState<ClientUser | null>(null);
 
   if (!isOpen) return null;
 
@@ -59,6 +60,16 @@ export function ClientAuthModal({
       }
 
       if (data.client) {
+        // If default admin, give options
+        if (
+          data.isAdmin ||
+          data.client?.email?.toLowerCase() === "ali.khaliq50@gmail.com" ||
+          cleanIdentifier.toLowerCase() === "ali.khaliq50@gmail.com"
+        ) {
+          setAdminClient(data.client);
+          return;
+        }
+
         if (
           data.client?.subscription?.status === "pending_verification" ||
           data.client?.isVerified === false ||
@@ -115,8 +126,50 @@ export function ClientAuthModal({
           </div>
         )}
 
-        {/* Sign In Form */}
-        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+        {adminClient ? (
+          <div className="space-y-5 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 text-white flex items-center justify-center shadow-lg shadow-indigo-600/30">
+              <ShieldCheck className="w-7 h-7" />
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="text-lg font-black text-slate-900">
+                Welcome, Ali Khaliq!
+              </h3>
+              <p className="text-xs text-slate-500">
+                Logged in with Administrator privileges. Where would you like to go?
+              </p>
+            </div>
+
+            <div className="space-y-2.5 pt-1">
+              <Link
+                href="/admin/users"
+                onClick={onClose}
+                className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-500 hover:to-purple-600 text-white font-black text-xs rounded-xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 group transition-all"
+              >
+                <ShieldCheck className="w-4 h-4 text-indigo-200" />
+                <span>Admin Panel</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  onSuccess(adminClient);
+                  onClose();
+                }}
+                className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-black text-xs rounded-xl shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 group transition-all cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 text-emerald-200" />
+                <span>Continue to Paper Generator</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Sign In Form */}
+            <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
             <label className="block font-bold text-slate-700 mb-1">
               Mobile / WhatsApp or Email <span className="text-rose-500">*</span>
@@ -196,6 +249,8 @@ export function ClientAuthModal({
             </Link>
           </span>
         </div>
+        </>
+        )}
       </div>
     </div>
   );

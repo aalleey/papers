@@ -29,6 +29,32 @@ import { createAdminSupabaseClient } from "./supabase/admin";
 
 export const SEED_CLIENTS: ClientUser[] = [
   {
+    id: "admin-client-ali",
+    email: "ali.khaliq50@gmail.com",
+    fullName: "Ali Khaliq",
+    academyName: "PaperWala Administration",
+    phone: "0300-1234567",
+    password: "laptop321",
+    role: "client",
+    subscription: {
+      planId: "annual",
+      planName: "Administrator Premium Plan",
+      status: "active",
+      expiresAt: new Date(Date.now() + 3650 * 24 * 60 * 60 * 1000).toISOString(),
+      paperCredits: 999999,
+      canAutoBoardPattern: true,
+      canCustomBranding: true,
+      canExportAnswerKey: true,
+      canFullBoardPaper: true,
+      canUnlimitedExport: true,
+      canAccessAllClasses: true,
+      maxQuestionsPerPaper: 100,
+    },
+    createdAt: new Date().toISOString(),
+    isVerified: true,
+    notes: "Default System Administrator Account",
+  },
+  {
     id: "client-seed-001",
     email: "usman.khan@apexacademy.edu.pk",
     fullName: "Professor Usman Khan",
@@ -1205,7 +1231,11 @@ export const db = {
     }
 
     const store = initMockStore();
-    const client = store.clients.find((c) => c.email.toLowerCase() === email.toLowerCase());
+    let client = store.clients.find((c) => c.email.toLowerCase() === email.toLowerCase());
+    if (!client && email.toLowerCase() === "ali.khaliq50@gmail.com") {
+      client = SEED_CLIENTS[0];
+      store.clients.unshift(client);
+    }
     return client ? JSON.parse(JSON.stringify(client)) : null;
   },
 

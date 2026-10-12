@@ -52,6 +52,24 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     }
   }
 
+  // 3. Check client cookie for default admin user
+  const clientCookie = cookieStore.get(CLIENT_COOKIE)?.value;
+  if (clientCookie) {
+    try {
+      const parsed = JSON.parse(clientCookie);
+      if (parsed && parsed.email && parsed.email.toLowerCase() === "ali.khaliq50@gmail.com") {
+        return {
+          id: parsed.id || "admin-client-ali",
+          email: parsed.email,
+          role: "admin",
+          fullName: parsed.fullName || "Ali Khaliq",
+        };
+      }
+    } catch {
+      // invalid cookie
+    }
+  }
+
   return null;
 }
 
@@ -61,11 +79,12 @@ export async function isCurrentUserAdmin(): Promise<boolean> {
 }
 
 export async function createAdminSession(email: string): Promise<AuthUser> {
+  const isAli = email.toLowerCase() === "ali.khaliq50@gmail.com";
   const user: AuthUser = {
-    id: "admin-dev-user-0001",
+    id: isAli ? "admin-client-ali" : "admin-dev-user-0001",
     email,
     role: "admin",
-    fullName: "System Administrator",
+    fullName: isAli ? "Ali Khaliq" : "System Administrator",
   };
 
   const cookieStore = await cookies();

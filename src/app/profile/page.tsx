@@ -56,6 +56,15 @@ export default function ProfilePage() {
             </span>
           </Link>
           <div className="flex items-center gap-2">
+            {client?.email?.toLowerCase() === "ali.khaliq50@gmail.com" && (
+              <Link
+                href="/admin/users"
+                id="btn-profile-admin-panel"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black shadow-sm"
+              >
+                Admin Panel
+              </Link>
+            )}
             <Link
               href="/select-questions"
               id="btn-profile-new-paper"

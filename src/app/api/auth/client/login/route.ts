@@ -15,7 +15,67 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Password is required." }, { status: 400 });
     }
 
-    // 1. Check if user exists in database
+    // 1. Check if user is the default admin
+    const isDefaultAdmin = email.trim().toLowerCase() === "ali.khaliq50@gmail.com";
+    if (isDefaultAdmin) {
+      if (password !== "laptop321") {
+        return NextResponse.json(
+          { error: "Incorrect password. Please try again." },
+          { status: 401 }
+        );
+      }
+
+      const { createAdminSession } = await import("@/lib/auth");
+      await createAdminSession("ali.khaliq50@gmail.com");
+
+      let existing = await db.getClientByEmail("ali.khaliq50@gmail.com");
+      if (!existing) {
+        existing = await db.saveClient({
+          id: "admin-client-ali",
+          email: "ali.khaliq50@gmail.com",
+          fullName: "Ali Khaliq",
+          academyName: "PaperWala Administration",
+          phone: "0300-1234567",
+          password: "laptop321",
+          planId: "annual",
+          subscription: {
+            planId: "annual",
+            planName: "Administrator Premium Plan",
+            status: "active",
+            expiresAt: new Date(Date.now() + 3650 * 24 * 60 * 60 * 1000).toISOString(),
+            paperCredits: 999999,
+            canAutoBoardPattern: true,
+            canCustomBranding: true,
+            canExportAnswerKey: true,
+            canFullBoardPaper: true,
+            canUnlimitedExport: true,
+            canAccessAllClasses: true,
+            maxQuestionsPerPaper: 100,
+          },
+          isVerified: true,
+        });
+      }
+
+      const client = await createClientSession({
+        id: existing.id,
+        email: existing.email,
+        fullName: existing.fullName,
+        academyName: existing.academyName,
+        phone: existing.phone,
+        password: "laptop321",
+        subscription: existing.subscription,
+        isVerified: true,
+      });
+
+      return NextResponse.json({
+        success: true,
+        client,
+        isAdmin: true,
+        isPendingVerification: false,
+      });
+    }
+
+    // 2. Check if user exists in database
     const existing = await db.getClientByEmail(email);
 
     if (!existing) {
@@ -25,7 +85,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Check password
+    // 3. Check password
     // If account has a stored password, verify it matches
     if (existing.password && existing.password !== password) {
       return NextResponse.json(
@@ -39,7 +99,7 @@ export async function POST(req: NextRequest) {
       await db.updateClient(existing.id, { password });
     }
 
-    // 3. Create active session for the verified client
+    // 4. Create active session for the verified client
     const client = await createClientSession({
       id: existing.id,
       email: existing.email,

@@ -31,6 +31,7 @@ import {
   Bookmark,
   Image as ImageIcon,
   Shield,
+  ShieldCheck,
   Layers,
   Scissors,
 } from "lucide-react";
@@ -682,6 +683,16 @@ export default function PaperEditorPage() {
               <span>View Full Pricing &amp; Comparison</span>
             </Link>
             <div className="flex items-center gap-2">
+              {clientUser?.email?.toLowerCase() === "ali.khaliq50@gmail.com" && (
+                <Link
+                  href="/admin/users"
+                  className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-colors"
+                  title="Open Admin Panel"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Admin Panel</span>
+                </Link>
+              )}
               <Link href="/" className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-colors">
                 Back to Home
               </Link>

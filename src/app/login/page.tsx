@@ -19,11 +19,12 @@ import {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [emailOrPhone, setEmailOrPhone] = useState("");
-  const [password, setPassword] = useState("");
+  const [emailOrPhone, setEmailOrPhone] = useState("ali.khaliq50@gmail.com");
+  const [password, setPassword] = useState("laptop321");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [adminLoggedIn, setAdminLoggedIn] = useState(false);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -43,6 +44,16 @@ export default function LoginPage() {
       const data = await res.json();
       if (!res.ok || data.error) {
         setError(data.error || "Invalid login credentials. Please try again.");
+        return;
+      }
+
+      // If default admin, show choice options
+      if (
+        data.isAdmin ||
+        data.client?.email?.toLowerCase() === "ali.khaliq50@gmail.com" ||
+        emailOrPhone.trim().toLowerCase() === "ali.khaliq50@gmail.com"
+      ) {
+        setAdminLoggedIn(true);
         return;
       }
 
@@ -93,13 +104,64 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="bg-white py-8 px-6 shadow-xl shadow-slate-200/60 rounded-3xl border border-slate-200/80 space-y-6">
-          {error && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-start gap-2">
-              <span className="text-rose-500 font-bold shrink-0">⚠️</span>
-              <span>{error}</span>
+        {adminLoggedIn ? (
+          <div className="bg-white py-8 px-6 sm:px-8 shadow-xl shadow-slate-200/60 rounded-3xl border border-slate-200/80 space-y-6 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700 text-white flex items-center justify-center shadow-lg shadow-indigo-600/30">
+              <ShieldCheck className="w-8 h-8" />
             </div>
-          )}
+
+            <div className="space-y-1.5">
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                Welcome, Ali Khaliq!
+              </h2>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Authenticated as Administrator</span>
+              </div>
+              <p className="text-xs text-slate-500 pt-1">
+                Choose an option below to proceed:
+              </p>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <Link
+                href="/admin/users"
+                id="btn-goto-admin-panel"
+                className="w-full py-3.5 px-5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-black text-sm rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+              >
+                <ShieldCheck className="w-5 h-5 text-indigo-200" />
+                <span>Admin Panel</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <Link
+                href="/select-questions"
+                id="btn-goto-generator"
+                className="w-full py-3.5 px-5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-600 text-white font-black text-sm rounded-xl shadow-lg shadow-emerald-700/25 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+              >
+                <BookOpen className="w-5 h-5 text-emerald-200" />
+                <span>Question Bank &amp; Exam Generator</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 text-center">
+              <Link
+                href="/"
+                className="text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors"
+              >
+                &larr; Back to Homepage
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white py-8 px-6 shadow-xl shadow-slate-200/60 rounded-3xl border border-slate-200/80 space-y-6">
+            {error && (
+              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-start gap-2">
+                <span className="text-rose-500 font-bold shrink-0">⚠️</span>
+                <span>{error}</span>
+              </div>
+            )}
 
           <form onSubmit={handleLogin} className="space-y-4 text-xs">
             <div>
@@ -166,6 +228,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

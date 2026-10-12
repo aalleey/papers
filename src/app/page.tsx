@@ -151,27 +151,40 @@ export default function Home() {
           {/* Action CTAs */}
           <div className="flex items-center gap-3">
             {clientUser ? (
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold shadow-xs">
-                <Link
-                  href="/profile"
-                  id="nav-my-profile-link"
-                  title="My Profile & Paper History"
-                  className="inline-flex items-center gap-2 hover:opacity-90"
-                >
-                  <User className="w-3.5 h-3.5 text-emerald-700" />
-                  <span className="text-slate-800">{clientUser.fullName.split(" ")[0]}</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold">
-                    {clientUser.subscription.planName}
-                  </span>
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="p-1 text-slate-400 hover:text-rose-600 transition-colors ml-0.5"
-                  title="Log Out"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                </button>
-              </div>
+              <>
+                {clientUser.email.toLowerCase() === "ali.khaliq50@gmail.com" && (
+                  <Link
+                    href="/admin/users"
+                    id="nav-admin-panel-btn"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black shadow-xs transition-colors"
+                    title="Open Admin Panel"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 text-indigo-200" />
+                    <span>Admin Panel</span>
+                  </Link>
+                )}
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold shadow-xs">
+                  <Link
+                    href="/profile"
+                    id="nav-my-profile-link"
+                    title="My Profile & Paper History"
+                    className="inline-flex items-center gap-2 hover:opacity-90"
+                  >
+                    <User className="w-3.5 h-3.5 text-emerald-700" />
+                    <span className="text-slate-800">{clientUser.fullName.split(" ")[0]}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold">
+                      {clientUser.subscription.planName}
+                    </span>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="p-1 text-slate-400 hover:text-rose-600 transition-colors ml-0.5"
+                    title="Log Out"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </>
             ) : (
               <div className="flex items-center gap-2">
                 <button
@@ -860,9 +873,6 @@ export default function Home() {
               </Link>
               <Link href="/register" className="hover:text-emerald-700 transition-colors">
                 Register Account
-              </Link>
-              <Link href="/admin/login" className="hover:text-emerald-700 transition-colors">
-                Admin Portal
               </Link>
             </div>
           </div>

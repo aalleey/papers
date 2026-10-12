@@ -32,6 +32,7 @@ import {
   Layers,
   FileText,
   SlidersHorizontal,
+  ShieldCheck,
   X,
   ArrowLeft,
   Settings,
@@ -793,6 +794,19 @@ export default function SelectQuestionsPage() {
 
               {/* Responsive Quick Action Buttons & Client Subscription Badge in Header */}
               <div className="flex flex-wrap items-center gap-2 self-end md:self-auto">
+                {/* Admin Panel Quick Link */}
+                {clientUser?.email?.toLowerCase() === "ali.khaliq50@gmail.com" && (
+                  <Link
+                    href="/admin/users"
+                    id="btn-header-admin-panel"
+                    className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black flex items-center gap-1.5 shadow-2xs transition-colors"
+                    title="Open Admin Panel"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 text-indigo-200" />
+                    <span>Admin Panel</span>
+                  </Link>
+                )}
+
                 {/* Client Subscription Status Badge */}
                 {clientUser ? (
                   <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl p-1 shadow-2xs">

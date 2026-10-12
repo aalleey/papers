@@ -75,8 +75,8 @@ begin
     new.id,
     new.email,
     case
-      -- You can set a specific bootstrap admin email or default to teacher
-      when new.email in ('admin@papermaker.pk', 'admin@example.com') then 'admin'::public.user_role
+      -- Bootstrap admin email
+      when new.email in ('ali.khaliq50@gmail.com', 'admin@papermaker.pk', 'admin@example.com') then 'admin'::public.user_role
       else 'teacher'::public.user_role
     end,
     coalesce(new.raw_user_meta_data->>'full_name', 'Teacher')
