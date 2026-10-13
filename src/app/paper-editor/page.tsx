@@ -793,6 +793,14 @@ export default function PaperEditorPage() {
           {/* Right: Action Buttons */}
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <Link
+              href="/quick-paper"
+              className="px-3 py-1.5 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center gap-1 transition-all shadow-xs"
+              title="Create or Paste Instant Paper"
+            >
+              <span>⚡</span> Quick Paper
+            </Link>
+
+            <Link
               href="/profile"
               className="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1 border border-slate-300 transition-colors"
             >

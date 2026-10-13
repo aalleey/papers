@@ -29,6 +29,7 @@ import {
   User,
   Phone,
   Search,
+  FileText,
 } from "lucide-react";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
@@ -152,6 +153,17 @@ export default function Home() {
           <div className="flex items-center gap-3">
             {clientUser ? (
               <>
+                {/* Quick Paper Link for Signed In Users */}
+                <Link
+                  href="/quick-paper"
+                  id="nav-quick-paper-btn"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black shadow-xs transition-all hover:scale-105"
+                  title="Create or Paste Instant Paper"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                  <span>Quick Paper</span>
+                </Link>
+
                 {clientUser.email.toLowerCase() === "ali.khaliq50@gmail.com" && (
                   <Link
                     href="/admin/users"

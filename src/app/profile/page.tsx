@@ -66,11 +66,19 @@ export default function ProfilePage() {
               </Link>
             )}
             <Link
+              href="/quick-paper"
+              id="btn-profile-quick-paper"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-sm"
+              title="Create or Paste Instant Paper"
+            >
+              <span>⚡</span> Quick Paper
+            </Link>
+            <Link
               href="/select-questions"
               id="btn-profile-new-paper"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-200 shadow-sm"
             >
-              <FilePlus2 className="w-4 h-4" /> New Paper
+              <FilePlus2 className="w-4 h-4 text-emerald-600" /> New Paper
             </Link>
             {client && (
               <button

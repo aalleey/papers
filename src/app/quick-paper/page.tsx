@@ -160,7 +160,7 @@ export default function QuickPaperPage() {
 
   // View state
   const [activeTab, setActiveTab] = useState<"input" | "preview" | "split">("split");
-  const [isEditMode, setIsEditMode] = useState<boolean>(true); // Inline editable toggle
+  const [isEditMode, setIsEditMode] = useState<boolean>(false); // Starts in clean pristine print preview mode
 
   // Active Template State (defaults to SeekAcademy Style 1)
   const [templates, setTemplates] = useState<PaperTemplate[]>(DEFAULT_TEMPLATES);
@@ -540,18 +540,27 @@ export default function QuickPaperPage() {
             <span>{logoBase64 ? "Change Logo" : "Upload Logo"}</span>
           </button>
 
-          {/* Edit Mode Toggle */}
+          {/* Clean View vs Edit Mode Toggle */}
           <button
             onClick={() => setIsEditMode(!isEditMode)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all shadow-sm ${
               isEditMode
-                ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
-                : "bg-slate-800 border-slate-700 text-slate-300 hover:text-white"
+                ? "bg-amber-500 text-slate-950 border-amber-400 ring-2 ring-amber-400/30"
+                : "bg-slate-800 hover:bg-slate-700 text-emerald-400 border-slate-700 hover:border-emerald-500/50"
             }`}
-            title="Toggle inline editing"
+            title={isEditMode ? "Switch to Clean Print Preview" : "Enable Inline Text Editing"}
           >
-            <Edit3 className="w-3.5 h-3.5" />
-            <span>{isEditMode ? "Edit Mode: ON" : "Edit Mode: OFF"}</span>
+            {isEditMode ? (
+              <>
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Editing Active (Click for Clean View)</span>
+              </>
+            ) : (
+              <>
+                <Eye className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Clean View (Click to Edit)</span>
+              </>
+            )}
           </button>
 
           {/* View Mode Buttons */}
@@ -884,14 +893,14 @@ export default function QuickPaperPage() {
             <div
               id="printable-paper"
               className={`bg-white text-black shadow-2xl transition-all relative print:m-0 print:p-0 print:shadow-none print:w-full print:border-0 ${
-                showBorder ? "p-5 sm:p-7 border-2 border-black" : "p-5 sm:p-7"
+                showBorder ? "p-4 sm:p-6 border-2 border-black" : "p-4 sm:p-6"
               }`}
               style={{
                 width: "210mm",
                 minHeight: "297mm",
                 fontSize: `${fontSize}px`,
                 boxSizing: "border-box",
-                lineHeight: "1.25",
+                lineHeight: "1.35",
               }}
             >
               {/* Optional Watermark */}
@@ -1281,17 +1290,19 @@ export default function QuickPaperPage() {
 
                       {/* MCQs Option Layout */}
                       {isMcqSection ? (
-                        <div className="space-y-2 pt-0.5">
+                        <div className="space-y-2.5 pt-1">
                           {section.questions.map((q, qIdx) => (
-                            <div key={qIdx} className="space-y-0.5 text-xs break-inside-avoid pb-1 border-b border-slate-100 last:border-b-0">
+                            <div key={qIdx} className="space-y-1 text-xs break-inside-avoid pb-1.5 border-b border-slate-100 last:border-b-0">
                               {/* Question line */}
                               <div
-                                className={`flex items-start justify-between gap-1.5 font-bold text-slate-950 leading-snug ${
-                                  paperLanguageMode === "Urdu" ? "text-xs sm:text-sm font-urdu text-right" : "text-xs text-left"
+                                className={`flex items-start justify-between gap-2 font-bold text-slate-950 ${
+                                  paperLanguageMode === "Urdu"
+                                    ? "text-sm sm:text-base font-urdu text-right leading-loose sm:leading-loose"
+                                    : "text-xs sm:text-sm text-left leading-normal"
                                 }`}
                               >
-                                <div className="flex-1 flex items-start gap-1.5">
-                                  <span className="font-extrabold whitespace-nowrap">
+                                <div className="flex-1 flex items-start gap-2">
+                                  <span className="font-extrabold whitespace-nowrap shrink-0 mt-0.5">
                                     {paperLanguageMode === "Urdu"
                                       ? `(${q.number || qIdx + 1})`
                                       : `${q.number || qIdx + 1}.`}
@@ -1306,12 +1317,12 @@ export default function QuickPaperPage() {
                                           handleUpdateQuestionText(sIdx, qIdx, e.target.value)
                                         }
                                         className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none resize-none font-bold no-print ${
-                                          paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                          paperLanguageMode === "Urdu" ? "font-urdu text-sm leading-relaxed" : "text-xs"
                                         }`}
                                       />
                                       <span
                                         className={`print-only font-bold ${
-                                          paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                          paperLanguageMode === "Urdu" ? "font-urdu text-sm leading-relaxed" : "text-xs"
                                         }`}
                                       >
                                         {q.questionUr}
@@ -1319,8 +1330,8 @@ export default function QuickPaperPage() {
                                     </>
                                   ) : (
                                     <span
-                                      className={`font-bold ${
-                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                      className={`font-bold flex-1 ${
+                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm sm:text-base leading-loose" : "text-xs sm:text-sm"
                                       }`}
                                     >
                                       {q.questionUr}
@@ -1330,23 +1341,23 @@ export default function QuickPaperPage() {
                                 {isEditMode && (
                                   <button
                                     onClick={() => handleDeleteQuestion(sIdx, qIdx)}
-                                    className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start"
+                                    className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start p-1"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
                                 )}
                               </div>
 
-                              {/* 4 Options Grid (Clean & compact) */}
+                              {/* 4 Options Grid (Clean & compact with proper spacing) */}
                               {q.options && q.options.length > 0 && (
                                 <div
-                                  className={`grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-1 pt-0.5 text-xs font-medium text-slate-900 ${
-                                    paperLanguageMode === "Urdu" ? "pr-4 font-urdu" : "pl-4"
+                                  className={`grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1.5 pt-1 text-xs font-medium text-slate-900 ${
+                                    paperLanguageMode === "Urdu" ? "pr-6 font-urdu" : "pl-6"
                                   }`}
                                   dir={paperLanguageMode === "Urdu" ? "rtl" : "ltr"}
                                 >
                                   {q.options.map((opt, oIdx) => (
-                                    <div key={oIdx} className="flex items-center gap-1">
+                                    <div key={oIdx} className="flex items-center gap-1.5 min-w-0">
                                       <span className="font-bold text-xs shrink-0">({opt.key})</span>
                                       {isEditMode ? (
                                         <>
@@ -1361,7 +1372,7 @@ export default function QuickPaperPage() {
                                             }`}
                                           />
                                           <span
-                                            className={`print-only ${
+                                            className={`print-only truncate ${
                                               paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""
                                             }`}
                                           >
@@ -1369,7 +1380,7 @@ export default function QuickPaperPage() {
                                           </span>
                                         </>
                                       ) : (
-                                        <span className={paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""}>
+                                        <span className={`truncate ${paperLanguageMode === "Urdu" ? "font-urdu text-xs sm:text-sm" : ""}`}>
                                           {opt.textUr}
                                         </span>
                                       )}
@@ -1384,14 +1395,14 @@ export default function QuickPaperPage() {
                         /* Poetry section: formatted in neat couplets */
                         <div className="space-y-2 py-1 font-urdu" dir="rtl">
                           {section.questions.map((q, qIdx) => (
-                            <div key={qIdx} className="space-y-1 break-inside-avoid bg-slate-50/50 p-2 border border-slate-200 rounded">
+                            <div key={qIdx} className="space-y-1 break-inside-avoid bg-slate-50/50 p-2.5 border border-slate-200 rounded">
                               <div className="text-xs font-bold text-slate-700 text-right">
                                 {`شعر (${toRomanLower(q.number || qIdx + 1)}):`}
                               </div>
                               {q.poetryLines?.map((line, pIdx) => (
                                 <div
                                   key={pIdx}
-                                  className="font-urdu text-center text-xs sm:text-sm font-bold text-slate-950 py-0.5 tracking-wide"
+                                  className="font-urdu text-center text-sm font-bold text-slate-950 py-0.5 tracking-wide leading-relaxed"
                                 >
                                   &ldquo;{line}&rdquo;
                                 </div>
@@ -1402,21 +1413,23 @@ export default function QuickPaperPage() {
                       ) : (
                         /* Subjective Questions: Clean full-width list or 2-column based on paperLayout */
                         <div
-                          className={`grid gap-2 pt-1 text-xs ${
+                          className={`grid gap-2.5 pt-1 text-xs ${
                             paperLayout === "two-column" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
                           }`}
                         >
                           {section.questions.map((q, qIdx) => (
                             <div
                               key={qIdx}
-                              className="flex items-start justify-between gap-2 break-inside-avoid pb-1 border-b border-slate-200 last:border-b-0"
+                              className="flex items-start justify-between gap-2 break-inside-avoid pb-1.5 border-b border-slate-200 last:border-b-0"
                             >
                               <div
-                                className={`flex-1 flex items-start gap-1.5 font-bold text-slate-950 leading-relaxed ${
-                                  paperLanguageMode === "Urdu" ? "font-urdu text-sm text-right" : "text-xs text-left"
+                                className={`flex-1 flex items-start gap-2 font-bold text-slate-950 ${
+                                  paperLanguageMode === "Urdu"
+                                    ? "font-urdu text-sm sm:text-base text-right leading-loose"
+                                    : "text-xs sm:text-sm text-left leading-normal"
                                 }`}
                               >
-                                <span className="font-extrabold whitespace-nowrap">
+                                <span className="font-extrabold whitespace-nowrap shrink-0 mt-0.5">
                                   {`(${toRomanLower(q.number || qIdx + 1)})`}
                                 </span>
                                 {isEditMode ? (
@@ -1428,25 +1441,27 @@ export default function QuickPaperPage() {
                                         handleUpdateQuestionText(sIdx, qIdx, e.target.value)
                                       }
                                       className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none resize-none font-bold no-print ${
-                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm leading-relaxed" : "text-xs"
                                       }`}
                                     />
                                     <span
                                       className={`print-only font-bold ${
-                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm leading-relaxed" : "text-xs"
                                       }`}
                                     >
                                       {q.questionUr}
                                     </span>
                                   </>
                                 ) : (
-                                  <span>{q.questionUr}</span>
+                                  <span className={paperLanguageMode === "Urdu" ? "font-urdu text-sm sm:text-base leading-loose" : ""}>
+                                    {q.questionUr}
+                                  </span>
                                 )}
                               </div>
                               {isEditMode && (
                                 <button
                                   onClick={() => handleDeleteQuestion(sIdx, qIdx)}
-                                  className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start"
+                                  className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start p-1"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>

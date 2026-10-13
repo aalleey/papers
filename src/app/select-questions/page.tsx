@@ -794,6 +794,17 @@ export default function SelectQuestionsPage() {
 
               {/* Responsive Quick Action Buttons & Client Subscription Badge in Header */}
               <div className="flex flex-wrap items-center gap-2 self-end md:self-auto">
+                {/* Quick Paper Link */}
+                <Link
+                  href="/quick-paper"
+                  id="btn-header-quick-paper"
+                  className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black flex items-center gap-1.5 shadow-2xs transition-all hover:scale-105"
+                  title="Create or Paste Instant Paper"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                  <span>Quick Paper</span>
+                </Link>
+
                 {/* Admin Panel Quick Link */}
                 {clientUser?.email?.toLowerCase() === "ali.khaliq50@gmail.com" && (
                   <Link
