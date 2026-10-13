@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { parseRawTextToExam, ExamPaperData, ExamSection, ExamQuestion } from "@/lib/quick-paper-parser";
 import { MathRenderer } from "@/components/MathRenderer";
+import { exportPaperToDocx } from "@/lib/docx-export";
 
 export interface PaperTemplate {
   id: string;
@@ -484,6 +485,37 @@ export default function QuickPaperPage() {
     setPaperData({ ...paperData, sections: updated });
   };
 
+  const [isExportingDocx, setIsExportingDocx] = useState(false);
+
+  const handleDownloadWord = async () => {
+    try {
+      setIsExportingDocx(true);
+      const blob = await exportPaperToDocx({
+        paperData,
+        languageMode: paperLanguageMode,
+        syllabus: syllabusText,
+        testNo: testNoText,
+        paperCode,
+        note: includeNote ? instructionNote : "",
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const cleanTitle = (paperData.institutionName || "Exam_Paper").replace(/\s+/g, "_");
+      link.download = `${cleanTitle}_${paperCode || "Paper"}.docx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Word export failed:", err);
+      alert("Failed to export Word document. Please try again.");
+    } finally {
+      setIsExportingDocx(false);
+    }
+  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -590,6 +622,26 @@ export default function QuickPaperPage() {
               Paper Preview
             </button>
           </div>
+
+          {/* Download Word (.docx) Button */}
+          <button
+            onClick={handleDownloadWord}
+            disabled={isExportingDocx}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/20 active:scale-95 transition-all disabled:opacity-50"
+            title="Download editable Microsoft Word file (.docx)"
+          >
+            {isExportingDocx ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Exporting...</span>
+              </>
+            ) : (
+              <>
+                <FileText className="w-3.5 h-3.5 text-blue-200" />
+                <span>Word (.docx)</span>
+              </>
+            )}
+          </button>
 
           {/* Print Button */}
           <button
