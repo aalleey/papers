@@ -17,28 +17,61 @@
   font-size: 1.05em;
 }
 
+/* Standalone utilities */
+.print-only {
+  display: none;
+}
+
 /* Examination Paper Print Styles */
 @media print {
   @page {
-    /* Base default print margin - orientation is governed dynamically by active paper mode */
-    margin: 4mm 6mm;
+    size: A4 portrait;
+    margin: 8mm 8mm 8mm 8mm;
   }
 
-  body {
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
     background: #ffffff !important;
     color: #000000 !important;
     font-size: 11pt;
-    line-height: 1.35;
+    line-height: 1.4;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    overflow: visible !important;
   }
 
-  .no-print {
+  /* Hide screen chrome, sidebars, buttons, dashed lines */
+  .no-print,
+  button,
+  header.no-print {
     display: none !important;
   }
 
+  /* Show clean text spans in place of input/textarea */
   .print-only {
+    display: inline !important;
+  }
+
+  div.print-only {
     display: block !important;
+  }
+
+  span.print-only {
+    display: inline !important;
+  }
+
+  /* Standalone PaperForge print sheet */
+  #printable-paper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+    page-break-after: avoid !important;
   }
 
   .exam-sheet-container {

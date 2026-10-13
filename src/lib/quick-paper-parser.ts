@@ -31,18 +31,20 @@ export interface ExamPaperData {
   sections: ExamSection[];
 }
 
-// Clean markdown bold stars, ticks, quotes, and normalize arabic/urdu numerals
 export function cleanUrduText(text: string): string {
   if (!text) return "";
   return text
-    .replace(/\*{1,3}/g, "") // strip asterisks **
+    .replace(/\*{1,3}/g, "") // strip markdown asterisks
     .replace(/[`_]/g, "")
-    .replace(/[✓✔√]/g, "") // strip checkmarks from "گرد (✓) کا نشان"
+    .replace(/[✓✔√]/g, "") // strip checkmarks
     .trim();
 }
 
 /**
- * High-Precision Pakistani Board Exam Parser for Urdu / English test papers.
+ * Intelligent Pakistani board exam parser.
+ * Grouping rules:
+ * - Major question 1 / Section-I: MCQs
+ * - Major question 2 / Section-II: Subjective (Ash'aar, Essay, Letter, Tashreeh)
  */
 export function parseRawTextToExam(rawText: string): ExamPaperData {
   const lines = rawText
@@ -50,12 +52,12 @@ export function parseRawTextToExam(rawText: string): ExamPaperData {
     .map((l) => cleanUrduText(l))
     .filter(Boolean);
 
-  let institutionName = "گورنمنٹ / پرائیویٹ ہائر سیکنڈری سکول";
-  let title = "امتحان و ماہانہ ٹیسٹ 2026 / ASSESSMENT EXAMINATION";
-  let subject = "اردو لازمی (Urdu Compulsory)";
-  let grade = "جماعت دہم (10th)";
-  let timeAllowed = "2:30 گھنٹے";
-  let totalMarks = 75;
+  let institutionName = "SEEKACADEMY";
+  let title = "مطالعہ پاکستان / PAKISTAN STUDIES";
+  let subject = "مطالعہ پاکستان";
+  let grade = "10th";
+  let timeAllowed = "40 Mins";
+  let totalMarks = 25;
 
   const sections: ExamSection[] = [];
   let currentSection: ExamSection | null = null;
@@ -63,32 +65,18 @@ export function parseRawTextToExam(rawText: string): ExamPaperData {
   let qCounter = 1;
 
   // Patterns
-  // 1. Major Section/Question Header:
-  // e.g. "سوال نمبر 1۔ درست جواب کے گرد کا نشان لگائیں"
-  // e.g. "سوال - درج ذیل اشعار کی تشریح کریں - (5)"
-  // e.g. "سوال - سیرت النبی صلی اللہ علیہ وآلہ وسلم کے عنوان پر ایک تفصیلی مضمون تحریر کریں - (10)"
-  // e.g. "سوال - دوست کے نام خط امتحان میں کامیابی کا ذکر کرنا (5)"
-  const majorSectionRegex = /^(?:سوال\s*(?:نمبر)?\s*[\d\u06F0-\u06F9]*\s*[\.\:۔\-]*)\s*(.+)$/i;
-
-  // 2. Sub-question markers:
-  // Roman numerals: -i-, -ii-, -iii-, -iv-, -v- OR i), ii), iii) OR (i), (ii)
-  // Numbered: 1-, 1., 1), (1)
-  const subIndexRegex = /^(?:-?\s*(?:i{1,3}|iv|v|vi|vii|viii|ix|x)\s*[\.\)\-۔:]|-?\s*(\d+)\s*[\.\)\-۔:])\s*(.*)$/i;
-
-  // 3. Urdu Options: (الف) (ب) (ج) (د)
-  // Can be in one line: "(الف) وہ (ب) جا (ج) رہا ہے (د) ہے"
-  // Or separate lines: "الف) وہ"
-  const inlineOptionRegex = /[(\[]?\s*(الف|ب|ج|د)\s*[)\]\.\:۔\-]\s*([^(\[الفبجد]+)/g;
-  const singleOptionRegex = /^[(\[]?\s*(الف|ب|ج|د)\s*[)\]\.\:۔\-]\s*(.+)$/;
+  const subIndexRegex = /^(?:-?\s*\(?(i{1,3}|iv|v|vi|vii|viii|ix|x)\)?\s*[\.\)\-۔:]|-?\s*\(?(\d+)\)?\s*[\.\)\-۔:])\s*(.*)$/i;
+  const inlineOptionRegex = /[(\[]?\s*(الف|ب|ج|د|[A-Da-d])\s*[)\]\.\:۔\-]\s*([^(\[الفبجدA-Da-d]+)/g;
+  const singleOptionRegex = /^[(\[]?\s*(الف|ب|ج|د|[A-Da-d])\s*[)\]\.\:۔\-]\s*(.+)$/;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    // Check if line contains marks like "(5)", "-(10)", "(نمبر: 10)"
-    const marksMatch = line.match(/[-–—]?\s*\(\s*(\d+)\s*(?:نمبر)?\s*\)/) || line.match(/نمبر\s*[:\-]\s*(\d+)/);
+    // Detect marks e.g. -(5), (10 Marks), (نمبر: 10)
+    const marksMatch = line.match(/[-–—]?\s*\(\s*(\d+)\s*(?:نمبر|marks)?\s*\)/i) || line.match(/نمبر\s*[:\-]\s*(\d+)/);
     const lineMarks = marksMatch ? parseInt(marksMatch[1], 10) : undefined;
 
-    // Check for inline Urdu options (الف) ... (ب) ... (ج) ... (د) ...
+    // Check for inline options: (الف) ... (ب) ... (ج) ... (د) ...
     const foundOptions = [...line.matchAll(inlineOptionRegex)];
     if (foundOptions.length >= 2) {
       if (currentQuestion) {
@@ -103,7 +91,7 @@ export function parseRawTextToExam(rawText: string): ExamPaperData {
       continue;
     }
 
-    // Check for single Urdu option line: "الف) وہ"
+    // Check for single option line: "الف) وہ"
     const singleOpt = line.match(singleOptionRegex);
     if (singleOpt && currentQuestion) {
       if (!currentQuestion.options) currentQuestion.options = [];
@@ -115,14 +103,14 @@ export function parseRawTextToExam(rawText: string): ExamPaperData {
       continue;
     }
 
-    // Check if this line is a Major Question / Section Header
-    const isMajorHeading =
-      line.startsWith("سوال") &&
-      (/درست جواب|اشعار|تشریح|مضمون|خط|درخواست|خلاصہ|مختصر سوال|تفصیلی/i.test(line) ||
-        lineMarks !== undefined ||
-        /^سوال\s*(?:نمبر)?\s*\d+/i.test(line));
+    // Check if line is an explicit Major Section Switch
+    // Only switch major section if it explicitly says Section / Part / سوال نمبر 1 / سوال نمبر 2
+    const isExplicitSectionSwitch =
+      /^(?:section|part|حصہ)\s*([a-c]|i{1,3}|[1-3])/i.test(line) ||
+      /^سوال\s*(?:نمبر)?\s*[1-3][\s*:\-۔]*/i.test(line) ||
+      (/درست جواب|معروضی|mcq/i.test(line) && sections.length === 0);
 
-    if (isMajorHeading) {
+    if (isExplicitSectionSwitch) {
       if (currentQuestion && currentSection) {
         currentSection.questions.push(currentQuestion);
         currentQuestion = null;
@@ -131,110 +119,110 @@ export function parseRawTextToExam(rawText: string): ExamPaperData {
         sections.push(currentSection);
       }
 
-      // Determine Section Type
-      let secType: ExamSection["type"] = "general";
-      if (/درست جواب|معروضی|انتخاب|mcq/i.test(line)) secType = "mcq";
-      else if (/اشعار|شعر|تشریح/i.test(line)) secType = "poetry";
-      else if (/مضمون/i.test(line)) secType = "essay";
-      else if (/خط|درخواست/i.test(line)) secType = "letter";
-      else if (/تفصیلی|انشائیہ/i.test(line)) secType = "long";
-      else if (/مختصر/i.test(line)) secType = "short";
-
-      // Strip marks from title display if present
-      const cleanTitle = line.replace(/[-–—]?\s*\(\s*\d+\s*(?:نمبر)?\s*\)/, "").trim();
+      const isMcq = /درست جواب|معروضی|mcq|section[-\s]*[1i]/i.test(line);
+      const cleanTitle = line.replace(/[-–—]?\s*\(\s*\d+\s*(?:نمبر|marks)?\s*\)/i, "").trim();
 
       currentSection = {
         id: `sec-${sections.length + 1}`,
-        type: secType,
-        titleUr: cleanTitle,
-        marks: lineMarks,
+        type: isMcq ? "mcq" : "short",
+        titleUr: cleanTitle || (isMcq ? "Section-I (معروضی سوالات)" : "Section-II (انشائیہ سوالات)"),
+        marks: lineMarks || (isMcq ? 10 : 15),
         questions: [],
       };
       qCounter = 1;
       continue;
     }
 
-    // Check if line is a Sub-Question / Part (e.g. -i-, -ii-, -iii-, 1., 2.)
-    const subMatch = line.match(subIndexRegex);
-    if (subMatch) {
-      if (currentQuestion && currentSection) {
+    // If no section exists yet, initialize Section-I
+    if (!currentSection) {
+      currentSection = {
+        id: "sec-1",
+        type: "mcq",
+        titleUr: "Section-I (معروضی سوالات)",
+        marks: 10,
+        questions: [],
+      };
+    }
+
+    // Check if line is an individual subjective question inside Section-II:
+    // e.g. "سوال - درج ذیل اشعار کی تشریح کریں - (5)"
+    // e.g. "سوال - سیرت النبی ﷺ کے عنوان پر ایک تفصیلی مضمون تحریر کریں - (10)"
+    // e.g. "سوال - دوست کے نام خط امتحان میں کامیابی کا ذکر کرتے ہوئے خط تحریر (10)"
+    if (line.startsWith("سوال") && !isExplicitSectionSwitch) {
+      // If we are currently in MCQ section, switch to Section-II for subjective
+      if (currentSection.type === "mcq") {
+        if (currentQuestion) {
+          currentSection.questions.push(currentQuestion);
+          currentQuestion = null;
+        }
+        if (currentSection.questions.length > 0) {
+          sections.push(currentSection);
+        }
+
+        currentSection = {
+          id: `sec-${sections.length + 1}`,
+          type: "short",
+          titleUr: "Section-II (انشائیہ سوالات)",
+          marks: 15,
+          questions: [],
+        };
+        qCounter = 1;
+      }
+
+      if (currentQuestion) {
         currentSection.questions.push(currentQuestion);
       }
 
-      const qText = subMatch[2] ? subMatch[2].trim() : line;
+      const cleanQText = line.replace(/^سوال\s*[\-\:۔]?\s*/, "").trim();
       currentQuestion = {
         number: qCounter++,
-        questionUr: qText,
-        marks: currentSection?.type === "mcq" ? 1 : undefined,
-        options: currentSection?.type === "mcq" ? [] : undefined,
+        questionUr: cleanQText,
+        marks: lineMarks || 5,
       };
       continue;
     }
 
-    // Poetry verses check: lines inside poetry section or quoted lines
-    if (currentSection?.type === "poetry") {
+    // Sub-index matching: (i), -ii-, 1., 2.
+    const subMatch = line.match(subIndexRegex);
+    if (subMatch) {
+      if (currentQuestion) {
+        currentSection.questions.push(currentQuestion);
+      }
+
+      const qText = (subMatch[3] || line).trim();
+      currentQuestion = {
+        number: qCounter++,
+        questionUr: qText,
+        marks: currentSection.type === "mcq" ? 1 : lineMarks,
+        options: currentSection.type === "mcq" ? [] : undefined,
+      };
+      continue;
+    }
+
+    // Poetry verses
+    if (/کعبے کی رونق|خیرالامم|شعر|مصرع/i.test(line)) {
       if (currentQuestion) {
         if (!currentQuestion.poetryLines) currentQuestion.poetryLines = [];
         currentQuestion.poetryLines.push(line);
       } else {
         currentQuestion = {
           number: qCounter++,
-          questionUr: "شعر",
+          questionUr: "اشعار کی تشریح کریں",
           poetryLines: [line],
-          marks: currentSection.marks,
+          marks: lineMarks || 5,
         };
       }
       continue;
     }
 
-    // General continuation or individual questions inside subjective sections
-    if (currentSection && (currentSection.type === "essay" || currentSection.type === "letter" || currentSection.type === "long")) {
-      if (!currentQuestion) {
-        currentQuestion = {
-          number: qCounter++,
-          questionUr: line,
-          marks: currentSection.marks,
-        };
-      } else {
-        currentQuestion.questionUr += " " + line;
-      }
-      continue;
-    }
-
-    // If within an MCQ section without explicit numbering, check if line ends with '؟' or is a question
-    if (currentSection && currentSection.type === "mcq") {
-      if (currentQuestion && (!currentQuestion.options || currentQuestion.options.length === 0)) {
-        currentQuestion.questionUr += " " + line;
-      } else {
-        if (currentQuestion) {
-          currentSection.questions.push(currentQuestion);
-        }
-        currentQuestion = {
-          number: qCounter++,
-          questionUr: line,
-          marks: 1,
-          options: [],
-        };
-      }
-      continue;
-    }
-
-    // Fallback if no section yet
-    if (!currentSection) {
-      currentSection = {
-        id: "sec-1",
-        type: "general",
-        titleUr: "امتحان / سوالات",
-        questions: [],
-      };
-    }
-
+    // Continuation line
     if (currentQuestion) {
       currentQuestion.questionUr += " " + line;
     } else {
       currentQuestion = {
         number: qCounter++,
         questionUr: line,
+        marks: currentSection.type === "mcq" ? 1 : 5,
       };
     }
   }
@@ -246,7 +234,7 @@ export function parseRawTextToExam(rawText: string): ExamPaperData {
     sections.push(currentSection);
   }
 
-  // Calculate total marks accurately if unspecified
+  // Calculate total marks accurately
   const sumMarks = sections.reduce((acc, sec) => {
     if (sec.marks) return acc + sec.marks;
     const qSum = sec.questions.reduce((qAcc, q) => qAcc + (q.marks || 0), 0);

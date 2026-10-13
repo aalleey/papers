@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   FileText,
   Printer,
@@ -31,6 +31,7 @@ import {
   AlignRight,
   Save,
   Palette,
+  Image as ImageIcon,
 } from "lucide-react";
 import { parseRawTextToExam, ExamPaperData, ExamSection, ExamQuestion } from "@/lib/quick-paper-parser";
 import { MathRenderer } from "@/components/MathRenderer";
@@ -39,33 +40,69 @@ export interface PaperTemplate {
   id: string;
   name: string;
   institutionName: string;
+  paperTypeBanner: string;
   title: string;
   subject: string;
   grade: string;
+  syllabus: string;
   timeAllowed: string;
   totalMarks: number;
-  headerStyle: "classic" | "modern" | "board" | "minimal";
-  layout: "standard" | "bilingual-split" | "two-column";
+  testNo: string;
+  headerStyle: "punjab-board-style1" | "classic" | "minimal";
+  layout: "standard" | "two-column";
   fontFamily: "urdu" | "serif" | "sans";
   fontSize: number;
   showBorder: boolean;
-  borderStyle: "double" | "single" | "ornate";
+  borderStyle: "double" | "single" | "none";
   showRollNo: boolean;
   showWatermark: boolean;
   watermarkText: string;
+  paperCode: string;
+  instructionNoteEn: string;
+  instructionNoteUr: string;
 }
 
 const DEFAULT_TEMPLATES: PaperTemplate[] = [
   {
-    id: "punjab-board",
+    id: "seek-academy-style1",
+    name: "Style 1: Punjab Boards / Seek Academy (User Choice)",
+    institutionName: "SEEKACADEMY",
+    paperTypeBanner: "EXAMINATION 2026-27",
+    title: "مطالعہ پاکستان / PAKISTAN STUDIES",
+    subject: "مطالعہ پاکستان",
+    grade: "10th",
+    syllabus: "Chapter 1-3 Complete",
+    timeAllowed: "40 Mins",
+    totalMarks: 25,
+    testNo: "15",
+    headerStyle: "punjab-board-style1",
+    layout: "standard",
+    fontFamily: "sans",
+    fontSize: 12,
+    showBorder: true,
+    borderStyle: "none",
+    showRollNo: true,
+    showWatermark: false,
+    watermarkText: "SEEKACADEMY",
+    paperCode: "3044",
+    instructionNoteEn:
+      "Four possible answer a,b,c and d to each question are given. The choice which you think is correct, fill that circle in front of that questions with Marker or Pen ink, Cutting or filling two or more circles will result in zero mark in that question.",
+    instructionNoteUr:
+      "ہر سوال کے چار ممکنہ جوابات a, b, c اور d دیے گئے ہیں۔ جس جواب کو آپ درست سمجھتے ہیں، مارکر یا پین کی سیاہی سے اس کا دائرہ پُر کریں۔",
+  },
+  {
+    id: "punjab-board-official",
     name: "BISE Punjab Board Standard",
     institutionName: "گورنمنٹ ہائر سیکنڈری سکول / کالج",
+    paperTypeBanner: "ANNUAL EXAMINATION 2026",
     title: "سالانہ امتحان و تعلیمی ٹیسٹ 2026",
     subject: "اردو لازمی",
     grade: "جماعت دہم (10th)",
+    syllabus: "مکمل نصاب (Full Syllabus)",
     timeAllowed: "2:30 گھنٹے",
     totalMarks: 75,
-    headerStyle: "board",
+    testNo: "01",
+    headerStyle: "punjab-board-style1",
     layout: "standard",
     fontFamily: "urdu",
     fontSize: 12,
@@ -73,64 +110,37 @@ const DEFAULT_TEMPLATES: PaperTemplate[] = [
     borderStyle: "double",
     showRollNo: true,
     showWatermark: false,
-    watermarkText: "BISE EXAM",
-  },
-  {
-    id: "academy-classic",
-    name: "Academy / Coaching Classic",
-    institutionName: "الٹیمیٹ اکیڈمی آف سائنسز اینڈ آرٹس",
-    title: "ماہانہ ٹیسٹ سیریز (گرینڈ ٹیسٹ)",
-    subject: "اردو لازمی",
-    grade: "جماعت نہم / دہم",
-    timeAllowed: "1:30 گھنٹہ",
-    totalMarks: 50,
-    headerStyle: "modern",
-    layout: "standard",
-    fontFamily: "urdu",
-    fontSize: 12,
-    showBorder: true,
-    borderStyle: "single",
-    showRollNo: true,
-    showWatermark: true,
-    watermarkText: "ACADEMY TEST",
-  },
-  {
-    id: "fbise-federal",
-    name: "Federal Board (FBISE) Style",
-    institutionName: "ISLAMABAD MODEL COLLEGE FOR BOYS/GIRLS",
-    title: "FIRST TERM EXAMINATION 2026",
-    subject: "Urdu Compulsory / اردو",
-    grade: "Class SSC-II (10th)",
-    timeAllowed: "3:00 Hours",
-    totalMarks: 75,
-    headerStyle: "classic",
-    layout: "standard",
-    fontFamily: "urdu",
-    fontSize: 12,
-    showBorder: true,
-    borderStyle: "double",
-    showRollNo: true,
-    showWatermark: false,
-    watermarkText: "FBISE MODEL",
+    watermarkText: "BISE LAHORE",
+    paperCode: "3041",
+    instructionNoteEn:
+      "Write your Roll Number on the bubble sheet and question paper. Attempt all questions.",
+    instructionNoteUr:
+      "تمام سوالات کے جوابات دی گئی جوابی کاپی پر تحریر کریں۔ کٹائی اور اوور رائٹنگ سے گریز کریں۔",
   },
   {
     id: "minimal-clean",
     name: "Clean & Compact (Eco Print)",
     institutionName: "SCHOOL EXAMINATION DEPARTMENT",
-    title: "CLASS TEST / REVISION ASSESSMENT",
-    subject: "اردو",
+    paperTypeBanner: "CLASS TEST",
+    title: "CLASS ASSESSMENT",
+    subject: "General Subject",
     grade: "10th",
+    syllabus: "Unit Assessment",
     timeAllowed: "45 Minutes",
     totalMarks: 25,
+    testNo: "03",
     headerStyle: "minimal",
     layout: "two-column",
-    fontFamily: "urdu",
+    fontFamily: "sans",
     fontSize: 11,
     showBorder: false,
-    borderStyle: "single",
-    showRollNo: false,
+    borderStyle: "none",
+    showRollNo: true,
     showWatermark: false,
     watermarkText: "",
+    paperCode: "1001",
+    instructionNoteEn: "Attempt all questions within the given time.",
+    instructionNoteUr: "تمام سوالات لازمی ہیں۔",
   },
 ];
 
@@ -152,21 +162,26 @@ export default function QuickPaperPage() {
   const [activeTab, setActiveTab] = useState<"input" | "preview" | "split">("split");
   const [isEditMode, setIsEditMode] = useState<boolean>(true); // Inline editable toggle
 
-  // Active Template State
+  // Active Template State (defaults to SeekAcademy Style 1)
   const [templates, setTemplates] = useState<PaperTemplate[]>(DEFAULT_TEMPLATES);
   const [activeTemplate, setActiveTemplate] = useState<PaperTemplate>(DEFAULT_TEMPLATES[0]);
 
-  // Paper Display / Customization settings (driven by template & individual tweaks)
-  const [paperLayout, setPaperLayout] = useState<"standard" | "bilingual-split" | "two-column">(
-    activeTemplate.layout
-  );
+  // Paper Display / Customization settings
+  const [paperLanguageMode, setPaperLanguageMode] = useState<"Urdu" | "English" | "Bilingual">("Urdu");
+  const [paperLayout, setPaperLayout] = useState<"standard" | "two-column">(activeTemplate.layout);
   const [fontSize, setFontSize] = useState<number>(activeTemplate.fontSize);
   const [showWatermark, setShowWatermark] = useState(activeTemplate.showWatermark);
   const [watermarkText, setWatermarkText] = useState(activeTemplate.watermarkText);
   const [showBorder, setShowBorder] = useState(activeTemplate.showBorder);
-  const [borderStyle, setBorderStyle] = useState<"double" | "single" | "ornate">(activeTemplate.borderStyle);
+  const [borderStyle, setBorderStyle] = useState<"double" | "single" | "none">(activeTemplate.borderStyle);
   const [includeStudentInfo, setIncludeStudentInfo] = useState(activeTemplate.showRollNo);
-  const [paperCode, setPaperCode] = useState("A-101");
+  const [paperCode, setPaperCode] = useState(activeTemplate.paperCode);
+  const [syllabusText, setSyllabusText] = useState(activeTemplate.syllabus);
+  const [testNoText, setTestNoText] = useState(activeTemplate.testNo);
+  const [paperTypeBanner, setPaperTypeBanner] = useState(activeTemplate.paperTypeBanner);
+  const [instructionNote, setInstructionNote] = useState(activeTemplate.instructionNoteEn);
+  const [includeNote, setIncludeNote] = useState(true);
+  const [logoBase64, setLogoBase64] = useState<string | null>(null);
 
   // Structured Paper Data (100% Editable)
   const [paperData, setPaperData] = useState<ExamPaperData>(() =>
@@ -198,6 +213,7 @@ export default function QuickPaperPage() {
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   // Apply a template to the current paper
   const handleApplyTemplate = (tpl: PaperTemplate) => {
@@ -209,6 +225,11 @@ export default function QuickPaperPage() {
     setIncludeStudentInfo(tpl.showRollNo);
     setShowWatermark(tpl.showWatermark);
     setWatermarkText(tpl.watermarkText);
+    setPaperCode(tpl.paperCode);
+    setSyllabusText(tpl.syllabus);
+    setTestNoText(tpl.testNo);
+    setPaperTypeBanner(tpl.paperTypeBanner);
+    setInstructionNote(tpl.instructionNoteEn);
 
     setPaperData((prev) => ({
       ...prev,
@@ -253,7 +274,6 @@ export default function QuickPaperPage() {
       const json = await res.json();
       if (json.error) throw new Error(json.error);
 
-      // Merge refined data
       setPaperData((prev) => ({
         ...prev,
         title: json.result.title || prev.title,
@@ -308,7 +328,6 @@ export default function QuickPaperPage() {
         console.warn("Gemini OCR fallback to browser Tesseract:", err.message);
       }
 
-      // Local Tesseract.js fallback
       try {
         setOcrStatus("Running local OCR engine (Tesseract)...");
         const Tesseract = await import("tesseract.js");
@@ -329,6 +348,17 @@ export default function QuickPaperPage() {
       } finally {
         setIsProcessingOcr(false);
       }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Logo upload
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setLogoBase64(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
@@ -364,7 +394,7 @@ export default function QuickPaperPage() {
     }
   };
 
-  // --- QUESTION & SECTION DIRECT EDITING HANDLERS ---
+  // Editable question handlers
   const handleUpdateSectionTitle = (sIdx: number, val: string) => {
     const updated = [...paperData.sections];
     updated[sIdx].titleUr = val;
@@ -435,7 +465,7 @@ export default function QuickPaperPage() {
     const newSection: ExamSection = {
       id: `sec-${paperData.sections.length + 1}`,
       type: "short",
-      titleUr: "سوال نمبر: مختصر سوالات کے جوابات تحریر کریں",
+      titleUr: "Section-II / حصہ دوم: مختصر سوالات",
       marks: 10,
       questions: [
         {
@@ -458,10 +488,13 @@ export default function QuickPaperPage() {
     window.print();
   };
 
+  // Format 4-digit paper code into array
+  const formattedCodeDigits = (paperCode || "3044").padEnd(4, "0").slice(0, 4).split("");
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      {/* Top Application Header (Standalone from PaperWala) */}
-      <header className="no-print bg-slate-900 border-b border-slate-800 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-50 shadow-md">
+      {/* Top Application Header */}
+      <header className="no-print bg-slate-900 border-b border-slate-800 px-6 py-3 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-50 shadow-md">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 shadow-lg shadow-emerald-500/20 font-black text-xl">
             PF
@@ -474,7 +507,7 @@ export default function QuickPaperPage() {
               </span>
             </div>
             <p className="text-xs text-slate-400">
-              Full Inline Editing &middot; Board Templates &middot; OCR &middot; Urdu Translation
+              Style 1: Punjab Boards &middot; Full Inline Editing &middot; OCR &middot; Urdu Translation
             </p>
           </div>
         </div>
@@ -487,7 +520,24 @@ export default function QuickPaperPage() {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 font-semibold text-xs transition-all shadow-sm"
           >
             <Palette className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Template: {activeTemplate.name.split(" ")[0]}</span>
+            <span>Template: {activeTemplate.name.split(":")[0]}</span>
+          </button>
+
+          {/* Logo upload trigger */}
+          <input
+            type="file"
+            ref={logoInputRef}
+            accept="image/*"
+            onChange={handleLogoUpload}
+            className="hidden"
+          />
+          <button
+            onClick={() => logoInputRef.current?.click()}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-semibold"
+            title="Upload institution or academy logo"
+          >
+            <ImageIcon className="w-3.5 h-3.5 text-blue-400" />
+            <span>{logoBase64 ? "Change Logo" : "Upload Logo"}</span>
           </button>
 
           {/* Edit Mode Toggle */}
@@ -498,7 +548,7 @@ export default function QuickPaperPage() {
                 ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
                 : "bg-slate-800 border-slate-700 text-slate-300 hover:text-white"
             }`}
-            title="Toggle inline editing of every text, question, and marks on the preview sheet"
+            title="Toggle inline editing"
           >
             <Edit3 className="w-3.5 h-3.5" />
             <span>{isEditMode ? "Edit Mode: ON" : "Edit Mode: OFF"}</span>
@@ -538,7 +588,7 @@ export default function QuickPaperPage() {
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
           >
             <Printer className="w-4 h-4" />
-            <span>Print Paper</span>
+            <span>Print PDF</span>
           </button>
         </div>
       </header>
@@ -551,10 +601,10 @@ export default function QuickPaperPage() {
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                   <Palette className="w-5 h-5 text-indigo-400" />
-                  Select & Configure Paper Template
+                  Select Paper Template
                 </h3>
                 <p className="text-xs text-slate-400">
-                  Pick a pre-configured template or customize how your paper converts.
+                  Choose a template design for your examination paper.
                 </p>
               </div>
               <button
@@ -587,18 +637,18 @@ export default function QuickPaperPage() {
                   </div>
                   <p className="text-xs text-slate-400 line-clamp-1">{tpl.institutionName}</p>
                   <div className="mt-2.5 flex items-center gap-2 text-[10px] text-slate-500 uppercase font-semibold">
-                    <span>{tpl.headerStyle} Header</span>
-                    <span>&bull;</span>
-                    <span>{tpl.borderStyle} Border</span>
+                    <span>{tpl.headerStyle}</span>
                     <span>&bull;</span>
                     <span>{tpl.totalMarks} Marks</span>
+                    <span>&bull;</span>
+                    <span>Code: {tpl.paperCode}</span>
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="border-t border-slate-800 pt-3 flex items-center justify-between text-xs text-slate-400">
-              <span>All text, headings, and marks remain 100% editable on the preview sheet.</span>
+              <span>All elements remain 100% editable on the preview sheet.</span>
               <button
                 onClick={() => setShowTemplateModal(false)}
                 className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-semibold"
@@ -620,14 +670,13 @@ export default function QuickPaperPage() {
             }`}
           >
             {/* Action Bar */}
-            <div className="p-3.5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 bg-slate-900">
+            <div className="p-3 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 bg-slate-900">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
                 <FileText className="w-4 h-4 text-emerald-400" />
                 Raw Paper Text
               </span>
 
               <div className="flex items-center gap-2">
-                {/* Upload Image for OCR */}
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -649,13 +698,12 @@ export default function QuickPaperPage() {
                   <span>{isProcessingOcr ? "Scanning..." : "OCR Scan"}</span>
                 </button>
 
-                {/* Translation dropdown */}
                 <div className="flex items-center bg-slate-800 border border-slate-700 rounded-lg overflow-hidden">
                   <button
                     onClick={() => handleTranslate("Urdu")}
                     disabled={isTranslating}
                     className="px-2.5 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-700 flex items-center gap-1 border-r border-slate-700"
-                    title="Translate questions into Urdu Nastaliq"
+                    title="Translate questions into Urdu"
                   >
                     <Languages className="w-3.5 h-3.5 text-blue-400" />
                     <span>Urdu</span>
@@ -670,7 +718,6 @@ export default function QuickPaperPage() {
                   </button>
                 </div>
 
-                {/* AI Refine Button */}
                 <button
                   onClick={handleAiRefine}
                   disabled={isAiStructuring}
@@ -737,7 +784,6 @@ export default function QuickPaperPage() {
               </div>
             </div>
 
-            {/* Add Section Button */}
             <div className="p-3 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between">
               <span className="text-xs text-slate-400">Manual Structure Controls:</span>
               <button
@@ -753,19 +799,35 @@ export default function QuickPaperPage() {
 
         {/* RIGHT PANEL: Live Printable Paper Sheet */}
         {(activeTab === "preview" || activeTab === "split") && (
-          <div className="flex-1 bg-slate-900/30 overflow-y-auto flex flex-col items-center p-4 sm:p-8">
+          <div className="flex-1 bg-slate-900/30 overflow-y-auto flex flex-col items-center p-4 sm:p-6">
             {/* Formatting Toolbar */}
-            <div className="no-print w-full max-w-[210mm] bg-slate-900 border border-slate-800 rounded-xl p-3 mb-6 flex flex-wrap items-center justify-between gap-3 shadow-lg">
+            <div className="no-print w-full max-w-[210mm] bg-slate-900 border border-slate-800 rounded-xl p-3 mb-4 flex flex-wrap items-center justify-between gap-3 shadow-lg">
               <div className="flex items-center gap-3">
-                <span className="text-xs font-semibold text-slate-400">Layout:</span>
+                <span className="text-xs font-semibold text-slate-400">Language:</span>
                 <select
-                  value={paperLayout}
-                  onChange={(e) => setPaperLayout(e.target.value as any)}
-                  className="bg-slate-800 border border-slate-700 rounded-md px-2.5 py-1 text-xs text-slate-200 font-medium"
+                  value={paperLanguageMode}
+                  onChange={(e) => setPaperLanguageMode(e.target.value as any)}
+                  className="bg-slate-800 border border-slate-700 rounded-md px-2.5 py-1 text-xs text-slate-200 font-bold"
                 >
-                  <option value="standard">Standard Board Paper</option>
-                  <option value="two-column">Compact Two-Column</option>
+                  <option value="Urdu">Urdu (دائیں سے بائیں - RTL)</option>
+                  <option value="English">English (Left to Right - LTR)</option>
+                  <option value="Bilingual">Bilingual (English + Urdu)</option>
                 </select>
+
+                <div className="flex items-center gap-1.5 border-l border-slate-800 pl-3">
+                  <span className="text-xs font-semibold text-slate-400">Header:</span>
+                  <select
+                    value={activeTemplate.headerStyle}
+                    onChange={(e) => {
+                      const hStyle = e.target.value as any;
+                      setActiveTemplate({ ...activeTemplate, headerStyle: hStyle });
+                    }}
+                    className="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-xs text-slate-200 font-medium"
+                  >
+                    <option value="punjab-board-style1">Style 1: Punjab Boards</option>
+                    <option value="minimal">Minimal / Simple</option>
+                  </select>
+                </div>
 
                 <div className="flex items-center gap-1.5 border-l border-slate-800 pl-3">
                   <span className="text-xs font-semibold text-slate-400">Font:</span>
@@ -789,24 +851,12 @@ export default function QuickPaperPage() {
                 <label className="flex items-center gap-1.5 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={showBorder}
-                    onChange={(e) => setShowBorder(e.target.checked)}
+                    checked={includeNote}
+                    onChange={(e) => setIncludeNote(e.target.checked)}
                     className="rounded text-emerald-500 focus:ring-0"
                   />
-                  <span>Border</span>
+                  <span>Note / Instructions</span>
                 </label>
-
-                {showBorder && (
-                  <select
-                    value={borderStyle}
-                    onChange={(e) => setBorderStyle(e.target.value as any)}
-                    className="bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-[11px] text-slate-200"
-                  >
-                    <option value="double">Double</option>
-                    <option value="single">Single</option>
-                    <option value="ornate">Ornate</option>
-                  </select>
-                )}
 
                 <label className="flex items-center gap-1.5 cursor-pointer">
                   <input
@@ -815,38 +865,33 @@ export default function QuickPaperPage() {
                     onChange={(e) => setIncludeStudentInfo(e.target.checked)}
                     className="rounded text-emerald-500 focus:ring-0"
                   />
-                  <span>Roll No. Box</span>
+                  <span>Student Box</span>
                 </label>
 
                 <label className="flex items-center gap-1.5 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={showWatermark}
-                    onChange={(e) => setShowWatermark(e.target.checked)}
+                    checked={showBorder}
+                    onChange={(e) => setShowBorder(e.target.checked)}
                     className="rounded text-emerald-500 focus:ring-0"
                   />
-                  <span>Watermark</span>
+                  <span>Border</span>
                 </label>
               </div>
             </div>
 
-            {/* A4 PRINT SHEET CONTAINER (100% Editable) */}
+            {/* A4 PRINT SHEET CONTAINER (Style 1: Punjab Boards / Seek Academy) */}
             <div
               id="printable-paper"
-              className={`bg-white text-black shadow-2xl transition-all relative print:m-0 print:p-0 print:shadow-none print:w-full ${
-                showBorder
-                  ? borderStyle === "double"
-                    ? "p-8 sm:p-10 border-4 border-double border-black"
-                    : borderStyle === "ornate"
-                    ? "p-8 sm:p-10 border-4 border-black outline outline-2 outline-offset-2 outline-black"
-                    : "p-8 sm:p-10 border-2 border-black"
-                  : "p-8 sm:p-10"
+              className={`bg-white text-black shadow-2xl transition-all relative print:m-0 print:p-0 print:shadow-none print:w-full print:border-0 ${
+                showBorder ? "p-5 sm:p-7 border-2 border-black" : "p-5 sm:p-7"
               }`}
               style={{
                 width: "210mm",
                 minHeight: "297mm",
                 fontSize: `${fontSize}px`,
                 boxSizing: "border-box",
+                lineHeight: "1.25",
               }}
             >
               {/* Optional Watermark */}
@@ -858,351 +903,578 @@ export default function QuickPaperPage() {
                 </div>
               )}
 
-              {/* PAPER HEADER (Fully Editable) */}
-              <header className="relative z-10 border-b-2 border-black pb-3 mb-4 text-center">
-                {isEditMode ? (
-                  <div className="space-y-1">
-                    <input
-                      type="text"
-                      value={paperData.institutionName}
-                      onChange={(e) => setPaperData({ ...paperData, institutionName: e.target.value })}
-                      className="w-full text-center text-2xl font-black uppercase tracking-tight font-serif bg-transparent border-b border-dashed border-slate-300 hover:border-slate-500 focus:border-black focus:outline-none py-0.5"
-                      placeholder="ادارہ / سکول کا نام درج کریں"
-                    />
-                    <input
-                      type="text"
-                      value={paperData.title}
-                      onChange={(e) => setPaperData({ ...paperData, title: e.target.value })}
-                      className="w-full text-center text-sm font-bold tracking-wider uppercase text-slate-800 bg-transparent border-b border-dashed border-slate-300 hover:border-slate-500 focus:border-black focus:outline-none py-0.5"
-                      placeholder="امتحان کی ہیڈنگ درج کریں"
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <h1 className="text-2xl font-black uppercase tracking-tight font-serif">
-                      {paperData.institutionName || "NAME OF INSTITUTION"}
-                    </h1>
-                    <p className="text-sm font-bold tracking-wider uppercase mt-0.5 text-slate-800">
-                      {paperData.title || "EXAMINATION / ASSESSMENT"}
-                    </p>
-                  </>
-                )}
-
-                {/* Sub-header row: Class, Subject, Date, Marks, Time (Editable) */}
-                <div className="mt-3 pt-2 border-t border-slate-300 grid grid-cols-3 text-xs font-semibold uppercase text-slate-800">
-                  <div className="text-left space-y-1">
-                    <div className="flex items-center gap-1">
-                      <span className="font-bold">Subject:</span>
-                      {isEditMode ? (
-                        <input
-                          type="text"
-                          value={paperData.subject}
-                          onChange={(e) => setPaperData({ ...paperData, subject: e.target.value })}
-                          className="bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none w-32"
+              {/* ===================================================================
+                  STYLE 1: PUNJAB BOARDS / SEEK ACADEMY HEADER
+                  =================================================================== */}
+              {activeTemplate.headerStyle === "punjab-board-style1" ? (
+                <header className="relative z-10 mb-2 font-sans select-text">
+                  {/* Top Outer Header Box */}
+                  <div className="border-2 border-black flex items-stretch w-full bg-white box-border mb-0">
+                    {/* Left: Logo Box */}
+                    <div className="w-24 min-w-[96px] border-r-2 border-black flex flex-col items-center justify-center p-1.5 bg-white shrink-0">
+                      {logoBase64 ? (
+                        <img
+                          src={logoBase64}
+                          alt="Logo"
+                          className="max-h-20 max-w-[85px] object-contain"
                         />
                       ) : (
-                        <span>{paperData.subject}</span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="font-bold">Class:</span>
-                      {isEditMode ? (
-                        <input
-                          type="text"
-                          value={paperData.grade}
-                          onChange={(e) => setPaperData({ ...paperData, grade: e.target.value })}
-                          className="bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none w-24"
-                        />
-                      ) : (
-                        <span>{paperData.grade}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="text-center space-y-1">
-                    <div className="flex items-center justify-center gap-1">
-                      <span className="font-bold">Date:</span>
-                      {isEditMode ? (
-                        <input
-                          type="text"
-                          value={paperData.date || ""}
-                          onChange={(e) => setPaperData({ ...paperData, date: e.target.value })}
-                          className="bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none w-24 text-center"
-                        />
-                      ) : (
-                        <span>{paperData.date || new Date().toLocaleDateString("en-GB")}</span>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-center gap-1">
-                      <span className="font-bold">Code:</span>
-                      {isEditMode ? (
-                        <input
-                          type="text"
-                          value={paperCode}
-                          onChange={(e) => setPaperCode(e.target.value)}
-                          className="bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none w-20 text-center"
-                        />
-                      ) : (
-                        <span>{paperCode}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="text-right space-y-1">
-                    <div className="flex items-center justify-end gap-1">
-                      <span className="font-bold">Total Marks:</span>
-                      {isEditMode ? (
-                        <input
-                          type="number"
-                          value={paperData.totalMarks}
-                          onChange={(e) => setPaperData({ ...paperData, totalMarks: Number(e.target.value) })}
-                          className="bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none w-16 text-right"
-                        />
-                      ) : (
-                        <span>{paperData.totalMarks}</span>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-end gap-1">
-                      <span className="font-bold">Time Allowed:</span>
-                      {isEditMode ? (
-                        <input
-                          type="text"
-                          value={paperData.timeAllowed}
-                          onChange={(e) => setPaperData({ ...paperData, timeAllowed: e.target.value })}
-                          className="bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none w-28 text-right"
-                        />
-                      ) : (
-                        <span>{paperData.timeAllowed}</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Student Info row */}
-                {includeStudentInfo && (
-                  <div className="mt-2.5 pt-2 border-t border-dashed border-slate-400 flex items-center justify-between text-xs font-medium text-slate-700">
-                    <div>Name: ______________________</div>
-                    <div>Roll No: [ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ]</div>
-                    <div>Section: __________</div>
-                  </div>
-                )}
-              </header>
-
-              {/* SECTIONS & QUESTIONS (100% Editable) */}
-              <div className="relative z-10 space-y-6" dir="rtl">
-                {paperData.sections.map((section, sIdx) => (
-                  <div key={section.id || sIdx} className="space-y-3 group/sec">
-                    {/* Section Title Banner (Editable) */}
-                    <div className="bg-slate-100 border-y-2 border-black py-1.5 px-3 flex items-center justify-between">
-                      {isEditMode ? (
-                        <input
-                          type="text"
-                          value={section.titleUr}
-                          onChange={(e) => handleUpdateSectionTitle(sIdx, e.target.value)}
-                          className="font-urdu font-bold text-base text-slate-900 bg-transparent border-b border-dashed border-slate-400 focus:border-black focus:outline-none flex-1 ml-4"
-                        />
-                      ) : (
-                        <div className="font-urdu font-bold text-base text-slate-900">
-                          {section.titleUr}
+                        <div className="w-16 h-16 border-2 border-emerald-600 rounded-full flex flex-col items-center justify-center p-1 bg-emerald-50 text-emerald-800 text-center font-bold">
+                          <span className="text-[10px] leading-tight">SEEK</span>
+                          <span className="text-[8px] uppercase tracking-tighter">ACADEMY</span>
                         </div>
                       )}
+                    </div>
 
-                      <div className="flex items-center gap-2">
+                    {/* Middle: Institution Name + Dark Blue Banner + Subject/Class */}
+                    <div className="flex-1 flex flex-col justify-between text-center border-r-2 border-black">
+                      {/* Institution Title */}
+                      <div className="py-1 px-2 font-black text-2xl text-[#1a365d] uppercase tracking-wider font-serif">
                         {isEditMode ? (
-                          <div className="flex items-center gap-1 text-xs font-bold font-urdu bg-white px-2 py-0.5 border border-slate-700 rounded">
-                            <span>نمبر:</span>
+                          <>
                             <input
-                              type="number"
-                              value={section.marks || ""}
-                              onChange={(e) => handleUpdateSectionMarks(sIdx, Number(e.target.value))}
-                              className="w-12 bg-transparent text-center focus:outline-none"
+                              type="text"
+                              value={paperData.institutionName}
+                              onChange={(e) =>
+                                setPaperData({ ...paperData, institutionName: e.target.value })
+                              }
+                              className="w-full text-center font-black text-2xl text-[#1a365d] bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none uppercase no-print"
                             />
-                          </div>
+                            <span className="print-only">
+                              {paperData.institutionName}
+                            </span>
+                          </>
                         ) : (
-                          section.marks && (
-                            <div className="text-xs font-bold bg-white px-2.5 py-0.5 border border-slate-700 rounded font-urdu">
-                              (نمبر: {section.marks})
-                            </div>
-                          )
+                          paperData.institutionName
                         )}
+                      </div>
 
-                        {/* Section deletion in Edit Mode */}
-                        {isEditMode && (
-                          <button
-                            onClick={() => handleDeleteSection(sIdx)}
-                            className="no-print p-1 rounded hover:bg-rose-100 text-rose-600 transition-colors"
-                            title="Delete this entire section"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                      {/* Dark Blue Center Banner (EXAMINATION 2026-27) */}
+                      <div className="bg-[#1a365d] text-white font-black text-xs sm:text-sm py-1 px-4 border-y border-black tracking-widest uppercase">
+                        {isEditMode ? (
+                          <>
+                            <input
+                              type="text"
+                              value={paperTypeBanner}
+                              onChange={(e) => setPaperTypeBanner(e.target.value)}
+                              className="w-full text-center font-black text-xs sm:text-sm text-white bg-transparent border-b border-dashed border-white/50 focus:border-white focus:outline-none uppercase no-print"
+                            />
+                            <span className="print-only">
+                              {paperTypeBanner}
+                            </span>
+                          </>
+                        ) : (
+                          paperTypeBanner
                         )}
+                      </div>
+
+                      {/* Subject & Class Row */}
+                      <div className="py-1 px-3 text-xs font-bold text-black flex items-center justify-center gap-4">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-extrabold">Subject:</span>
+                          {isEditMode ? (
+                            <>
+                              <input
+                                type="text"
+                                value={paperData.subject}
+                                onChange={(e) => setPaperData({ ...paperData, subject: e.target.value })}
+                                className="font-bold text-xs bg-transparent border-b border-dashed border-slate-400 focus:border-black focus:outline-none w-32 text-center no-print"
+                              />
+                              <span className="print-only">
+                                {paperData.subject}
+                              </span>
+                            </>
+                          ) : (
+                            <span>{paperData.subject}</span>
+                          )}
+                        </div>
+                        <span>|</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-extrabold">Class:</span>
+                          {isEditMode ? (
+                            <>
+                              <input
+                                type="text"
+                                value={paperData.grade}
+                                onChange={(e) => setPaperData({ ...paperData, grade: e.target.value })}
+                                className="font-bold text-xs bg-transparent border-b border-dashed border-slate-400 focus:border-black focus:outline-none w-20 text-center no-print"
+                              />
+                              <span className="print-only">
+                                {paperData.grade}
+                              </span>
+                            </>
+                          ) : (
+                            <span>{paperData.grade}</span>
+                          )}
+                        </div>
                       </div>
                     </div>
 
-                    {/* Poetry Section Rendering */}
-                    {section.type === "poetry" ? (
-                      <div className="space-y-4 py-2">
-                        {section.questions.map((q, qIdx) => (
-                          <div key={qIdx} className="space-y-2 break-inside-avoid">
-                            {q.poetryLines && q.poetryLines.length > 0 ? (
-                              <div className="bg-slate-50/70 p-3 rounded-lg border border-slate-200 space-y-2">
-                                <div className="text-xs font-bold font-urdu text-slate-600 mb-1 flex items-center justify-between">
-                                  <span>{`شعر نمبر (${qIdx + 1}):`}</span>
-                                  {isEditMode && (
-                                    <button
-                                      onClick={() => handleDeleteQuestion(sIdx, qIdx)}
-                                      className="no-print text-rose-500 hover:text-rose-700 text-xs"
-                                    >
-                                      حذف
-                                    </button>
-                                  )}
-                                </div>
-                                {q.poetryLines.map((line, pIdx) => (
-                                  <div key={pIdx} className="py-0.5">
-                                    {isEditMode ? (
-                                      <input
-                                        type="text"
-                                        value={line}
-                                        onChange={(e) => {
-                                          const updated = [...paperData.sections];
-                                          if (updated[sIdx].questions[qIdx].poetryLines) {
-                                            updated[sIdx].questions[qIdx].poetryLines![pIdx] = e.target.value;
-                                            setPaperData({ ...paperData, sections: updated });
-                                          }
-                                        }}
-                                        className="font-urdu text-center text-base font-bold text-slate-900 tracking-wide w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none"
-                                      />
-                                    ) : (
-                                      <div className="font-urdu text-center text-base font-bold text-slate-900 tracking-wide">
-                                        &ldquo;{line}&rdquo;
-                                      </div>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
+                    {/* Right: Paper Code Box */}
+                    <div className="w-28 min-w-[110px] flex flex-col items-center justify-center p-2 bg-white shrink-0 text-center">
+                      <div className="text-[10px] font-bold uppercase tracking-tight text-black mb-1">
+                        PAPER CODE
+                      </div>
+                      <div className="flex justify-center gap-1">
+                        {formattedCodeDigits.map((digit, dIdx) => (
+                          <div
+                            key={dIdx}
+                            className="w-5 h-6 sm:w-6 sm:h-7 border-2 border-black flex items-center justify-center font-black font-mono text-sm sm:text-base bg-white"
+                          >
+                            {isEditMode ? (
+                              <>
+                                <input
+                                  type="text"
+                                  maxLength={1}
+                                  value={digit}
+                                  onChange={(e) => {
+                                    const arr = [...formattedCodeDigits];
+                                    arr[dIdx] = e.target.value;
+                                    setPaperCode(arr.join(""));
+                                  }}
+                                  className="w-full h-full text-center font-black font-mono bg-transparent focus:outline-none no-print"
+                                />
+                                <span className="print-only">
+                                  {digit}
+                                </span>
+                              </>
                             ) : (
-                              <div className="font-urdu text-base font-bold text-center py-1">
-                                {q.questionUr}
-                              </div>
+                              digit
                             )}
                           </div>
                         ))}
                       </div>
-                    ) : (
-                      /* MCQ and Subjective Questions List */
-                      <div
-                        className={`space-y-3 ${
-                          paperLayout === "two-column" ? "grid grid-cols-2 gap-4 space-y-0" : ""
-                        }`}
-                      >
-                        {section.questions.map((q, qIdx) => (
-                          <div
-                            key={qIdx}
-                            className="space-y-2 pb-2.5 border-b border-slate-200 last:border-b-0 break-inside-avoid relative group/q"
-                          >
-                            {/* Question Title Line (Editable) */}
-                            <div className="flex items-start justify-between gap-3 font-urdu">
-                              <div className="flex-1 text-right text-base font-medium text-slate-900 leading-loose flex items-start">
-                                <span className="font-bold ml-2 text-slate-950 whitespace-nowrap">
-                                  {`(${q.number || qIdx + 1})`}
+                    </div>
+                  </div>
+
+                  {/* Student Details & Syllabus Table (Exact style from reference screenshot) */}
+                  {includeStudentInfo && (
+                    <table
+                      className="w-full border-2 border-black border-t-0 border-collapse text-xs font-bold"
+                      dir="ltr"
+                    >
+                      <tbody>
+                        {/* Row 1: Student Name & Syllabus */}
+                        <tr className="border-b border-black h-7">
+                          <td className="w-28 bg-[#f8f9fa] border-r border-black px-2 text-left whitespace-nowrap text-slate-800">
+                            Student Name:
+                          </td>
+                          <td className="border-r-2 border-black px-2 bg-white">
+                            <span className="border-b border-dotted border-slate-500 inline-block w-full min-h-[16px]" />
+                          </td>
+                          <td className="w-24 bg-[#fff3e0] border-r border-black px-2 text-left text-[#e65100] whitespace-nowrap">
+                            Syllabus:
+                          </td>
+                          <td className="px-2 bg-white text-slate-800">
+                            {isEditMode ? (
+                              <>
+                                <input
+                                  type="text"
+                                  value={syllabusText}
+                                  onChange={(e) => setSyllabusText(e.target.value)}
+                                  className="w-full bg-transparent focus:outline-none font-medium text-xs text-slate-800 no-print"
+                                />
+                                <span className="print-only font-medium">
+                                  {syllabusText}
                                 </span>
+                              </>
+                            ) : (
+                              <span className="font-medium">{syllabusText}</span>
+                            )}
+                          </td>
+                        </tr>
+
+                        {/* Row 2: Roll No | Time | Marks | Date | Test No. (Light blue row) */}
+                        <tr className="bg-[#e3f2fd] text-[#0d47a1] h-7">
+                          <td colSpan={4} className="px-3 py-1">
+                            <div className="flex items-center justify-between gap-3 text-xs flex-wrap font-bold">
+                              <div className="flex items-center gap-1">
+                                <span>Roll No:</span>
+                                <span className="border-b border-dotted border-[#0d47a1] w-20 inline-block" />
+                              </div>
+                              <span className="text-slate-400">|</span>
+                              <div className="flex items-center gap-1">
+                                <span>Time:</span>
                                 {isEditMode ? (
-                                  <textarea
-                                    value={q.questionUr}
-                                    rows={1}
-                                    onChange={(e) => handleUpdateQuestionText(sIdx, qIdx, e.target.value)}
-                                    className="font-urdu text-base font-medium text-slate-900 bg-transparent border-b border-dashed border-slate-300 hover:border-slate-500 focus:border-black focus:outline-none w-full resize-none leading-relaxed"
-                                  />
+                                  <>
+                                    <input
+                                      type="text"
+                                      value={paperData.timeAllowed}
+                                      onChange={(e) =>
+                                        setPaperData({ ...paperData, timeAllowed: e.target.value })
+                                      }
+                                      className="w-16 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                                    />
+                                    <span className="print-only">
+                                      {paperData.timeAllowed}
+                                    </span>
+                                  </>
                                 ) : (
-                                  <span>{q.questionUr}</span>
+                                  <span>{paperData.timeAllowed}</span>
                                 )}
                               </div>
-
-                              <div className="flex items-center gap-1.5 pt-1">
+                              <span className="text-slate-400">|</span>
+                              <div className="flex items-center gap-1">
+                                <span>Marks:</span>
                                 {isEditMode ? (
-                                  <div className="flex items-center gap-1 text-xs text-slate-700">
+                                  <>
                                     <input
                                       type="number"
-                                      value={q.marks || ""}
-                                      onChange={(e) => handleUpdateQuestionMarks(sIdx, qIdx, Number(e.target.value))}
-                                      className="w-10 bg-transparent border-b border-dashed border-slate-400 text-center font-bold focus:outline-none"
-                                      placeholder="نمبر"
+                                      value={paperData.totalMarks}
+                                      onChange={(e) =>
+                                        setPaperData({
+                                          ...paperData,
+                                          totalMarks: Number(e.target.value),
+                                        })
+                                      }
+                                      className="w-12 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
                                     />
-                                    <span>نمبر</span>
-                                  </div>
-                                ) : (
-                                  q.marks && (
-                                    <span className="text-xs font-bold text-slate-700 whitespace-nowrap">
-                                      [{q.marks} نمبر]
+                                    <span className="print-only">
+                                      {paperData.totalMarks}
                                     </span>
-                                  )
+                                  </>
+                                ) : (
+                                  <span>{paperData.totalMarks}</span>
                                 )}
+                              </div>
+                              <span className="text-slate-400">|</span>
+                              <div className="flex items-center gap-1">
+                                <span>Date:</span>
+                                {isEditMode ? (
+                                  <>
+                                    <input
+                                      type="text"
+                                      value={paperData.date || ""}
+                                      onChange={(e) =>
+                                        setPaperData({ ...paperData, date: e.target.value })
+                                      }
+                                      className="w-24 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                                    />
+                                    <span className="print-only">
+                                      {paperData.date || "11-10-2026"}
+                                    </span>
+                                  </>
+                                ) : (
+                                  <span>{paperData.date || "11-10-2026"}</span>
+                                )}
+                              </div>
+                              <span className="text-slate-400">|</span>
+                              <div className="flex items-center gap-1">
+                                <span>Test No.:</span>
+                                {isEditMode ? (
+                                  <>
+                                    <input
+                                      type="text"
+                                      value={testNoText}
+                                      onChange={(e) => setTestNoText(e.target.value)}
+                                      className="w-10 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                                    />
+                                    <span className="print-only">
+                                      {testNoText}
+                                    </span>
+                                  </>
+                                ) : (
+                                  <span>{testNoText}</span>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  )}
 
+                  {/* Note / Instruction Banner (Light Green Badge) */}
+                  {includeNote && (
+                    <div className="mt-2 text-xs flex items-start gap-1.5 leading-snug">
+                      <span className="bg-[#d4efdf] text-[#196f3d] px-1.5 py-0.5 rounded text-[11px] font-bold shrink-0">
+                        Note:
+                      </span>
+                      {isEditMode ? (
+                        <>
+                          <textarea
+                            rows={2}
+                            value={instructionNote}
+                            onChange={(e) => setInstructionNote(e.target.value)}
+                            className="w-full text-slate-800 text-[11px] bg-transparent border-b border-dashed border-slate-300 focus:outline-none resize-none leading-relaxed no-print"
+                          />
+                          <span className="print-only text-slate-800 text-[11px] leading-relaxed">
+                            {instructionNote}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-slate-800 text-[11px] leading-relaxed">
+                          {instructionNote}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </header>
+              ) : (
+                /* Simple Minimal Header fallback */
+                <header className="relative z-10 border-b-2 border-black pb-2 mb-3 text-center">
+                  <h1 className="text-2xl font-black uppercase tracking-tight font-serif">
+                    {paperData.institutionName}
+                  </h1>
+                  <p className="text-xs font-bold uppercase text-slate-700">{paperData.title}</p>
+                </header>
+              )}
+
+              {/* ===================================================================
+                  SECTIONS & QUESTIONS (RTL for Urdu / LTR for English)
+                  =================================================================== */}
+              <div
+                className={`relative z-10 space-y-3 pt-1 ${
+                  paperLanguageMode === "Urdu" ? "font-urdu" : "font-sans"
+                }`}
+                dir={paperLanguageMode === "Urdu" ? "rtl" : "ltr"}
+              >
+                {paperData.sections.map((section, sIdx) => {
+                  const isMcqSection = section.type === "mcq";
+
+                  return (
+                    <div key={section.id || sIdx} className="space-y-1.5">
+                      {/* Section Title Banner e.g. "Section-I (20 Marks)" or "حصہ اول (20 نمبر)" */}
+                      <div className="text-center pt-1 pb-0.5 border-b-2 border-black flex items-center justify-between px-1">
+                        <div
+                          className={`font-black uppercase tracking-wider text-black ${
+                            paperLanguageMode === "Urdu" ? "text-sm sm:text-base font-urdu" : "text-xs sm:text-sm"
+                          }`}
+                        >
+                          {isEditMode ? (
+                            <>
+                              <input
+                                type="text"
+                                value={section.titleUr || ""}
+                                onChange={(e) => handleUpdateSectionTitle(sIdx, e.target.value)}
+                                className="font-black uppercase text-black bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none no-print"
+                              />
+                              <span className="print-only">
+                                {section.titleUr || (section.type === "mcq" ? "Section-I (معروضی سوالات)" : "Section-II (انشائیہ سوالات)")}
+                              </span>
+                            </>
+                          ) : (
+                            section.titleUr || (section.type === "mcq" ? "Section-I (معروضی سوالات)" : "Section-II (انشائیہ سوالات)")
+                          )}
+                        </div>
+                        {section.marks && (
+                          <div
+                            className={`text-xs font-bold text-slate-800 ${
+                              paperLanguageMode === "Urdu" ? "font-urdu" : ""
+                            }`}
+                          >
+                            {paperLanguageMode === "Urdu" ? `(${section.marks} نمبر)` : `(${section.marks} Marks)`}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Section Instructions if any */}
+                      {section.instructionsUr && (
+                        <div
+                          className={`text-[11px] font-bold text-slate-800 italic px-0.5 ${
+                            paperLanguageMode === "Urdu" ? "font-urdu text-right not-italic" : "text-left"
+                          }`}
+                        >
+                          {section.instructionsUr}
+                        </div>
+                      )}
+
+                      {/* MCQs Option Layout */}
+                      {isMcqSection ? (
+                        <div className="space-y-2 pt-0.5">
+                          {section.questions.map((q, qIdx) => (
+                            <div key={qIdx} className="space-y-0.5 text-xs break-inside-avoid pb-1 border-b border-slate-100 last:border-b-0">
+                              {/* Question line */}
+                              <div
+                                className={`flex items-start justify-between gap-1.5 font-bold text-slate-950 leading-snug ${
+                                  paperLanguageMode === "Urdu" ? "text-xs sm:text-sm font-urdu text-right" : "text-xs text-left"
+                                }`}
+                              >
+                                <div className="flex-1 flex items-start gap-1.5">
+                                  <span className="font-extrabold whitespace-nowrap">
+                                    {paperLanguageMode === "Urdu"
+                                      ? `(${q.number || qIdx + 1})`
+                                      : `${q.number || qIdx + 1}.`}
+                                  </span>
+                                  {/* In Edit mode, show textarea on screen; in print or preview show clean flowing text */}
+                                  {isEditMode ? (
+                                    <>
+                                      <textarea
+                                        rows={1}
+                                        value={q.questionUr || ""}
+                                        onChange={(e) =>
+                                          handleUpdateQuestionText(sIdx, qIdx, e.target.value)
+                                        }
+                                        className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none resize-none font-bold no-print ${
+                                          paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                        }`}
+                                      />
+                                      <span
+                                        className={`print-only font-bold ${
+                                          paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                        }`}
+                                      >
+                                        {q.questionUr}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <span
+                                      className={`font-bold ${
+                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                      }`}
+                                    >
+                                      {q.questionUr}
+                                    </span>
+                                  )}
+                                </div>
                                 {isEditMode && (
                                   <button
                                     onClick={() => handleDeleteQuestion(sIdx, qIdx)}
-                                    className="no-print opacity-40 hover:opacity-100 text-rose-500 p-1 transition-opacity"
-                                    title="Delete question"
+                                    className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
                                 )}
                               </div>
+
+                              {/* 4 Options Grid (Clean & compact) */}
+                              {q.options && q.options.length > 0 && (
+                                <div
+                                  className={`grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-1 pt-0.5 text-xs font-medium text-slate-900 ${
+                                    paperLanguageMode === "Urdu" ? "pr-4 font-urdu" : "pl-4"
+                                  }`}
+                                  dir={paperLanguageMode === "Urdu" ? "rtl" : "ltr"}
+                                >
+                                  {q.options.map((opt, oIdx) => (
+                                    <div key={oIdx} className="flex items-center gap-1">
+                                      <span className="font-bold text-xs shrink-0">({opt.key})</span>
+                                      {isEditMode ? (
+                                        <>
+                                          <input
+                                            type="text"
+                                            value={opt.textUr || ""}
+                                            onChange={(e) =>
+                                              handleUpdateOption(sIdx, qIdx, oIdx, "textUr", e.target.value)
+                                            }
+                                            className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none text-xs no-print ${
+                                              paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""
+                                            }`}
+                                          />
+                                          <span
+                                            className={`print-only ${
+                                              paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""
+                                            }`}
+                                          >
+                                            {opt.textUr}
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <span className={paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""}>
+                                          {opt.textUr}
+                                        </span>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
-
-                            {/* MCQ Options grid (Editable) */}
-                            {section.type === "mcq" && q.options && q.options.length > 0 && (
-                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 px-1">
-                                {q.options.map((opt, oIdx) => (
-                                  <div
-                                    key={oIdx}
-                                    className="flex items-center gap-2 p-1.5 rounded bg-slate-50 border border-slate-300"
-                                  >
-                                    <span className="font-bold text-xs min-w-5 h-5 rounded-full bg-slate-200 border border-slate-400 flex items-center justify-center text-slate-950 font-urdu">
-                                      ({opt.key})
-                                    </span>
-                                    {isEditMode ? (
-                                      <input
-                                        type="text"
-                                        value={opt.textUr}
-                                        onChange={(e) =>
-                                          handleUpdateOption(sIdx, qIdx, oIdx, "textUr", e.target.value)
-                                        }
-                                        className="font-urdu text-xs font-medium text-slate-900 bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none w-full"
-                                      />
-                                    ) : (
-                                      <span className="font-urdu text-xs font-medium text-slate-900 leading-normal">
-                                        {opt.textUr}
-                                      </span>
-                                    )}
-                                  </div>
-                                ))}
+                          ))}
+                        </div>
+                      ) : section.type === "poetry" ? (
+                        /* Poetry section: formatted in neat couplets */
+                        <div className="space-y-2 py-1 font-urdu" dir="rtl">
+                          {section.questions.map((q, qIdx) => (
+                            <div key={qIdx} className="space-y-1 break-inside-avoid bg-slate-50/50 p-2 border border-slate-200 rounded">
+                              <div className="text-xs font-bold text-slate-700 text-right">
+                                {`شعر (${toRomanLower(q.number || qIdx + 1)}):`}
                               </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Add Question Button inside section in Edit Mode */}
-                    {isEditMode && (
-                      <div className="no-print pt-2 flex justify-end">
-                        <button
-                          onClick={() => handleAddQuestion(sIdx)}
-                          className="px-2.5 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md border border-emerald-200 flex items-center gap-1 transition-colors"
+                              {q.poetryLines?.map((line, pIdx) => (
+                                <div
+                                  key={pIdx}
+                                  className="font-urdu text-center text-xs sm:text-sm font-bold text-slate-950 py-0.5 tracking-wide"
+                                >
+                                  &ldquo;{line}&rdquo;
+                                </div>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        /* Subjective Questions: Clean full-width list or 2-column based on paperLayout */
+                        <div
+                          className={`grid gap-2 pt-1 text-xs ${
+                            paperLayout === "two-column" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+                          }`}
                         >
-                          <Plus className="w-3.5 h-3.5" />
-                          <span>نیا سوال شامل کریں</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+                          {section.questions.map((q, qIdx) => (
+                            <div
+                              key={qIdx}
+                              className="flex items-start justify-between gap-2 break-inside-avoid pb-1 border-b border-slate-200 last:border-b-0"
+                            >
+                              <div
+                                className={`flex-1 flex items-start gap-1.5 font-bold text-slate-950 leading-relaxed ${
+                                  paperLanguageMode === "Urdu" ? "font-urdu text-sm text-right" : "text-xs text-left"
+                                }`}
+                              >
+                                <span className="font-extrabold whitespace-nowrap">
+                                  {`(${toRomanLower(q.number || qIdx + 1)})`}
+                                </span>
+                                {isEditMode ? (
+                                  <>
+                                    <textarea
+                                      rows={1}
+                                      value={q.questionUr || ""}
+                                      onChange={(e) =>
+                                        handleUpdateQuestionText(sIdx, qIdx, e.target.value)
+                                      }
+                                      className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none resize-none font-bold no-print ${
+                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                      }`}
+                                    />
+                                    <span
+                                      className={`print-only font-bold ${
+                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm" : "text-xs"
+                                      }`}
+                                    >
+                                      {q.questionUr}
+                                    </span>
+                                  </>
+                                ) : (
+                                  <span>{q.questionUr}</span>
+                                )}
+                              </div>
+                              {isEditMode && (
+                                <button
+                                  onClick={() => handleDeleteQuestion(sIdx, qIdx)}
+                                  className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
 
-              {/* End of paper indicator */}
-              <div className="mt-8 pt-4 border-t border-slate-300 text-center text-xs font-semibold tracking-widest text-slate-500 uppercase font-urdu">
-                *** اختتام پیپر / Best of Luck ***
+                      {/* Add Question Button in Edit Mode */}
+                      {isEditMode && (
+                        <div
+                          className={`no-print pt-0.5 flex ${
+                            paperLanguageMode === "Urdu" ? "justify-start" : "justify-end"
+                          }`}
+                        >
+                          <button
+                            onClick={() => handleAddQuestion(sIdx)}
+                            className="px-2 py-0.5 text-[11px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded border border-emerald-300 flex items-center gap-1 font-sans"
+                          >
+                            <Plus className="w-3 h-3" />
+                            <span>{paperLanguageMode === "Urdu" ? "نیا سوال شامل کریں" : "Add Question"}</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -1210,4 +1482,23 @@ export default function QuickPaperPage() {
       </main>
     </div>
   );
+}
+
+// Convert numbers to lower roman numerals for sub-questions (i), (ii), (iii)
+function toRomanLower(num: number): string {
+  const lookup: [number, string][] = [
+    [10, "x"],
+    [9, "ix"],
+    [5, "v"],
+    [4, "iv"],
+    [1, "i"],
+  ];
+  let roman = "";
+  for (const [val, str] of lookup) {
+    while (num >= val) {
+      roman += str;
+      num -= val;
+    }
+  }
+  return roman || "i";
 }
