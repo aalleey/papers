@@ -32,6 +32,8 @@ import {
   Save,
   Palette,
   Image as ImageIcon,
+  Columns,
+  Scissors,
 } from "lucide-react";
 import { parseRawTextToExam, ExamPaperData, ExamSection, ExamQuestion } from "@/lib/quick-paper-parser";
 import { MathRenderer } from "@/components/MathRenderer";
@@ -183,6 +185,7 @@ export default function QuickPaperPage() {
   const [instructionNote, setInstructionNote] = useState(activeTemplate.instructionNoteEn);
   const [includeNote, setIncludeNote] = useState(true);
   const [logoBase64, setLogoBase64] = useState<string | null>(null);
+  const [printDensity, setPrintDensity] = useState<"1_per_page" | "2_per_page">("1_per_page");
 
   // Structured Paper Data (100% Editable)
   const [paperData, setPaperData] = useState<ExamPaperData>(() =>
@@ -527,6 +530,619 @@ export default function QuickPaperPage() {
 
   // Format 4-digit paper code into array
   const formattedCodeDigits = (paperCode || "3044").padEnd(4, "0").slice(0, 4).split("");
+
+  // Reusable Exam Paper Renderer
+  const renderPaperContent = (copyIndex: number = 1) => {
+    const isSecondCopy = copyIndex === 2;
+    return (
+      <div
+        className={`printable-paper-sheet bg-white text-black transition-all relative ${
+          showBorder ? "border-2 border-black" : ""
+        } ${
+          printDensity === "2_per_page"
+            ? "p-2 sm:p-3 text-[10px]"
+            : "p-4 sm:p-6 text-xs"
+        }`}
+        style={{
+          boxSizing: "border-box",
+          lineHeight: printDensity === "2_per_page" ? "1.25" : "1.35",
+        }}
+      >
+        {/* Optional Watermark */}
+        {showWatermark && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5 select-none overflow-hidden z-0">
+            <span className="text-7xl font-black rotate-45 uppercase tracking-widest text-slate-900">
+              {watermarkText || paperData.institutionName}
+            </span>
+          </div>
+        )}
+
+        {/* ===================================================================
+            STYLE 1: PUNJAB BOARDS / SEEK ACADEMY HEADER
+            =================================================================== */}
+        {activeTemplate.headerStyle === "punjab-board-style1" ? (
+          <header className="relative z-10 mb-2 font-sans select-text">
+            {/* Top Outer Header Box */}
+            <div className="border-2 border-black flex items-stretch w-full bg-white box-border mb-0">
+              {/* Left: Logo Box */}
+              <div className="w-20 sm:w-24 min-w-[76px] sm:min-w-[96px] border-r-2 border-black flex flex-col items-center justify-center p-1 sm:p-1.5 bg-white shrink-0">
+                {logoBase64 ? (
+                  <img
+                    src={logoBase64}
+                    alt="Logo"
+                    className="max-h-16 sm:max-h-20 max-w-[70px] sm:max-w-[85px] object-contain"
+                  />
+                ) : (
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-emerald-600 rounded-full flex flex-col items-center justify-center p-1 bg-emerald-50 text-emerald-800 text-center font-bold">
+                    <span className="text-[9px] sm:text-[10px] leading-tight">SEEK</span>
+                    <span className="text-[7px] sm:text-[8px] uppercase tracking-tighter">ACADEMY</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Middle: Institution Name + Dark Blue Banner + Subject/Class */}
+              <div className="flex-1 flex flex-col justify-between text-center border-r-2 border-black">
+                {/* Institution Title */}
+                <div className="py-0.5 sm:py-1 px-2 font-black text-lg sm:text-2xl text-[#1a365d] uppercase tracking-wider font-serif">
+                  {isEditMode && !isSecondCopy ? (
+                    <>
+                      <input
+                        type="text"
+                        value={paperData.institutionName}
+                        onChange={(e) =>
+                          setPaperData({ ...paperData, institutionName: e.target.value })
+                        }
+                        className="w-full text-center font-black text-lg sm:text-2xl text-[#1a365d] bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none uppercase no-print"
+                      />
+                      <span className="print-only">
+                        {paperData.institutionName}
+                      </span>
+                    </>
+                  ) : (
+                    paperData.institutionName
+                  )}
+                </div>
+
+                {/* Dark Blue Center Banner (EXAMINATION 2026-27) */}
+                <div className="bg-[#1a365d] text-white font-black text-[11px] sm:text-xs py-0.5 px-3 border-y border-black tracking-widest uppercase">
+                  {isEditMode && !isSecondCopy ? (
+                    <>
+                      <input
+                        type="text"
+                        value={paperTypeBanner}
+                        onChange={(e) => setPaperTypeBanner(e.target.value)}
+                        className="w-full text-center font-black text-[11px] sm:text-xs text-white bg-transparent border-b border-dashed border-white/50 focus:border-white focus:outline-none uppercase no-print"
+                      />
+                      <span className="print-only">
+                        {paperTypeBanner}
+                      </span>
+                    </>
+                  ) : (
+                    paperTypeBanner
+                  )}
+                </div>
+
+                {/* Subject & Class Row */}
+                <div className="py-0.5 px-2 text-[11px] sm:text-xs font-bold text-black flex items-center justify-center gap-3">
+                  <div className="flex items-center gap-1">
+                    <span className="font-extrabold">Subject:</span>
+                    {isEditMode && !isSecondCopy ? (
+                      <>
+                        <input
+                          type="text"
+                          value={paperData.subject}
+                          onChange={(e) => setPaperData({ ...paperData, subject: e.target.value })}
+                          className="font-bold text-[11px] sm:text-xs bg-transparent border-b border-dashed border-slate-400 focus:border-black focus:outline-none w-28 text-center no-print"
+                        />
+                        <span className="print-only">
+                          {paperData.subject}
+                        </span>
+                      </>
+                    ) : (
+                      <span>{paperData.subject}</span>
+                    )}
+                  </div>
+                  <span>|</span>
+                  <div className="flex items-center gap-1">
+                    <span className="font-extrabold">Class:</span>
+                    {isEditMode && !isSecondCopy ? (
+                      <>
+                        <input
+                          type="text"
+                          value={paperData.grade}
+                          onChange={(e) => setPaperData({ ...paperData, grade: e.target.value })}
+                          className="font-bold text-[11px] sm:text-xs bg-transparent border-b border-dashed border-slate-400 focus:border-black focus:outline-none w-16 text-center no-print"
+                        />
+                        <span className="print-only">
+                          {paperData.grade}
+                        </span>
+                      </>
+                    ) : (
+                      <span>{paperData.grade}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Paper Code Box */}
+              <div className="w-20 sm:w-28 min-w-[80px] sm:min-w-[110px] flex flex-col items-center justify-center p-1.5 bg-white shrink-0 text-center">
+                <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-tight text-black mb-0.5">
+                  PAPER CODE
+                </div>
+                <div className="flex justify-center gap-0.5 sm:gap-1">
+                  {formattedCodeDigits.map((digit, dIdx) => (
+                    <div
+                      key={dIdx}
+                      className="w-4 h-5 sm:w-6 sm:h-7 border border-black sm:border-2 flex items-center justify-center font-black font-mono text-xs sm:text-base bg-white"
+                    >
+                      {isEditMode && !isSecondCopy ? (
+                        <>
+                          <input
+                            type="text"
+                            maxLength={1}
+                            value={digit}
+                            onChange={(e) => {
+                              const arr = [...formattedCodeDigits];
+                              arr[dIdx] = e.target.value;
+                              setPaperCode(arr.join(""));
+                            }}
+                            className="w-full h-full text-center font-black font-mono bg-transparent focus:outline-none no-print"
+                          />
+                          <span className="print-only">
+                            {digit}
+                          </span>
+                        </>
+                      ) : (
+                        digit
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Student Details & Syllabus Table */}
+            {includeStudentInfo && (
+              <table
+                className="w-full border-2 border-black border-t-0 border-collapse text-[11px] sm:text-xs font-bold"
+                dir="ltr"
+              >
+                <tbody>
+                  {/* Row 1: Student Name & Syllabus */}
+                  <tr className="border-b border-black h-6 sm:h-7">
+                    <td className="w-24 sm:w-28 bg-[#f8f9fa] border-r border-black px-1.5 sm:px-2 text-left whitespace-nowrap text-slate-800">
+                      Student Name:
+                    </td>
+                    <td className="border-r-2 border-black px-2 bg-white">
+                      <span className="border-b border-dotted border-slate-500 inline-block w-full min-h-[14px]" />
+                    </td>
+                    <td className="w-20 sm:w-24 bg-[#fff3e0] border-r border-black px-1.5 sm:px-2 text-left text-[#e65100] whitespace-nowrap">
+                      Syllabus:
+                    </td>
+                    <td className="px-2 bg-white text-slate-800">
+                      {isEditMode && !isSecondCopy ? (
+                        <>
+                          <input
+                            type="text"
+                            value={syllabusText}
+                            onChange={(e) => setSyllabusText(e.target.value)}
+                            className="w-full bg-transparent focus:outline-none font-medium text-[11px] sm:text-xs text-slate-800 no-print"
+                          />
+                          <span className="print-only font-medium">
+                            {syllabusText}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="font-medium">{syllabusText}</span>
+                      )}
+                    </td>
+                  </tr>
+
+                  {/* Row 2: Roll No | Time | Marks | Date | Test No. (Light blue row) */}
+                  <tr className="bg-[#e3f2fd] text-[#0d47a1] h-6 sm:h-7">
+                    <td colSpan={4} className="px-2 sm:px-3 py-0.5">
+                      <div className="flex items-center justify-between gap-2 sm:gap-3 text-[10px] sm:text-xs flex-wrap font-bold">
+                        <div className="flex items-center gap-1">
+                          <span>Roll No:</span>
+                          <span className="border-b border-dotted border-[#0d47a1] w-14 sm:w-20 inline-block" />
+                        </div>
+                        <span className="text-slate-400">|</span>
+                        <div className="flex items-center gap-1">
+                          <span>Time:</span>
+                          {isEditMode && !isSecondCopy ? (
+                            <>
+                              <input
+                                type="text"
+                                value={paperData.timeAllowed}
+                                onChange={(e) =>
+                                  setPaperData({ ...paperData, timeAllowed: e.target.value })
+                                }
+                                className="w-14 sm:w-16 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                              />
+                              <span className="print-only">
+                                {paperData.timeAllowed}
+                              </span>
+                            </>
+                          ) : (
+                            <span>{paperData.timeAllowed}</span>
+                          )}
+                        </div>
+                        <span className="text-slate-400">|</span>
+                        <div className="flex items-center gap-1">
+                          <span>Marks:</span>
+                          {isEditMode && !isSecondCopy ? (
+                            <>
+                              <input
+                                type="number"
+                                value={paperData.totalMarks}
+                                onChange={(e) =>
+                                  setPaperData({
+                                    ...paperData,
+                                    totalMarks: Number(e.target.value),
+                                  })
+                                }
+                                className="w-10 sm:w-12 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                              />
+                              <span className="print-only">
+                                {paperData.totalMarks}
+                              </span>
+                            </>
+                          ) : (
+                            <span>{paperData.totalMarks}</span>
+                          )}
+                        </div>
+                        <span className="text-slate-400">|</span>
+                        <div className="flex items-center gap-1">
+                          <span>Date:</span>
+                          {isEditMode && !isSecondCopy ? (
+                            <>
+                              <input
+                                type="text"
+                                value={paperData.date || ""}
+                                onChange={(e) =>
+                                  setPaperData({ ...paperData, date: e.target.value })
+                                }
+                                className="w-20 sm:w-24 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                              />
+                              <span className="print-only">
+                                {paperData.date || "11-10-2026"}
+                              </span>
+                            </>
+                          ) : (
+                            <span>{paperData.date || "11-10-2026"}</span>
+                          )}
+                        </div>
+                        <span className="text-slate-400">|</span>
+                        <div className="flex items-center gap-1">
+                          <span>Test No.:</span>
+                          {isEditMode && !isSecondCopy ? (
+                            <>
+                              <input
+                                type="text"
+                                value={testNoText}
+                                onChange={(e) => setTestNoText(e.target.value)}
+                                className="w-8 sm:w-10 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                              />
+                              <span className="print-only">
+                                {testNoText}
+                              </span>
+                            </>
+                          ) : (
+                            <span>{testNoText}</span>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            )}
+
+            {/* Note / Instruction Banner */}
+            {includeNote && (
+              <div className="mt-1.5 text-[10px] sm:text-xs flex items-start gap-1.5 leading-snug">
+                <span className="bg-[#d4efdf] text-[#196f3d] px-1 py-0.2 rounded text-[10px] font-bold shrink-0">
+                  Note:
+                </span>
+                {isEditMode && !isSecondCopy ? (
+                  <>
+                    <textarea
+                      rows={2}
+                      value={instructionNote}
+                      onChange={(e) => setInstructionNote(e.target.value)}
+                      className="w-full text-slate-800 text-[10px] sm:text-[11px] bg-transparent border-b border-dashed border-slate-300 focus:outline-none resize-none leading-relaxed no-print"
+                    />
+                    <span className="print-only text-slate-800 text-[10px] sm:text-[11px] leading-relaxed">
+                      {instructionNote}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-slate-800 text-[10px] sm:text-[11px] leading-relaxed">
+                    {instructionNote}
+                  </span>
+                )}
+              </div>
+            )}
+          </header>
+        ) : (
+          <header className="relative z-10 border-b-2 border-black pb-2 mb-2 text-center">
+            <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight font-serif">
+              {paperData.institutionName}
+            </h1>
+            <p className="text-xs font-bold uppercase text-slate-700">{paperData.title}</p>
+          </header>
+        )}
+
+        {/* ===================================================================
+            SECTIONS & QUESTIONS
+            =================================================================== */}
+        <div
+          className={`relative z-10 space-y-2.5 pt-1 ${
+            paperLanguageMode === "Urdu" ? "font-urdu" : "font-sans"
+          }`}
+          dir={paperLanguageMode === "Urdu" ? "rtl" : "ltr"}
+        >
+          {paperData.sections.map((section, sIdx) => {
+            const isMcqSection = section.type === "mcq";
+
+            return (
+              <div key={section.id || sIdx} className="space-y-1">
+                {/* Section Title Banner */}
+                <div className="text-center pt-0.5 pb-0.5 border-b-2 border-black flex items-center justify-between px-1">
+                  <div
+                    className={`font-black uppercase tracking-wider text-black ${
+                      paperLanguageMode === "Urdu"
+                        ? "text-xs sm:text-sm font-urdu"
+                        : "text-[11px] sm:text-xs"
+                    }`}
+                  >
+                    {isEditMode && !isSecondCopy ? (
+                      <>
+                        <input
+                          type="text"
+                          value={section.titleUr || ""}
+                          onChange={(e) => handleUpdateSectionTitle(sIdx, e.target.value)}
+                          className="font-black uppercase text-black bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none no-print"
+                        />
+                        <span className="print-only">
+                          {section.titleUr || (section.type === "mcq" ? "Section-I (معروضی سوالات)" : "Section-II (انشائیہ سوالات)")}
+                        </span>
+                      </>
+                    ) : (
+                      section.titleUr || (section.type === "mcq" ? "Section-I (معروضی سوالات)" : "Section-II (انشائیہ سوالات)")
+                    )}
+                  </div>
+                  {section.marks && (
+                    <div
+                      className={`text-[10px] sm:text-xs font-bold text-slate-800 ${
+                        paperLanguageMode === "Urdu" ? "font-urdu" : ""
+                      }`}
+                    >
+                      {paperLanguageMode === "Urdu" ? `(${section.marks} نمبر)` : `(${section.marks} Marks)`}
+                    </div>
+                  )}
+                </div>
+
+                {/* Section Instructions */}
+                {section.instructionsUr && (
+                  <div
+                    className={`text-[10px] sm:text-[11px] font-bold text-slate-800 italic px-0.5 ${
+                      paperLanguageMode === "Urdu" ? "font-urdu text-right not-italic" : "text-left"
+                    }`}
+                  >
+                    {section.instructionsUr}
+                  </div>
+                )}
+
+                {/* MCQs Option Layout */}
+                {isMcqSection ? (
+                  <div className="space-y-2 pt-0.5">
+                    {section.questions.map((q, qIdx) => (
+                      <div key={qIdx} className="space-y-0.5 text-[11px] sm:text-xs break-inside-avoid pb-1 border-b border-slate-100 last:border-b-0">
+                        {/* Question line */}
+                        <div
+                          className={`flex items-start justify-between gap-1.5 font-bold text-slate-950 ${
+                            paperLanguageMode === "Urdu"
+                              ? "text-xs sm:text-sm font-urdu text-right leading-loose"
+                              : "text-[11px] sm:text-xs text-left leading-normal"
+                          }`}
+                        >
+                          <div className="flex-1 flex items-start gap-1.5">
+                            <span className="font-extrabold whitespace-nowrap shrink-0 mt-0.5">
+                              {paperLanguageMode === "Urdu"
+                                ? `(${q.number || qIdx + 1})`
+                                : `${q.number || qIdx + 1}.`}
+                            </span>
+                            {isEditMode && !isSecondCopy ? (
+                              <>
+                                <textarea
+                                  rows={1}
+                                  value={q.questionUr || ""}
+                                  onChange={(e) =>
+                                    handleUpdateQuestionText(sIdx, qIdx, e.target.value)
+                                  }
+                                  className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none resize-none font-bold no-print ${
+                                    paperLanguageMode === "Urdu" ? "font-urdu text-xs leading-relaxed" : "text-[11px] sm:text-xs"
+                                  }`}
+                                />
+                                <span
+                                  className={`print-only font-bold ${
+                                    paperLanguageMode === "Urdu" ? "font-urdu text-xs leading-relaxed" : "text-[11px] sm:text-xs"
+                                  }`}
+                                >
+                                  {q.questionUr}
+                                </span>
+                              </>
+                            ) : (
+                              <span
+                                className={`font-bold flex-1 ${
+                                  paperLanguageMode === "Urdu" ? "font-urdu text-xs sm:text-sm leading-loose" : "text-[11px] sm:text-xs"
+                                }`}
+                              >
+                                {q.questionUr}
+                              </span>
+                            )}
+                          </div>
+                          {isEditMode && !isSecondCopy && (
+                            <button
+                              onClick={() => handleDeleteQuestion(sIdx, qIdx)}
+                              className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start p-0.5"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* 4 Options Grid */}
+                        {q.options && q.options.length > 0 && (
+                          <div
+                            className={`grid grid-cols-2 sm:grid-cols-4 gap-x-2 sm:gap-x-4 gap-y-1 pt-0.5 text-[10px] sm:text-xs font-medium text-slate-900 ${
+                              paperLanguageMode === "Urdu" ? "pr-4 font-urdu" : "pl-4"
+                            }`}
+                            dir={paperLanguageMode === "Urdu" ? "rtl" : "ltr"}
+                          >
+                            {q.options.map((opt, oIdx) => (
+                              <div key={oIdx} className="flex items-center gap-1 min-w-0">
+                                <span className="font-bold text-[10px] sm:text-xs shrink-0">({opt.key})</span>
+                                {isEditMode && !isSecondCopy ? (
+                                  <>
+                                    <input
+                                      type="text"
+                                      value={opt.textUr || ""}
+                                      onChange={(e) =>
+                                        handleUpdateOption(sIdx, qIdx, oIdx, "textUr", e.target.value)
+                                      }
+                                      className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none text-[10px] sm:text-xs no-print ${
+                                        paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""
+                                      }`}
+                                    />
+                                    <span
+                                      className={`print-only break-words ${
+                                        paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""
+                                      }`}
+                                    >
+                                      {opt.textUr}
+                                    </span>
+                                  </>
+                                ) : (
+                                  <span className={`break-words ${paperLanguageMode === "Urdu" ? "font-urdu text-xs sm:text-sm" : ""}`}>
+                                    {opt.textUr}
+                                  </span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : section.type === "poetry" ? (
+                  /* Poetry section */
+                  <div className="space-y-1.5 py-0.5 font-urdu" dir="rtl">
+                    {section.questions.map((q, qIdx) => (
+                      <div key={qIdx} className="space-y-0.5 break-inside-avoid bg-slate-50/50 p-2 border border-slate-200 rounded">
+                        <div className="text-[10px] sm:text-xs font-bold text-slate-700 text-right">
+                          {`شعر (${toRomanLower(q.number || qIdx + 1)}):`}
+                        </div>
+                        {q.poetryLines?.map((line, pIdx) => (
+                          <div
+                            key={pIdx}
+                            className="font-urdu text-center text-xs sm:text-sm font-bold text-slate-950 py-0.5 tracking-wide leading-relaxed"
+                          >
+                            &ldquo;{line}&rdquo;
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  /* Subjective Questions */
+                  <div
+                    className={`grid gap-1.5 pt-0.5 text-[11px] sm:text-xs ${
+                      paperLayout === "two-column" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+                    }`}
+                  >
+                    {section.questions.map((q, qIdx) => (
+                      <div
+                        key={qIdx}
+                        className="flex items-start justify-between gap-1.5 break-inside-avoid pb-1 border-b border-slate-200 last:border-b-0"
+                      >
+                        <div
+                          className={`flex-1 flex items-start gap-1.5 font-bold text-slate-950 ${
+                            paperLanguageMode === "Urdu"
+                              ? "font-urdu text-xs sm:text-sm text-right leading-loose"
+                              : "text-[11px] sm:text-xs text-left leading-normal"
+                          }`}
+                        >
+                          <span className="font-extrabold whitespace-nowrap shrink-0 mt-0.5">
+                            {paperLanguageMode === "Urdu"
+                              ? `(${toRomanLower(q.number || qIdx + 1)})`
+                              : section.questions.length === 1 && section.type === "essay"
+                              ? ""
+                              : `${q.number || qIdx + 1}.`}
+                          </span>
+                          {isEditMode && !isSecondCopy ? (
+                            <>
+                              <textarea
+                                rows={1}
+                                value={q.questionUr || ""}
+                                onChange={(e) =>
+                                  handleUpdateQuestionText(sIdx, qIdx, e.target.value)
+                                }
+                                className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none resize-none font-bold no-print ${
+                                  paperLanguageMode === "Urdu" ? "font-urdu text-xs leading-relaxed" : "text-[11px] sm:text-xs"
+                                }`}
+                              />
+                              <span
+                                className={`print-only font-bold ${
+                                  paperLanguageMode === "Urdu" ? "font-urdu text-xs leading-relaxed" : "text-[11px] sm:text-xs"
+                                }`}
+                              >
+                                {q.questionUr}
+                              </span>
+                            </>
+                          ) : (
+                            <span className={paperLanguageMode === "Urdu" ? "font-urdu text-xs sm:text-sm leading-loose" : ""}>
+                              {q.questionUr}
+                            </span>
+                          )}
+                        </div>
+                        {isEditMode && !isSecondCopy && (
+                          <button
+                            onClick={() => handleDeleteQuestion(sIdx, qIdx)}
+                            className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start p-0.5"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Add Question Button in Edit Mode */}
+                {isEditMode && !isSecondCopy && (
+                  <div
+                    className={`no-print pt-0.5 flex ${
+                      paperLanguageMode === "Urdu" ? "justify-start" : "justify-end"
+                    }`}
+                  >
+                    <button
+                      onClick={() => handleAddQuestion(sIdx)}
+                      className="px-2 py-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded border border-emerald-300 flex items-center gap-1 font-sans"
+                    >
+                      <Plus className="w-3 h-3" />
+                      <span>{paperLanguageMode === "Urdu" ? "نیا سوال شامل کریں" : "Add Question"}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
@@ -923,6 +1539,35 @@ export default function QuickPaperPage() {
               </div>
 
               <div className="flex items-center gap-4 text-xs text-slate-300">
+                <div className="flex items-center gap-1.5 border-l border-slate-800 pl-3">
+                  <span className="text-xs font-semibold text-slate-400">Layout:</span>
+                  <div className="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-700">
+                    <button
+                      onClick={() => setPrintDensity("1_per_page")}
+                      className={`px-2 py-1 rounded text-xs font-semibold transition-all ${
+                        printDensity === "1_per_page"
+                          ? "bg-emerald-500 text-slate-950 shadow"
+                          : "text-slate-300 hover:text-white"
+                      }`}
+                      title="1 Exam Paper per full A4 sheet"
+                    >
+                      1 on 1 Page
+                    </button>
+                    <button
+                      onClick={() => setPrintDensity("2_per_page")}
+                      className={`px-2 py-1 rounded text-xs font-semibold flex items-center gap-1 transition-all ${
+                        printDensity === "2_per_page"
+                          ? "bg-emerald-500 text-slate-950 shadow"
+                          : "text-slate-300 hover:text-white"
+                      }`}
+                      title="Print 2 Exam Papers side-by-side on 1 Landscape A4 sheet (Save 50% paper)"
+                    >
+                      <Columns className="w-3 h-3" />
+                      <span>2 on 1 Page</span>
+                    </button>
+                  </div>
+                </div>
+
                 <label className="flex items-center gap-1.5 cursor-pointer">
                   <input
                     type="checkbox"
@@ -955,613 +1600,60 @@ export default function QuickPaperPage() {
               </div>
             </div>
 
-            {/* A4 PRINT SHEET CONTAINER (Style 1: Punjab Boards / Seek Academy) */}
-            <div
-              id="printable-paper"
-              className={`bg-white text-black shadow-2xl transition-all relative print:m-0 print:p-0 print:shadow-none print:w-full print:border-0 ${
-                showBorder ? "p-4 sm:p-6 border-2 border-black" : "p-4 sm:p-6"
-              }`}
-              style={{
-                width: "210mm",
-                minHeight: "297mm",
-                fontSize: `${fontSize}px`,
-                boxSizing: "border-box",
-                lineHeight: "1.35",
+            {/* Dynamic Print Styles for Single A4 vs 2-Up Landscape A4 */}
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `
+                  @media print {
+                    @page {
+                      size: ${printDensity === "2_per_page" ? "A4 landscape" : "A4 portrait"} !important;
+                      margin: ${printDensity === "2_per_page" ? "3mm 4mm" : "5mm"} !important;
+                    }
+                  }
+                `,
               }}
-            >
-              {/* Optional Watermark */}
-              {showWatermark && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5 select-none overflow-hidden z-0">
-                  <span className="text-8xl font-black rotate-45 uppercase tracking-widest text-slate-900">
-                    {watermarkText || paperData.institutionName}
+            />
+            {printDensity === "2_per_page" ? (
+              <div className="w-full max-w-[297mm]">
+                {/* 2-on-1 Info Banner */}
+                <div className="no-print mb-3 py-2 px-3 bg-emerald-950/70 border border-emerald-500/30 rounded-xl text-xs font-bold text-emerald-300 flex items-center justify-between shadow-md">
+                  <span className="flex items-center gap-1.5">
+                    <Columns className="w-4 h-4 text-emerald-400" />
+                    <span>2 Papers on 1 Page Mode: Both copies print side-by-side on one Landscape A4 sheet with scissors cut line.</span>
+                  </span>
+                  <span className="text-[11px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30 font-black">
+                    A4 Landscape (2-Up)
                   </span>
                 </div>
-              )}
 
-              {/* ===================================================================
-                  STYLE 1: PUNJAB BOARDS / SEEK ACADEMY HEADER
-                  =================================================================== */}
-              {activeTemplate.headerStyle === "punjab-board-style1" ? (
-                <header className="relative z-10 mb-2 font-sans select-text">
-                  {/* Top Outer Header Box */}
-                  <div className="border-2 border-black flex items-stretch w-full bg-white box-border mb-0">
-                    {/* Left: Logo Box */}
-                    <div className="w-24 min-w-[96px] border-r-2 border-black flex flex-col items-center justify-center p-1.5 bg-white shrink-0">
-                      {logoBase64 ? (
-                        <img
-                          src={logoBase64}
-                          alt="Logo"
-                          className="max-h-20 max-w-[85px] object-contain"
-                        />
-                      ) : (
-                        <div className="w-16 h-16 border-2 border-emerald-600 rounded-full flex flex-col items-center justify-center p-1 bg-emerald-50 text-emerald-800 text-center font-bold">
-                          <span className="text-[10px] leading-tight">SEEK</span>
-                          <span className="text-[8px] uppercase tracking-tighter">ACADEMY</span>
-                        </div>
-                      )}
+                <div
+                  id="printable-paper"
+                  className="duplex-print-container grid grid-cols-2 gap-4 items-start w-full relative"
+                >
+                  <div className="duplex-print-column relative border-r-2 border-dashed border-slate-300 print:border-slate-500 pr-2">
+                    {/* Cut line indicator */}
+                    <div className="no-print absolute -top-3 right-0 translate-x-1/2 bg-slate-800 text-slate-300 text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-600 flex items-center gap-1 z-10 shadow">
+                      <Scissors className="w-3 h-3 text-amber-400" />
+                      <span>Cut Line</span>
                     </div>
-
-                    {/* Middle: Institution Name + Dark Blue Banner + Subject/Class */}
-                    <div className="flex-1 flex flex-col justify-between text-center border-r-2 border-black">
-                      {/* Institution Title */}
-                      <div className="py-1 px-2 font-black text-2xl text-[#1a365d] uppercase tracking-wider font-serif">
-                        {isEditMode ? (
-                          <>
-                            <input
-                              type="text"
-                              value={paperData.institutionName}
-                              onChange={(e) =>
-                                setPaperData({ ...paperData, institutionName: e.target.value })
-                              }
-                              className="w-full text-center font-black text-2xl text-[#1a365d] bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none uppercase no-print"
-                            />
-                            <span className="print-only">
-                              {paperData.institutionName}
-                            </span>
-                          </>
-                        ) : (
-                          paperData.institutionName
-                        )}
-                      </div>
-
-                      {/* Dark Blue Center Banner (EXAMINATION 2026-27) */}
-                      <div className="bg-[#1a365d] text-white font-black text-xs sm:text-sm py-1 px-4 border-y border-black tracking-widest uppercase">
-                        {isEditMode ? (
-                          <>
-                            <input
-                              type="text"
-                              value={paperTypeBanner}
-                              onChange={(e) => setPaperTypeBanner(e.target.value)}
-                              className="w-full text-center font-black text-xs sm:text-sm text-white bg-transparent border-b border-dashed border-white/50 focus:border-white focus:outline-none uppercase no-print"
-                            />
-                            <span className="print-only">
-                              {paperTypeBanner}
-                            </span>
-                          </>
-                        ) : (
-                          paperTypeBanner
-                        )}
-                      </div>
-
-                      {/* Subject & Class Row */}
-                      <div className="py-1 px-3 text-xs font-bold text-black flex items-center justify-center gap-4">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-extrabold">Subject:</span>
-                          {isEditMode ? (
-                            <>
-                              <input
-                                type="text"
-                                value={paperData.subject}
-                                onChange={(e) => setPaperData({ ...paperData, subject: e.target.value })}
-                                className="font-bold text-xs bg-transparent border-b border-dashed border-slate-400 focus:border-black focus:outline-none w-32 text-center no-print"
-                              />
-                              <span className="print-only">
-                                {paperData.subject}
-                              </span>
-                            </>
-                          ) : (
-                            <span>{paperData.subject}</span>
-                          )}
-                        </div>
-                        <span>|</span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-extrabold">Class:</span>
-                          {isEditMode ? (
-                            <>
-                              <input
-                                type="text"
-                                value={paperData.grade}
-                                onChange={(e) => setPaperData({ ...paperData, grade: e.target.value })}
-                                className="font-bold text-xs bg-transparent border-b border-dashed border-slate-400 focus:border-black focus:outline-none w-20 text-center no-print"
-                              />
-                              <span className="print-only">
-                                {paperData.grade}
-                              </span>
-                            </>
-                          ) : (
-                            <span>{paperData.grade}</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right: Paper Code Box */}
-                    <div className="w-28 min-w-[110px] flex flex-col items-center justify-center p-2 bg-white shrink-0 text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-tight text-black mb-1">
-                        PAPER CODE
-                      </div>
-                      <div className="flex justify-center gap-1">
-                        {formattedCodeDigits.map((digit, dIdx) => (
-                          <div
-                            key={dIdx}
-                            className="w-5 h-6 sm:w-6 sm:h-7 border-2 border-black flex items-center justify-center font-black font-mono text-sm sm:text-base bg-white"
-                          >
-                            {isEditMode ? (
-                              <>
-                                <input
-                                  type="text"
-                                  maxLength={1}
-                                  value={digit}
-                                  onChange={(e) => {
-                                    const arr = [...formattedCodeDigits];
-                                    arr[dIdx] = e.target.value;
-                                    setPaperCode(arr.join(""));
-                                  }}
-                                  className="w-full h-full text-center font-black font-mono bg-transparent focus:outline-none no-print"
-                                />
-                                <span className="print-only">
-                                  {digit}
-                                </span>
-                              </>
-                            ) : (
-                              digit
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                    {renderPaperContent(1)}
                   </div>
-
-                  {/* Student Details & Syllabus Table (Exact style from reference screenshot) */}
-                  {includeStudentInfo && (
-                    <table
-                      className="w-full border-2 border-black border-t-0 border-collapse text-xs font-bold"
-                      dir="ltr"
-                    >
-                      <tbody>
-                        {/* Row 1: Student Name & Syllabus */}
-                        <tr className="border-b border-black h-7">
-                          <td className="w-28 bg-[#f8f9fa] border-r border-black px-2 text-left whitespace-nowrap text-slate-800">
-                            Student Name:
-                          </td>
-                          <td className="border-r-2 border-black px-2 bg-white">
-                            <span className="border-b border-dotted border-slate-500 inline-block w-full min-h-[16px]" />
-                          </td>
-                          <td className="w-24 bg-[#fff3e0] border-r border-black px-2 text-left text-[#e65100] whitespace-nowrap">
-                            Syllabus:
-                          </td>
-                          <td className="px-2 bg-white text-slate-800">
-                            {isEditMode ? (
-                              <>
-                                <input
-                                  type="text"
-                                  value={syllabusText}
-                                  onChange={(e) => setSyllabusText(e.target.value)}
-                                  className="w-full bg-transparent focus:outline-none font-medium text-xs text-slate-800 no-print"
-                                />
-                                <span className="print-only font-medium">
-                                  {syllabusText}
-                                </span>
-                              </>
-                            ) : (
-                              <span className="font-medium">{syllabusText}</span>
-                            )}
-                          </td>
-                        </tr>
-
-                        {/* Row 2: Roll No | Time | Marks | Date | Test No. (Light blue row) */}
-                        <tr className="bg-[#e3f2fd] text-[#0d47a1] h-7">
-                          <td colSpan={4} className="px-3 py-1">
-                            <div className="flex items-center justify-between gap-3 text-xs flex-wrap font-bold">
-                              <div className="flex items-center gap-1">
-                                <span>Roll No:</span>
-                                <span className="border-b border-dotted border-[#0d47a1] w-20 inline-block" />
-                              </div>
-                              <span className="text-slate-400">|</span>
-                              <div className="flex items-center gap-1">
-                                <span>Time:</span>
-                                {isEditMode ? (
-                                  <>
-                                    <input
-                                      type="text"
-                                      value={paperData.timeAllowed}
-                                      onChange={(e) =>
-                                        setPaperData({ ...paperData, timeAllowed: e.target.value })
-                                      }
-                                      className="w-16 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
-                                    />
-                                    <span className="print-only">
-                                      {paperData.timeAllowed}
-                                    </span>
-                                  </>
-                                ) : (
-                                  <span>{paperData.timeAllowed}</span>
-                                )}
-                              </div>
-                              <span className="text-slate-400">|</span>
-                              <div className="flex items-center gap-1">
-                                <span>Marks:</span>
-                                {isEditMode ? (
-                                  <>
-                                    <input
-                                      type="number"
-                                      value={paperData.totalMarks}
-                                      onChange={(e) =>
-                                        setPaperData({
-                                          ...paperData,
-                                          totalMarks: Number(e.target.value),
-                                        })
-                                      }
-                                      className="w-12 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
-                                    />
-                                    <span className="print-only">
-                                      {paperData.totalMarks}
-                                    </span>
-                                  </>
-                                ) : (
-                                  <span>{paperData.totalMarks}</span>
-                                )}
-                              </div>
-                              <span className="text-slate-400">|</span>
-                              <div className="flex items-center gap-1">
-                                <span>Date:</span>
-                                {isEditMode ? (
-                                  <>
-                                    <input
-                                      type="text"
-                                      value={paperData.date || ""}
-                                      onChange={(e) =>
-                                        setPaperData({ ...paperData, date: e.target.value })
-                                      }
-                                      className="w-24 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
-                                    />
-                                    <span className="print-only">
-                                      {paperData.date || "11-10-2026"}
-                                    </span>
-                                  </>
-                                ) : (
-                                  <span>{paperData.date || "11-10-2026"}</span>
-                                )}
-                              </div>
-                              <span className="text-slate-400">|</span>
-                              <div className="flex items-center gap-1">
-                                <span>Test No.:</span>
-                                {isEditMode ? (
-                                  <>
-                                    <input
-                                      type="text"
-                                      value={testNoText}
-                                      onChange={(e) => setTestNoText(e.target.value)}
-                                      className="w-10 bg-transparent border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
-                                    />
-                                    <span className="print-only">
-                                      {testNoText}
-                                    </span>
-                                  </>
-                                ) : (
-                                  <span>{testNoText}</span>
-                                )}
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  )}
-
-                  {/* Note / Instruction Banner (Light Green Badge) */}
-                  {includeNote && (
-                    <div className="mt-2 text-xs flex items-start gap-1.5 leading-snug">
-                      <span className="bg-[#d4efdf] text-[#196f3d] px-1.5 py-0.5 rounded text-[11px] font-bold shrink-0">
-                        Note:
-                      </span>
-                      {isEditMode ? (
-                        <>
-                          <textarea
-                            rows={2}
-                            value={instructionNote}
-                            onChange={(e) => setInstructionNote(e.target.value)}
-                            className="w-full text-slate-800 text-[11px] bg-transparent border-b border-dashed border-slate-300 focus:outline-none resize-none leading-relaxed no-print"
-                          />
-                          <span className="print-only text-slate-800 text-[11px] leading-relaxed">
-                            {instructionNote}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-slate-800 text-[11px] leading-relaxed">
-                          {instructionNote}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </header>
-              ) : (
-                /* Simple Minimal Header fallback */
-                <header className="relative z-10 border-b-2 border-black pb-2 mb-3 text-center">
-                  <h1 className="text-2xl font-black uppercase tracking-tight font-serif">
-                    {paperData.institutionName}
-                  </h1>
-                  <p className="text-xs font-bold uppercase text-slate-700">{paperData.title}</p>
-                </header>
-              )}
-
-              {/* ===================================================================
-                  SECTIONS & QUESTIONS (RTL for Urdu / LTR for English)
-                  =================================================================== */}
-              <div
-                className={`relative z-10 space-y-3 pt-1 ${
-                  paperLanguageMode === "Urdu" ? "font-urdu" : "font-sans"
-                }`}
-                dir={paperLanguageMode === "Urdu" ? "rtl" : "ltr"}
-              >
-                {paperData.sections.map((section, sIdx) => {
-                  const isMcqSection = section.type === "mcq";
-
-                  return (
-                    <div key={section.id || sIdx} className="space-y-1.5">
-                      {/* Section Title Banner e.g. "Section-I (20 Marks)" or "حصہ اول (20 نمبر)" */}
-                      <div className="text-center pt-1 pb-0.5 border-b-2 border-black flex items-center justify-between px-1">
-                        <div
-                          className={`font-black uppercase tracking-wider text-black ${
-                            paperLanguageMode === "Urdu" ? "text-sm sm:text-base font-urdu" : "text-xs sm:text-sm"
-                          }`}
-                        >
-                          {isEditMode ? (
-                            <>
-                              <input
-                                type="text"
-                                value={section.titleUr || ""}
-                                onChange={(e) => handleUpdateSectionTitle(sIdx, e.target.value)}
-                                className="font-black uppercase text-black bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none no-print"
-                              />
-                              <span className="print-only">
-                                {section.titleUr || (section.type === "mcq" ? "Section-I (معروضی سوالات)" : "Section-II (انشائیہ سوالات)")}
-                              </span>
-                            </>
-                          ) : (
-                            section.titleUr || (section.type === "mcq" ? "Section-I (معروضی سوالات)" : "Section-II (انشائیہ سوالات)")
-                          )}
-                        </div>
-                        {section.marks && (
-                          <div
-                            className={`text-xs font-bold text-slate-800 ${
-                              paperLanguageMode === "Urdu" ? "font-urdu" : ""
-                            }`}
-                          >
-                            {paperLanguageMode === "Urdu" ? `(${section.marks} نمبر)` : `(${section.marks} Marks)`}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Section Instructions if any */}
-                      {section.instructionsUr && (
-                        <div
-                          className={`text-[11px] font-bold text-slate-800 italic px-0.5 ${
-                            paperLanguageMode === "Urdu" ? "font-urdu text-right not-italic" : "text-left"
-                          }`}
-                        >
-                          {section.instructionsUr}
-                        </div>
-                      )}
-
-                      {/* MCQs Option Layout */}
-                      {isMcqSection ? (
-                        <div className="space-y-2.5 pt-1">
-                          {section.questions.map((q, qIdx) => (
-                            <div key={qIdx} className="space-y-1 text-xs break-inside-avoid pb-1.5 border-b border-slate-100 last:border-b-0">
-                              {/* Question line */}
-                              <div
-                                className={`flex items-start justify-between gap-2 font-bold text-slate-950 ${
-                                  paperLanguageMode === "Urdu"
-                                    ? "text-sm sm:text-base font-urdu text-right leading-loose sm:leading-loose"
-                                    : "text-xs sm:text-sm text-left leading-normal"
-                                }`}
-                              >
-                                <div className="flex-1 flex items-start gap-2">
-                                  <span className="font-extrabold whitespace-nowrap shrink-0 mt-0.5">
-                                    {paperLanguageMode === "Urdu"
-                                      ? `(${q.number || qIdx + 1})`
-                                      : `${q.number || qIdx + 1}.`}
-                                  </span>
-                                  {/* In Edit mode, show textarea on screen; in print or preview show clean flowing text */}
-                                  {isEditMode ? (
-                                    <>
-                                      <textarea
-                                        rows={1}
-                                        value={q.questionUr || ""}
-                                        onChange={(e) =>
-                                          handleUpdateQuestionText(sIdx, qIdx, e.target.value)
-                                        }
-                                        className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none resize-none font-bold no-print ${
-                                          paperLanguageMode === "Urdu" ? "font-urdu text-sm leading-relaxed" : "text-xs"
-                                        }`}
-                                      />
-                                      <span
-                                        className={`print-only font-bold ${
-                                          paperLanguageMode === "Urdu" ? "font-urdu text-sm leading-relaxed" : "text-xs"
-                                        }`}
-                                      >
-                                        {q.questionUr}
-                                      </span>
-                                    </>
-                                  ) : (
-                                    <span
-                                      className={`font-bold flex-1 ${
-                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm sm:text-base leading-loose" : "text-xs sm:text-sm"
-                                      }`}
-                                    >
-                                      {q.questionUr}
-                                    </span>
-                                  )}
-                                </div>
-                                {isEditMode && (
-                                  <button
-                                    onClick={() => handleDeleteQuestion(sIdx, qIdx)}
-                                    className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start p-1"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
-                                )}
-                              </div>
-
-                              {/* 4 Options Grid (Clean & compact with proper spacing) */}
-                              {q.options && q.options.length > 0 && (
-                                <div
-                                  className={`grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1.5 pt-1 text-xs font-medium text-slate-900 ${
-                                    paperLanguageMode === "Urdu" ? "pr-6 font-urdu" : "pl-6"
-                                  }`}
-                                  dir={paperLanguageMode === "Urdu" ? "rtl" : "ltr"}
-                                >
-                                  {q.options.map((opt, oIdx) => (
-                                    <div key={oIdx} className="flex items-center gap-1.5 min-w-0">
-                                      <span className="font-bold text-xs shrink-0">({opt.key})</span>
-                                      {isEditMode ? (
-                                        <>
-                                          <input
-                                            type="text"
-                                            value={opt.textUr || ""}
-                                            onChange={(e) =>
-                                              handleUpdateOption(sIdx, qIdx, oIdx, "textUr", e.target.value)
-                                            }
-                                            className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none text-xs no-print ${
-                                              paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""
-                                            }`}
-                                          />
-                                          <span
-                                            className={`print-only break-words ${
-                                              paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""
-                                            }`}
-                                          >
-                                            {opt.textUr}
-                                          </span>
-                                        </>
-                                      ) : (
-                                        <span className={`break-words ${paperLanguageMode === "Urdu" ? "font-urdu text-xs sm:text-sm" : ""}`}>
-                                          {opt.textUr}
-                                        </span>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      ) : section.type === "poetry" ? (
-                        /* Poetry section: formatted in neat couplets */
-                        <div className="space-y-2 py-1 font-urdu" dir="rtl">
-                          {section.questions.map((q, qIdx) => (
-                            <div key={qIdx} className="space-y-1 break-inside-avoid bg-slate-50/50 p-2.5 border border-slate-200 rounded">
-                              <div className="text-xs font-bold text-slate-700 text-right">
-                                {`شعر (${toRomanLower(q.number || qIdx + 1)}):`}
-                              </div>
-                              {q.poetryLines?.map((line, pIdx) => (
-                                <div
-                                  key={pIdx}
-                                  className="font-urdu text-center text-sm font-bold text-slate-950 py-0.5 tracking-wide leading-relaxed"
-                                >
-                                  &ldquo;{line}&rdquo;
-                                </div>
-                              ))}
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        /* Subjective Questions: Clean full-width list or 2-column based on paperLayout */
-                        <div
-                          className={`grid gap-2.5 pt-1 text-xs ${
-                            paperLayout === "two-column" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
-                          }`}
-                        >
-                          {section.questions.map((q, qIdx) => (
-                            <div
-                              key={qIdx}
-                              className="flex items-start justify-between gap-2 break-inside-avoid pb-1.5 border-b border-slate-200 last:border-b-0"
-                            >
-                              <div
-                                className={`flex-1 flex items-start gap-2 font-bold text-slate-950 ${
-                                  paperLanguageMode === "Urdu"
-                                    ? "font-urdu text-sm sm:text-base text-right leading-loose"
-                                    : "text-xs sm:text-sm text-left leading-normal"
-                                }`}
-                              >
-                                <span className="font-extrabold whitespace-nowrap shrink-0 mt-0.5">
-                                  {paperLanguageMode === "Urdu"
-                                    ? `(${toRomanLower(q.number || qIdx + 1)})`
-                                    : section.questions.length === 1 && section.type === "essay"
-                                    ? ""
-                                    : `${q.number || qIdx + 1}.`}
-                                </span>
-                                {isEditMode ? (
-                                  <>
-                                    <textarea
-                                      rows={1}
-                                      value={q.questionUr || ""}
-                                      onChange={(e) =>
-                                        handleUpdateQuestionText(sIdx, qIdx, e.target.value)
-                                      }
-                                      className={`w-full bg-transparent border-b border-dashed border-slate-300 focus:border-black focus:outline-none resize-none font-bold no-print ${
-                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm leading-relaxed" : "text-xs"
-                                      }`}
-                                    />
-                                    <span
-                                      className={`print-only font-bold ${
-                                        paperLanguageMode === "Urdu" ? "font-urdu text-sm leading-relaxed" : "text-xs"
-                                      }`}
-                                    >
-                                      {q.questionUr}
-                                    </span>
-                                  </>
-                                ) : (
-                                  <span className={paperLanguageMode === "Urdu" ? "font-urdu text-sm sm:text-base leading-loose" : ""}>
-                                    {q.questionUr}
-                                  </span>
-                                )}
-                              </div>
-                              {isEditMode && (
-                                <button
-                                  onClick={() => handleDeleteQuestion(sIdx, qIdx)}
-                                  className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 self-start p-1"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Add Question Button in Edit Mode */}
-                      {isEditMode && (
-                        <div
-                          className={`no-print pt-0.5 flex ${
-                            paperLanguageMode === "Urdu" ? "justify-start" : "justify-end"
-                          }`}
-                        >
-                          <button
-                            onClick={() => handleAddQuestion(sIdx)}
-                            className="px-2 py-0.5 text-[11px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded border border-emerald-300 flex items-center gap-1 font-sans"
-                          >
-                            <Plus className="w-3 h-3" />
-                            <span>{paperLanguageMode === "Urdu" ? "نیا سوال شامل کریں" : "Add Question"}</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                  <div className="duplex-print-column pl-2">
+                    {renderPaperContent(2)}
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div
+                id="printable-paper"
+                className="w-full max-w-[210mm] shadow-2xl print:shadow-none print:w-full print:max-w-full"
+                style={{
+                  fontSize: `${fontSize}px`,
+                }}
+              >
+                {renderPaperContent(1)}
+              </div>
+            )}
           </div>
         )}
       </main>
