@@ -248,10 +248,15 @@ export default function QuickPaperPage() {
   const handleInstantParse = () => {
     if (!rawText.trim()) return;
     const parsed = parseRawTextToExam(rawText);
+    if (parsed.detectedLanguage) {
+      setPaperLanguageMode(parsed.detectedLanguage);
+    }
     setPaperData((prev) => ({
       ...parsed,
       institutionName: activeTemplate.institutionName || parsed.institutionName,
       title: activeTemplate.title || parsed.title,
+      subject: parsed.subject || prev.subject,
+      totalMarks: parsed.totalMarks || prev.totalMarks,
     }));
   };
 
@@ -812,9 +817,18 @@ export default function QuickPaperPage() {
               <textarea
                 value={rawText}
                 onChange={(e) => {
-                  setRawText(e.target.value);
-                  const p = parseRawTextToExam(e.target.value);
-                  setPaperData(p);
+                  const val = e.target.value;
+                  setRawText(val);
+                  const p = parseRawTextToExam(val);
+                  if (p.detectedLanguage) {
+                    setPaperLanguageMode(p.detectedLanguage);
+                  }
+                  setPaperData((prev) => ({
+                    ...p,
+                    institutionName: prev.institutionName || p.institutionName,
+                    subject: p.subject || prev.subject,
+                    totalMarks: p.totalMarks || prev.totalMarks,
+                  }));
                 }}
                 placeholder="Paste your exam text here... (All Urdu and English questions are automatically identified and separated into MCQs and Questions)"
                 className="w-full flex-1 bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-200 placeholder-slate-600 text-sm font-mono leading-relaxed resize-none focus:outline-none focus:border-emerald-500 shadow-inner"
@@ -1424,7 +1438,7 @@ export default function QuickPaperPage() {
                                             }`}
                                           />
                                           <span
-                                            className={`print-only truncate ${
+                                            className={`print-only break-words ${
                                               paperLanguageMode === "Urdu" ? "font-urdu text-xs" : ""
                                             }`}
                                           >
@@ -1432,7 +1446,7 @@ export default function QuickPaperPage() {
                                           </span>
                                         </>
                                       ) : (
-                                        <span className={`truncate ${paperLanguageMode === "Urdu" ? "font-urdu text-xs sm:text-sm" : ""}`}>
+                                        <span className={`break-words ${paperLanguageMode === "Urdu" ? "font-urdu text-xs sm:text-sm" : ""}`}>
                                           {opt.textUr}
                                         </span>
                                       )}
@@ -1482,7 +1496,11 @@ export default function QuickPaperPage() {
                                 }`}
                               >
                                 <span className="font-extrabold whitespace-nowrap shrink-0 mt-0.5">
-                                  {`(${toRomanLower(q.number || qIdx + 1)})`}
+                                  {paperLanguageMode === "Urdu"
+                                    ? `(${toRomanLower(q.number || qIdx + 1)})`
+                                    : section.questions.length === 1 && section.type === "essay"
+                                    ? ""
+                                    : `${q.number || qIdx + 1}.`}
                                 </span>
                                 {isEditMode ? (
                                   <>
