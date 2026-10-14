@@ -295,7 +295,8 @@ export default function QuickPaperPage() {
       }));
       setActiveTab("preview");
     } catch (err: any) {
-      alert("AI structuring error: " + err.message + "\nUsing instant smart parser instead.");
+      console.warn("AI structuring error, falling back to smart parser:", err.message);
+      // Automatically fallback to our upgraded instant smart parser smoothly
       handleInstantParse();
     } finally {
       setIsAiStructuring(false);

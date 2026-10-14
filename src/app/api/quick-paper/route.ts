@@ -16,10 +16,42 @@ export async function POST(req: Request) {
       );
     }
 
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
-    const headers = {
-      "Content-Type": "application/json",
-      "X-goog-api-key": apiKey,
+    const CANDIDATE_MODELS = [
+      "gemini-2.5-flash",
+      "gemini-2.0-flash",
+      "gemini-1.5-flash",
+      "gemini-flash-latest",
+    ];
+
+    const callGemini = async (bodyPayload: any) => {
+      let lastError: Error | null = null;
+      for (const model of CANDIDATE_MODELS) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-goog-api-key": apiKey,
+            },
+            body: JSON.stringify(bodyPayload),
+          });
+
+          const data = await response.json();
+          if (response.ok && data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+            return data.candidates[0].content.parts[0].text;
+          }
+
+          const errMsg = data?.error?.message || `HTTP ${response.status}`;
+          // If it's a 503 high demand or quota/rate-limit on this specific model, try the next model
+          lastError = new Error(errMsg);
+          console.warn(`Gemini model ${model} failed: ${errMsg}. Trying next model...`);
+        } catch (e: any) {
+          lastError = e;
+          console.warn(`Gemini network error with model ${model}: ${e.message}`);
+        }
+      }
+      throw lastError || new Error("All Gemini models failed to respond");
     };
 
     if (action === "ocr") {
@@ -34,33 +66,22 @@ Extract all text from this test/exam paper image precisely.
 - Convert any math formulas into clean LaTeX (e.g. $x^2 + 2x = 0$).
 Return clean, structured plain text of the paper.`;
 
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: prompt },
-                {
-                  inlineData: {
-                    mimeType: mimeType || "image/jpeg",
-                    data: imageBase64.replace(/^data:[^;]+;base64,/, ""),
-                  },
+      const extractedText = await callGemini({
+        contents: [
+          {
+            parts: [
+              { text: prompt },
+              {
+                inlineData: {
+                  mimeType: mimeType || "image/jpeg",
+                  data: imageBase64.replace(/^data:[^;]+;base64,/, ""),
                 },
-              ],
-            },
-          ],
-        }),
+              },
+            ],
+          },
+        ],
       });
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.error?.message || "Gemini OCR failed");
-      }
-
-      const extractedText =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
       return NextResponse.json({ result: extractedText });
     }
 
@@ -83,21 +104,10 @@ ${text}
 
 Return ONLY the translated exam paper content.`;
 
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
+      const translated = await callGemini({
+        contents: [{ parts: [{ text: prompt }] }],
       });
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.error?.message || "Gemini Translation failed");
-      }
-
-      const translated =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
       return NextResponse.json({ result: translated });
     }
 
@@ -184,25 +194,14 @@ Format the response strictly as valid JSON matching this schema:
 
 Return ONLY raw JSON, without markdown backticks or commentary.`;
 
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            responseMimeType: "application/json",
-          },
-        }),
+      const jsonText = await callGemini({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+        },
       });
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.error?.message || "Gemini Parsing failed");
-      }
-
-      const jsonText =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
-      const cleanJson = jsonText.replace(/^```json\s*/, "").replace(/\s*```$/, "");
+      const cleanJson = (jsonText || "{}").replace(/^```json\s*/, "").replace(/\s*```$/, "");
       return NextResponse.json({ result: JSON.parse(cleanJson) });
     }
 
