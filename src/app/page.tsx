@@ -111,76 +111,76 @@ export default function Home() {
       />
 
       {/* =========================================================================
-          TOP STICKY NAVBAR - Transparent 3D Glassmorphic Floating Bar
+          TOP STICKY NAVBAR - iOS Liquid Glass 3D Floating Bar
           ========================================================================= */}
       <header className="sticky top-3 z-50 px-3 sm:px-6 lg:px-8 pointer-events-none">
-        <div className="pointer-events-auto max-w-7xl mx-auto rounded-2xl bg-white/45 backdrop-blur-2xl border border-white/80 shadow-[0_20px_50px_-12px_rgba(15,23,42,0.18),0_4px_16px_-2px_rgba(16,185,129,0.12),inset_0_2px_1px_0_rgba(255,255,255,0.95),inset_0_-2px_4px_0_rgba(15,23,42,0.06)] transition-all duration-200">
+        <div className="pointer-events-auto max-w-7xl mx-auto rounded-[22px] bg-gradient-to-b from-white/65 via-white/40 to-white/55 backdrop-blur-3xl border border-white/90 ring-1 ring-slate-900/[0.04] shadow-[0_22px_55px_-12px_rgba(15,23,42,0.18),0_6px_20px_-4px_rgba(16,185,129,0.12),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(255,255,255,0.7)] transition-all duration-200">
           <div className="px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
-            {/* Zone 1: 3D Brand Emblem & Wordmark */}
+            {/* Zone 1: 3D Liquid Glass Brand Emblem & Wordmark */}
             <Link
               href="/"
               className="flex items-center gap-3 group whitespace-nowrap shrink-0"
               id="nav-brand-logo"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-[0_4px_0_0_#065f46,0_8px_16px_-2px_rgba(16,185,129,0.45),inset_0_1px_1px_rgba(255,255,255,0.65)] group-hover:-translate-y-0.5 group-active:translate-y-0.5 transition-all duration-150">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-[0_4px_0_0_#065f46,0_8px_16px_-2px_rgba(16,185,129,0.45),inset_0_2px_2px_rgba(255,255,255,0.7)] group-hover:-translate-y-0.5 group-active:translate-y-0.5 transition-all duration-150">
                 <BookOpen className="w-4 h-4 drop-shadow-xs" />
               </div>
               <div className="flex items-baseline gap-2">
-                <span className="font-extrabold text-lg tracking-tight text-slate-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
+                <span className="font-extrabold text-lg tracking-tight text-slate-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.95)]">
                   PaperWala
                 </span>
                 <span className="text-slate-400 text-xs" aria-hidden="true">·</span>
-                <span className="font-urdu text-emerald-700 text-base font-bold drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
+                <span className="font-urdu text-emerald-700 text-base font-bold drop-shadow-[0_1px_0_rgba(255,255,255,0.95)]">
                   پیپر والا
                 </span>
               </div>
             </Link>
 
-            {/* Zone 2: 3D Recessed Glass Navigation Track (Desktop) */}
+            {/* Zone 2: 3D Recessed Liquid Glass Navigation Track (Desktop) */}
             <nav
-              className="hidden lg:flex items-center gap-1.5 p-1.5 rounded-xl bg-slate-900/[0.04] backdrop-blur-md border border-white/70 shadow-[inset_0_2px_4px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.9)] text-xs font-semibold text-slate-700"
+              className="hidden lg:flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-900/[0.04] backdrop-blur-xl border border-white/80 shadow-[inset_0_2px_5px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.95)] text-xs font-semibold text-slate-700"
               aria-label="Main Navigation"
             >
               <a
                 href="#how-it-works"
-                className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 How It Works
               </a>
               <a
                 href="#active-chapters"
-                className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 Question Bank
               </a>
               <a
                 href="#sample-paper"
-                className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 Sample Paper
               </a>
               <Link
                 href="/pricing"
-                className="px-3.5 py-1.5 rounded-lg text-emerald-800 bg-white/60 hover:bg-white/95 shadow-[0_2px_6px_-1px_rgba(16,185,129,0.15),0_2px_0_0_#a7f3d0,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="px-3.5 py-1.5 rounded-xl text-emerald-800 bg-gradient-to-b from-white/85 to-white/55 hover:from-white hover:to-white/80 shadow-[0_3px_8px_-1px_rgba(16,185,129,0.16),0_2px_0_0_#a7f3d0,inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 Pricing
               </Link>
               <a
                 href="#faq"
-                className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 FAQs
               </a>
             </nav>
 
-            {/* Zone 3: 3D Tactile Account Controls & Primary Action */}
+            {/* Zone 3: iOS Liquid Glass 3D Account Controls & Primary Action */}
             <div className="flex items-center gap-2.5 shrink-0">
               {clientUser ? (
                 <>
                   <Link
                     href="/quick-paper"
                     id="nav-quick-paper-btn"
-                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 hover:bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1,0_6px_12px_-2px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                    className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-b from-white/80 via-white/45 to-white/65 hover:from-white/95 hover:to-white/80 backdrop-blur-2xl border border-white/90 text-slate-800 text-xs font-bold shadow-[0_4px_0_0_rgba(203,213,225,0.8),0_8px_20px_-4px_rgba(15,23,42,0.12),inset_0_2px_2px_0_#ffffff,inset_0_-2px_4px_0_rgba(16,185,129,0.1)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
                     title="Create or Paste Instant Paper"
                   >
                     <FileText className="w-3.5 h-3.5 text-emerald-600" />
@@ -191,7 +191,7 @@ export default function Home() {
                     <Link
                       href="/admin/users"
                       id="nav-admin-panel-btn"
-                      className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50/90 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-xs font-bold shadow-[0_3px_0_0_#c7d2fe,0_6px_12px_-2px_rgba(79,70,229,0.12),inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                      className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-b from-indigo-50/85 via-white/50 to-indigo-100/65 hover:from-indigo-50 hover:to-indigo-100/90 backdrop-blur-2xl border border-white/90 text-indigo-800 text-xs font-bold shadow-[0_4px_0_0_#c7d2fe,0_8px_20px_-4px_rgba(79,70,229,0.15),inset_0_2px_2px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
                       title="Open Admin Panel"
                     >
                       <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
@@ -199,7 +199,7 @@ export default function Home() {
                     </Link>
                   )}
 
-                  <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/80 border border-white text-xs font-medium shadow-[0_3px_0_0_#cbd5e1,0_6px_12px_-2px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] whitespace-nowrap shrink-0">
+                  <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-b from-white/80 via-white/45 to-white/65 backdrop-blur-2xl border border-white/90 text-xs font-medium shadow-[0_4px_0_0_rgba(203,213,225,0.8),0_8px_20px_-4px_rgba(15,23,42,0.12),inset_0_2px_2px_0_#ffffff] whitespace-nowrap shrink-0">
                     <Link
                       href="/profile"
                       id="nav-my-profile-link"
@@ -223,20 +223,22 @@ export default function Home() {
                   </div>
                 </>
               ) : (
-                <div className="hidden sm:flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-2.5">
                   <button
                     onClick={() => openAuth()}
                     id="nav-client-login-btn"
-                    className="px-3.5 py-1.5 rounded-xl bg-white/75 hover:bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1,0_6px_12px_-2px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-white/85 via-white/45 to-white/70 hover:from-white hover:via-white/70 hover:to-emerald-50/75 backdrop-blur-2xl border border-white/95 ring-1 ring-slate-900/[0.04] text-slate-800 hover:text-emerald-900 text-xs font-bold shadow-[0_4px_0_0_rgba(203,213,225,0.85),0_10px_22px_-4px_rgba(15,23,42,0.14),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(16,185,129,0.12)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_rgba(167,243,208,0.9),0_14px_26px_-4px_rgba(16,185,129,0.22),inset_0_2px_3px_0_#ffffff] active:translate-y-0.5 active:shadow-[0_2px_0_0_rgba(203,213,225,0.9)] transition-all duration-150 whitespace-nowrap shrink-0 cursor-pointer"
                   >
-                    Sign In
+                    <LogIn className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Sign In</span>
                   </button>
                   <Link
                     href="/register"
                     id="nav-client-signup-btn"
-                    className="px-3.5 py-1.5 rounded-xl bg-white/75 hover:bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1,0_6px_12px_-2px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-50/85 via-white/45 to-teal-50/75 hover:from-white hover:via-emerald-50/65 hover:to-teal-100/80 backdrop-blur-2xl border border-white/95 ring-1 ring-emerald-500/15 text-emerald-900 hover:text-emerald-950 text-xs font-extrabold shadow-[0_4px_0_0_rgba(167,243,208,0.95),0_10px_22px_-4px_rgba(16,185,129,0.18),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(16,185,129,0.18)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_rgba(110,231,183,1),0_14px_28px_-4px_rgba(16,185,129,0.28),inset_0_2px_3px_0_#ffffff] active:translate-y-0.5 active:shadow-[0_2px_0_0_rgba(167,243,208,1)] transition-all duration-150 whitespace-nowrap shrink-0"
                   >
-                    Register
+                    <User className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Register Account</span>
                   </Link>
                 </div>
               )}
@@ -246,7 +248,7 @@ export default function Home() {
                   <Link
                     href="/select-questions?chapter=3"
                     id="nav-generate-paper-btn"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_1px_1px_rgba(255,255,255,0.7)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_2px_2px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_2px_2px_rgba(255,255,255,0.75)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
                   >
                     <span>Generate Paper</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -255,7 +257,7 @@ export default function Home() {
                   <Link
                     href="/pricing"
                     id="nav-generate-paper-btn"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-amber-400 via-amber-500 to-orange-600 text-white font-bold text-xs shadow-[0_4px_0_0_#9a3412,0_10px_20px_-4px_rgba(245,158,11,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-amber-400 via-amber-500 to-orange-600 text-white font-bold text-xs shadow-[0_4px_0_0_#9a3412,0_10px_20px_-4px_rgba(245,158,11,0.45),inset_0_2px_2px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
                   >
                     <span>Upgrade Plan</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -265,7 +267,7 @@ export default function Home() {
                 <Link
                   href="/pricing"
                   id="nav-generate-paper-btn"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_1px_1px_rgba(255,255,255,0.7)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_2px_2px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_2px_2px_rgba(255,255,255,0.75)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
                 >
                   <span>Plans &amp; Pricing</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -276,7 +278,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-xl bg-white/80 border border-white text-slate-700 hover:text-slate-950 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] active:translate-y-0.5 transition-all"
+                className="lg:hidden p-2 rounded-xl bg-gradient-to-b from-white/85 to-white/60 border border-white text-slate-700 hover:text-slate-950 shadow-[0_3px_0_0_#cbd5e1,inset_0_2px_2px_#ffffff] active:translate-y-0.5 transition-all"
                 aria-label="Toggle Menu"
               >
                 {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -284,49 +286,49 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Mobile 3D Glass Navigation Drawer */}
+          {/* Mobile 3D Liquid Glass Navigation Drawer */}
           {mobileMenuOpen && (
-            <div className="lg:hidden border-t border-white/70 bg-white/75 backdrop-blur-2xl rounded-b-2xl px-4 py-4 space-y-3">
+            <div className="lg:hidden border-t border-white/70 bg-gradient-to-b from-white/75 to-white/60 backdrop-blur-3xl rounded-b-[22px] px-4 py-4 space-y-3">
               <nav className="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700">
                 <a
                   href="#how-it-works"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1] hover:text-emerald-700 transition-all"
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1,inset_0_1px_1px_#ffffff] hover:text-emerald-700 transition-all"
                 >
                   How It Works
                 </a>
                 <a
                   href="#active-chapters"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1] hover:text-emerald-700 transition-all"
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1,inset_0_1px_1px_#ffffff] hover:text-emerald-700 transition-all"
                 >
                   Question Bank
                 </a>
                 <a
                   href="#sample-paper"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1] hover:text-emerald-700 transition-all"
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1,inset_0_1px_1px_#ffffff] hover:text-emerald-700 transition-all"
                 >
                   Sample Paper
                 </a>
                 <Link
                   href="/pricing"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-xl bg-emerald-50/90 border border-emerald-200 text-emerald-800 shadow-[0_2px_0_0_#a7f3d0] transition-all"
+                  className="px-3 py-2 rounded-xl bg-emerald-50/90 border border-emerald-200 text-emerald-800 shadow-[0_2px_0_0_#a7f3d0,inset_0_1px_1px_#ffffff] transition-all"
                 >
                   Pricing (Monthly)
                 </Link>
                 <a
                   href="#faq"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1] hover:text-emerald-700 transition-all"
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1,inset_0_1px_1px_#ffffff] hover:text-emerald-700 transition-all"
                 >
                   FAQs
                 </a>
                 <Link
                   href="/quick-paper"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-xl bg-white/80 border border-white text-emerald-700 shadow-[0_2px_0_0_#cbd5e1] transition-all"
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white text-emerald-700 shadow-[0_2px_0_0_#cbd5e1,inset_0_1px_1px_#ffffff] transition-all"
                 >
                   Quick Paper
                 </Link>
@@ -353,17 +355,17 @@ export default function Home() {
                     </button>
                   </>
                 ) : (
-                  <div className="grid grid-cols-2 gap-2 w-full">
+                  <div className="grid grid-cols-2 gap-2.5 w-full">
                     <button
                       onClick={() => openAuth()}
-                      className="py-2 px-3 rounded-xl bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1] text-center"
+                      className="py-2.5 px-3 rounded-xl bg-gradient-to-b from-white/90 via-white/55 to-white/75 backdrop-blur-2xl border border-white text-slate-800 text-xs font-bold shadow-[0_4px_0_0_rgba(203,213,225,0.85),inset_0_2px_2px_#ffffff] text-center"
                     >
                       Sign In
                     </button>
                     <Link
                       href="/register"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="py-2 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-[0_3px_0_0_#0f172a] text-center"
+                      className="py-2.5 px-3 rounded-xl bg-gradient-to-b from-emerald-50/90 via-white/55 to-teal-50/85 backdrop-blur-2xl border border-white text-emerald-900 text-xs font-extrabold shadow-[0_4px_0_0_rgba(167,243,208,0.95),inset_0_2px_2px_#ffffff] text-center"
                     >
                       Register Account
                     </Link>

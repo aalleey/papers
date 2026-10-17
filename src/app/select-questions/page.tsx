@@ -895,14 +895,30 @@ export default function SelectQuestionsPage() {
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white text-xs font-bold shadow-[0_3px_0_0_#065f46,inset_0_1px_0_rgba(255,255,255,0.5)] flex items-center gap-1.5 transition-all whitespace-nowrap"
-                  id="btn-client-login"
-                >
-                  <LogIn className="w-3.5 h-3.5" />
-                  <span>Sign In</span>
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setShowAuthModal(true)}
+                    className="relative overflow-hidden px-3 py-1.5 rounded-xl bg-gradient-to-b from-white/85 via-white/60 to-slate-100/70 hover:from-white/95 hover:to-white/85 backdrop-blur-2xl saturate-150 border border-white/90 text-slate-900 text-xs font-extrabold shadow-[0_3px_0_0_rgba(203,213,225,0.9),0_6px_14px_-3px_rgba(15,23,42,0.14),inset_0_2px_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 flex items-center gap-1.5 transition-all duration-150 whitespace-nowrap cursor-pointer"
+                    id="btn-client-login"
+                  >
+                    <span
+                      className="pointer-events-none absolute inset-x-1 top-0.5 h-2 rounded-t-full bg-gradient-to-b from-white/90 to-transparent"
+                      aria-hidden="true"
+                    />
+                    <LogIn className="w-3.5 h-3.5 text-emerald-600 relative z-10" />
+                    <span className="relative z-10">Sign In</span>
+                  </button>
+                  <Link
+                    href="/register"
+                    className="relative overflow-hidden hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-b from-emerald-400/90 via-emerald-500/85 to-teal-600/90 hover:from-emerald-300/95 hover:to-teal-500/95 backdrop-blur-2xl saturate-200 border border-emerald-200/90 text-white text-xs font-extrabold shadow-[0_3px_0_0_#065f46,0_8px_18px_-3px_rgba(16,185,129,0.45),inset_0_2px_2px_0_rgba(255,255,255,0.8)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap"
+                  >
+                    <span
+                      className="pointer-events-none absolute inset-x-1 top-0.5 h-2 rounded-t-full bg-gradient-to-b from-white/60 to-transparent"
+                      aria-hidden="true"
+                    />
+                    <span className="relative z-10 drop-shadow-[0_1px_1px_rgba(6,95,70,0.6)]">Register</span>
+                  </Link>
+                </div>
               )}
             </div>
           </div>

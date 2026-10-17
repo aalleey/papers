@@ -136,12 +136,28 @@ export default function PricingPage() {
                   </Link>
                 </div>
               ) : (
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
-                >
-                  Client Login / Register
-                </button>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/login"
+                    className="relative overflow-hidden px-3.5 py-2 rounded-xl bg-gradient-to-b from-white/80 via-white/55 to-slate-100/60 hover:from-white/95 hover:to-white/80 backdrop-blur-2xl saturate-150 border border-white/90 text-slate-900 font-bold text-xs shadow-[0_4px_0_0_rgba(203,213,225,0.85),0_8px_18px_-4px_rgba(15,23,42,0.14),inset_0_2px_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                  >
+                    <span
+                      className="pointer-events-none absolute inset-x-1.5 top-0.5 h-2.5 rounded-t-full bg-gradient-to-b from-white/90 to-transparent"
+                      aria-hidden="true"
+                    />
+                    <span className="relative z-10">Sign In</span>
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="relative overflow-hidden px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400/90 via-emerald-500/85 to-teal-600/90 hover:from-emerald-300/95 hover:to-teal-500/95 backdrop-blur-2xl saturate-200 border border-emerald-200/90 text-white font-extrabold text-xs shadow-[0_4px_0_0_#065f46,0_10px_24px_-4px_rgba(16,185,129,0.5),inset_0_2px_2px_0_rgba(255,255,255,0.8)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                  >
+                    <span
+                      className="pointer-events-none absolute inset-x-1.5 top-0.5 h-2.5 rounded-t-full bg-gradient-to-b from-white/60 to-transparent"
+                      aria-hidden="true"
+                    />
+                    <span className="relative z-10 drop-shadow-[0_1px_1px_rgba(6,95,70,0.6)]">Register Account</span>
+                  </Link>
+                </div>
               )}
             </div>
           </div>
