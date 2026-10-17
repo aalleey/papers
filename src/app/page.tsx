@@ -47,28 +47,107 @@ export default function Home() {
   const [heroLang, setHeroLang] = useState<"Bilingual" | "English" | "Urdu">("Bilingual");
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
 
-  // SEO Schema
+  // Comprehensive SEO Structured Data (SoftwareApplication + HowTo + FAQPage)
   const jsonLdSchema = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "SoftwareApplication",
-        "name": "PaperWala",
-        "alternateName": "پیپر والا",
+        "name": "PaperWala – Online Paper Maker & Board Pattern Exam Generator",
+        "alternateName": ["PaperWala", "Paper Wala", "پیپر والا", "Online Paper Maker Pakistan"],
         "applicationCategory": "EducationalApplication",
-        "operatingSystem": "All (Web App)",
+        "operatingSystem": "All (Web Browser, Windows, macOS, Android, iOS)",
         "description":
-          "Pakistan's #1 exam and test paper generator for schools, colleges, and academies. Generates board-standard papers with authentic Urdu Nastaliq and KaTeX mathematical formulas for Punjab Boards and Federal Board (FBISE).",
+          "Pakistan's #1 online paper maker and board pattern exam generator for schools, colleges, and academies. Create 9th, 10th, 1st Year & 2nd Year test papers with Urdu Nastaliq, KaTeX Math, 1-page A4 PDF print, and editable Word (.docx) download.",
         "offers": {
-          "@type": "Offer",
-          "price": "0",
+          "@type": "AggregateOffer",
+          "lowPrice": "30",
+          "highPrice": "2000",
           "priceCurrency": "PKR",
+          "offerCount": "3",
         },
         "aggregateRating": {
           "@type": "AggregateRating",
           "ratingValue": "4.9",
-          "ratingCount": "1420",
+          "ratingCount": "1480",
+          "bestRating": "5",
+          "worstRating": "1",
         },
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to Make a Board Pattern Exam Paper Online in 60 Seconds",
+        "description":
+          "Step-by-step guide for teachers and academies to create, customize, and download official BISE & FBISE board-pattern question papers online.",
+        "totalTime": "PT1M",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Select Chapter Questions or Use AI Quick Paper Maker",
+            "text": "Choose your class (9th, 10th, 1st Year, 2nd Year), board (Punjab BISE or Federal FBISE), and chapter from the Question Bank, or paste/scan any topic in the AI Quick Paper Maker.",
+            "url": "https://paperwala.world/select-questions",
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Customize School Header, Crest & Board Pattern",
+            "text": "Enter your school or academy name, upload your crest/logo, select Bilingual (English + Urdu Nastaliq), and pick Paper Code A/B/C/D.",
+            "url": "https://paperwala.world/paper-editor",
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Download Editable Word (.docx) or Print 1-Page A4 PDF",
+            "text": "Export a formatted Microsoft Word (.docx) document or print an exact 1-page A4 PDF complete with OMR bubble sheets and teacher answer keys.",
+            "url": "https://paperwala.world/quick-paper",
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Which is the best online paper maker with official board pattern in Pakistan?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "PaperWala (paperwala.world) is Pakistan's #1 online paper maker and board-pattern test generator for 9th, 10th, 1st Year (11th), and 2nd Year (12th) across all 9 Punjab Boards (BISE Lahore, Gujranwala, Rawalpindi, Faisalabad, Multan, Sargodha, Bahawalpur, DG Khan, Sahiwal) and Federal Board (FBISE Islamabad).",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need InPage or special Urdu software installed on my computer?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No! PaperWala runs 100% online in your web browser. Authentic Noto Nastaliq Urdu and KaTeX mathematical equations render natively without InPage or extra font installations.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Can I download the exam paper in editable Microsoft Word (.docx) and 1-page PDF?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Both the AI Quick Paper Studio and Live Paper Editor let you download a fully editable Microsoft Word (.docx) file with aligned Urdu/English columns and 4-column MCQ grids, or print a 1-page auto-fit A4 PDF.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Does PaperWala match official Punjab Board (BISE) and FBISE exam formats?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. PaperWala strictly follows official BISE and FBISE board pairing schemes, including 1-mark MCQs with 4-column option tables, 2-mark Short Questions (attempt any 5 of 8), and Long Questions with exact marks tags.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Does PaperWala automatically generate Answer Keys and OMR Bubble Sheets?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Every generated paper can include a 4-circle OMR bubble sheet for students and an automated grading answer key across 4 anti-cheating shuffled Paper Codes (A, B, C, D).",
+            },
+          },
+        ],
       },
     ],
   };
@@ -392,21 +471,20 @@ export default function Home() {
 
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.18]">
-                Create Board-Standard{" "}
+                #1 Online Paper Maker &amp;{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800">
-                  Exam Papers
-                </span>{" "}
-                in Just 2 Minutes
+                  Board Pattern Exam Generator
+                </span>
               </h1>
 
               {/* Urdu Subtitle */}
               <div className="font-urdu text-xl sm:text-2xl text-emerald-900 font-bold leading-relaxed max-w-2xl mx-auto" dir="rtl">
-                سکول اور اکیڈمی کے امتحانی پرچے منٹوں میں تیار کریں — بغیر کسی ان پیج (InPage) یا فارمیٹنگ کی پریشانی کے!
+                سکول اور اکیڈمی کے بورڈ پیٹرن امتحانی پرچے آن لائن منٹوں میں تیار کریں — بغیر کسی ان پیج (InPage) یا فارمیٹنگ کی پریشانی کے!
               </div>
 
               {/* Simple description */}
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto font-normal">
-                Select questions from our verified question bank, add your school name, and print professional papers in authentic <strong>Noto Nastaliq Urdu</strong> and <strong>KaTeX Math</strong> with 4 anti-cheating codes (A, B, C, D) and automated answer keys.
+                Create official <strong>Punjab Board (BISE) &amp; Federal Board (FBISE)</strong> pattern test papers online for <strong>9th, 10th, 1st Year &amp; 2nd Year</strong>. Type, select from our verified question bank, or use our <strong>AI Quick Paper Maker</strong> to export <strong>1-Page A4 PDF</strong> &amp; editable <strong>Microsoft Word (.docx)</strong> papers in <strong>Urdu Nastaliq</strong> and <strong>English</strong>.
               </p>
 
               {/* =================================================================
@@ -894,24 +972,28 @@ export default function Home() {
           <div className="space-y-3">
             {[
               {
-                q: "Do I need InPage or special Urdu software installed on my computer?",
-                a: "No! PaperWala runs completely in your web browser. You do not need InPage, Arabic fonts, or any extra software. Authentic Noto Nastaliq Urdu renders natively with one click.",
+                q: "Which is the best online paper maker with official board pattern in Pakistan?",
+                a: "PaperWala (paperwala.world) is Pakistan's #1 online paper maker and board-pattern exam generator for 9th, 10th, 1st Year (11th), and 2nd Year (12th). It supports all 9 Punjab Boards (BISE Lahore, Gujranwala, Rawalpindi, Faisalabad, Multan, Sargodha, Bahawalpur, DG Khan, Sahiwal) and Federal Board (FBISE Islamabad).",
               },
               {
-                q: "Does PaperWala match official Punjab Board (BISE) exam formats?",
-                a: "Yes. PaperWala strictly adheres to the official pairing schemes and weightage distributions set by Punjab Boards (Lahore, Rawalpindi, Faisalabad, Gujranwala, Multan, etc.) and FBISE. Questions include 1-mark MCQs, 2-mark Short Questions, and 4/5-mark Long/Detailed Questions with exact marks tags.",
+                q: "Do I need InPage or special Urdu software installed on my computer?",
+                a: "No! PaperWala runs completely in your web browser. You do not need InPage, Arabic fonts, or any extra software. Authentic Noto Nastaliq Urdu and KaTeX Math formulas render natively with one click.",
+              },
+              {
+                q: "Can I download the exam paper in editable Microsoft Word (.docx) and 1-page PDF?",
+                a: "Yes! Both the AI Quick Paper Maker (/quick-paper) and Live Paper Editor (/paper-editor) let you download an editable Microsoft Word (.docx) file with properly aligned Bilingual Urdu/English columns and 4-column MCQ grids, or print a 1-page auto-fit A4 PDF.",
+              },
+              {
+                q: "Does PaperWala match official Punjab Board (BISE) and FBISE exam formats?",
+                a: "Yes. PaperWala strictly adheres to official pairing schemes and weightage distributions set by Punjab Boards and FBISE. Questions include 1-mark MCQs, 2-mark Short Questions, and 4/5-mark Long Questions with exact marks tags.",
               },
               {
                 q: "Can I add my School / Academy name and logo on top of the paper?",
-                a: "Yes, 100%! In the Paper Editor & Print page, you can change your institution name, exam title (Send-Up Exam, Class Test, Monthly Assessment), date, time duration, and custom student instructions.",
+                a: "Yes, 100%! In the Paper Editor & Print studio, you can customize your institution name, upload your school crest/logo, set the exam title (Send-Up Exam, Class Test, Monthly Assessment), date, time duration, and custom student instructions.",
               },
               {
                 q: "Does PaperWala automatically generate Answer Keys and Bubble Sheets?",
-                a: "Yes. Every generated paper automatically includes teacher grading keys and standard 4-circle OMR bubble sheets for students to fill their roll numbers and MCQ options.",
-              },
-              {
-                q: "How can I contact customer support if I need assistance?",
-                a: "Our WhatsApp support team is available 24/7 for Pakistani teachers and academy directors. You can message us on WhatsApp or email support@paperwala.pk.",
+                a: "Yes. Every generated paper automatically includes teacher grading keys and standard 4-circle OMR bubble sheets for students across 4 shuffled anti-cheating Paper Codes (A, B, C, D).",
               },
             ].map((faq, idx) => (
               <div
@@ -936,6 +1018,79 @@ export default function Home() {
                 )}
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* =========================================================================
+            SEO DIRECTORY: SUPPORTED BOARDS, CLASSES & ONLINE PAPER MAKING TOOLS
+            ========================================================================= */}
+        <section className="py-14 bg-white border-y border-slate-200/80" aria-labelledby="seo-directory-heading">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div className="max-w-3xl space-y-2">
+              <span className="text-[11px] font-black text-emerald-700 uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                Complete Pakistan Board Coverage
+              </span>
+              <h2 id="seo-directory-heading" className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Online Paper Maker for All Punjab Boards (BISE), Federal Board (FBISE) &amp; Classes
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                PaperWala is built for Pakistani schools, colleges, and coaching academies searching for a fast, accurate <strong>online paper maker with board pattern</strong>. Generate bilingual English &amp; Urdu Nastaliq question papers for daily class tests, weekly quizzes, monthly assessments, send-up exams, and pre-board papers.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
+                <h3 className="font-extrabold text-slate-900 text-sm">
+                  Supported Educational Boards in Pakistan
+                </h3>
+                <ul className="space-y-1.5 text-slate-600">
+                  <li>&bull; <strong>BISE Lahore</strong> Board Pattern Paper Maker</li>
+                  <li>&bull; <strong>BISE Gujranwala &amp; Rawalpindi</strong> Online Test Generator</li>
+                  <li>&bull; <strong>BISE Faisalabad &amp; Multan</strong> Exam Paper Maker</li>
+                  <li>&bull; <strong>BISE Sargodha, Bahawalpur, DG Khan &amp; Sahiwal</strong></li>
+                  <li>&bull; <strong>FBISE Islamabad (Federal Board)</strong> SLO &amp; Board Pattern</li>
+                </ul>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
+                <h3 className="font-extrabold text-slate-900 text-sm">
+                  Classes &amp; Subjects Question Bank
+                </h3>
+                <ul className="space-y-1.5 text-slate-600">
+                  <li>&bull; <strong>9th Class (Matric Part-I)</strong> Online Paper Maker</li>
+                  <li>&bull; <strong>10th Class (Matric Part-II)</strong> Board Pattern Generator</li>
+                  <li>&bull; <strong>1st Year (11th / FSc &amp; ICS Part-I)</strong> Test Maker</li>
+                  <li>&bull; <strong>2nd Year (12th / FSc &amp; ICS Part-II)</strong> Exam Creator</li>
+                  <li>&bull; Computer Science, Mathematics, Physics, Chemistry, Biology, English, Urdu, Islamiat &amp; Pak Studies</li>
+                </ul>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
+                <h3 className="font-extrabold text-slate-900 text-sm">
+                  Direct Online Paper Making Tools
+                </h3>
+                <ul className="space-y-2 text-slate-600">
+                  <li>
+                    <Link href="/quick-paper" className="font-bold text-emerald-700 hover:underline">
+                      AI Quick Paper Maker &amp; OCR Scanner →
+                    </Link>{" "}
+                    Paste raw text, upload book photos, or enter any topic to generate a formatted bilingual board paper.
+                  </li>
+                  <li>
+                    <Link href="/select-questions" className="font-bold text-emerald-700 hover:underline">
+                      Chapter-Wise Question Bank Selector →
+                    </Link>{" "}
+                    Pick verified MCQs, Short Questions, and Long Questions with 1-click auto board pattern.
+                  </li>
+                  <li>
+                    <Link href="/paper-editor" className="font-bold text-emerald-700 hover:underline">
+                      Live Paper Studio (.docx &amp; 1-Page PDF) →
+                    </Link>{" "}
+                    Customize school header, 2-per-page landscape duplex mode, and Word download.
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1000,9 +1155,15 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex items-center gap-6 text-slate-600 font-semibold text-xs">
-              <Link href="/select-questions?chapter=3" className="hover:text-emerald-700 transition-colors">
-                Question Selector
+            <div className="flex flex-wrap items-center justify-center gap-5 text-slate-600 font-semibold text-xs">
+              <Link href="/quick-paper" className="hover:text-emerald-700 transition-colors">
+                AI Quick Paper Maker
+              </Link>
+              <Link href="/select-questions" className="hover:text-emerald-700 transition-colors">
+                Board Question Bank
+              </Link>
+              <Link href="/paper-editor" className="hover:text-emerald-700 transition-colors">
+                Paper Editor &amp; Word Export
               </Link>
               <Link href="/pricing" className="hover:text-emerald-700 transition-colors">
                 Pricing

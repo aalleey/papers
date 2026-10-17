@@ -1,6 +1,6 @@
 {
   "name": "Question Paper Generator",
-  "description": "Smart Bilingual Examination Paper Generator for 9th, 10th, 1st Year & 2nd Year across all Punjab Boards and Federal Board (FBISE).",
+  "description": "Create board-pattern exam papers online in 60 seconds. #1 online paper maker for 9th, 10th, FSc & ICS (Punjab BISE & FBISE) with Urdu Nastaliq, PDF & Word export.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

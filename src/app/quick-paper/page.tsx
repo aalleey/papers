@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   FileText,
@@ -249,6 +249,9 @@ export default function QuickPaperPage() {
   const [includeNote, setIncludeNote] = useState(true);
   const [logoBase64, setLogoBase64] = useState<string | null>(null);
   const [printDensity, setPrintDensity] = useState<"1_per_page" | "2_per_page">("1_per_page");
+  const [fitToOnePage, setFitToOnePage] = useState<boolean>(true);
+  const [printScale, setPrintScale] = useState<number>(1);
+  const sheetMeasureRef = useRef<HTMLDivElement>(null);
 
   // Structured Paper Data
   const [paperData, setPaperData] = useState<ExamPaperData>(() => {
@@ -689,11 +692,76 @@ export default function QuickPaperPage() {
   };
 
   const handlePrint = () => {
-    window.print();
+    // Re-measure right before invoking print dialog so printScale is 100% up-to-date
+    if (sheetMeasureRef.current && fitToOnePage) {
+      const h = sheetMeasureRef.current.scrollHeight;
+      const targetMaxPx = printDensity === "2_per_page" ? 695 : 1015;
+      const computedScale = h > targetMaxPx ? Math.max(0.55, Number((targetMaxPx / h).toFixed(3))) : 1;
+      setPrintScale(computedScale);
+    } else {
+      setPrintScale(1);
+    }
+    setTimeout(() => {
+      window.print();
+    }, 60);
   };
 
   const formattedCodeDigits = (paperCode || "3044").padEnd(4, "0").slice(0, 4).split("");
   const totalQuestionsCount = paperData.sections.reduce((acc, s) => acc + s.questions.length, 0);
+
+  // Compute total character volume so base font size adapts automatically when Fit-to-1-Page is enabled
+  const totalContentChars = paperData.sections.reduce(
+    (sum, sec) =>
+      sum +
+      sec.questions.reduce(
+        (qSum, q) =>
+          qSum +
+          (q.questionEn?.length || 0) +
+          (q.questionUr?.length || 0) +
+          (q.options?.reduce((oSum, o) => oSum + (o.textEn?.length || 0) + (o.textUr?.length || 0), 0) || 0),
+        0
+      ),
+    0
+  );
+
+  // Measure actual rendered sheet height and update printScale automatically
+  useEffect(() => {
+    if (!fitToOnePage) {
+      setPrintScale(1);
+      return;
+    }
+    const el = sheetMeasureRef.current;
+    if (!el) return;
+
+    const updateScale = () => {
+      const h = el.scrollHeight;
+      // Printable single-page height in CSS pixels:
+      // A4 Landscape (2_per_page) ~202mm => ~695px safe height
+      // A4 Portrait (1_per_page) ~288mm => ~1015px safe height
+      const targetMaxPx = printDensity === "2_per_page" ? 695 : 1015;
+      if (h > targetMaxPx) {
+        const nextScale = Math.max(0.55, Number((targetMaxPx / h).toFixed(3)));
+        setPrintScale(nextScale);
+      } else {
+        setPrintScale(1);
+      }
+    };
+
+    updateScale();
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [
+    fitToOnePage,
+    printDensity,
+    paperLanguageMode,
+    fontSize,
+    includeStudentInfo,
+    includeNote,
+    showBorder,
+    totalQuestionsCount,
+    totalContentChars,
+  ]);
 
   // ===========================================================================
   // REUSABLE EXAMINATION PAPER SHEET RENDERER (Supports Urdu, English & Bilingual)
@@ -703,26 +771,40 @@ export default function QuickPaperPage() {
     const isUrduOnly = paperLanguageMode === "Urdu";
     const isEnglishOnly = paperLanguageMode === "English";
     const isBilingual = paperLanguageMode === "Bilingual";
+    const is2Up = printDensity === "2_per_page";
+
+    // Calculate adaptive base font size so content stays compact on 1 page
+    let basePx = is2Up ? Math.min(fontSize, 9.5) : fontSize;
+    if (fitToOnePage) {
+      if (is2Up) {
+        if (totalContentChars > 1600 || totalQuestionsCount > 12) basePx = Math.min(basePx, 8.2);
+        else if (totalContentChars > 1000 || totalQuestionsCount > 8) basePx = Math.min(basePx, 8.8);
+      } else {
+        if (totalContentChars > 2400 || totalQuestionsCount > 16) basePx = Math.min(basePx, 9.8);
+        else if (totalContentChars > 1600 || totalQuestionsCount > 11) basePx = Math.min(basePx, 10.5);
+      }
+    }
 
     return (
       <div
+        ref={copyIndex === 1 ? sheetMeasureRef : undefined}
         className={`printable-paper-sheet bg-white text-black transition-all relative ${
           showBorder ? "border-2 border-black" : "border border-slate-300"
         } ${
-          printDensity === "2_per_page"
-            ? "p-2.5 sm:p-3.5 text-[10px]"
-            : "p-5 sm:p-7 text-xs shadow-xl print:shadow-none"
+          is2Up
+            ? "p-2 sm:p-2.5"
+            : "p-3.5 sm:p-5 shadow-xl print:shadow-none"
         }`}
         style={{
           boxSizing: "border-box",
-          lineHeight: printDensity === "2_per_page" ? "1.28" : "1.4",
-          fontSize: `${printDensity === "2_per_page" ? Math.min(fontSize, 10) : fontSize}px`,
+          lineHeight: is2Up ? "1.22" : "1.28",
+          fontSize: `${basePx}px`,
         }}
       >
         {/* Optional Background Watermark */}
         {showWatermark && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5 select-none overflow-hidden z-0">
-            <span className="text-6xl sm:text-7xl font-black -rotate-45 uppercase tracking-widest text-slate-900">
+            <span className="text-[4.2em] font-black -rotate-45 uppercase tracking-widest text-slate-900">
               {watermarkText || paperData.institutionName}
             </span>
           </div>
@@ -732,27 +814,37 @@ export default function QuickPaperPage() {
             HEADER SECTION: STYLE 1 (PUNJAB BOARDS / SEEK ACADEMY) vs MINIMAL
             =================================================================== */}
         {activeTemplate.headerStyle === "punjab-board-style1" ? (
-          <header className="relative z-10 mb-2.5 font-sans select-text" dir="ltr">
+          <header className="relative z-10 mb-1.5 font-sans select-text" dir="ltr">
             <div className="border-2 border-black flex items-stretch w-full bg-white box-border mb-0">
               {/* Left: Logo Box */}
-              <div className="w-20 sm:w-24 min-w-[76px] sm:min-w-[92px] border-r-2 border-black flex flex-col items-center justify-center p-1.5 bg-white shrink-0">
+              <div
+                className={`${
+                  is2Up ? "w-14 min-w-[54px] p-1" : "w-20 min-w-[72px] p-1"
+                } border-r-2 border-black flex flex-col items-center justify-center bg-white shrink-0`}
+              >
                 {logoBase64 ? (
                   <img
                     src={logoBase64}
                     alt="Logo"
-                    className="max-h-16 sm:max-h-20 max-w-[70px] sm:max-w-[82px] object-contain"
+                    className={`${is2Up ? "max-h-10 max-w-[46px]" : "max-h-14 max-w-[64px]"} object-contain`}
                   />
                 ) : (
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 border-2 border-emerald-700 rounded-full flex flex-col items-center justify-center p-1 bg-emerald-50 text-emerald-900 text-center font-black">
-                    <span className="text-[9px] sm:text-[10px] leading-tight">SEEK</span>
-                    <span className="text-[7px] uppercase tracking-tighter">ACADEMY</span>
+                  <div
+                    className={`${
+                      is2Up ? "w-9 h-9" : "w-11 h-11"
+                    } border-2 border-emerald-700 rounded-full flex flex-col items-center justify-center p-0.5 bg-emerald-50 text-emerald-900 text-center font-black`}
+                  >
+                    <span className="text-[0.75em] leading-none">SEEK</span>
+                    <span className="text-[0.55em] uppercase tracking-tighter leading-none mt-0.5">
+                      ACADEMY
+                    </span>
                   </div>
                 )}
               </div>
 
               {/* Center: Institution Name + Dark Blue Banner + Subject/Class */}
               <div className="flex-1 min-w-0 flex flex-col justify-between text-center border-r-2 border-black">
-                <div className="py-1 px-2 font-black text-base sm:text-xl text-[#1a365d] uppercase tracking-wider font-serif">
+                <div className="py-0.5 px-1.5 font-black text-[1.3em] text-[#1a365d] uppercase tracking-wider font-serif leading-tight">
                   {isEditMode && !isSecondCopy ? (
                     <>
                       <input
@@ -761,7 +853,7 @@ export default function QuickPaperPage() {
                         onChange={(e) =>
                           setPaperData({ ...paperData, institutionName: e.target.value })
                         }
-                        className="w-full text-center font-black text-base sm:text-xl text-[#1a365d] bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none uppercase no-print"
+                        className="w-full text-center font-black text-[1em] text-[#1a365d] bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none uppercase no-print"
                       />
                       <span className="print-only">{paperData.institutionName}</span>
                     </>
@@ -771,14 +863,14 @@ export default function QuickPaperPage() {
                 </div>
 
                 {/* Dark Blue Examination Banner */}
-                <div className="bg-[#1a365d] text-white font-black text-[10px] sm:text-xs py-0.5 px-3 border-y border-black tracking-widest uppercase">
+                <div className="bg-[#1a365d] text-white font-black text-[0.84em] py-0.5 px-2 border-y border-black tracking-widest uppercase leading-tight">
                   {isEditMode && !isSecondCopy ? (
                     <>
                       <input
                         type="text"
                         value={paperTypeBanner}
                         onChange={(e) => setPaperTypeBanner(e.target.value)}
-                        className="w-full text-center font-black text-[10px] sm:text-xs text-white bg-transparent border-b border-dashed border-white/60 focus:outline-none uppercase no-print"
+                        className="w-full text-center font-black text-[1em] text-white bg-transparent border-b border-dashed border-white/60 focus:outline-none uppercase no-print"
                       />
                       <span className="print-only">{paperTypeBanner}</span>
                     </>
@@ -788,7 +880,7 @@ export default function QuickPaperPage() {
                 </div>
 
                 {/* Subject & Class Row */}
-                <div className="py-1 px-2 text-[11px] sm:text-xs font-bold text-black flex items-center justify-center gap-3 flex-wrap">
+                <div className="py-0.5 px-1.5 text-[0.94em] font-bold text-black flex items-center justify-center gap-2 flex-wrap leading-tight">
                   <div className="flex items-center gap-1">
                     <span className="font-extrabold">Subject:</span>
                     {isEditMode && !isSecondCopy ? (
@@ -797,7 +889,7 @@ export default function QuickPaperPage() {
                           type="text"
                           value={paperData.subject}
                           onChange={(e) => setPaperData({ ...paperData, subject: e.target.value })}
-                          className="font-bold text-[11px] sm:text-xs bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none w-32 text-center no-print"
+                          className="font-bold text-[1em] bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none w-28 text-center no-print"
                         />
                         <span className="print-only">{paperData.subject}</span>
                       </>
@@ -814,7 +906,7 @@ export default function QuickPaperPage() {
                           type="text"
                           value={paperData.grade}
                           onChange={(e) => setPaperData({ ...paperData, grade: e.target.value })}
-                          className="font-bold text-[11px] sm:text-xs bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none w-20 text-center no-print"
+                          className="font-bold text-[1em] bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none w-16 text-center no-print"
                         />
                         <span className="print-only">{paperData.grade}</span>
                       </>
@@ -826,15 +918,21 @@ export default function QuickPaperPage() {
               </div>
 
               {/* Right: 4-Digit Paper Code Box */}
-              <div className="w-24 sm:w-28 min-w-[88px] sm:min-w-[108px] flex flex-col items-center justify-center p-1.5 bg-white shrink-0 text-center">
-                <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-tight text-black mb-1">
+              <div
+                className={`${
+                  is2Up ? "w-18 min-w-[68px] p-1" : "w-24 min-w-[84px] p-1"
+                } flex flex-col items-center justify-center bg-white shrink-0 text-center`}
+              >
+                <div className="text-[0.76em] font-bold uppercase tracking-tight text-black mb-0.5 leading-none">
                   PAPER CODE
                 </div>
-                <div className="flex justify-center gap-0.5 sm:gap-1">
+                <div className="flex justify-center gap-0.5">
                   {formattedCodeDigits.map((digit, dIdx) => (
                     <div
                       key={dIdx}
-                      className="w-4 h-5 sm:w-5 sm:h-6 border border-black sm:border-2 flex items-center justify-center font-black font-mono text-xs sm:text-sm bg-white tabular-nums"
+                      className={`${
+                        is2Up ? "w-3.5 h-4" : "w-4 h-5"
+                      } border border-black flex items-center justify-center font-black font-mono text-[0.95em] bg-white tabular-nums`}
                     >
                       {isEditMode && !isSecondCopy ? (
                         <>
@@ -863,28 +961,28 @@ export default function QuickPaperPage() {
             {/* Student Details & Syllabus Table */}
             {includeStudentInfo && (
               <table
-                className="w-full border-2 border-black border-t-0 border-collapse text-[11px] sm:text-xs font-bold"
+                className="w-full border-2 border-black border-t-0 border-collapse text-[0.92em] font-bold"
                 dir="ltr"
               >
                 <tbody>
-                  <tr className="border-b border-black h-6 sm:h-7">
-                    <td className="w-24 sm:w-28 bg-[#f8f9fa] border-r border-black px-2 text-left whitespace-nowrap text-slate-800">
+                  <tr className="border-b border-black">
+                    <td className="w-22 bg-[#f8f9fa] border-r border-black px-1.5 py-0.5 text-left whitespace-nowrap text-slate-800">
                       Student Name:
                     </td>
-                    <td className="border-r-2 border-black px-2 bg-white w-1/3">
-                      <span className="border-b border-dotted border-slate-500 inline-block w-full min-h-[14px]" />
+                    <td className="border-r-2 border-black px-1.5 py-0.5 bg-white w-1/3">
+                      <span className="border-b border-dotted border-slate-500 inline-block w-full min-h-[10px]" />
                     </td>
-                    <td className="w-20 bg-[#fff3e0] border-r border-black px-2 text-left text-[#e65100] whitespace-nowrap">
+                    <td className="w-16 bg-[#fff3e0] border-r border-black px-1.5 py-0.5 text-left text-[#e65100] whitespace-nowrap">
                       Syllabus:
                     </td>
-                    <td className="px-2 bg-white text-slate-800">
+                    <td className="px-1.5 py-0.5 bg-white text-slate-800">
                       {isEditMode && !isSecondCopy ? (
                         <>
                           <input
                             type="text"
                             value={syllabusText}
                             onChange={(e) => setSyllabusText(e.target.value)}
-                            className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none font-medium text-[11px] sm:text-xs text-slate-800 no-print"
+                            className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none font-medium text-[1em] text-slate-800 no-print"
                           />
                           <span className="print-only font-medium">{syllabusText}</span>
                         </>
@@ -894,12 +992,12 @@ export default function QuickPaperPage() {
                     </td>
                   </tr>
 
-                  <tr className="bg-[#e3f2fd] text-[#0d47a1] h-6 sm:h-7">
-                    <td colSpan={4} className="px-2 sm:px-3 py-0.5">
-                      <div className="flex items-center justify-between gap-2 text-[10px] sm:text-xs flex-wrap font-bold">
+                  <tr className="bg-[#e3f2fd] text-[#0d47a1]">
+                    <td colSpan={4} className="px-1.5 py-0.5">
+                      <div className="flex items-center justify-between gap-1.5 text-[0.94em] flex-wrap font-bold leading-tight">
                         <div className="flex items-center gap-1">
                           <span>Roll No:</span>
-                          <span className="border-b border-dotted border-[#0d47a1] w-14 sm:w-20 inline-block" />
+                          <span className="border-b border-dotted border-[#0d47a1] w-12 inline-block" />
                         </div>
                         <span className="text-slate-400">|</span>
                         <div className="flex items-center gap-1">
@@ -912,7 +1010,7 @@ export default function QuickPaperPage() {
                                 onChange={(e) =>
                                   setPaperData({ ...paperData, timeAllowed: e.target.value })
                                 }
-                                className="w-16 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                                className="w-14 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
                               />
                               <span className="print-only">{paperData.timeAllowed}</span>
                             </>
@@ -934,7 +1032,7 @@ export default function QuickPaperPage() {
                                     totalMarks: Number(e.target.value),
                                   })
                                 }
-                                className="w-12 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print tabular-nums"
+                                className="w-10 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print tabular-nums"
                               />
                               <span className="print-only">{paperData.totalMarks}</span>
                             </>
@@ -956,7 +1054,7 @@ export default function QuickPaperPage() {
                                 type="text"
                                 value={testNoText}
                                 onChange={(e) => setTestNoText(e.target.value)}
-                                className="w-10 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                                className="w-8 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
                               />
                               <span className="print-only">{testNoText}</span>
                             </>
@@ -973,34 +1071,34 @@ export default function QuickPaperPage() {
 
             {/* Instruction / Note Row */}
             {includeNote && (
-              <div className="mt-1.5 text-[10px] sm:text-[11px] flex items-start gap-1.5 leading-snug">
-                <span className="bg-[#d4efdf] text-[#196f3d] px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0">
+              <div className="mt-1 text-[0.86em] flex items-start gap-1 leading-tight">
+                <span className="bg-[#d4efdf] text-[#196f3d] px-1 py-0.2 rounded text-[0.92em] font-bold shrink-0">
                   Note:
                 </span>
                 {isEditMode && !isSecondCopy ? (
                   <>
                     <textarea
-                      rows={2}
+                      rows={1}
                       value={instructionNote}
                       onChange={(e) => setInstructionNote(e.target.value)}
-                      className="w-full text-slate-800 bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none leading-relaxed no-print"
+                      className="w-full text-slate-800 bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none leading-tight no-print"
                     />
-                    <span className="print-only text-slate-800 leading-relaxed">
+                    <span className="print-only text-slate-800 leading-tight">
                       {instructionNote}
                     </span>
                   </>
                 ) : (
-                  <span className="text-slate-800 leading-relaxed">{instructionNote}</span>
+                  <span className="text-slate-800 leading-tight">{instructionNote}</span>
                 )}
               </div>
             )}
           </header>
         ) : (
-          <header className="relative z-10 border-b-2 border-black pb-2 mb-3 text-center" dir="ltr">
-            <h1 className="text-lg sm:text-2xl font-black uppercase tracking-tight font-serif">
+          <header className="relative z-10 border-b-2 border-black pb-1.5 mb-2 text-center" dir="ltr">
+            <h1 className="text-[1.35em] font-black uppercase tracking-tight font-serif leading-tight">
               {paperData.institutionName}
             </h1>
-            <p className="text-xs font-bold uppercase text-slate-700">
+            <p className="text-[0.9em] font-bold uppercase text-slate-700 leading-tight">
               {paperTypeBanner} &bull; {paperData.subject} (Class: {paperData.grade}) &bull; Marks: {paperData.totalMarks} &bull; Time: {paperData.timeAllowed}
             </p>
           </header>
@@ -1010,7 +1108,7 @@ export default function QuickPaperPage() {
             SECTIONS & QUESTIONS (Supports Bilingual, English & Urdu)
             =================================================================== */}
         <div
-          className={`relative z-10 space-y-3 pt-1 ${
+          className={`relative z-10 space-y-1.5 pt-0.5 ${
             isUrduOnly ? "font-urdu" : "font-sans"
           }`}
           dir={isUrduOnly ? "rtl" : "ltr"}
@@ -1025,20 +1123,20 @@ export default function QuickPaperPage() {
               (isMcqSection ? "حصہ اول: معروضی سوالات" : "حصہ دوم: انشائیہ سوالات");
 
             return (
-              <div key={section.id || sIdx} className="space-y-1.5">
-                {/* Section Title Banner */}
-                <div className="pt-0.5 pb-1 border-b-2 border-black flex items-center justify-between gap-2 px-1">
+              <div key={section.id || sIdx} className="space-y-1">
+                {/* Section Title Banner (Never Orphan at Bottom of Page) */}
+                <div className="section-header-keep pt-0.5 pb-0.5 border-b-2 border-black flex items-center justify-between gap-2 px-0.5">
                   <div className="flex-1 flex items-center justify-between gap-2 flex-wrap">
                     {/* English or Primary Section Title */}
                     {(isEnglishOnly || isBilingual) && (
-                      <div className="font-black uppercase tracking-wider text-black text-[11px] sm:text-xs">
+                      <div className="font-black uppercase tracking-wider text-black text-[0.96em] leading-tight">
                         {isEditMode && !isSecondCopy ? (
                           <>
                             <input
                               type="text"
                               value={secTitleEn}
                               onChange={(e) => handleUpdateSectionTitle(sIdx, "titleEn", e.target.value)}
-                              className="font-black uppercase text-black bg-amber-50/70 border-b border-dashed border-amber-500 focus:outline-none no-print min-w-[220px]"
+                              className="font-black uppercase text-black bg-amber-50/70 border-b border-dashed border-amber-500 focus:outline-none no-print min-w-[180px]"
                             />
                             <span className="print-only">{secTitleEn}</span>
                           </>
@@ -1050,7 +1148,7 @@ export default function QuickPaperPage() {
 
                     {/* Urdu Section Title */}
                     {(isUrduOnly || isBilingual) && (
-                      <div className="font-black text-black text-xs sm:text-sm font-urdu" dir="rtl">
+                      <div className="font-black text-black text-[1.08em] font-urdu leading-snug" dir="rtl">
                         {isEditMode && !isSecondCopy ? (
                           <>
                             <input
@@ -1068,16 +1166,16 @@ export default function QuickPaperPage() {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     {section.marks && (
-                      <div className="text-[10px] sm:text-xs font-extrabold text-slate-900 tabular-nums">
+                      <div className="text-[0.92em] font-extrabold text-slate-900 tabular-nums">
                         {isUrduOnly ? `(${section.marks} نمبر)` : `[ Marks: ${section.marks} ]`}
                       </div>
                     )}
                     {isEditMode && !isSecondCopy && paperData.sections.length > 1 && (
                       <button
                         onClick={() => handleDeleteSection(sIdx)}
-                        className="no-print text-rose-600 hover:bg-rose-50 p-1 rounded"
+                        className="no-print text-rose-600 hover:bg-rose-50 p-0.5 rounded"
                         title="Delete Section"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -1088,7 +1186,7 @@ export default function QuickPaperPage() {
 
                 {/* MCQs Section */}
                 {isMcqSection ? (
-                  <div className="space-y-2 pt-0.5">
+                  <div className="space-y-1 pt-0.5">
                     {section.questions.map((q, qIdx) => {
                       const qTextEn = q.questionEn || q.questionUr || "";
                       const qTextUr = q.questionUr || q.questionEn || "";
@@ -1097,15 +1195,15 @@ export default function QuickPaperPage() {
                       return (
                         <div
                           key={qIdx}
-                          className="space-y-1 text-[11px] sm:text-xs break-inside-avoid pb-1.5 border-b border-slate-200/80 last:border-b-0"
+                          className="space-y-0.5 text-[0.96em] break-inside-avoid pb-1 border-b border-slate-200/80 last:border-b-0"
                         >
                           {/* Question Stem Row */}
                           <div className="flex items-start justify-between gap-2 font-bold text-slate-950">
-                            {/* Left / English Stem (or Urdu if Urdu-only) */}
+                            {/* Left / English Stem */}
                             {(isEnglishOnly || isBilingual) && (
-                              <div className="flex-1 flex items-start gap-1.5 text-left leading-snug" dir="ltr">
+                              <div className="flex-1 flex items-start gap-1 text-left leading-[1.24]" dir="ltr">
                                 <span className="font-extrabold shrink-0 tabular-nums">
-                                  {q.number || qIdx + 1}.
+                                  {qIdx + 1}.
                                 </span>
                                 {isEditMode && !isSecondCopy ? (
                                   <>
@@ -1132,12 +1230,12 @@ export default function QuickPaperPage() {
                             {/* Right / Urdu Stem */}
                             {(isUrduOnly || (isBilingual && hasDistinctUrdu)) && (
                               <div
-                                className="flex-1 flex items-start gap-1.5 font-urdu text-right text-xs sm:text-sm leading-loose"
+                                className="flex-1 flex items-start gap-1 font-urdu text-right text-[1.06em] leading-[1.38]"
                                 dir="rtl"
                               >
                                 {isUrduOnly && (
                                   <span className="font-extrabold shrink-0 font-sans tabular-nums">
-                                    ({q.number || qIdx + 1})
+                                    ({qIdx + 1})
                                   </span>
                                 )}
                                 {isEditMode && !isSecondCopy ? (
@@ -1173,11 +1271,11 @@ export default function QuickPaperPage() {
                             )}
                           </div>
 
-                          {/* 4 MCQ Options Grid */}
+                          {/* Smart Single-Line Flex-Wrap MCQ Options */}
                           {q.options && q.options.length > 0 && (
                             <div
-                              className={`grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1 pt-0.5 text-[10.5px] sm:text-xs font-medium text-slate-900 ${
-                                isUrduOnly ? "pr-4 font-urdu" : "pl-4"
+                              className={`flex flex-wrap items-baseline justify-between gap-x-2.5 gap-y-0.5 pt-0.5 text-[0.92em] font-medium text-slate-900 leading-[1.24] ${
+                                isUrduOnly ? "pr-3 font-urdu" : "pl-3"
                               }`}
                               dir={isUrduOnly ? "rtl" : "ltr"}
                             >
@@ -1193,8 +1291,11 @@ export default function QuickPaperPage() {
                                   : oTextEn;
 
                                 return (
-                                  <div key={oIdx} className="flex items-baseline gap-1 min-w-0">
-                                    <span className="font-extrabold text-[10px] sm:text-xs shrink-0">
+                                  <div
+                                    key={oIdx}
+                                    className="inline-flex items-baseline gap-1 min-w-[20%] max-w-full"
+                                  >
+                                    <span className="font-extrabold shrink-0">
                                       ({opt.key})
                                     </span>
                                     {isEditMode && !isSecondCopy ? (
@@ -1211,7 +1312,7 @@ export default function QuickPaperPage() {
                                               e.target.value
                                             )
                                           }
-                                          className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none text-[10px] sm:text-xs no-print"
+                                          className="w-28 bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none text-[1em] no-print"
                                         />
                                         <span className="print-only break-words">
                                           <MathRenderer content={displayOptText} />
@@ -1233,19 +1334,19 @@ export default function QuickPaperPage() {
                   </div>
                 ) : section.type === "poetry" ? (
                   /* Poetry Section */
-                  <div className="space-y-1.5 py-0.5 font-urdu" dir="rtl">
+                  <div className="space-y-1 py-0.5 font-urdu" dir="rtl">
                     {section.questions.map((q, qIdx) => (
                       <div
                         key={qIdx}
-                        className="space-y-0.5 break-inside-avoid bg-slate-50/60 p-2 border border-slate-200 rounded"
+                        className="space-y-0.5 break-inside-avoid bg-slate-50/60 p-1.5 border border-slate-200 rounded"
                       >
-                        <div className="text-[10px] sm:text-xs font-bold text-slate-700 text-right">
-                          {`شعر (${toRomanLower(q.number || qIdx + 1)}):`}
+                        <div className="text-[0.92em] font-bold text-slate-700 text-right leading-tight">
+                          {`شعر (${toRomanLower(qIdx + 1)}):`}
                         </div>
                         {q.poetryLines?.map((line, pIdx) => (
                           <div
                             key={pIdx}
-                            className="font-urdu text-center text-xs sm:text-sm font-bold text-slate-950 py-0.5 tracking-wide leading-relaxed"
+                            className="font-urdu text-center text-[1.05em] font-bold text-slate-950 py-0.2 tracking-wide leading-[1.38]"
                           >
                             &ldquo;{line}&rdquo;
                           </div>
@@ -1256,7 +1357,7 @@ export default function QuickPaperPage() {
                 ) : (
                   /* Subjective Questions (Short / Long / Essay) */
                   <div
-                    className={`grid gap-1.5 pt-0.5 text-[11px] sm:text-xs ${
+                    className={`grid gap-1 pt-0.5 text-[0.96em] ${
                       paperLayout === "two-column" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
                     }`}
                   >
@@ -1264,20 +1365,27 @@ export default function QuickPaperPage() {
                       const qTextEn = q.questionEn || q.questionUr || "";
                       const qTextUr = q.questionUr || q.questionEn || "";
                       const hasDistinctUrdu = qTextUr && qTextUr !== qTextEn;
+                      const romanNumLabel =
+                        section.questions.length === 1 && section.type === "essay"
+                          ? ""
+                          : `(${toRomanLower(qIdx + 1)})`;
 
                       return (
                         <div
                           key={qIdx}
-                          className="flex items-start justify-between gap-2 break-inside-avoid pb-1 border-b border-slate-200/80 last:border-b-0"
+                          className="flex items-start justify-between gap-2 break-inside-avoid pb-0.5 border-b border-slate-200/80 last:border-b-0"
                         >
                           {/* English Side */}
                           {(isEnglishOnly || isBilingual) && (
-                            <div className="flex-1 flex items-start gap-1.5 font-bold text-slate-950 text-left leading-snug" dir="ltr">
-                              <span className="font-extrabold shrink-0 tabular-nums">
-                                {section.questions.length === 1 && section.type === "essay"
-                                  ? ""
-                                  : `(${toRomanLower(q.number || qIdx + 1)})`}
-                              </span>
+                            <div
+                              className="flex-1 flex items-start gap-1 font-bold text-slate-950 text-left leading-[1.25]"
+                              dir="ltr"
+                            >
+                              {romanNumLabel && (
+                                <span className="font-extrabold shrink-0 tabular-nums">
+                                  {romanNumLabel}
+                                </span>
+                              )}
                               {isEditMode && !isSecondCopy ? (
                                 <>
                                   <textarea
@@ -1303,12 +1411,12 @@ export default function QuickPaperPage() {
                           {/* Urdu Side */}
                           {(isUrduOnly || (isBilingual && hasDistinctUrdu)) && (
                             <div
-                              className="flex-1 flex items-start gap-1.5 font-bold text-slate-950 font-urdu text-xs sm:text-sm text-right leading-loose"
+                              className="flex-1 flex items-start gap-1 font-bold text-slate-950 font-urdu text-[1.06em] text-right leading-[1.38]"
                               dir="rtl"
                             >
-                              {isUrduOnly && (
+                              {isUrduOnly && romanNumLabel && (
                                 <span className="font-extrabold shrink-0 font-sans tabular-nums">
-                                  ({toRomanLower(q.number || qIdx + 1)})
+                                  {romanNumLabel}
                                 </span>
                               )}
                               {isEditMode && !isSecondCopy ? (
@@ -1369,7 +1477,7 @@ export default function QuickPaperPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 print:bg-white text-slate-900 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen print:min-h-0 print:h-auto bg-slate-100 print:bg-white text-slate-900 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="no-print fixed bottom-5 right-5 z-50 bg-slate-900/95 backdrop-blur-xl text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold border border-white/15 flex items-center gap-2 animate-in fade-in">
@@ -1930,6 +2038,23 @@ export default function QuickPaperPage() {
                   </button>
                 </div>
 
+                <label
+                  className={`flex items-center gap-1 px-2 py-1 rounded-lg border cursor-pointer transition-colors ${
+                    fitToOnePage
+                      ? "bg-emerald-50 border-emerald-300 text-emerald-900"
+                      : "bg-slate-50 border-slate-200 text-slate-600"
+                  }`}
+                  title="Automatically scale font & spacing so the entire exam fits on 1 single page"
+                >
+                  <input
+                    type="checkbox"
+                    checked={fitToOnePage}
+                    onChange={(e) => setFitToOnePage(e.target.checked)}
+                    className="accent-emerald-600"
+                  />
+                  <span>Fit 1 Page</span>
+                </label>
+
                 <label className="flex items-center gap-1 cursor-pointer">
                   <input
                     type="checkbox"
@@ -1962,19 +2087,29 @@ export default function QuickPaperPage() {
               </div>
             </div>
 
-            {/* Dynamic Print CSS for 1-Up Portrait vs 2-Up Landscape */}
+            {/* Dynamic Print CSS for 1-Up Portrait vs 2-Up Landscape with 1-Page Auto-Fit */}
             <style
               dangerouslySetInnerHTML={{
                 __html: `
                   @media print {
                     @page {
                       size: ${printDensity === "2_per_page" ? "A4 landscape" : "A4 portrait"} !important;
-                      margin: ${printDensity === "2_per_page" ? "4mm 5mm" : "6mm 8mm"} !important;
+                      margin: ${printDensity === "2_per_page" ? "3.5mm 4.5mm" : "4.5mm 6mm"} !important;
                     }
-                    html, body {
+                    html, body, .min-h-screen {
                       background: #ffffff !important;
                       overflow: visible !important;
                       height: auto !important;
+                      min-height: 0 !important;
+                      margin: 0 !important;
+                      padding: 0 !important;
+                    }
+                    #printable-paper {
+                      zoom: ${fitToOnePage ? printScale : 1} !important;
+                      page-break-inside: ${fitToOnePage ? "avoid" : "auto"} !important;
+                      break-inside: ${fitToOnePage ? "avoid" : "auto"} !important;
+                      page-break-after: avoid !important;
+                      break-after: avoid !important;
                     }
                   }
                 `,
@@ -1991,13 +2126,15 @@ export default function QuickPaperPage() {
                       <span>2 Papers on 1 Page Mode: Both copies print side-by-side on one Landscape A4 sheet.</span>
                     </span>
                     <span className="text-[11px] bg-emerald-200/80 text-emerald-950 px-2 py-0.5 rounded font-black">
-                      A4 Landscape (2-Up)
+                      {fitToOnePage && printScale < 1
+                        ? `Auto-Fitted (${Math.round(printScale * 100)}%) • 1 Page`
+                        : "A4 Landscape (2-Up • 1 Page)"}
                     </span>
                   </div>
 
                   <div
                     id="printable-paper"
-                    className="duplex-print-container grid grid-cols-2 gap-4 items-start w-full relative"
+                    className="duplex-print-container grid grid-cols-2 gap-3 items-start w-full relative"
                   >
                     <div className="duplex-print-column relative border-r-2 border-dashed border-slate-400 pr-2">
                       <div className="no-print absolute -top-3 right-0 translate-x-1/2 bg-slate-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 z-10 shadow">

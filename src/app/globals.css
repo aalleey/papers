@@ -26,18 +26,21 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 5mm;
+    margin: 4mm 5mm;
   }
 
-  html, body {
+  html,
+  body,
+  .min-h-screen {
     width: 100% !important;
     height: auto !important;
+    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #ffffff !important;
     color: #000000 !important;
-    font-size: 10pt;
-    line-height: 1.3;
+    font-size: 9.5pt;
+    line-height: 1.25;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     overflow: visible !important;
@@ -66,7 +69,7 @@
     display: inline !important;
   }
 
-  /* Main Workspace print behavior: remove screen flex/dark styling */
+  /* Main Workspace print behavior: remove screen flex/dark styling and extra margins */
   main,
   main > div {
     display: block !important;
@@ -75,6 +78,8 @@
     margin: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
     overflow: visible !important;
     border: none !important;
     box-shadow: none !important;
@@ -85,15 +90,14 @@
   .printable-paper-sheet {
     width: 100% !important;
     max-width: 100% !important;
-    min-height: auto !important;
+    min-height: 0 !important;
     height: auto !important;
     margin: 0 !important;
-    padding: 4mm !important;
+    padding: 2.5mm 3mm !important;
     box-shadow: none !important;
     box-sizing: border-box !important;
     overflow: visible !important;
     background: #ffffff !important;
-    page-break-inside: auto !important;
   }
 
   #printable-paper *,
@@ -102,39 +106,44 @@
     print-color-adjust: exact !important;
   }
 
+  /* Keep section headers attached to their first question — never orphan at page bottom */
+  .section-header-keep {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
   /* 2-Paper on 1-Page (2-Up) Print Styles */
   .duplex-print-container {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    column-gap: 5mm !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    column-gap: 4mm !important;
     row-gap: 0 !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+    align-items: start !important;
   }
 
   .duplex-print-column {
     width: 100% !important;
+    min-width: 0 !important;
     box-sizing: border-box !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
   }
 
   .duplex-print-column:first-child {
-    border-right: 1.5px dashed #64748b !important;
-    padding-right: 3mm !important;
+    border-right: 1.5px dashed #475569 !important;
+    padding-right: 2.5mm !important;
   }
 
   .duplex-print-column:last-child {
-    padding-left: 3mm !important;
+    padding-left: 2.5mm !important;
   }
 
   .duplex-print-column .printable-paper-sheet {
-    padding: 2.5mm !important;
-    font-size: 9.5px !important;
+    padding: 2mm 2.5mm !important;
   }
 
   .exam-sheet-container {
