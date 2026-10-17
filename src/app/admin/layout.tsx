@@ -12,11 +12,12 @@ export default async function AdminLayout({
   const user = await getCurrentUser();
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-emerald-50/30 flex flex-col lg:flex-row overflow-x-hidden">
       <AdminNav user={user} />
-      <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+      <main className="flex-1 min-w-0 p-3 sm:p-6 lg:p-8 max-w-[1600px] mx-auto w-full">
         {children}
       </main>
     </div>
   );
 }
+

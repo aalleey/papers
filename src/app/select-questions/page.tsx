@@ -1090,17 +1090,17 @@ export default function SelectQuestionsPage() {
             {/* Class, Subject & Chapter Navigation Bar */}
             <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 pt-2 border-t border-slate-100">
               {/* Class & Subject Selectors */}
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-3">
                 {/* 1. Class Selector */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 hidden sm:flex items-center gap-1 shrink-0">
                     <BookOpen className="w-3.5 h-3.5 text-blue-600" />
                     <span>Class:</span>
                   </span>
                   <select
                     value={selectedClassId}
                     onChange={(e) => handleClassChange(e.target.value)}
-                    className="font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-blue-50/90 to-indigo-50/70 hover:bg-blue-100/70 px-2.5 py-1.5 sm:py-2 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-xs min-w-[110px]"
+                    className="w-full sm:w-auto font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-blue-50/90 to-indigo-50/70 hover:bg-blue-100/70 px-2.5 py-2 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-xs sm:min-w-[110px] truncate"
                     id="select-class-dropdown"
                   >
                     {classesList.map((cls) => (
@@ -1112,15 +1112,15 @@ export default function SelectQuestionsPage() {
                 </div>
 
                 {/* 2. Subject Selector */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 hidden sm:flex items-center gap-1 shrink-0">
                     <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
                     <span>Subject:</span>
                   </span>
                   <select
                     value={currentSubject?.id || ""}
                     onChange={(e) => handleSubjectChange(e.target.value)}
-                    className="font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-indigo-50/80 to-blue-50/60 hover:bg-indigo-100/70 px-2.5 py-1.5 sm:py-2 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer shadow-xs min-w-[150px]"
+                    className="w-full sm:w-auto font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-indigo-50/80 to-blue-50/60 hover:bg-indigo-100/70 px-2.5 py-2 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer shadow-xs sm:min-w-[150px] truncate"
                     id="select-subject-dropdown"
                   >
                     {subjects.length === 0 ? (
@@ -1137,7 +1137,7 @@ export default function SelectQuestionsPage() {
               </div>
 
               {/* Chapter Navigation & Selector */}
-              <div className="flex items-center gap-1.5 sm:gap-2 flex-1 max-w-2xl sm:justify-end">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0 lg:max-w-2xl lg:justify-end">
                 <button
                   onClick={() => {
                     if (!currentChapter) return;
@@ -1145,7 +1145,7 @@ export default function SelectQuestionsPage() {
                     if (curIdx > 0) handleChapterChange(chapters[curIdx - 1].id);
                   }}
                   disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) <= 0}
-                  className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1"
+                  className="px-2.5 sm:px-3 py-2 rounded-xl bg-gradient-to-b from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1 cursor-pointer"
                   id="btn-prev-chapter"
                   title="Previous Chapter"
                 >
@@ -1153,11 +1153,11 @@ export default function SelectQuestionsPage() {
                   <span className="hidden md:inline">Prev</span>
                 </button>
 
-                <div className="flex-1 text-center">
+                <div className="flex-1 min-w-0 text-center">
                   <select
                     value={currentChapter?.id || ""}
                     onChange={(e) => handleChapterChange(e.target.value)}
-                    className="w-full font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-slate-50 to-indigo-50/50 hover:bg-slate-100 px-3 py-1.5 sm:py-2 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer text-center shadow-xs"
+                    className="w-full max-w-full truncate font-black text-slate-800 text-xs sm:text-sm bg-gradient-to-r from-slate-50 to-indigo-50/50 hover:bg-slate-100 px-2.5 sm:px-3 py-2 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer text-center shadow-xs"
                     id="select-chapter-dropdown"
                   >
                     {chapters.length === 0 ? (
@@ -1179,7 +1179,7 @@ export default function SelectQuestionsPage() {
                     if (curIdx < chapters.length - 1) handleChapterChange(chapters[curIdx + 1].id);
                   }}
                   disabled={!currentChapter || chapters.findIndex((c) => c.id === currentChapter.id) >= chapters.length - 1}
-                  className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1"
+                  className="px-2.5 sm:px-3 py-2 rounded-xl bg-gradient-to-b from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 font-extrabold text-xs transition-all disabled:cursor-not-allowed shadow-sm shrink-0 flex items-center gap-1 cursor-pointer"
                   id="btn-next-chapter"
                   title="Next Chapter"
                 >
@@ -1534,28 +1534,28 @@ export default function SelectQuestionsPage() {
       </div>
 
       {/* =========================================================================
-          STICKY BOTTOM BAR (COMPACT, GLOWING & 100% RESPONSIVE)
+          STICKY BOTTOM BAR (3D LIQUID GLASS DOCK & 100% RESPONSIVE)
           ========================================================================= */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-indigo-100 shadow-2xl py-2.5 sm:py-3.5 px-3 sm:px-8">
-        <div className="max-w-[1700px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-b from-white/85 via-white/75 to-white/90 backdrop-blur-2xl saturate-150 border-t border-white/90 shadow-[0_-12px_35px_-8px_rgba(15,23,42,0.14),inset_0_2px_2px_0_#ffffff] py-2.5 sm:py-3 px-3 sm:px-8">
+        <div className="max-w-[1700px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
           {/* Counters row */}
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 text-xs font-bold text-slate-800 w-full sm:w-auto">
-            <span className="flex items-center gap-1.5 bg-blue-50/80 px-2.5 py-1 rounded-lg border border-blue-200">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-xs font-bold text-slate-800 w-full sm:w-auto">
+            <span className="flex items-center gap-1.5 bg-blue-50/90 px-2.5 py-1 rounded-xl border border-blue-200/80 shadow-2xs">
               <span className="text-slate-600">MCQs:</span>
-              <span className="font-black text-blue-700">{selectedCounts.mcq}</span>
+              <span className="font-black text-blue-700 tabular-nums">{selectedCounts.mcq}</span>
             </span>
 
-            <span className="flex items-center gap-1.5 bg-emerald-50/80 px-2.5 py-1 rounded-lg border border-emerald-200">
+            <span className="flex items-center gap-1.5 bg-emerald-50/90 px-2.5 py-1 rounded-xl border border-emerald-200/80 shadow-2xs">
               <span className="text-slate-600">Shorts:</span>
-              <span className="font-black text-emerald-700">{selectedCounts.short}</span>
+              <span className="font-black text-emerald-700 tabular-nums">{selectedCounts.short}</span>
             </span>
 
-            <span className="flex items-center gap-1.5 bg-purple-50/80 px-2.5 py-1 rounded-lg border border-purple-200">
+            <span className="flex items-center gap-1.5 bg-purple-50/90 px-2.5 py-1 rounded-xl border border-purple-200/80 shadow-2xs">
               <span className="text-slate-600">Longs:</span>
-              <span className="font-black text-purple-700">{selectedCounts.long}</span>
+              <span className="font-black text-purple-700 tabular-nums">{selectedCounts.long}</span>
             </span>
 
-            <div className="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-1 rounded-lg border border-amber-200 font-black text-amber-900">
+            <div className="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-1 rounded-xl border border-amber-200 font-black text-amber-900 tabular-nums">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               <span>Total Selected: {selectedCounts.total}</span>
             </div>
@@ -1566,10 +1566,10 @@ export default function SelectQuestionsPage() {
             {selectedCounts.total > 0 && (
               <button
                 onClick={() => setViewOnlySelected(!viewOnlySelected)}
-                className={`px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer ${
                   viewOnlySelected
                     ? "bg-amber-500 text-white hover:bg-amber-600 ring-2 ring-amber-300"
-                    : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200"
+                    : "bg-white/90 text-indigo-700 hover:bg-indigo-50 border border-indigo-200"
                 }`}
               >
                 <Eye className="w-3.5 h-3.5" />
@@ -1581,14 +1581,20 @@ export default function SelectQuestionsPage() {
               onClick={handleGeneratePaper}
               disabled={selectedCounts.total === 0}
               id="btn-generate-paper-bottom"
-              className={`flex-1 sm:flex-initial px-6 py-2.5 rounded-xl text-xs sm:text-sm font-black text-white shadow-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+              className={`relative overflow-hidden flex-1 sm:flex-initial px-6 py-2.5 rounded-xl text-xs sm:text-sm font-black text-white flex items-center justify-center gap-2 transition-all duration-150 cursor-pointer ${
                 selectedCounts.total === 0
                   ? "bg-slate-300 text-slate-500 cursor-not-allowed shadow-none"
-                  : "bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-950/20 ring-2 ring-emerald-400/40"
+                  : "bg-gradient-to-b from-emerald-400/95 via-emerald-500/90 to-teal-600/95 hover:from-emerald-300 hover:to-teal-500 border border-emerald-200/80 shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.5),inset_0_2px_2px_0_rgba(255,255,255,0.75)] hover:-translate-y-0.5 active:translate-y-0.5"
               }`}
             >
-              <span>Generate Paper</span>
-              <ArrowRight className="w-4 h-4" />
+              {selectedCounts.total > 0 && (
+                <span
+                  className="pointer-events-none absolute inset-x-2 top-0.5 h-2 rounded-t-full bg-gradient-to-b from-white/60 to-transparent"
+                  aria-hidden="true"
+                />
+              )}
+              <span className="relative z-10">Generate Paper ({selectedCounts.total})</span>
+              <ArrowRight className="w-4 h-4 relative z-10" />
             </button>
           </div>
         </div>
@@ -1848,15 +1854,15 @@ function QuestionCard({
             return (
               <div
                 key={optIdx}
-                className={`p-2 rounded-xl flex items-center justify-between gap-1.5 text-[11px] transition-colors ${
+                className={`p-2 rounded-xl flex items-start justify-between gap-2 text-[11px] transition-colors ${
                   isCorrect
                     ? "bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-900 font-extrabold border-2 border-emerald-400 shadow-2xs"
                     : "text-slate-700 bg-slate-50 border border-slate-200/80 hover:bg-slate-100"
                 }`}
               >
-                <div className="flex items-center gap-1.5 overflow-hidden">
+                <div className="flex items-start gap-1.5 min-w-0 flex-1 break-words leading-snug">
                   <span
-                    className={`w-5 h-5 rounded-full flex items-center justify-center font-black text-[10px] shrink-0 ${
+                    className={`w-5 h-5 rounded-md flex items-center justify-center font-black text-[10px] shrink-0 ${
                       isCorrect
                         ? "bg-emerald-600 text-white"
                         : "bg-slate-200 text-slate-700"
@@ -1864,10 +1870,10 @@ function QuestionCard({
                   >
                     {letter}
                   </span>
-                  <span className="truncate">{optEn}</span>
+                  <span className="break-words">{optEn}</span>
                 </div>
                 {languageMode === "Bilingual" && optUr && (
-                  <span className="font-urdu text-xs text-slate-800 shrink-0 pr-1" dir="rtl">
+                  <span className="font-urdu text-xs text-slate-800 shrink-0 max-w-[52%] text-right break-words leading-relaxed pr-0.5" dir="rtl">
                     {optUr}
                   </span>
                 )}

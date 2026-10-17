@@ -728,52 +728,65 @@ export default function PaperEditorPage() {
   return (
     <div
       onClick={() => setActiveDropdown(null)}
-      className={`min-h-screen bg-white text-slate-900 font-sans pb-28 selection:bg-blue-100 ${
+      className={`min-h-screen bg-slate-100/90 print:bg-white text-slate-900 font-sans pb-28 print:pb-0 selection:bg-emerald-500 selection:text-white ${
         entireContentBold ? "font-bold" : ""
       }`}
     >
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold border border-slate-700 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 backdrop-blur-xl text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold border border-white/15 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
           <Check className="w-4 h-4 text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* =========================================================================
-          TOP APP BAR (Exact match to reference Paper Preview)
+          TOP 3D LIQUID GLASS PAPER STUDIO COMMAND BAR & RIBBON
           ========================================================================= */}
       <div
-        className="no-print sticky top-0 z-40 flex flex-col bg-white border-b-2 border-slate-200 shadow-sm px-3 sm:px-6 py-2.5 gap-2"
+        className="no-print sticky top-0 z-40 flex flex-col bg-gradient-to-b from-white/85 via-white/75 to-white/85 backdrop-blur-2xl saturate-150 border-b border-white/90 shadow-[0_12px_32px_-8px_rgba(15,23,42,0.12),0_4px_0_0_rgba(226,232,240,0.85),inset_0_2px_2px_0_#ffffff] px-3 sm:px-6 py-2.5 gap-2"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Top Specular Edge */}
+        <div
+          className="pointer-events-none absolute inset-x-6 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white to-transparent opacity-95"
+          aria-hidden="true"
+        />
+
         {/* Top Row: Brand, Version Selector, and Action Buttons */}
-        <div className="flex flex-wrap items-center justify-between gap-3 w-full">
-          {/* Left: Brand & Title Group */}
-          <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center justify-between gap-2.5 w-full">
+          {/* Left: Back & Editable Paper Title */}
+          <div className="flex items-center gap-2 min-w-0">
             <Link
               href="/select-questions"
-              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+              className="p-2 rounded-xl bg-white/80 hover:bg-white text-slate-600 hover:text-slate-900 border border-slate-200/80 shadow-2xs transition-all shrink-0"
               title="Back to Question Selector"
             >
               <ArrowLeft className="w-4 h-4" />
             </Link>
-            <span className="text-xl sm:text-2xl">🎓</span>
-            <div
-              contentEditable
-              suppressContentEditableWarning
-              onBlur={(e) => setPaperTitle(e.currentTarget.textContent || paperTitle)}
-              className="text-base sm:text-lg font-bold text-slate-900 whitespace-nowrap outline-none hover:bg-slate-50 px-1.5 py-0.5 rounded cursor-text border border-transparent hover:border-slate-300"
-            >
-              {paperTitle}
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-[0_3px_0_0_#065f46,inset_0_1px_1px_rgba(255,255,255,0.6)] shrink-0 text-sm">
+              🎓
+            </div>
+            <div className="min-w-0">
+              <div className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 leading-none mb-0.5 hidden sm:block">
+                Live Paper Studio
+              </div>
+              <div
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={(e) => setPaperTitle(e.currentTarget.textContent || paperTitle)}
+                className="text-sm sm:text-base font-black text-slate-900 truncate max-w-[180px] sm:max-w-[300px] outline-none hover:bg-white/80 px-1.5 py-0.5 rounded-lg cursor-text border border-transparent hover:border-slate-300"
+              >
+                {paperTitle}
+              </div>
             </div>
           </div>
 
-          {/* Center: Version Selector placed right in blank space */}
-          <div className="flex items-center gap-2">
+          {/* Center: Version Selector Pill */}
+          <div className="flex items-center gap-1.5 bg-white/85 px-2.5 py-1 rounded-xl border border-slate-200/90 shadow-2xs">
             <label
               htmlFor="paperVersionSelector"
-              className="text-[11px] font-bold text-slate-600 uppercase tracking-wider whitespace-nowrap"
+              className="text-[10px] font-black text-slate-500 uppercase tracking-wider whitespace-nowrap"
             >
               Version:
             </label>
@@ -781,7 +794,7 @@ export default function PaperEditorPage() {
               id="paperVersionSelector"
               value={paperVersion}
               onChange={(e) => setPaperVersion(e.target.value as "A" | "B" | "C" | "D")}
-              className="h-9 font-bold text-blue-700 border-2 border-blue-600 rounded-md px-3 text-xs bg-white cursor-pointer outline-none shadow-xs"
+              className="h-7 font-black text-emerald-700 bg-transparent rounded-md px-1.5 text-xs cursor-pointer outline-none tabular-nums"
             >
               <option value="A">Version A (Code: {paperCodes.A})</option>
               <option value="B">Version B (Code: {paperCodes.B})</option>
@@ -790,67 +803,73 @@ export default function PaperEditorPage() {
             </select>
           </div>
 
-          {/* Right: Action Buttons */}
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {/* Right: Studio Action Buttons */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
             <Link
               href="/quick-paper"
-              className="px-3 py-1.5 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center gap-1 transition-all shadow-xs"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/85 hover:bg-white text-slate-700 hover:text-emerald-700 font-bold text-xs flex items-center gap-1 border border-slate-200/90 shadow-2xs transition-all"
               title="Create or Paste Instant Paper"
             >
-              <span>⚡</span> Quick Paper
+              <span>⚡</span>
+              <span className="hidden md:inline">Quick Paper</span>
             </Link>
 
             <Link
               href="/profile"
-              className="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1 border border-slate-300 transition-colors"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/85 hover:bg-white text-slate-700 font-bold text-xs flex items-center gap-1 border border-slate-200/90 shadow-2xs transition-colors"
+              title="Saved Papers Library"
             >
-              <span>📂</span> Library
+              <span>📂</span>
+              <span className="hidden md:inline">Library</span>
             </Link>
 
             <button
               onClick={() => setIsSettingsDrawerOpen(true)}
-              className="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1 border border-slate-300 transition-colors cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/85 hover:bg-white text-slate-800 font-bold text-xs flex items-center gap-1 border border-slate-200/90 shadow-2xs transition-colors cursor-pointer"
               id="btnOpenSettings"
             >
-              <span>⚙️</span> Settings
+              <span>⚙️</span>
+              <span className="hidden sm:inline">Settings</span>
             </button>
 
             <button
               onClick={handleSaveFavorite}
-              className="px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1 transition-colors shadow-xs cursor-pointer"
+              className="relative overflow-hidden px-3 py-1.5 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 hover:from-emerald-300 hover:to-teal-500 text-white font-extrabold text-xs flex items-center gap-1 border border-emerald-200/80 shadow-[0_3px_0_0_#065f46,0_6px_14px_-3px_rgba(16,185,129,0.4),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
               id="btnSaveFavorite"
             >
-              <span>⭐</span> Save Favorite
+              <span>⭐</span>
+              <span className="hidden sm:inline">Save Paper</span>
             </button>
 
-            {/* Print Dropdown */}
+            {/* Print 3D Split Button */}
             <div className="relative inline-flex" id="printOptionDropdown">
               <button
                 onClick={() => handlePrint()}
-                className="px-3.5 py-1.5 rounded-l-md bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+                className="relative overflow-hidden px-3.5 py-1.5 rounded-l-xl bg-gradient-to-b from-blue-500 via-blue-600 to-indigo-700 hover:from-blue-400 hover:to-indigo-600 text-white font-extrabold text-xs flex items-center gap-1.5 border border-blue-300/60 shadow-[0_3px_0_0_#1e3a8a,inset_0_1px_1px_rgba(255,255,255,0.6)] transition-all cursor-pointer"
                 id="btnPrintNormal"
               >
-                <span>🖨️</span> Print PDF
+                <span>🖨️</span>
+                <span>Print PDF</span>
               </button>
               <button
                 onClick={() => setActiveDropdown(activeDropdown === "print" ? null : "print")}
-                className="px-2 py-1.5 rounded-r-md bg-blue-700 hover:bg-blue-600 text-white font-bold text-xs border-l border-blue-500 transition-colors cursor-pointer"
+                className="px-2 py-1.5 rounded-r-xl bg-gradient-to-b from-blue-600 to-indigo-800 hover:from-blue-500 hover:to-indigo-700 text-white font-bold text-xs border-y border-r border-blue-300/60 border-l border-l-blue-400/50 shadow-[0_3px_0_0_#1e3a8a] transition-colors cursor-pointer"
                 title="Print Options"
               >
                 <ChevronDown className="w-3.5 h-3.5" />
               </button>
 
               {activeDropdown === "print" && (
-                <div className="absolute right-0 top-full mt-1.5 w-64 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 text-xs font-semibold z-50 animate-in fade-in">
+                <div className="absolute right-0 top-full mt-2 w-64 bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-2xl shadow-2xl py-1.5 text-xs font-semibold z-50 animate-in fade-in">
                   <button
                     onClick={() => handlePrint("portrait")}
-                    className="w-full text-left px-3.5 py-2 hover:bg-slate-50 flex items-center gap-2 cursor-pointer text-slate-800"
+                    className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 flex items-center gap-2 cursor-pointer text-slate-800"
                   >
                     <span>📄</span> Standard Portrait Print
                   </button>
                   <button
                     onClick={() => handlePrint("landscape_2up")}
-                    className="w-full text-left px-3.5 py-2 hover:bg-blue-50 text-blue-700 flex items-center gap-2 cursor-pointer font-bold"
+                    className="w-full text-left px-3.5 py-2.5 hover:bg-blue-50 text-blue-700 flex items-center gap-2 cursor-pointer font-bold"
                   >
                     <span>📋</span> Landscape Side-by-Side (2-up)
                   </button>
@@ -861,20 +880,20 @@ export default function PaperEditorPage() {
         </div>
 
         {/* =========================================================================
-            PERSISTENT CONFIGURATION RIBBON (Exact match to reference)
+            RESPONSIVE STUDIO CONFIGURATION RIBBON
             ========================================================================= */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs">
-          {/* Left Ribbon Group: Header Style, Language, Marks, Time, Date */}
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-900/5 border border-slate-200/80 rounded-2xl px-2.5 sm:px-3 py-1.5 text-xs">
+          {/* Left Ribbon Group: Header Style, Language, Marks, Time, Date, Density */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full xl:w-auto">
             {/* Header Style Model Selector */}
             <select
               id="headerStyleSelect"
               value={headerStyle}
               onChange={(e) => updateHeaderStyle(e.target.value as "style1" | "style2")}
-              className="h-[38px] px-3 rounded-md border border-slate-300 font-bold text-slate-800 bg-white shadow-2xs outline-none focus:border-blue-600 cursor-pointer"
+              className="h-8 px-2.5 rounded-lg border border-slate-300/90 font-bold text-slate-800 bg-white shadow-2xs outline-none focus:border-emerald-600 cursor-pointer text-[11px] sm:text-xs"
               title="Select Examination Header & Question Layout Model"
             >
-              <option value="style1">Style 1: Punjab Boards (Default)</option>
+              <option value="style1">Style 1: Punjab Boards</option>
               <option value="style2">Style 2: Federal Board (FBISE)</option>
             </select>
 
@@ -883,32 +902,38 @@ export default function PaperEditorPage() {
               id="languageMode"
               value={languageMode}
               onChange={(e) => setLanguageMode(e.target.value as "Bilingual" | "English" | "Urdu")}
-              className="h-[38px] px-3 rounded-md border border-slate-300 font-bold text-slate-800 bg-white shadow-2xs outline-none focus:border-blue-600 cursor-pointer"
+              className="h-8 px-2.5 rounded-lg border border-slate-300/90 font-bold text-slate-800 bg-white shadow-2xs outline-none focus:border-emerald-600 cursor-pointer text-[11px] sm:text-xs"
             >
-              <option value="Bilingual">Bilingual (English &amp; Urdu)</option>
+              <option value="Bilingual">Bilingual (EN + UR)</option>
               <option value="English">English Only</option>
               <option value="Urdu">Urdu Only</option>
             </select>
 
-            <input
-              type="number"
-              id="totalMarks"
-              value={totalMarks}
-              onChange={(e) => setTotalMarks(Number(e.target.value))}
-              placeholder="Marks (75)"
-              title="Total Marks"
-              className="h-[38px] w-20 px-2 rounded-md border border-slate-300 font-bold text-center bg-white shadow-2xs outline-none focus:border-blue-600"
-            />
+            <div className="flex items-center gap-1 bg-white border border-slate-300/90 rounded-lg px-2 h-8 shadow-2xs">
+              <span className="text-[10px] font-bold text-slate-400 uppercase">Marks:</span>
+              <input
+                type="number"
+                id="totalMarks"
+                value={totalMarks}
+                onChange={(e) => setTotalMarks(Number(e.target.value))}
+                placeholder="75"
+                title="Total Marks"
+                className="w-12 font-black text-center bg-transparent outline-none tabular-nums text-slate-800"
+              />
+            </div>
 
-            <input
-              type="text"
-              id="timeDuration"
-              value={timeDuration}
-              onChange={(e) => setTimeDuration(e.target.value)}
-              placeholder="Time (2:30)"
-              title="Time Duration"
-              className="h-[38px] w-24 px-2 rounded-md border border-slate-300 font-bold text-center bg-white shadow-2xs outline-none focus:border-blue-600"
-            />
+            <div className="flex items-center gap-1 bg-white border border-slate-300/90 rounded-lg px-2 h-8 shadow-2xs">
+              <span className="text-[10px] font-bold text-slate-400 uppercase">Time:</span>
+              <input
+                type="text"
+                id="timeDuration"
+                value={timeDuration}
+                onChange={(e) => setTimeDuration(e.target.value)}
+                placeholder="2:30"
+                title="Time Duration"
+                className="w-16 font-bold text-center bg-transparent outline-none text-slate-800"
+              />
+            </div>
 
             <input
               type="text"
@@ -917,12 +942,12 @@ export default function PaperEditorPage() {
               onChange={(e) => setPaperDate(e.target.value)}
               placeholder="Date"
               title="Paper Date"
-              className="h-[38px] w-28 px-2 rounded-md border border-slate-300 font-bold text-center bg-white shadow-2xs outline-none focus:border-blue-600"
+              className="h-8 w-24 px-2 rounded-lg border border-slate-300/90 font-bold text-center bg-white shadow-2xs outline-none focus:border-emerald-600 hidden sm:block"
             />
 
             {/* Paper Size selector */}
-            <div className="hidden xl:flex items-center gap-1 bg-white border border-slate-300 rounded-md px-2 h-[38px] shadow-2xs">
-              <FileText className="w-3.5 h-3.5 text-blue-600" />
+            <div className="hidden md:flex items-center gap-1 bg-white border border-slate-300/90 rounded-lg px-2 h-8 shadow-2xs">
+              <FileText className="w-3.5 h-3.5 text-emerald-600" />
               <select
                 value={paperSize}
                 onChange={(e) => updatePaperSize(e.target.value as "a4" | "letter" | "legal")}
@@ -936,53 +961,53 @@ export default function PaperEditorPage() {
             </div>
 
             {/* 1 Test vs 2 Tests Layout Density Selector */}
-            <div className="flex items-center rounded-md border border-slate-300 bg-white p-0.5 shadow-2xs h-[38px]">
+            <div className="flex items-center rounded-lg border border-slate-300/90 bg-white p-0.5 shadow-2xs h-8">
               <button
                 type="button"
                 onClick={() => updateTestDensity("1_per_page")}
-                className={`px-2.5 py-1 text-xs font-bold rounded transition-all cursor-pointer ${
+                className={`px-2 py-1 text-[11px] font-bold rounded-md transition-all cursor-pointer ${
                   testDensity === "1_per_page"
-                    ? "bg-blue-600 text-white shadow-2xs"
+                    ? "bg-slate-900 text-white shadow-2xs"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
                 title="Single Test per page (Portrait)"
               >
-                1 Test / Page
+                1 / Page
               </button>
               <button
                 type="button"
                 onClick={() => updateTestDensity("2_per_page")}
-                className={`px-2.5 py-1 text-xs font-bold rounded transition-all flex items-center gap-1 cursor-pointer ${
+                className={`px-2 py-1 text-[11px] font-bold rounded-md transition-all flex items-center gap-1 cursor-pointer ${
                   testDensity === "2_per_page"
-                    ? "bg-emerald-600 text-white shadow-2xs ring-1 ring-emerald-500"
+                    ? "bg-emerald-600 text-white shadow-2xs"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
-                title="Two duplicate tests side-by-side on 1 A4 Landscape sheet (Left & Right)"
+                title="Two duplicate tests side-by-side on 1 Landscape sheet"
               >
-                <Columns className="w-3.5 h-3.5" />
-                <span>2 Tests on 1 Page</span>
+                <Columns className="w-3 h-3" />
+                <span>2 / Page</span>
               </button>
             </div>
           </div>
 
-          {/* Right Ribbon Group: Popovers with left accent bars */}
-          <div className="flex flex-wrap items-center gap-2 relative">
-            {/* 1. Fonts & Sizing Popover (Blue Accent) */}
+          {/* Right Ribbon Group: Popovers with viewport-safe anchoring */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 relative w-full xl:w-auto justify-start xl:justify-end pt-1 xl:pt-0 border-t xl:border-t-0 border-slate-200/60">
+            {/* 1. Fonts & Sizing Popover */}
             <div className="relative">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveDropdown(activeDropdown === "fonts" ? null : "fonts");
                 }}
-                className="h-[38px] px-3 rounded-md bg-white border border-slate-300 border-l-4 border-l-[#1976d2] font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer"
+                className="h-8 px-2.5 rounded-lg bg-white border border-slate-300/90 border-l-4 border-l-blue-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs"
               >
-                <span>📐 Fonts &amp; Sizing ▾</span>
+                <span>📐 Fonts ▾</span>
               </button>
 
               {activeDropdown === "fonts" && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 top-full mt-2 w-72 bg-white border border-slate-300 rounded-xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
+                  className="fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-28 sm:top-full sm:mt-2 sm:w-72 bg-white border border-slate-300 rounded-2xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
                 >
                   <div className="font-bold text-slate-800 pb-1 border-b">Layout &amp; Font Sizing</div>
                   <div className="grid grid-cols-2 gap-2">
@@ -994,7 +1019,7 @@ export default function PaperEditorPage() {
                         max="22"
                         value={objFontSize}
                         onChange={(e) => setObjFontSize(Number(e.target.value))}
-                        className="w-full p-1.5 border border-slate-300 rounded text-center font-bold"
+                        className="w-full p-1.5 border border-slate-300 rounded-lg text-center font-bold tabular-nums"
                       />
                     </div>
                     <div>
@@ -1005,7 +1030,7 @@ export default function PaperEditorPage() {
                         max="22"
                         value={subFontSize}
                         onChange={(e) => setSubFontSize(Number(e.target.value))}
-                        className="w-full p-1.5 border border-slate-300 rounded text-center font-bold"
+                        className="w-full p-1.5 border border-slate-300 rounded-lg text-center font-bold tabular-nums"
                       />
                     </div>
                   </div>
@@ -1048,7 +1073,7 @@ export default function PaperEditorPage() {
                         const val = e.target.value;
                         setPaperCodes((prev) => ({ ...prev, [paperVersion]: val }));
                       }}
-                      className="w-full p-1.5 border border-slate-300 rounded font-mono font-bold text-center tracking-widest text-base"
+                      className="w-full p-1.5 border border-slate-300 rounded-lg font-mono font-bold text-center tracking-widest text-base"
                     />
                   </div>
 
@@ -1076,22 +1101,22 @@ export default function PaperEditorPage() {
               )}
             </div>
 
-            {/* 2. Content Options Popover (Green Accent) */}
+            {/* 2. Content Options Popover */}
             <div className="relative">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveDropdown(activeDropdown === "content" ? null : "content");
                 }}
-                className="h-[38px] px-3 rounded-md bg-white border border-slate-300 border-l-4 border-l-[#2e7d32] font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer"
+                className="h-8 px-2.5 rounded-lg bg-white border border-slate-300/90 border-l-4 border-l-emerald-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs"
               >
-                <span>⚙️ Content Options ▾</span>
+                <span>⚙️ Sections ▾</span>
               </button>
 
               {activeDropdown === "content" && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 top-full mt-2 w-72 bg-white border border-slate-300 rounded-xl shadow-2xl p-4 text-xs space-y-2 z-50 max-h-[380px] overflow-y-auto animate-in fade-in"
+                  className="fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-28 sm:top-full sm:mt-2 sm:w-72 bg-white border border-slate-300 rounded-2xl shadow-2xl p-4 text-xs space-y-2 z-50 max-h-[380px] overflow-y-auto animate-in fade-in"
                 >
                   <div className="font-bold text-slate-800 pb-1 border-b">Display Sections &amp; Layout</div>
                   <label className="flex items-center justify-between cursor-pointer py-1">
@@ -1209,22 +1234,22 @@ export default function PaperEditorPage() {
               )}
             </div>
 
-            {/* 3. Profile Popover (Orange Accent) */}
+            {/* 3. Profile Popover */}
             <div className="relative">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveDropdown(activeDropdown === "profile" ? null : "profile");
                 }}
-                className="h-[38px] px-3 rounded-md bg-white border border-slate-300 border-l-4 border-l-[#ed6c02] font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer"
+                className="h-8 px-2.5 rounded-lg bg-white border border-slate-300/90 border-l-4 border-l-amber-500 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs"
               >
-                <span>👤 Profile ▾</span>
+                <span>🏛️ Branding ▾</span>
               </button>
 
               {activeDropdown === "profile" && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-300 rounded-xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
+                  className="fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-28 sm:top-full sm:mt-2 sm:w-80 bg-white border border-slate-300 rounded-2xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
                 >
                   <div className="font-bold text-slate-800 pb-1 border-b flex items-center justify-between">
                     <span>Institution Header &amp; Watermark</span>
@@ -1237,7 +1262,7 @@ export default function PaperEditorPage() {
                       value={institutionName}
                       onChange={(e) => setInstitutionName(e.target.value)}
                       placeholder="Your Institution"
-                      className="w-full p-2 border border-slate-300 rounded font-bold uppercase"
+                      className="w-full p-2 border border-slate-300 rounded-lg font-bold uppercase"
                     />
                   </div>
 
@@ -1376,22 +1401,22 @@ export default function PaperEditorPage() {
               )}
             </div>
 
-            {/* 4. Instructions Popover (Purple Accent) */}
+            {/* 4. Instructions Popover */}
             <div className="relative">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveDropdown(activeDropdown === "inst" ? null : "inst");
                 }}
-                className="h-[38px] px-3 rounded-md bg-white border border-slate-300 border-l-4 border-l-[#9c27b0] font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer"
+                className="h-8 px-2.5 rounded-lg bg-white border border-slate-300/90 border-l-4 border-l-purple-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs"
               >
-                <span>📋 Instructions ▾</span>
+                <span>📋 Notes ▾</span>
               </button>
 
               {activeDropdown === "inst" && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-300 rounded-xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
+                  className="fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-28 sm:top-full sm:mt-2 sm:w-80 bg-white border border-slate-300 rounded-2xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
                 >
                   <div className="font-bold text-slate-800 pb-1 border-b flex items-center justify-between">
                     <span>Note &amp; Instructions</span>
@@ -1408,7 +1433,7 @@ export default function PaperEditorPage() {
 
                   <select
                     onChange={(e) => handleInstructionPresetChange(e.target.value)}
-                    className="w-full p-2 border border-slate-300 rounded font-semibold text-slate-800 bg-white cursor-pointer"
+                    className="w-full p-2 border border-slate-300 rounded-lg font-semibold text-slate-800 bg-white cursor-pointer"
                   >
                     <option value="">-- Quick Notes Presets --</option>
                     <option value="english_default">English Instruction</option>
@@ -1421,12 +1446,12 @@ export default function PaperEditorPage() {
                     value={instructionText}
                     onChange={(e) => setInstructionText(e.target.value)}
                     placeholder="Note text..."
-                    className="w-full p-2 border border-slate-300 rounded text-[11px] leading-relaxed"
+                    className="w-full p-2 border border-slate-300 rounded-lg text-[11px] leading-relaxed"
                   />
                   <div className="flex justify-end">
                     <button
                       onClick={() => setActiveDropdown(null)}
-                      className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded text-xs cursor-pointer"
+                      className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-xs cursor-pointer"
                     >
                       Done
                     </button>
@@ -2769,14 +2794,43 @@ export default function PaperEditorPage() {
 
         return (
           <main
-            className={`mx-auto px-2 sm:px-6 pt-6 transition-all ${
+            className={`mx-auto px-2 sm:px-6 pt-5 print:p-0 transition-all ${
               testDensity === "2_per_page" ? "max-w-[1740px]" : paperSizeClasses
             }`}
           >
+            {/* Studio Desk Status Strip (Hidden in Print) */}
+            <div className="no-print mb-3.5 px-3.5 py-2 rounded-2xl bg-white/85 backdrop-blur-xl border border-slate-200/90 shadow-xs flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div className="flex flex-wrap items-center gap-2 font-bold text-slate-700">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 font-black uppercase tracking-wider text-[10px]">
+                  {paperSize.toUpperCase()} {testDensity === "2_per_page" ? "Landscape (2-Up)" : "Portrait"}
+                </span>
+                <span className="text-slate-400">&bull;</span>
+                <span className="tabular-nums">
+                  MCQs: <strong className="text-slate-900">{displayedMcqs.length}</strong>
+                </span>
+                <span className="text-slate-400">&bull;</span>
+                <span className="tabular-nums">
+                  Shorts: <strong className="text-slate-900">{shorts.length}</strong>
+                </span>
+                <span className="text-slate-400">&bull;</span>
+                <span className="tabular-nums">
+                  Longs: <strong className="text-slate-900">{longs.length}</strong>
+                </span>
+              </div>
+              <div className="text-[11px] font-semibold text-slate-500 flex items-center gap-2">
+                <span className="sm:hidden text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 font-bold">
+                  ↔ Swipe horizontally to inspect full A4 sheet
+                </span>
+                <span className="hidden sm:inline">
+                  Click any heading, question, or mark on the sheet to edit inline
+                </span>
+              </div>
+            </div>
+
             {testDensity === "2_per_page" ? (
-              <div>
+              <div className="w-full overflow-x-auto pb-6 print:overflow-visible print:pb-0">
                 {/* Informational Banner for 2 Tests on 1 Page Layout */}
-                <div className="no-print mb-3 py-2 px-3 bg-emerald-50 border border-emerald-300 rounded-lg text-xs font-bold text-emerald-800 flex items-center justify-between shadow-2xs">
+                <div className="no-print mb-3 py-2 px-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-bold text-emerald-800 flex items-center justify-between shadow-2xs min-w-[1120px]">
                   <span className="flex items-center gap-1.5">
                     <Columns className="w-4 h-4 text-emerald-600" />
                     <span>2 Tests on 1 Page Mode: Both copies fit side-by-side on one sheet with scissors cut line.</span>
@@ -2786,7 +2840,7 @@ export default function PaperEditorPage() {
                   </span>
                 </div>
 
-                <div className="duplex-container grid grid-cols-2 gap-4 items-start relative">
+                <div className="duplex-container grid grid-cols-2 gap-4 items-start relative min-w-[1120px] print:min-w-0">
                   <div className="duplex-column relative pr-3 border-r-2 border-dashed border-slate-300">
                     {/* Top Scissors indicator for screen */}
                     <div className="no-print absolute -top-3 right-0 translate-x-1/2 bg-slate-100 text-slate-700 text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-300 flex items-center gap-1 z-10 shadow-2xs">
@@ -2801,7 +2855,11 @@ export default function PaperEditorPage() {
                 </div>
               </div>
             ) : (
-              <div className="single-test-container">{renderExamPaperSheet(1)}</div>
+              <div className="w-full overflow-x-auto pb-6 print:overflow-visible print:pb-0">
+                <div className="single-test-container min-w-[720px] sm:min-w-0">
+                  {renderExamPaperSheet(1)}
+                </div>
+              </div>
             )}
 
             {/* Dynamic Print Styles for Paper Size & 2-Up Layout */}

@@ -477,550 +477,809 @@ export default function AdminUsersPage() {
         </div>
       )}
 
-      {/* Top Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600">
-              <Users className="w-6 h-6" />
-            </span>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-              Registered Clients &amp; Subscriptions
+      {/* Top Executive Command Bar (3D Liquid Glass) */}
+      <div className="relative overflow-hidden bg-gradient-to-b from-white/85 via-white/70 to-white/85 backdrop-blur-2xl saturate-150 p-5 sm:p-6 rounded-3xl border border-white/90 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.12),0_4px_0_0_rgba(203,213,225,0.6),inset_0_2px_1px_#ffffff] flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white/70 to-transparent"
+          aria-hidden="true"
+        />
+        <div className="relative space-y-1.5">
+          <div className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-wider text-emerald-700">
+            <span>Admin Console</span>
+            <span className="text-slate-300">/</span>
+            <span>Educator CRM &amp; Billing</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-[0_4px_0_0_#065f46,inset_0_1px_1px_rgba(255,255,255,0.65)] shrink-0">
+              <Users className="w-5 h-5" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              Registered Educators &amp; Subscriptions
             </h1>
-            <span className="font-urdu text-emerald-600 text-lg font-normal px-2 py-0.5 bg-emerald-50 rounded-lg">
+            <span className="font-urdu text-emerald-700 text-base sm:text-lg font-bold px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
               صارفین اور سبسکرپشن کنٹرول
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500">
-            Manage registered educators, edit profiles (Email, Mobile/WhatsApp, Academy Name), and configure plan permissions.
+          <p className="text-xs text-slate-600 font-medium max-w-2xl">
+            Verify Raast ID (<strong className="font-mono text-slate-800">03092770207</strong>) transfers, manage educator credentials, and configure plan permissions.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="relative flex flex-wrap items-center gap-2.5 shrink-0">
           <button
             onClick={() => loadClients()}
             title="Refresh List"
-            className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors"
+            className="p-2.5 rounded-xl bg-white/90 hover:bg-white border border-slate-200/90 text-slate-700 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-emerald-600" : ""}`} />
           </button>
           <button
             onClick={handleExportCsv}
-            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-colors"
+            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/90 hover:bg-white border border-slate-200/90 text-slate-800 text-xs font-extrabold shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
           >
-            <Download className="w-4 h-4 text-slate-500" />
+            <Download className="w-4 h-4 text-emerald-600" />
             <span>Export CSV</span>
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-950/20 active:scale-95 transition-all"
+            className="relative overflow-hidden inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white text-xs font-extrabold border border-emerald-300/80 shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_2px_1px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
-            <span>Register New Educator</span>
+            <span
+              className="pointer-events-none absolute inset-x-1.5 top-0.5 h-2 rounded-t-full bg-gradient-to-b from-white/50 to-transparent"
+              aria-hidden="true"
+            />
+            <Plus className="w-4 h-4 relative z-10" />
+            <span className="relative z-10">Register New Educator</span>
           </button>
         </div>
       </div>
 
-      {/* Summary KPI Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-        {/* Total Clients */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              Total Clients
-            </span>
-            <div className="p-1.5 rounded-xl bg-blue-50 text-blue-600">
-              <Users className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-1.5">
-            <span className="text-xl sm:text-2xl font-black text-slate-900">{stats.total}</span>
-            <span className="text-[11px] text-slate-400 font-medium">registered</span>
-          </div>
-          <div className="mt-1.5 text-[10px] text-slate-500 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-            <span>{stats.active} Active accounts</span>
-          </div>
-        </div>
-
-        {/* Pending Verification Hold */}
-        <div
-          onClick={() => setFilterStatus("pending_verification")}
-          className={`p-4 rounded-2xl border shadow-sm relative overflow-hidden cursor-pointer transition-all ${
-            stats.pendingVerification > 0
-              ? "bg-amber-500/10 border-amber-300 ring-2 ring-amber-400/20"
-              : "bg-white border-slate-200"
+      {/* Interactive KPI Telemetry Cards (Click to Filter) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3">
+        {/* 1. Total Clients */}
+        <button
+          type="button"
+          onClick={() => {
+            setFilterStatus("all");
+            setFilterPlan("all");
+          }}
+          className={`text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
+            filterStatus === "all" && filterPlan === "all"
+              ? "bg-white border-emerald-500 ring-2 ring-emerald-500/20 shadow-[0_4px_0_0_#10b981]"
+              : "bg-white/85 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7),0_10px_25px_-8px_rgba(15,23,42,0.08)] hover:-translate-y-0.5"
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">
+            <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
+              Total Educators
+            </span>
+            <div className="p-1.5 rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
+              <Users className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="mt-2 flex items-baseline gap-1.5 tabular-nums">
+            <span className="text-2xl font-black text-slate-900">{stats.total}</span>
+            <span className="text-[11px] text-slate-500 font-semibold">accounts</span>
+          </div>
+          <div className="mt-1.5 text-[10px] text-slate-600 font-medium flex items-center gap-1.5 tabular-nums">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span>{stats.active} Active right now</span>
+          </div>
+        </button>
+
+        {/* 2. Pending Verification Hold */}
+        <button
+          type="button"
+          onClick={() => {
+            setFilterStatus(filterStatus === "pending_verification" ? "all" : "pending_verification");
+          }}
+          className={`text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
+            filterStatus === "pending_verification"
+              ? "bg-amber-50 border-amber-500 ring-2 ring-amber-500/25 shadow-[0_4px_0_0_#f59e0b]"
+              : stats.pendingVerification > 0
+              ? "bg-gradient-to-b from-amber-50/90 to-white border-amber-300 shadow-[0_4px_0_0_#fcd34d]"
+              : "bg-white/85 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7)] hover:-translate-y-0.5"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-extrabold text-amber-800 uppercase tracking-wider">
               Pending Approval
             </span>
-            <div className="p-1.5 rounded-xl bg-amber-100 text-amber-700">
+            <div className="p-1.5 rounded-xl bg-amber-100 text-amber-700 border border-amber-200">
               <Clock className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="mt-2 flex items-baseline gap-1.5">
-            <span className="text-xl sm:text-2xl font-black text-amber-600">
+          <div className="mt-2 flex items-baseline gap-1.5 tabular-nums">
+            <span className="text-2xl font-black text-amber-600">
               {stats.pendingVerification}
             </span>
             <span className="text-[11px] text-amber-800 font-bold">on hold</span>
           </div>
-          <div className="mt-1.5 text-[10px] text-amber-700 font-medium">
+          <div className="mt-1.5 text-[10px] text-amber-700 font-semibold truncate">
             Raast 03092770207 review
           </div>
-        </div>
+        </button>
 
-        {/* Paid / Pro Subscribers */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+        {/* 3. Paid / Pro Subscribers */}
+        <button
+          type="button"
+          onClick={() => {
+            setFilterPlan(filterPlan === "standard" ? "all" : "standard");
+            setFilterStatus("all");
+          }}
+          className={`text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
+            filterPlan === "standard" || filterPlan === "annual"
+              ? "bg-white border-emerald-500 ring-2 ring-emerald-500/20 shadow-[0_4px_0_0_#10b981]"
+              : "bg-white/85 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7),0_10px_25px_-8px_rgba(15,23,42,0.08)] hover:-translate-y-0.5"
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              Paid Pro
+            <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
+              Paid Pro Plans
             </span>
-            <div className="p-1.5 rounded-xl bg-amber-50 text-amber-600">
+            <div className="p-1.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
               <Crown className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="mt-2 flex items-baseline gap-1.5">
-            <span className="text-xl sm:text-2xl font-black text-amber-600">{stats.paid}</span>
-            <span className="text-[11px] text-amber-700 font-medium">pro members</span>
+          <div className="mt-2 flex items-baseline gap-1.5 tabular-nums">
+            <span className="text-2xl font-black text-emerald-700">{stats.paid}</span>
+            <span className="text-[11px] text-emerald-800 font-semibold">subscribers</span>
           </div>
-          <div className="mt-1.5 text-[10px] text-slate-500 flex items-center gap-1">
-            <span className="text-emerald-600 font-bold">{stats.standard} Std</span>
+          <div className="mt-1.5 text-[10px] text-slate-600 flex items-center gap-1.5 tabular-nums">
+            <span className="text-emerald-700 font-bold">{stats.standard} Monthly</span>
             <span>&bull;</span>
-            <span className="text-blue-600 font-bold">{stats.annual} Ann</span>
+            <span className="text-indigo-700 font-bold">{stats.annual} Annual</span>
           </div>
-        </div>
+        </button>
 
-        {/* Free Plan Educators */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+        {/* 4. Free Tier */}
+        <button
+          type="button"
+          onClick={() => {
+            setFilterPlan(filterPlan === "free" ? "all" : "free");
+            setFilterStatus("all");
+          }}
+          className={`text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
+            filterPlan === "free"
+              ? "bg-white border-slate-500 ring-2 ring-slate-400/20 shadow-[0_4px_0_0_#64748b]"
+              : "bg-white/85 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7),0_10px_25px_-8px_rgba(15,23,42,0.08)] hover:-translate-y-0.5"
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              Free Tier
+            <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
+              Free &amp; Credits
             </span>
-            <div className="p-1.5 rounded-xl bg-slate-100 text-slate-600">
+            <div className="p-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200">
               <School className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="mt-2 flex items-baseline gap-1.5">
-            <span className="text-xl sm:text-2xl font-black text-slate-800">{stats.free}</span>
-            <span className="text-[11px] text-slate-400 font-medium">basic</span>
+          <div className="mt-2 flex items-baseline gap-1.5 tabular-nums">
+            <span className="text-2xl font-black text-slate-800">{stats.free}</span>
+            <span className="text-[11px] text-slate-500 font-semibold">free tier</span>
           </div>
-          <div className="mt-1.5 text-[10px] text-slate-500 flex items-center gap-1">
-            <span>Pay-per-paper: </span>
-            <span className="font-bold text-orange-600">{stats.payAsYouGo}</span>
+          <div className="mt-1.5 text-[10px] text-slate-600 flex items-center gap-1 tabular-nums">
+            <span>Pay-per-paper:</span>
+            <span className="font-bold text-amber-700">{stats.payAsYouGo}</span>
           </div>
-        </div>
+        </button>
 
-        {/* Suspended Accounts */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+        {/* 5. Suspended Accounts */}
+        <button
+          type="button"
+          onClick={() => {
+            setFilterStatus(filterStatus === "suspended" ? "all" : "suspended");
+          }}
+          className={`col-span-2 sm:col-span-1 text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
+            filterStatus === "suspended"
+              ? "bg-rose-50 border-rose-500 ring-2 ring-rose-500/20 shadow-[0_4px_0_0_#f43f5e]"
+              : "bg-white/85 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7),0_10px_25px_-8px_rgba(15,23,42,0.08)] hover:-translate-y-0.5"
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
               Suspended
             </span>
-            <div className="p-1.5 rounded-xl bg-rose-50 text-rose-600">
+            <div className="p-1.5 rounded-xl bg-rose-50 text-rose-600 border border-rose-100">
               <ShieldAlert className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="mt-2 flex items-baseline gap-1.5">
-            <span className="text-xl sm:text-2xl font-black text-rose-600">{stats.suspended}</span>
-            <span className="text-[11px] text-rose-700 font-medium">locked</span>
+          <div className="mt-2 flex items-baseline gap-1.5 tabular-nums">
+            <span className="text-2xl font-black text-rose-600">{stats.suspended}</span>
+            <span className="text-[11px] text-rose-700 font-semibold">locked</span>
           </div>
           <div className="mt-1.5 text-[10px] text-slate-500 truncate">
-            Requires admin action
+            Click to filter locked accounts
           </div>
-        </div>
+        </button>
       </div>
 
-      {/* Filter & Search Toolbar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      {/* Filter & Search Command Bar */}
+      <div className="bg-white/85 backdrop-blur-2xl p-4 rounded-2xl border border-white/90 shadow-[0_10px_30px_-10px_rgba(15,23,42,0.08),0_3px_0_0_rgba(203,213,225,0.6),inset_0_1px_0_#ffffff] flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by educator name, email, phone / WhatsApp, TID, or academy..."
-            className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+            placeholder="Search educator name, email, WhatsApp/mobile, Raast TID, or school..."
+            className="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm font-medium rounded-xl bg-slate-50/90 focus:bg-white border border-slate-200/90 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 shadow-inner transition-all"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
 
-        {/* Filters */}
+        {/* Quick Status Segmented Pills & Plan Dropdown */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Plan Filter */}
-          <div className="flex items-center gap-1.5 text-xs text-slate-500">
-            <span className="font-semibold text-slate-700">Plan:</span>
-            <select
-              value={filterPlan}
-              onChange={(e) => setFilterPlan(e.target.value)}
-              className="py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-            >
-              <option value="all">All Plans</option>
-              <option value="free">Free (Rs. 0)</option>
-              <option value="pay_as_you_go">Go as you pay (Rs. 30)</option>
-              <option value="standard">Standard (Rs. 2000)</option>
-              <option value="annual">Annual Premium (Rs. 3000)</option>
-            </select>
+          <div className="inline-flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200/80 text-xs font-bold">
+            {[
+              { id: "all", label: "All" },
+              { id: "pending_verification", label: `Pending (${stats.pendingVerification})` },
+              { id: "active", label: "Active" },
+              { id: "suspended", label: "Suspended" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setFilterStatus(tab.id)}
+                className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                  filterStatus === tab.id
+                    ? "bg-white text-slate-900 shadow-xs font-extrabold"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
 
-          {/* Status Filter */}
-          <div className="flex items-center gap-1.5 text-xs text-slate-500">
-            <span className="font-semibold text-slate-700">Status:</span>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-            >
-              <option value="all">All Statuses</option>
-              <option value="pending_verification">⏳ Pending Approval (Hold)</option>
-              <option value="active">Active</option>
-              <option value="suspended">Suspended</option>
-              <option value="expired">Expired</option>
-            </select>
-          </div>
+          {/* Plan Filter */}
+          <select
+            value={filterPlan}
+            onChange={(e) => setFilterPlan(e.target.value)}
+            className="py-2 px-3 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 cursor-pointer shadow-2xs"
+          >
+            <option value="all">All Plans</option>
+            <option value="free">Free (Rs. 0)</option>
+            <option value="pay_as_you_go">Go as you pay (Rs. 30)</option>
+            <option value="standard">Standard (Rs. 2000)</option>
+            <option value="annual">Annual Premium (Rs. 3000)</option>
+          </select>
         </div>
       </div>
 
-      {/* Clients Table / List */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      {/* Clients Container (Dual Responsive: Mobile/Tablet Cards + Desktop High-Density Table) */}
+      <div className="bg-white/90 backdrop-blur-2xl rounded-3xl border border-white/90 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.1),0_4px_0_0_rgba(203,213,225,0.65)] overflow-hidden">
         {loading ? (
           <div className="py-20 text-center text-slate-400 space-y-3">
             <RefreshCw className="w-8 h-8 animate-spin mx-auto text-emerald-600" />
-            <p className="text-xs font-medium">Loading educator profiles &amp; subscriptions...</p>
+            <p className="text-xs font-bold text-slate-600">Loading educator profiles &amp; subscriptions...</p>
           </div>
         ) : clients.length === 0 ? (
-          <div className="py-20 text-center text-slate-400 space-y-3">
+          <div className="py-20 px-4 text-center text-slate-400 space-y-3">
             <Users className="w-12 h-12 mx-auto text-slate-300 stroke-1" />
-            <p className="text-base font-bold text-slate-700">No registered educators match your filters</p>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto">
-              Try adjusting your search criteria or register a new client using the button above.
+            <p className="text-base font-black text-slate-800">No registered educators match your filters</p>
+            <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              Try clearing your search or status filter, or register a new educator account above.
             </p>
+            {(searchTerm || filterPlan !== "all" || filterStatus !== "all") && (
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilterPlan("all");
+                  setFilterStatus("all");
+                }}
+                className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-sm hover:bg-emerald-500 transition-colors"
+              >
+                Reset All Filters
+              </button>
+            )}
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50/80 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200">
-                <tr>
-                  <th className="py-3.5 px-4">Educator &amp; Academy</th>
-                  <th className="py-3.5 px-4">Contact Info</th>
-                  <th className="py-3.5 px-4">User Password</th>
-                  <th className="py-3.5 px-4">Current Plan</th>
-                  <th className="py-3.5 px-4">Status &amp; Expiry</th>
-                  <th className="py-3.5 px-4">Permissions Breakdown</th>
-                  <th className="py-3.5 px-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {clients.map((c) => {
-                  const planMeta = PLAN_METADATA[c.subscription.planId] || {
-                    name: c.subscription.planName || c.subscription.planId,
-                    priceFormatted: "Custom",
-                  };
-                  const isPending = c.subscription.status === "pending_verification" || c.isVerified === false;
-                  const isSuspended = c.subscription.status === "suspended";
-                  const isExpired = c.subscription.status === "expired";
+          <>
+            {/* ===============================================================
+                1. MOBILE & TABLET RESPONSIVE CARDS (< lg)
+                =============================================================== */}
+            <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3.5 p-3.5 sm:p-5 bg-slate-50/50">
+              {clients.map((c) => {
+                const planMeta = PLAN_METADATA[c.subscription.planId] || {
+                  name: c.subscription.planName || c.subscription.planId,
+                  priceFormatted: "Custom",
+                };
+                const isPending = c.subscription.status === "pending_verification" || c.isVerified === false;
+                const isSuspended = c.subscription.status === "suspended";
+                const isExpired = c.subscription.status === "expired";
 
-                  return (
-                    <tr
-                      key={c.id}
-                      className={`hover:bg-slate-50/80 transition-colors ${
-                        isPending
-                          ? "bg-amber-50/40 border-l-4 border-l-amber-500"
-                          : isSuspended
-                          ? "bg-rose-50/30"
-                          : ""
-                      }`}
-                    >
-                      {/* Educator & Academy */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-2xl text-white font-black flex items-center justify-center text-sm shrink-0 shadow-sm ${
+                return (
+                  <div
+                    key={c.id}
+                    className={`rounded-2xl border p-4 space-y-3.5 bg-white shadow-sm transition-all ${
+                      isPending
+                        ? "border-amber-400 ring-2 ring-amber-400/20"
+                        : isSuspended
+                        ? "border-rose-200 bg-rose-50/20"
+                        : "border-slate-200/90"
+                    }`}
+                  >
+                    {/* Card Header: Avatar, Name, Status Badge */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div
+                          className={`w-10 h-10 rounded-xl text-white font-black flex items-center justify-center text-sm shrink-0 shadow-sm ${
                             isPending
                               ? "bg-gradient-to-tr from-amber-500 to-orange-500"
                               : "bg-gradient-to-tr from-emerald-500 to-teal-600"
-                          }`}>
-                            {c.fullName.charAt(0).toUpperCase()}
+                          }`}
+                        >
+                          {c.fullName.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="min-w-0">
+                          <Link
+                            href={`/admin/users/${c.id}`}
+                            className="font-black text-slate-900 text-sm hover:text-emerald-700 truncate block"
+                          >
+                            {c.fullName}
+                          </Link>
+                          <div className="text-[11px] text-slate-500 flex items-center gap-1 truncate">
+                            <School className="w-3 h-3 text-slate-400 shrink-0" />
+                            <span className="truncate">{c.academyName || "Educator Academy"}</span>
                           </div>
-                          <div>
-                            <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                              <Link
-                                href={`/admin/users/${c.id}`}
-                                className="hover:text-emerald-700 hover:underline"
-                              >
-                                {c.fullName}
-                              </Link>
-                              {c.subscription.planId === "annual" && (
-                                <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                        </div>
+                      </div>
+
+                      {/* Status Pill */}
+                      <div className="shrink-0">
+                        {isPending ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300">
+                            <Clock className="w-3 h-3 text-amber-700" />
+                            <span>HOLD</span>
+                          </span>
+                        ) : isSuspended ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                            <span>SUSPENDED</span>
+                          </span>
+                        ) : isExpired ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-200">
+                            <span>EXPIRED</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                            <CheckCircle2 className="w-3 h-3" />
+                            <span>ACTIVE</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Raast TID Notice if present */}
+                    {c.paymentSubmission && (
+                      <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-center justify-between gap-2 font-mono">
+                        <span>⚡ Raast TID: <strong>{c.paymentSubmission.transactionRef}</strong></span>
+                        {c.paymentSubmission.amount && (
+                          <span className="font-bold bg-amber-200/70 px-2 py-0.5 rounded text-[10px]">
+                            Rs. {c.paymentSubmission.amount}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Contact & Password Row */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs">
+                      <div className="space-y-1 min-w-0">
+                        <a
+                          href={`mailto:${c.email}`}
+                          className="flex items-center gap-1.5 text-slate-700 hover:text-emerald-600 font-medium truncate"
+                        >
+                          <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span className="truncate">{c.email}</span>
+                        </a>
+                        {c.phone && (
+                          <a
+                            href={`https://wa.me/${c.phone.replace(/[^0-9]/g, "")}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center gap-1.5 text-emerald-700 font-semibold"
+                          >
+                            <Phone className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                            <span>{c.phone}</span>
+                          </a>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between sm:justify-end gap-1.5">
+                        <div className="font-mono text-[11px] font-bold px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 flex items-center gap-1.5">
+                          <Lock className="w-3 h-3 text-slate-400" />
+                          <span>
+                            {c.password
+                              ? revealedPasswords.has(c.id)
+                                ? c.password
+                                : "••••••••"
+                              : "default123"}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => toggleRevealPassword(c.id)}
+                          className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-600"
+                        >
+                          {revealedPasswords.has(c.id) ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Plan & Actions Footer */}
+                    <div className="pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-black bg-slate-100 text-slate-800 border border-slate-200">
+                        <Crown className="w-3 h-3 text-amber-500" />
+                        <span>{planMeta.name}</span>
+                      </span>
+
+                      <div className="flex items-center gap-1.5">
+                        {isPending && (
+                          <button
+                            onClick={() => handleApproveClient(c)}
+                            className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center gap-1 shadow-xs"
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>Approve</span>
+                          </button>
+                        )}
+                        <Link
+                          href={`/admin/users/${c.id}`}
+                          className="p-2 rounded-xl border border-slate-200 hover:bg-indigo-50 text-slate-700"
+                          title="View Details"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </Link>
+                        <button
+                          onClick={() => handleOpenEdit(c)}
+                          className="p-2 rounded-xl border border-slate-200 hover:bg-emerald-50 text-slate-700"
+                          title="Edit Profile & Plan"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => setEmailPreviewClient(c)}
+                          className="p-2 rounded-xl border border-slate-200 hover:bg-amber-50 text-slate-700"
+                          title="Welcome Email"
+                        >
+                          <Mail className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => setDeletingClient(c)}
+                          className="p-2 rounded-xl border border-slate-200 hover:bg-rose-50 text-rose-600"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* ===============================================================
+                2. DESKTOP HIGH-DENSITY ENTERPRISE TABLE (lg+)
+                =============================================================== */}
+            <div className="hidden lg:block overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-900 text-slate-300 uppercase tracking-wider font-extrabold border-b border-slate-800 text-[11px]">
+                  <tr>
+                    <th className="py-3.5 px-4">Educator &amp; Academy</th>
+                    <th className="py-3.5 px-4">Contact Info</th>
+                    <th className="py-3.5 px-4">Password</th>
+                    <th className="py-3.5 px-4">Plan &amp; Billing</th>
+                    <th className="py-3.5 px-4">Status &amp; Expiry</th>
+                    <th className="py-3.5 px-4">Permissions</th>
+                    <th className="py-3.5 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {clients.map((c) => {
+                    const planMeta = PLAN_METADATA[c.subscription.planId] || {
+                      name: c.subscription.planName || c.subscription.planId,
+                      priceFormatted: "Custom",
+                    };
+                    const isPending = c.subscription.status === "pending_verification" || c.isVerified === false;
+                    const isSuspended = c.subscription.status === "suspended";
+                    const isExpired = c.subscription.status === "expired";
+
+                    return (
+                      <tr
+                        key={c.id}
+                        className={`hover:bg-slate-50/90 transition-colors ${
+                          isPending
+                            ? "bg-amber-50/50 border-l-4 border-l-amber-500"
+                            : isSuspended
+                            ? "bg-rose-50/30"
+                            : ""
+                        }`}
+                      >
+                        {/* Educator & Academy */}
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-10 h-10 rounded-xl text-white font-black flex items-center justify-center text-sm shrink-0 shadow-sm ${
+                                isPending
+                                  ? "bg-gradient-to-tr from-amber-500 to-orange-500"
+                                  : "bg-gradient-to-tr from-emerald-500 to-teal-600"
+                              }`}
+                            >
+                              {c.fullName.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                                <Link
+                                  href={`/admin/users/${c.id}`}
+                                  className="hover:text-emerald-700 hover:underline"
+                                >
+                                  {c.fullName}
+                                </Link>
+                                {c.subscription.planId === "annual" && (
+                                  <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                                )}
+                                {isPending && (
+                                  <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase bg-amber-500 text-white tracking-wider">
+                                    HOLD
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
+                                <School className="w-3 h-3 text-slate-400" />
+                                <span className="truncate max-w-[180px] font-medium">
+                                  {c.academyName || "Educator Academy"}
+                                </span>
+                              </div>
+                              {c.paymentSubmission && (
+                                <div className="mt-1 flex items-center gap-1.5 text-[10px] text-amber-900 bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200 font-mono">
+                                  <span>⚡ Raast TID:</span>
+                                  <strong className="font-bold">{c.paymentSubmission.transactionRef}</strong>
+                                  {c.paymentSubmission.amount && <span>(Rs. {c.paymentSubmission.amount})</span>}
+                                </div>
                               )}
-                              {isPending && (
-                                <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase bg-amber-500 text-white tracking-wider">
-                                  HOLD
+                              {c.notes && (
+                                <div className="text-[10px] text-slate-400 italic mt-0.5 max-w-[200px] truncate">
+                                  {c.notes}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Contact Info */}
+                        <td className="py-3.5 px-4">
+                          <div className="space-y-1">
+                            <a
+                              href={`mailto:${c.email}`}
+                              className="flex items-center gap-1.5 text-slate-700 hover:text-emerald-600 font-medium transition-colors"
+                            >
+                              <Mail className="w-3.5 h-3.5 text-slate-400" />
+                              <span>{c.email}</span>
+                            </a>
+                            {c.phone ? (
+                              <a
+                                href={`https://wa.me/${c.phone.replace(/[^0-9]/g, "")}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex items-center gap-1.5 text-slate-600 hover:text-emerald-600 font-medium transition-colors tabular-nums"
+                              >
+                                <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                                <span>{c.phone}</span>
+                              </a>
+                            ) : (
+                              <span className="text-[11px] text-slate-400 italic">No phone added</span>
+                            )}
+                          </div>
+                        </td>
+
+                        {/* User Password */}
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-1.5">
+                            <div className="font-mono text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 flex items-center gap-1.5">
+                              <Lock className="w-3 h-3 text-slate-400" />
+                              <span>
+                                {c.password
+                                  ? revealedPasswords.has(c.id)
+                                    ? c.password
+                                    : "••••••••"
+                                  : "default123"}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => toggleRevealPassword(c.id)}
+                              title={revealedPasswords.has(c.id) ? "Hide Password" : "Show Password"}
+                              className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                            >
+                              {revealedPasswords.has(c.id) ? (
+                                <EyeOff className="w-3.5 h-3.5" />
+                              ) : (
+                                <Eye className="w-3.5 h-3.5" />
+                              )}
+                            </button>
+                          </div>
+                        </td>
+
+                        {/* Current Plan */}
+                        <td className="py-3.5 px-4">
+                          <div className="space-y-1">
+                            <span
+                              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-black border ${
+                                c.subscription.planId === "annual"
+                                  ? "bg-indigo-50 text-indigo-700 border-indigo-200"
+                                  : c.subscription.planId === "standard"
+                                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                  : c.subscription.planId === "pay_as_you_go" || c.subscription.planId === "pay_per_paper"
+                                  ? "bg-amber-50 text-amber-700 border-amber-200"
+                                  : "bg-slate-100 text-slate-700 border-slate-200"
+                              }`}
+                            >
+                              {c.subscription.planId === "annual" && <Crown className="w-3 h-3 text-indigo-600" />}
+                              {c.subscription.planId === "standard" && <Sparkles className="w-3 h-3 text-emerald-600" />}
+                              {c.subscription.planId === "pay_as_you_go" && <Zap className="w-3 h-3 text-amber-600" />}
+                              <span>{planMeta.name}</span>
+                            </span>
+
+                            <div className="text-[11px] text-slate-500 font-medium tabular-nums">
+                              {c.subscription.planId === "pay_as_you_go" || c.subscription.planId === "pay_per_paper" ? (
+                                <span>Credits: <b>{c.subscription.paperCredits} papers</b></span>
+                              ) : (
+                                <span>{planMeta.priceFormatted}</span>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Status & Expiry */}
+                        <td className="py-3.5 px-4">
+                          <div className="space-y-1">
+                            <div>
+                              {isPending ? (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300 animate-pulse">
+                                  <Clock className="w-3 h-3 text-amber-700" />
+                                  <span>HOLD (APPROVAL)</span>
+                                </span>
+                              ) : isSuspended ? (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                                  <XCircle className="w-3 h-3" />
+                                  <span>SUSPENDED</span>
+                                </span>
+                              ) : isExpired ? (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-200">
+                                  <Clock className="w-3 h-3" />
+                                  <span>EXPIRED</span>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                  <CheckCircle2 className="w-3 h-3" />
+                                  <span>ACTIVE</span>
                                 </span>
                               )}
                             </div>
-                            <div className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
-                              <School className="w-3 h-3 text-slate-400" />
-                              <span className="truncate max-w-[180px] font-medium">
-                                {c.academyName || "Educator Academy"}
-                              </span>
+
+                            <div className="text-[11px] text-slate-500 flex items-center gap-1 tabular-nums">
+                              <Calendar className="w-3 h-3 text-slate-400" />
+                              {c.subscription.expiresAt ? (
+                                <span>Exp: {new Date(c.subscription.expiresAt).toLocaleDateString()}</span>
+                              ) : (
+                                <span>Perpetual / Free</span>
+                              )}
                             </div>
-                            {c.paymentSubmission && (
-                              <div className="mt-1 flex items-center gap-1.5 text-[10px] text-amber-900 bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200 font-mono">
-                                <span>⚡ Raast TID:</span>
-                                <strong className="font-bold">{c.paymentSubmission.transactionRef}</strong>
-                                {c.paymentSubmission.amount && <span>(Rs. {c.paymentSubmission.amount})</span>}
-                              </div>
-                            )}
-                            {c.notes && (
-                              <div className="text-[10px] text-slate-400 italic mt-0.5 max-w-[200px] truncate">
-                                {c.notes}
-                              </div>
-                            )}
                           </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      {/* Contact Info */}
-                      <td className="py-3.5 px-4">
-                        <div className="space-y-1">
-                          <a
-                            href={`mailto:${c.email}`}
-                            className="flex items-center gap-1.5 text-slate-700 hover:text-emerald-600 font-medium transition-colors"
-                          >
-                            <Mail className="w-3.5 h-3.5 text-slate-400" />
-                            <span>{c.email}</span>
-                          </a>
-                          {c.phone ? (
-                            <a
-                              href={`https://wa.me/${c.phone.replace(/[^0-9]/g, "")}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex items-center gap-1.5 text-slate-600 hover:text-emerald-600 font-medium transition-colors"
-                            >
-                              <Phone className="w-3.5 h-3.5 text-emerald-600" />
-                              <span>{c.phone}</span>
-                            </a>
-                          ) : (
-                            <span className="text-[11px] text-slate-400 italic">No phone added</span>
-                          )}
-                        </div>
-                      </td>
+                        {/* Permissions Breakdown */}
+                        <td className="py-3.5 px-4">
+                          <div className="flex flex-wrap gap-1 max-w-xs">
+                            {c.subscription.canAutoBoardPattern ? (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                Board Scheme
+                              </span>
+                            ) : (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-400">
+                                No Scheme
+                              </span>
+                            )}
 
-                      {/* User Password */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-2">
-                          <div className="font-mono text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 flex items-center gap-1.5">
-                            <Lock className="w-3 h-3 text-slate-400" />
-                            <span>
-                              {c.password
-                                ? revealedPasswords.has(c.id)
-                                  ? c.password
-                                  : "••••••••"
-                                : "default123"}
+                            {c.subscription.canCustomBranding ? (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                Branding
+                              </span>
+                            ) : (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-400">
+                                No Brand
+                              </span>
+                            )}
+
+                            {c.subscription.canExportAnswerKey && (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                Key
+                              </span>
+                            )}
+
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 tabular-nums">
+                              Max {c.subscription.maxQuestionsPerPaper} Qs
                             </span>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => toggleRevealPassword(c.id)}
-                            title={revealedPasswords.has(c.id) ? "Hide Password" : "Show Password"}
-                            className="p-1 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
-                          >
-                            {revealedPasswords.has(c.id) ? (
-                              <EyeOff className="w-3.5 h-3.5" />
-                            ) : (
+                        </td>
+
+                        {/* Actions */}
+                        <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                          <div className="inline-flex items-center gap-1">
+                            {isPending && (
+                              <button
+                                onClick={() => handleApproveClient(c)}
+                                title="Approve Raast Payment & Activate Account"
+                                className="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center gap-1 shadow-xs transition-all active:scale-95 mr-1 cursor-pointer"
+                              >
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                <span>Approve</span>
+                              </button>
+                            )}
+
+                            <Link
+                              href={`/admin/users/${c.id}`}
+                              title="View Profile & Paper History"
+                              className="p-1.5 rounded-lg border border-slate-200 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300 text-slate-600 transition-colors"
+                            >
                               <Eye className="w-3.5 h-3.5" />
-                            )}
-                          </button>
-                        </div>
-                      </td>
+                            </Link>
 
-                      {/* Current Plan */}
-                      <td className="py-3.5 px-4">
-                        <div className="space-y-1">
-                          <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-black border ${
-                              c.subscription.planId === "annual"
-                                ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                                : c.subscription.planId === "standard"
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                : c.subscription.planId === "pay_as_you_go" || c.subscription.planId === "pay_per_paper"
-                                ? "bg-amber-50 text-amber-700 border-amber-200"
-                                : "bg-slate-100 text-slate-700 border-slate-200"
-                            }`}
-                          >
-                            {c.subscription.planId === "annual" && <Crown className="w-3 h-3 text-indigo-600" />}
-                            {c.subscription.planId === "standard" && <Sparkles className="w-3 h-3 text-emerald-600" />}
-                            {c.subscription.planId === "pay_as_you_go" && <Zap className="w-3 h-3 text-amber-600" />}
-                            <span>{planMeta.name}</span>
-                          </span>
-
-                          <div className="text-[11px] text-slate-500 font-medium">
-                            {c.subscription.planId === "pay_as_you_go" || c.subscription.planId === "pay_per_paper" ? (
-                              <span>Credits: <b>{c.subscription.paperCredits} papers</b></span>
-                            ) : (
-                              <span>{planMeta.priceFormatted}</span>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* Status & Expiry */}
-                      <td className="py-3.5 px-4">
-                        <div className="space-y-1">
-                          <div>
-                            {isPending ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300 animate-pulse">
-                                <Clock className="w-3 h-3 text-amber-700" />
-                                <span>HOLD (NEEDS APPROVAL)</span>
-                              </span>
-                            ) : isSuspended ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
-                                <XCircle className="w-3 h-3" />
-                                <span>SUSPENDED</span>
-                              </span>
-                            ) : isExpired ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-200">
-                                <Clock className="w-3 h-3" />
-                                <span>EXPIRED</span>
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">
-                                <CheckCircle2 className="w-3 h-3" />
-                                <span>ACTIVE</span>
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="text-[11px] text-slate-500 flex items-center gap-1">
-                            <Calendar className="w-3 h-3 text-slate-400" />
-                            {c.subscription.expiresAt ? (
-                              <span>Exp: {new Date(c.subscription.expiresAt).toLocaleDateString()}</span>
-                            ) : (
-                              <span>No expiry (Perpetual/Free)</span>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* Permissions Breakdown */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-wrap gap-1 max-w-xs">
-                          {c.subscription.canAutoBoardPattern ? (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                              Board Scheme
-                            </span>
-                          ) : (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-400">
-                              No Scheme
-                            </span>
-                          )}
-
-                          {c.subscription.canCustomBranding ? (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                              Branding
-                            </span>
-                          ) : (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-400">
-                              No Brand
-                            </span>
-                          )}
-
-                          {c.subscription.canExportAnswerKey && (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                              Key
-                            </span>
-                          )}
-
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600">
-                            Max {c.subscription.maxQuestionsPerPaper} Qs
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* Actions */}
-                      <td className="py-3.5 px-4 text-right">
-                        <div className="inline-flex items-center gap-1">
-                          {/* One-Click APPROVE button for pending accounts */}
-                          {isPending && (
                             <button
-                              onClick={() => handleApproveClient(c)}
-                              title="Approve Raast Payment & Activate Account"
-                              className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center gap-1 shadow-sm transition-all active:scale-95 mr-1"
+                              onClick={() => setEmailPreviewClient(c)}
+                              title="Preview & Send Welcome Email"
+                              className="p-1.5 rounded-lg border border-slate-200 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300 text-slate-600 transition-colors cursor-pointer"
                             >
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>Approve</span>
+                              <Mail className="w-3.5 h-3.5" />
                             </button>
-                          )}
 
-                          {/* View profile & paper history */}
-                          <Link
-                            href={`/admin/users/${c.id}`}
-                            title="View Profile & Paper History"
-                            className="p-1.5 rounded-lg border border-slate-200 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300 text-slate-600 transition-colors"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                          </Link>
+                            <button
+                              onClick={() => handleOpenEdit(c)}
+                              title="Edit Profile & Permissions"
+                              className="p-1.5 rounded-lg border border-slate-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 text-slate-600 transition-colors cursor-pointer"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
 
-                          {/* Preview & Resend Welcome Email */}
-                          <button
-                            onClick={() => setEmailPreviewClient(c)}
-                            title="Preview & Send Welcome Email"
-                            className="p-1.5 rounded-lg border border-slate-200 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300 text-slate-600 transition-colors"
-                          >
-                            <Mail className="w-3.5 h-3.5" />
-                          </button>
+                            <button
+                              onClick={() => handleToggleSuspend(c)}
+                              title={isSuspended ? "Activate Account" : "Suspend Account"}
+                              className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
+                                isSuspended
+                                  ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                                  : "border-slate-200 text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-300"
+                              }`}
+                            >
+                              {isSuspended ? (
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                              ) : (
+                                <ShieldAlert className="w-3.5 h-3.5" />
+                              )}
+                            </button>
 
-                          {/* Edit Full Profile & Permissions */}
-                          <button
-                            onClick={() => handleOpenEdit(c)}
-                            title="Edit Profile & Permissions"
-                            className="p-1.5 rounded-lg border border-slate-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 text-slate-600 transition-colors"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
-
-                          {/* Quick Suspend / Activate Toggle */}
-                          <button
-                            onClick={() => handleToggleSuspend(c)}
-                            title={isSuspended ? "Activate Account" : "Suspend Account"}
-                            className={`p-1.5 rounded-lg border transition-colors ${
-                              isSuspended
-                                ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                                : "border-slate-200 text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-300"
-                            }`}
-                          >
-                            {isSuspended ? (
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                            ) : (
-                              <ShieldAlert className="w-3.5 h-3.5" />
-                            )}
-                          </button>
-
-                          {/* Delete Account */}
-                          <button
-                            onClick={() => setDeletingClient(c)}
-                            title="Delete Client"
-                            className="p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-300 transition-colors"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                            <button
+                              onClick={() => setDeletingClient(c)}
+                              title="Delete Client"
+                              className="p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-300 transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
