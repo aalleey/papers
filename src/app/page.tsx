@@ -30,6 +30,8 @@ import {
   Phone,
   Search,
   FileText,
+  Menu,
+  X,
 } from "lucide-react";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
@@ -39,6 +41,7 @@ import { ClientUser, isPaidSubscriber } from "@/lib/types";
 export default function Home() {
   const [clientUser, setClientUser] = useState<ClientUser | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Interactive preview state for the Hero Mock Paper
   const [heroLang, setHeroLang] = useState<"Bilingual" | "English" | "Urdu">("Bilingual");
@@ -89,12 +92,14 @@ export default function Home() {
     try {
       await fetch("/api/auth/client/logout", { method: "POST" });
       setClientUser(null);
+      setMobileMenuOpen(false);
     } catch (e) {
       console.error(e);
     }
   }
 
   const openAuth = () => {
+    setMobileMenuOpen(false);
     setShowAuthModal(true);
   };
 
@@ -106,147 +111,267 @@ export default function Home() {
       />
 
       {/* =========================================================================
-          TOP STICKY NAVBAR - Fresh, Clean, White & Emerald
+          TOP STICKY NAVBAR - Transparent 3D Glassmorphic Floating Bar
           ========================================================================= */}
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-          {/* Logo & Brand Name */}
-          <Link href="/" className="flex items-center gap-3 group" id="nav-brand-logo">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
-              <BookOpen className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-black text-xl tracking-tight text-slate-900">PaperWala</span>
-                <span className="font-urdu text-emerald-700 text-lg font-bold">پیپر والا</span>
-              </div>
-              <span className="text-[11px] text-slate-500 block -mt-1 font-medium tracking-wide">
-                Pakistan&apos;s #1 Exam Paper Generator
-              </span>
-            </div>
-          </Link>
-
-          {/* Nav Links (Desktop) */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-bold text-slate-600" aria-label="Main Navigation">
-            <a href="#how-it-works" className="hover:text-emerald-700 transition-colors">
-              How It Works
-            </a>
-            <a href="#active-chapters" className="hover:text-emerald-700 transition-colors">
-              Question Bank
-            </a>
-            <a href="#sample-paper" className="hover:text-emerald-700 transition-colors">
-              Sample Paper
-            </a>
+      <header className="sticky top-3 z-50 px-3 sm:px-6 lg:px-8 pointer-events-none">
+        <div className="pointer-events-auto max-w-7xl mx-auto rounded-2xl bg-white/45 backdrop-blur-2xl border border-white/80 shadow-[0_20px_50px_-12px_rgba(15,23,42,0.18),0_4px_16px_-2px_rgba(16,185,129,0.12),inset_0_2px_1px_0_rgba(255,255,255,0.95),inset_0_-2px_4px_0_rgba(15,23,42,0.06)] transition-all duration-200">
+          <div className="px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
+            {/* Zone 1: 3D Brand Emblem & Wordmark */}
             <Link
-              href="/pricing"
-              className="text-amber-700 hover:text-amber-800 font-extrabold flex items-center gap-1 transition-colors"
+              href="/"
+              className="flex items-center gap-3 group whitespace-nowrap shrink-0"
+              id="nav-brand-logo"
             >
-              <Crown className="w-3.5 h-3.5 text-amber-600" />
-              <span>Pricing (Monthly)</span>
-            </Link>
-            <a href="#faq" className="hover:text-emerald-700 transition-colors">
-              FAQs
-            </a>
-          </nav>
-
-          {/* Action CTAs */}
-          <div className="flex items-center gap-3">
-            {clientUser ? (
-              <>
-                {/* Quick Paper Link for Signed In Users */}
-                <Link
-                  href="/quick-paper"
-                  id="nav-quick-paper-btn"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black shadow-xs transition-all hover:scale-105"
-                  title="Create or Paste Instant Paper"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                  <span>Quick Paper</span>
-                </Link>
-
-                {clientUser.email.toLowerCase() === "ali.khaliq50@gmail.com" && (
-                  <Link
-                    href="/admin/users"
-                    id="nav-admin-panel-btn"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black shadow-xs transition-colors"
-                    title="Open Admin Panel"
-                  >
-                    <ShieldCheck className="w-3.5 h-3.5 text-indigo-200" />
-                    <span>Admin Panel</span>
-                  </Link>
-                )}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold shadow-xs">
-                  <Link
-                    href="/profile"
-                    id="nav-my-profile-link"
-                    title="My Profile & Paper History"
-                    className="inline-flex items-center gap-2 hover:opacity-90"
-                  >
-                    <User className="w-3.5 h-3.5 text-emerald-700" />
-                    <span className="text-slate-800">{clientUser.fullName.split(" ")[0]}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold">
-                      {clientUser.subscription.planName}
-                    </span>
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="p-1 text-slate-400 hover:text-rose-600 transition-colors ml-0.5"
-                    title="Log Out"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => openAuth()}
-                  id="nav-client-login-btn"
-                  className="px-3.5 py-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 text-xs font-bold transition-all"
-                >
-                  Sign In
-                </button>
-                <Link
-                  href="/register"
-                  id="nav-client-signup-btn"
-                  className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-black transition-all"
-                >
-                  Register Account
-                </Link>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-[0_4px_0_0_#065f46,0_8px_16px_-2px_rgba(16,185,129,0.45),inset_0_1px_1px_rgba(255,255,255,0.65)] group-hover:-translate-y-0.5 group-active:translate-y-0.5 transition-all duration-150">
+                <BookOpen className="w-4 h-4 drop-shadow-xs" />
               </div>
-            )}
+              <div className="flex items-baseline gap-2">
+                <span className="font-extrabold text-lg tracking-tight text-slate-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
+                  PaperWala
+                </span>
+                <span className="text-slate-400 text-xs" aria-hidden="true">·</span>
+                <span className="font-urdu text-emerald-700 text-base font-bold drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
+                  پیپر والا
+                </span>
+              </div>
+            </Link>
 
-            {clientUser ? (
-              isPaidSubscriber(clientUser) ? (
-                <Link
-                  href="/select-questions?chapter=3"
-                  id="nav-generate-paper-btn"
-                  className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-md shadow-emerald-700/20 active:scale-[0.98] transition-all"
-                >
-                  <Zap className="w-4 h-4 fill-white text-white" />
-                  <span>Generate Paper</span>
-                </Link>
+            {/* Zone 2: 3D Recessed Glass Navigation Track (Desktop) */}
+            <nav
+              className="hidden lg:flex items-center gap-1.5 p-1.5 rounded-xl bg-slate-900/[0.04] backdrop-blur-md border border-white/70 shadow-[inset_0_2px_4px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.9)] text-xs font-semibold text-slate-700"
+              aria-label="Main Navigation"
+            >
+              <a
+                href="#how-it-works"
+                className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+              >
+                How It Works
+              </a>
+              <a
+                href="#active-chapters"
+                className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+              >
+                Question Bank
+              </a>
+              <a
+                href="#sample-paper"
+                className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+              >
+                Sample Paper
+              </a>
+              <Link
+                href="/pricing"
+                className="px-3.5 py-1.5 rounded-lg text-emerald-800 bg-white/60 hover:bg-white/95 shadow-[0_2px_6px_-1px_rgba(16,185,129,0.15),0_2px_0_0_#a7f3d0,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+              >
+                Pricing
+              </Link>
+              <a
+                href="#faq"
+                className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+              >
+                FAQs
+              </a>
+            </nav>
+
+            {/* Zone 3: 3D Tactile Account Controls & Primary Action */}
+            <div className="flex items-center gap-2.5 shrink-0">
+              {clientUser ? (
+                <>
+                  <Link
+                    href="/quick-paper"
+                    id="nav-quick-paper-btn"
+                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 hover:bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1,0_6px_12px_-2px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                    title="Create or Paste Instant Paper"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Quick Paper</span>
+                  </Link>
+
+                  {clientUser.email.toLowerCase() === "ali.khaliq50@gmail.com" && (
+                    <Link
+                      href="/admin/users"
+                      id="nav-admin-panel-btn"
+                      className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50/90 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-xs font-bold shadow-[0_3px_0_0_#c7d2fe,0_6px_12px_-2px_rgba(79,70,229,0.12),inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                      title="Open Admin Panel"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+                      <span>Admin</span>
+                    </Link>
+                  )}
+
+                  <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/80 border border-white text-xs font-medium shadow-[0_3px_0_0_#cbd5e1,0_6px_12px_-2px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] whitespace-nowrap shrink-0">
+                    <Link
+                      href="/profile"
+                      id="nav-my-profile-link"
+                      title="My Profile & Paper History"
+                      className="inline-flex items-center gap-1.5 text-slate-800 hover:text-emerald-700 transition-colors"
+                    >
+                      <User className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="font-bold">{clientUser.fullName.split(" ")[0]}</span>
+                      <span className="text-slate-300" aria-hidden="true">·</span>
+                      <span className="text-[11px] text-emerald-700 font-bold">
+                        {clientUser.subscription.planName}
+                      </span>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="p-0.5 text-slate-400 hover:text-rose-600 transition-colors ml-1"
+                      title="Log Out"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="hidden sm:flex items-center gap-2">
+                  <button
+                    onClick={() => openAuth()}
+                    id="nav-client-login-btn"
+                    className="px-3.5 py-1.5 rounded-xl bg-white/75 hover:bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1,0_6px_12px_-2px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                  >
+                    Sign In
+                  </button>
+                  <Link
+                    href="/register"
+                    id="nav-client-signup-btn"
+                    className="px-3.5 py-1.5 rounded-xl bg-white/75 hover:bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1,0_6px_12px_-2px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
+
+              {clientUser ? (
+                isPaidSubscriber(clientUser) ? (
+                  <Link
+                    href="/select-questions?chapter=3"
+                    id="nav-generate-paper-btn"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_1px_1px_rgba(255,255,255,0.7)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
+                  >
+                    <span>Generate Paper</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                ) : (
+                  <Link
+                    href="/pricing"
+                    id="nav-generate-paper-btn"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-amber-400 via-amber-500 to-orange-600 text-white font-bold text-xs shadow-[0_4px_0_0_#9a3412,0_10px_20px_-4px_rgba(245,158,11,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                  >
+                    <span>Upgrade Plan</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                )
               ) : (
                 <Link
                   href="/pricing"
                   id="nav-generate-paper-btn"
-                  className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-extrabold text-xs shadow-md shadow-orange-700/20 active:scale-[0.98] transition-all"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_1px_1px_rgba(255,255,255,0.7)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
                 >
-                  <Crown className="w-4 h-4 fill-white text-white" />
-                  <span>Upgrade to Generate</span>
+                  <span>Plans &amp; Pricing</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
-              )
-            ) : (
-              <Link
-                href="/pricing"
-                id="nav-generate-paper-btn"
-                className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-md shadow-emerald-700/20 active:scale-[0.98] transition-all"
+              )}
+
+              {/* Mobile Menu Button */}
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden p-2 rounded-xl bg-white/80 border border-white text-slate-700 hover:text-slate-950 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] active:translate-y-0.5 transition-all"
+                aria-label="Toggle Menu"
               >
-                <Crown className="w-4 h-4 fill-white text-white" />
-                <span>Plans &amp; Pricing</span>
-              </Link>
-            )}
+                {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile 3D Glass Navigation Drawer */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden border-t border-white/70 bg-white/75 backdrop-blur-2xl rounded-b-2xl px-4 py-4 space-y-3">
+              <nav className="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700">
+                <a
+                  href="#how-it-works"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1] hover:text-emerald-700 transition-all"
+                >
+                  How It Works
+                </a>
+                <a
+                  href="#active-chapters"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1] hover:text-emerald-700 transition-all"
+                >
+                  Question Bank
+                </a>
+                <a
+                  href="#sample-paper"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1] hover:text-emerald-700 transition-all"
+                >
+                  Sample Paper
+                </a>
+                <Link
+                  href="/pricing"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2 rounded-xl bg-emerald-50/90 border border-emerald-200 text-emerald-800 shadow-[0_2px_0_0_#a7f3d0] transition-all"
+                >
+                  Pricing (Monthly)
+                </Link>
+                <a
+                  href="#faq"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1] hover:text-emerald-700 transition-all"
+                >
+                  FAQs
+                </a>
+                <Link
+                  href="/quick-paper"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white text-emerald-700 shadow-[0_2px_0_0_#cbd5e1] transition-all"
+                >
+                  Quick Paper
+                </Link>
+              </nav>
+
+              <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between gap-2">
+                {clientUser ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2 text-xs font-bold text-slate-800"
+                    >
+                      <User className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>{clientUser.fullName}</span>
+                      <span className="text-slate-400">·</span>
+                      <span className="text-emerald-700">{clientUser.subscription.planName}</span>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold shadow-[0_2px_0_0_#fecdd3]"
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2 w-full">
+                    <button
+                      onClick={() => openAuth()}
+                      className="py-2 px-3 rounded-xl bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1] text-center"
+                    >
+                      Sign In
+                    </button>
+                    <Link
+                      href="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="py-2 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-[0_3px_0_0_#0f172a] text-center"
+                    >
+                      Register Account
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </header>
 

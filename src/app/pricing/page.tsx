@@ -80,50 +80,70 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-indigo-50/30 text-slate-900 font-sans pb-24 selection:bg-indigo-500 selection:text-white">
-      {/* Top Header */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
-              title="Home"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Link>
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl">🎓</span>
-              <span className="text-lg font-black bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-700 bg-clip-text text-transparent">
-                PaperWala
-              </span>
-              <span className="font-urdu text-blue-700 font-bold text-base">پیپر والا</span>
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {clientUser ? (
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-600 hidden sm:inline">
-                  Logged in as <strong className="text-indigo-600">{clientUser.fullName}</strong>
-                </span>
-                <span className="px-2.5 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
-                  {clientUser.subscription.planName}
-                </span>
-                <Link
-                  href="/select-questions?chapter=2"
-                  className="px-3 py-1.5 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-500 transition-colors"
-                >
-                  Go to Generator &rarr;
-                </Link>
-              </div>
-            ) : (
-              <button
-                onClick={() => setShowAuthModal(true)}
-                className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors shadow-sm"
+      {/* Top Header - Transparent 3D Glassmorphic Floating Bar */}
+      <header className="sticky top-3 z-40 px-3 sm:px-6 lg:px-8 pointer-events-none">
+        <div className="pointer-events-auto max-w-7xl mx-auto rounded-2xl bg-white/45 backdrop-blur-2xl border border-white/80 shadow-[0_20px_50px_-12px_rgba(15,23,42,0.18),0_4px_16px_-2px_rgba(16,185,129,0.12),inset_0_2px_1px_0_rgba(255,255,255,0.95),inset_0_-2px_4px_0_rgba(15,23,42,0.06)]">
+          <div className="px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
+            <div className="flex items-center gap-3 whitespace-nowrap shrink-0">
+              <Link
+                href="/"
+                className="p-2 rounded-xl bg-white/80 hover:bg-white border border-white text-slate-700 hover:text-slate-950 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150"
+                title="Back to Home"
               >
-                Client Login / Register
-              </button>
-            )}
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+              <Link href="/" className="flex items-baseline gap-2">
+                <span className="text-lg font-extrabold tracking-tight text-slate-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
+                  PaperWala
+                </span>
+                <span className="text-slate-400 text-xs" aria-hidden="true">·</span>
+                <span className="font-urdu text-emerald-700 font-bold text-base drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
+                  پیپر والا
+                </span>
+              </Link>
+            </div>
+
+            <nav className="hidden md:flex items-center gap-1.5 p-1.5 rounded-xl bg-slate-900/[0.04] backdrop-blur-md border border-white/70 shadow-[inset_0_2px_4px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.9)] text-xs font-semibold text-slate-700">
+              <Link href="/" className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1] hover:-translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0">
+                Overview
+              </Link>
+              <Link href="/select-questions" className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1] hover:-translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0">
+                Question Bank
+              </Link>
+              <Link href="/quick-paper" className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 hover:shadow-[0_4px_10px_-2px_rgba(15,23,42,0.12),0_2px_0_0_#cbd5e1] hover:-translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0">
+                Quick Paper
+              </Link>
+              <span className="px-3.5 py-1.5 rounded-lg bg-white/90 text-emerald-800 shadow-[0_3px_8px_-2px_rgba(16,185,129,0.2),0_2px_0_0_#a7f3d0,inset_0_1px_0_#ffffff] whitespace-nowrap shrink-0">
+                Plans &amp; Pricing
+              </span>
+            </nav>
+
+            <div className="flex items-center gap-2.5 shrink-0">
+              {clientUser ? (
+                <div className="flex items-center gap-2.5">
+                  <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 border border-white text-xs font-medium text-slate-700 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] whitespace-nowrap">
+                    <User className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="text-slate-900 font-bold">{clientUser.fullName.split(" ")[0]}</span>
+                    <span className="text-slate-300" aria-hidden="true">·</span>
+                    <span className="text-emerald-700 font-bold">{clientUser.subscription.planName}</span>
+                  </div>
+                  <Link
+                    href="/select-questions?chapter=2"
+                    className="px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0 inline-flex items-center gap-1.5"
+                  >
+                    <span>Open Generator</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                >
+                  Client Login / Register
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </header>
