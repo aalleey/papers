@@ -248,11 +248,14 @@ export function parseRawTextToExam(rawText: string): ExamPaperData {
 
       const explicitNum = qMatch[2] ? parseInt(qMatch[2], 10) : undefined;
       const qText = (qMatch[4] || line).trim();
+      const parts = qText.split("|").map((s) => s.trim()).filter(Boolean);
+      const qEn = parts[0] || qText;
+      const qUr = parts.length > 1 ? parts[1] : qText;
 
       currentQuestion = {
         number: explicitNum || qCounter++,
-        questionUr: qText,
-        questionEn: qText,
+        questionUr: qUr,
+        questionEn: qEn,
         marks: lineMarks || (currentSection.type === "mcq" ? 1 : undefined),
         options: currentSection.type === "mcq" ? [] : undefined,
       };
