@@ -8,6 +8,8 @@ import { MathRenderer } from "@/components/MathRenderer";
 import { getUrduTranslation } from "@/lib/urdu-translations";
 import { SubscriptionModal } from "@/components/SubscriptionModal";
 import { ClientAuthModal } from "@/components/ClientAuthModal";
+import { exportPaperToDocx } from "@/lib/docx-export";
+import { ExamSection } from "@/lib/quick-paper-parser";
 import {
   ArrowLeft,
   Printer,
@@ -449,6 +451,157 @@ export default function PaperEditorPage() {
     showToast("⭐ Paper configuration saved to favorites!");
   };
 
+  const [isExportingDocx, setIsExportingDocx] = useState(false);
+
+  // Export to Microsoft Word (.docx)
+  const handleExportWord = async () => {
+    try {
+      setIsExportingDocx(true);
+      const exportSections: ExamSection[] = [];
+
+      if (includeMcqs && displayedMcqs.length > 0) {
+        exportSections.push({
+          id: "sec-mcq",
+          type: "mcq",
+          titleEn: "SECTION-I: OBJECTIVE (MCQs)",
+          titleUr: "حصہ اول: معروضی سوالات",
+          instructionsEn: "Q.1: Choose the correct answer from the following options.",
+          instructionsUr: "سوال نمبر 1: درست جواب کا انتخاب کریں۔",
+          marks: effectiveMcqMarks,
+          questions: displayedMcqs.map((q, idx) => {
+            const enTrans = q.translations?.find((t) => t.language === "en");
+            const urTrans = q.translations?.find((t) => t.language === "ur");
+            const dynamicUr = getUrduTranslation(enTrans?.text || "", enTrans?.options);
+            const enQ = cleanQuestionText(enTrans?.text || "");
+            const urQ = cleanQuestionText(urTrans?.text || dynamicUr.text_ur || "");
+            const enOpts = enTrans?.options || [];
+            const urOpts = urTrans?.options || dynamicUr.options_ur || [];
+
+            return {
+              number: idx + 1,
+              questionEn: enQ || urQ,
+              questionUr: urQ || enQ,
+              marks: 1,
+              options: [0, 1, 2, 3].map((oIdx) => ({
+                key: String.fromCharCode(65 + oIdx),
+                textEn: enOpts[oIdx] || "",
+                textUr: urOpts[oIdx] || enOpts[oIdx] || "",
+              })),
+            };
+          }),
+        });
+      }
+
+      if (includeShort && shorts.length > 0) {
+        exportSections.push({
+          id: "sec-short",
+          type: "short",
+          titleEn: "SECTION-II: SHORT QUESTIONS",
+          titleUr: "حصہ دوم: مختصر سوالات",
+          instructionsEn: `Q.2: Write short answers to the following questions. (${shorts.length} × 2 = ${effectiveShortMarks})`,
+          instructionsUr: "سوال نمبر 2: درج ذیل سوالات کے مختصر جوابات تحریر کریں۔",
+          marks: effectiveShortMarks,
+          questions: shorts.map((q, idx) => {
+            const en = cleanQuestionText(q.translations?.find((t) => t.language === "en")?.text || "");
+            const ur = cleanQuestionText(
+              q.translations?.find((t) => t.language === "ur")?.text ||
+                getUrduTranslation(en).text_ur ||
+                ""
+            );
+            return {
+              number: idx + 1,
+              questionEn: en || ur,
+              questionUr: ur || en,
+              marks: 2,
+            };
+          }),
+        });
+      }
+
+      if (includeLong && longs.length > 0) {
+        exportSections.push({
+          id: "sec-long",
+          type: "long",
+          titleEn: "SECTION-III: LONG QUESTIONS",
+          titleUr: "حصہ سوم: تفصیلی سوالات",
+          instructionsEn: `Attempt the following questions in detail. (${longs.length} × 5 = ${effectiveLongMarks})`,
+          instructionsUr: "درج ذیل سوالات کے تفصیلی جوابات تحریر کریں۔",
+          marks: effectiveLongMarks,
+          questions: longs.map((q, idx) => {
+            const en = cleanQuestionText(q.translations?.find((t) => t.language === "en")?.text || "");
+            const ur = cleanQuestionText(
+              q.translations?.find((t) => t.language === "ur")?.text ||
+                getUrduTranslation(en).text_ur ||
+                ""
+            );
+            return {
+              number: idx + 3,
+              questionEn: en || ur,
+              questionUr: ur || en,
+              marks: 5,
+            };
+          }),
+        });
+      }
+
+      const answerKeyItems =
+        includeMcqAnswerKey && displayedMcqs.length > 0
+          ? displayedMcqs.map((q, idx) => {
+              const enTrans = q.translations?.find((t) => t.language === "en");
+              const enQ = cleanQuestionText(enTrans?.text || "");
+              const ans = enTrans?.answer || q.translations?.[0]?.answer || "A";
+              return {
+                number: idx + 1,
+                question: enQ,
+                answer: ans,
+              };
+            })
+          : [];
+
+      const blob = await exportPaperToDocx({
+        paperData: {
+          title: paperTitle,
+          institutionName,
+          subject: subjectTitle,
+          grade: classNameText,
+          totalMarks,
+          timeAllowed: timeDuration,
+          date: paperDate,
+          sections: exportSections,
+        },
+        languageMode,
+        syllabus: syllabusText,
+        testNo: testNoText,
+        paperCode: currentPaperCode,
+        note: includeInstructions ? instructionText : "",
+        noteUr: includeInstructions ? defaultUrduInstruction : "",
+        paperTypeBanner,
+        logoBase64,
+        headerStyle,
+        includeStudentInfo: includeStudentSection,
+        includeBubbleSheet,
+        includeAnswerKey: includeMcqAnswerKey,
+        answerKeyItems,
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const cleanName = (institutionName || "Exam_Paper").replace(/\s+/g, "_");
+      link.download = `${cleanName}_${currentPaperCode}_Ver_${paperVersion}.docx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast("📄 Downloaded formatted Word (.docx) file!");
+    } catch (err) {
+      console.error("Failed to export Word file:", err);
+      showToast("Failed to export Word file");
+    } finally {
+      setIsExportingDocx(false);
+    }
+  };
+
   // Swap question
   const handleSwapQuestion = (id: string, type: string) => {
     const currentIds = new Set(questions.map((q) => q.id));
@@ -839,6 +992,16 @@ export default function PaperEditorPage() {
             >
               <span>⭐</span>
               <span className="hidden sm:inline">Save Paper</span>
+            </button>
+
+            <button
+              onClick={handleExportWord}
+              disabled={isExportingDocx}
+              className="relative overflow-hidden px-3 py-1.5 rounded-xl bg-gradient-to-b from-indigo-500 via-indigo-600 to-violet-700 hover:from-indigo-400 hover:to-violet-600 text-white font-extrabold text-xs flex items-center gap-1.5 border border-indigo-300/60 shadow-[0_3px_0_0_#312e81,inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all disabled:opacity-50 cursor-pointer"
+              title="Download editable Microsoft Word (.docx) file"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>{isExportingDocx ? "Exporting..." : "Word (.docx)"}</span>
             </button>
 
             {/* Print 3D Split Button */}

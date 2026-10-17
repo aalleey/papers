@@ -655,12 +655,19 @@ export default function QuickPaperPage() {
     try {
       setIsExportingDocx(true);
       const blob = await exportPaperToDocx({
-        paperData,
+        paperData: {
+          ...paperData,
+          date: paperData.date || "17-10-2026",
+        },
         languageMode: paperLanguageMode,
         syllabus: syllabusText,
         testNo: testNoText,
         paperCode,
         note: includeNote ? instructionNote : "",
+        paperTypeBanner,
+        logoBase64,
+        headerStyle: activeTemplate.headerStyle === "punjab-board-style1" ? "style1" : "minimal",
+        includeStudentInfo,
       });
 
       const url = URL.createObjectURL(blob);
