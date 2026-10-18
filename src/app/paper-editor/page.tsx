@@ -37,6 +37,9 @@ import {
   ShieldCheck,
   Layers,
   Scissors,
+  Languages,
+  Loader2,
+  RefreshCw,
 } from "lucide-react";
 
 // Roman numeral converter
@@ -165,9 +168,14 @@ export default function PaperEditorPage() {
   // Toast feedback
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // AI Language Translation / Bilingual Conversion State
+  const [isAiTranslating, setIsAiTranslating] = useState(false);
+  const [translatingQuestionId, setTranslatingQuestionId] = useState<string | null>(null);
+  const [translationBannerDismissed, setTranslationBannerDismissed] = useState(false);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
+    setTimeout(() => setToastMessage(null), 3500);
   };
 
   // Load layout preferences from localStorage on mount
@@ -629,6 +637,221 @@ export default function PaperEditorPage() {
     else if (preset === "bilingual_default") setInstructionText(defaultEngInstruction);
   };
 
+  // Detect whether each question has English and/or Urdu content
+  const languageCoverage = useMemo(() => {
+    const urduRegex = /[\u0600-\u06FF]/;
+    const latinRegex = /[A-Za-z]/;
+    let missingEnCount = 0;
+    let missingUrCount = 0;
+    let missingMcqUrOptions = 0;
+
+    questions.forEach((q) => {
+      const enTrans = q.translations?.find((t) => t.language === "en");
+      const urTrans = q.translations?.find((t) => t.language === "ur");
+
+      const rawEn = (enTrans?.text || "").trim();
+      const rawUr = (urTrans?.text || "").trim();
+
+      const enIsActuallyUrdu =
+        urduRegex.test(rawEn) && !latinRegex.test(rawEn.replace(/\\[a-zA-Z]+/g, ""));
+      const hasValidEn = Boolean(rawEn && !enIsActuallyUrdu);
+      const hasValidUr = Boolean(rawUr && urduRegex.test(rawUr)) || enIsActuallyUrdu;
+
+      if (!hasValidEn) missingEnCount++;
+      if (!hasValidUr) missingUrCount++;
+
+      if (q.type === "mcq") {
+        const urOpts = urTrans?.options || [];
+        const hasAllUrOpts = urOpts.length >= 4 && urOpts.some((o) => Boolean(o && o.trim()));
+        if (!hasAllUrOpts) missingMcqUrOptions++;
+      }
+    });
+
+    const total = questions.length;
+    const isCompleteBilingual =
+      total > 0 && missingEnCount === 0 && missingUrCount === 0 && missingMcqUrOptions === 0;
+
+    return {
+      total,
+      missingEnCount,
+      missingUrCount,
+      missingMcqUrOptions,
+      hasMissingUrdu: missingUrCount > 0 || missingMcqUrOptions > 0,
+      hasMissingEnglish: missingEnCount > 0,
+      isCompleteBilingual,
+    };
+  }, [questions]);
+
+  // AI Language Conversion Handler (Bulk)
+  const handleAiConvertLanguage = async (
+    direction: "auto_both" | "en_to_ur" | "ur_to_en",
+    targetLanguageMode?: "Bilingual" | "English" | "Urdu",
+    forceRetranslate = false
+  ) => {
+    if (isAiTranslating || questions.length === 0) return;
+
+    try {
+      setIsAiTranslating(true);
+      setActiveDropdown(null);
+
+      const urduRegex = /[\u0600-\u06FF]/;
+      const latinRegex = /[A-Za-z]/;
+
+      const normalizedInput = questions.map((q) => {
+        const enTrans = q.translations?.find((t) => t.language === "en");
+        const urTrans = q.translations?.find((t) => t.language === "ur");
+        const rawEn = (enTrans?.text || "").trim();
+        const rawUr = (urTrans?.text || "").trim();
+
+        const enIsActuallyUrdu =
+          urduRegex.test(rawEn) && !latinRegex.test(rawEn.replace(/\\[a-zA-Z]+/g, ""));
+
+        if (enIsActuallyUrdu && !rawUr) {
+          return {
+            ...q,
+            translations: [
+              {
+                language: "en" as const,
+                text: "",
+                options: [],
+                answer: enTrans?.answer || "",
+              },
+              {
+                language: "ur" as const,
+                text: rawEn,
+                options: enTrans?.options || [],
+                answer: enTrans?.answer || "",
+              },
+            ],
+          };
+        }
+        return q;
+      });
+
+      const res = await fetch("/api/paper/translate-questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questions: normalizedInput,
+          direction,
+          subject: subjectTitle,
+          className: classNameText,
+          forceRetranslate,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Translation failed");
+      }
+
+      if (Array.isArray(data.questions) && data.questions.length > 0) {
+        setQuestions(data.questions);
+        try {
+          sessionStorage.setItem("papermaker_selected_questions", JSON.stringify(data.questions));
+        } catch {
+          // ignore storage quota errors
+        }
+
+        const nextMode =
+          targetLanguageMode ||
+          (direction === "auto_both"
+            ? "Bilingual"
+            : direction === "en_to_ur" && languageMode === "English"
+            ? "Bilingual"
+            : direction === "ur_to_en" && languageMode === "Urdu"
+            ? "Bilingual"
+            : languageMode);
+
+        setLanguageMode(nextMode);
+        try {
+          sessionStorage.setItem("papermaker_language_mode", nextMode);
+        } catch {
+          // ignore
+        }
+
+        const label =
+          direction === "en_to_ur"
+            ? "English → Urdu (Nastaliq)"
+            : direction === "ur_to_en"
+            ? "Urdu → English"
+            : "Bilingual (English & Urdu)";
+        showToast(`✨ AI converted ${data.questions.length} questions to ${label}!`);
+      }
+    } catch (err: any) {
+      console.error("AI language conversion error:", err);
+      showToast(err?.message || "Failed to convert paper languages with AI.");
+    } finally {
+      setIsAiTranslating(false);
+    }
+  };
+
+  // Single Question AI Translation Handler
+  const handleTranslateSingleQuestion = async (questionId: string) => {
+    const targetQ = questions.find((q) => q.id === questionId);
+    if (!targetQ || translatingQuestionId) return;
+
+    try {
+      setTranslatingQuestionId(questionId);
+      const urduRegex = /[\u0600-\u06FF]/;
+      const latinRegex = /[A-Za-z]/;
+      const enTrans = targetQ.translations?.find((t) => t.language === "en");
+      const urTrans = targetQ.translations?.find((t) => t.language === "ur");
+      const rawEn = (enTrans?.text || "").trim();
+      const rawUr = (urTrans?.text || "").trim();
+      const enIsActuallyUrdu =
+        urduRegex.test(rawEn) && !latinRegex.test(rawEn.replace(/\\[a-zA-Z]+/g, ""));
+
+      const preparedQ =
+        enIsActuallyUrdu && !rawUr
+          ? {
+              ...targetQ,
+              translations: [
+                { language: "en" as const, text: "", options: [], answer: enTrans?.answer || "" },
+                {
+                  language: "ur" as const,
+                  text: rawEn,
+                  options: enTrans?.options || [],
+                  answer: enTrans?.answer || "",
+                },
+              ],
+            }
+          : targetQ;
+
+      const res = await fetch("/api/paper/translate-questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questions: [preparedQ],
+          direction: "auto_both",
+          subject: subjectTitle,
+          className: classNameText,
+          forceRetranslate: true,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.questions) && data.questions[0]) {
+        const updatedQ = data.questions[0];
+        setQuestions((prev) => {
+          const next = prev.map((q) => (q.id === questionId ? updatedQ : q));
+          try {
+            sessionStorage.setItem("papermaker_selected_questions", JSON.stringify(next));
+          } catch {
+            // ignore
+          }
+          return next;
+        });
+        showToast("✨ Question translated to both English & Urdu!");
+      }
+    } catch (err) {
+      console.error("Single question translation error:", err);
+      showToast("Failed to translate question.");
+    } finally {
+      setTranslatingQuestionId(null);
+    }
+  };
+
   if (!authChecked || (loading && clientUser)) {
     return (
       <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6 text-slate-700">
@@ -1063,13 +1286,146 @@ export default function PaperEditorPage() {
             <select
               id="languageMode"
               value={languageMode}
-              onChange={(e) => setLanguageMode(e.target.value as "Bilingual" | "English" | "Urdu")}
+              onChange={(e) => {
+                const nextLang = e.target.value as "Bilingual" | "English" | "Urdu";
+                setLanguageMode(nextLang);
+                try {
+                  sessionStorage.setItem("papermaker_language_mode", nextLang);
+                } catch {
+                  // ignore
+                }
+              }}
               className="h-8 px-2.5 rounded-lg border border-slate-300/90 font-bold text-slate-800 bg-white shadow-2xs outline-none focus:border-emerald-600 cursor-pointer text-[11px] sm:text-xs"
             >
               <option value="Bilingual">Bilingual (EN + UR)</option>
               <option value="English">English Only</option>
-              <option value="Urdu">Urdu Only</option>
+              <option value="Urdu">Urdu Only (اردو)</option>
             </select>
+
+            {/* AI Bilingual Converter / Translator Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                disabled={isAiTranslating}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveDropdown(activeDropdown === "ai_translate" ? null : "ai_translate");
+                }}
+                className={`h-8 px-2.5 rounded-lg font-extrabold text-[11px] sm:text-xs flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer border ${
+                  !languageCoverage.isCompleteBilingual
+                    ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-600 text-white border-emerald-400/60 shadow-sm"
+                    : "bg-white hover:bg-emerald-50 text-emerald-800 border-emerald-300 border-l-4 border-l-emerald-600"
+                }`}
+                title="Convert Paper Between English and Urdu using AI"
+              >
+                {isAiTranslating ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>AI Converting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Languages className="w-3.5 h-3.5" />
+                    <span>✨ AI EN↔UR</span>
+                    {!languageCoverage.isCompleteBilingual && (
+                      <span className="px-1.5 py-0.2 rounded-full bg-amber-300 text-slate-950 text-[9px] font-black">
+                        Convert
+                      </span>
+                    )}
+                    <ChevronDown className="w-3 h-3 opacity-80" />
+                  </>
+                )}
+              </button>
+
+              {activeDropdown === "ai_translate" && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="fixed sm:absolute left-3 right-3 sm:left-0 sm:right-auto top-28 sm:top-full sm:mt-2 sm:w-80 bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 text-xs space-y-3 z-50 animate-in fade-in"
+                >
+                  <div className="flex items-start justify-between gap-2 pb-2 border-b border-slate-100">
+                    <div>
+                      <div className="font-black text-slate-900 text-sm flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-emerald-600" />
+                        <span>AI Bilingual Paper Converter</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
+                        Automatically translate &amp; generate missing English or Urdu (Nastaliq) questions and MCQ options.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Coverage Status Pill */}
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5 text-[11px]">
+                    <div className="flex items-center justify-between font-bold text-slate-700">
+                      <span>English Questions Ready:</span>
+                      <span className={languageCoverage.missingEnCount === 0 ? "text-emerald-600 font-black" : "text-amber-600 font-black"}>
+                        {languageCoverage.total - languageCoverage.missingEnCount} / {languageCoverage.total}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between font-bold text-slate-700">
+                      <span>Urdu (اردو) Questions Ready:</span>
+                      <span className={!languageCoverage.hasMissingUrdu ? "text-emerald-600 font-black" : "text-amber-600 font-black"}>
+                        {languageCoverage.total - languageCoverage.missingUrCount} / {languageCoverage.total}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <button
+                      type="button"
+                      disabled={isAiTranslating}
+                      onClick={() => handleAiConvertLanguage("auto_both", "Bilingual", false)}
+                      className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs flex items-center justify-between shadow-sm transition-all cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Generate Both (English + Urdu)</span>
+                      </span>
+                      <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded font-black">Bilingual</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={isAiTranslating}
+                      onClick={() => handleAiConvertLanguage("en_to_ur", "Bilingual", true)}
+                      className="w-full py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 font-bold text-xs flex items-center justify-between transition-colors cursor-pointer"
+                    >
+                      <span>🇵🇰 Convert English → Urdu (اردو)</span>
+                      <span className="text-[10px] font-extrabold text-emerald-700">EN → UR</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={isAiTranslating}
+                      onClick={() => handleAiConvertLanguage("ur_to_en", "Bilingual", true)}
+                      className="w-full py-2 px-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-200 font-bold text-xs flex items-center justify-between transition-colors cursor-pointer"
+                    >
+                      <span>🇬🇧 Convert Urdu → English</span>
+                      <span className="text-[10px] font-extrabold text-indigo-700">UR → EN</span>
+                    </button>
+
+                    <div className="pt-1.5 border-t border-slate-100 flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        disabled={isAiTranslating}
+                        onClick={() => handleAiConvertLanguage("en_to_ur", "Urdu", true)}
+                        className="flex-1 py-1.5 px-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] text-center transition-colors cursor-pointer"
+                      >
+                        Switch to Urdu Only
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isAiTranslating}
+                        onClick={() => handleAiConvertLanguage("ur_to_en", "English", true)}
+                        className="flex-1 py-1.5 px-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] text-center transition-colors cursor-pointer"
+                      >
+                        Switch to English Only
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="flex items-center gap-1 bg-white border border-slate-300/90 rounded-lg px-2 h-8 shadow-2xs">
               <span className="text-[10px] font-bold text-slate-400 uppercase">Marks:</span>
@@ -2559,7 +2915,14 @@ export default function PaperEditorPage() {
                             {[0, 1, 2, 3].map((optIdx) => (
                               <td key={optIdx} className="text-center align-middle">
                                 <div>
-                                  <MathRenderer content={enOpts[optIdx] || ""} />
+                                  {languageMode !== "Urdu" && (
+                                    <MathRenderer content={enOpts[optIdx] || urOpts[optIdx] || ""} />
+                                  )}
+                                  {languageMode === "Urdu" && (
+                                    <div className="font-urdu text-[0.95em]" dir="rtl">
+                                      <MathRenderer content={urOpts[optIdx] || enOpts[optIdx] || ""} />
+                                    </div>
+                                  )}
                                   {languageMode === "Bilingual" && urOpts[optIdx] && (
                                     <div className="font-urdu text-[0.85em]" dir="rtl">
                                       <MathRenderer content={urOpts[optIdx]} />
@@ -2598,6 +2961,14 @@ export default function PaperEditorPage() {
                           {/* Question Action Toolbar */}
                           <div className="no-print absolute top-0 right-0 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-xs px-1.5 py-0.5 z-10 transition-opacity">
                             <button
+                              onClick={() => handleTranslateSingleQuestion(q.id)}
+                              disabled={translatingQuestionId === q.id}
+                              className="text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded text-[9.5px] font-extrabold cursor-pointer disabled:opacity-50"
+                              title="AI Translate Question (English ↔ Urdu)"
+                            >
+                              {translatingQuestionId === q.id ? "⏳..." : "✨ EN↔UR"}
+                            </button>
+                            <button
                               onClick={() => handleSwapQuestion(q.id, "mcq")}
                               className="text-teal-600 hover:text-teal-800 p-0.5 cursor-pointer"
                               title="Swap MCQ"
@@ -2614,37 +2985,65 @@ export default function PaperEditorPage() {
                           </div>
 
                           {/* Question Text */}
-                          <div className={`flex items-start gap-1 font-bold ${is2Up ? "leading-tight text-[10px]" : "leading-normal"}`}>
-                            <span>{idx + 1}.</span>
-                            <div className="flex-1 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-                              <span>
-                                <MathRenderer content={enQ} />
+                          {languageMode === "Urdu" ? (
+                            <div
+                              className={`flex items-start justify-end gap-1.5 font-bold font-urdu text-right ${
+                                is2Up ? "leading-tight text-xs" : "leading-normal text-sm"
+                              }`}
+                              dir="rtl"
+                            >
+                              <span>{idx + 1}.</span>
+                              <span className="flex-1 text-right">
+                                <MathRenderer content={urQ || enQ} />
                               </span>
-                              {languageMode === "Bilingual" && urQ && (
-                                <span className={`font-urdu text-right pr-2 text-slate-800 ${is2Up ? "text-xs" : "text-sm"}`} dir="rtl">
-                                  <MathRenderer content={urQ} />
-                                </span>
-                              )}
                             </div>
-                          </div>
+                          ) : (
+                            <div className={`flex items-start gap-1 font-bold ${is2Up ? "leading-tight text-[10px]" : "leading-normal"}`}>
+                              <span>{idx + 1}.</span>
+                              <div className="flex-1 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+                                <span>
+                                  <MathRenderer content={enQ || urQ} />
+                                </span>
+                                {languageMode === "Bilingual" && urQ && (
+                                  <span className={`font-urdu text-right pr-2 text-slate-800 ${is2Up ? "text-xs" : "text-sm"}`} dir="rtl">
+                                    <MathRenderer content={urQ} />
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )}
 
                           {/* Options Grid */}
-                          {enOpts.length > 0 && (
-                            <div className={`flex flex-wrap items-baseline justify-between gap-1 pt-0.5 ${is2Up ? "pl-2 text-[9.5px]" : "pl-4 text-xs"}`}>
-                              {enOpts.map((opt, optIdx) => {
+                          {(enOpts.length > 0 || urOpts.length > 0) && (
+                            <div
+                              className={`flex flex-wrap items-baseline justify-between gap-1 pt-0.5 ${
+                                is2Up ? "pl-2 text-[9.5px]" : "pl-4 text-xs"
+                              } ${languageMode === "Urdu" ? "font-urdu text-right" : ""}`}
+                              dir={languageMode === "Urdu" ? "rtl" : "ltr"}
+                            >
+                              {[0, 1, 2, 3].map((optIdx) => {
                                 const letter = String.fromCharCode(65 + optIdx);
-                                const optUr = urOpts[optIdx];
+                                const optEn = enOpts[optIdx] || "";
+                                const optUr = urOpts[optIdx] || "";
 
                                 return (
                                   <div key={optIdx} className="flex items-baseline gap-1 min-w-[22%]">
-                                    <span className="font-bold">({letter})</span>
-                                    <span>
-                                      <MathRenderer content={opt} />
-                                    </span>
-                                    {languageMode === "Bilingual" && optUr && (
-                                      <span className="font-urdu text-[11px] text-slate-700 pr-1" dir="rtl">
-                                        <MathRenderer content={optUr} />
+                                    <span className="font-bold font-sans">({letter})</span>
+                                    {languageMode === "Urdu" ? (
+                                      <span className="font-urdu text-right" dir="rtl">
+                                        <MathRenderer content={optUr || optEn} />
                                       </span>
+                                    ) : (
+                                      <>
+                                        <span>
+                                          <MathRenderer content={optEn || optUr} />
+                                        </span>
+                                        {languageMode === "Bilingual" && optUr && (
+                                          <span className="font-urdu text-[11px] text-slate-700 pr-1" dir="rtl">
+                                            <MathRenderer content={optUr} />
+                                          </span>
+                                        )}
+                                      </>
                                     )}
                                   </div>
                                 );
@@ -2761,15 +3160,25 @@ export default function PaperEditorPage() {
                             );
                             const num = `(${toRomanLower(idx + 1)})`;
 
-                            return (
-                              <tr key={q.id}>
-                                <td className="bilingual-eng">
+                             return (
+                              <tr key={q.id} className="group relative">
+                                <td className="bilingual-eng relative">
                                   <b>{num} </b>
-                                  <MathRenderer content={en} />
+                                  <MathRenderer content={en || ur} />
                                 </td>
-                                <td className="bilingual-urdu">
+                                <td className="bilingual-urdu relative">
+                                  <div className="no-print absolute top-0 left-0 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-xs px-1 py-0.5 z-10 transition-opacity font-sans" dir="ltr">
+                                    <button
+                                      onClick={() => handleTranslateSingleQuestion(q.id)}
+                                      disabled={translatingQuestionId === q.id}
+                                      className="text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded text-[9px] font-extrabold cursor-pointer disabled:opacity-50"
+                                      title="AI Translate Question (English ↔ Urdu)"
+                                    >
+                                      {translatingQuestionId === q.id ? "⏳..." : "✨ EN↔UR"}
+                                    </button>
+                                  </div>
                                   <b>{num} </b>
-                                  <MathRenderer content={ur} />
+                                  <MathRenderer content={ur || en} />
                                 </td>
                               </tr>
                             );
@@ -2778,7 +3187,12 @@ export default function PaperEditorPage() {
                       </table>
                     ) : (
                       /* Single Language Numbered List */
-                      <ol className="list-decimal pl-5 space-y-1.5 font-bold">
+                      <ol
+                        className={`list-decimal space-y-1.5 font-bold ${
+                          languageMode === "Urdu" ? "pr-5 font-urdu text-right" : "pl-5 text-left"
+                        }`}
+                        dir={languageMode === "Urdu" ? "rtl" : "ltr"}
+                      >
                         {shorts.map((q) => {
                           const en = cleanQuestionText(q.translations?.find((t) => t.language === "en")?.text || "");
                           const ur = cleanQuestionText(
@@ -2787,8 +3201,17 @@ export default function PaperEditorPage() {
                               ""
                           );
                           return (
-                            <li key={q.id}>
-                              <MathRenderer content={languageMode === "Urdu" ? ur || en : en} />
+                            <li key={q.id} className="group relative">
+                              <span className="no-print opacity-0 group-hover:opacity-100 inline-flex items-center gap-1 mr-2 font-sans" dir="ltr">
+                                <button
+                                  onClick={() => handleTranslateSingleQuestion(q.id)}
+                                  disabled={translatingQuestionId === q.id}
+                                  className="text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded text-[9px] font-extrabold cursor-pointer disabled:opacity-50"
+                                >
+                                  {translatingQuestionId === q.id ? "⏳..." : "✨ AI EN↔UR"}
+                                </button>
+                              </span>
+                              <MathRenderer content={languageMode === "Urdu" ? ur || en : en || ur} />
                             </li>
                           );
                         })}
@@ -2869,14 +3292,24 @@ export default function PaperEditorPage() {
                             const num = `Q. ${idx + 3}:`;
 
                             return (
-                              <tr key={q.id}>
+                              <tr key={q.id} className="group relative">
                                 <td className="bilingual-eng font-bold">
                                   <b>{num} </b>
-                                  <MathRenderer content={en} />
+                                  <MathRenderer content={en || ur} />
                                 </td>
-                                <td className="bilingual-urdu font-bold">
-                                  <b>{num} </b>
-                                  <MathRenderer content={ur} />
+                                <td className="bilingual-urdu font-bold relative">
+                                  <div className="no-print absolute top-0 left-0 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-xs px-1 py-0.5 z-10 transition-opacity font-sans" dir="ltr">
+                                    <button
+                                      onClick={() => handleTranslateSingleQuestion(q.id)}
+                                      disabled={translatingQuestionId === q.id}
+                                      className="text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded text-[9px] font-extrabold cursor-pointer disabled:opacity-50"
+                                      title="AI Translate Question (English ↔ Urdu)"
+                                    >
+                                      {translatingQuestionId === q.id ? "⏳..." : "✨ EN↔UR"}
+                                    </button>
+                                  </div>
+                                  <b>سوال نمبر {idx + 3}: </b>
+                                  <MathRenderer content={ur || en} />
                                 </td>
                               </tr>
                             );
@@ -2884,7 +3317,10 @@ export default function PaperEditorPage() {
                         </tbody>
                       </table>
                     ) : (
-                      <div className="space-y-2">
+                      <div
+                        className={`space-y-2 ${languageMode === "Urdu" ? "font-urdu text-right" : "text-left"}`}
+                        dir={languageMode === "Urdu" ? "rtl" : "ltr"}
+                      >
                         {longs.map((q, idx) => {
                           const en = cleanQuestionText(q.translations?.find((t) => t.language === "en")?.text || "");
                           const ur = cleanQuestionText(
@@ -2893,9 +3329,18 @@ export default function PaperEditorPage() {
                               ""
                           );
                           return (
-                            <div key={q.id} className="font-bold">
-                              <span>Q. {idx + 3}: </span>
-                              <MathRenderer content={languageMode === "Urdu" ? ur || en : en} />
+                            <div key={q.id} className="font-bold group relative">
+                              <span>{languageMode === "Urdu" ? `سوال نمبر ${idx + 3}: ` : `Q. ${idx + 3}: `}</span>
+                              <MathRenderer content={languageMode === "Urdu" ? ur || en : en || ur} />
+                              <span className="no-print opacity-0 group-hover:opacity-100 inline-flex items-center gap-1 ml-2 font-sans" dir="ltr">
+                                <button
+                                  onClick={() => handleTranslateSingleQuestion(q.id)}
+                                  disabled={translatingQuestionId === q.id}
+                                  className="text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded text-[9px] font-extrabold cursor-pointer disabled:opacity-50"
+                                >
+                                  {translatingQuestionId === q.id ? "⏳..." : "✨ AI EN↔UR"}
+                                </button>
+                              </span>
                             </div>
                           );
                         })}
@@ -2995,15 +3440,129 @@ export default function PaperEditorPage() {
                   Longs: <strong className="text-slate-900">{longs.length}</strong>
                 </span>
               </div>
-              <div className="text-[11px] font-semibold text-slate-500 flex items-center gap-2">
-                <span className="sm:hidden text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 font-bold">
-                  ↔ Swipe horizontally to inspect full A4 sheet
-                </span>
-                <span className="hidden sm:inline">
-                  Click any heading, question, or mark on the sheet to edit inline
-                </span>
+
+              {/* Quick AI Bilingual Conversion Strip */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                <button
+                  type="button"
+                  disabled={isAiTranslating}
+                  onClick={() => handleAiConvertLanguage("en_to_ur", "Bilingual", true)}
+                  className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-extrabold text-[11px] flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
+                  title="Convert English questions & options to Urdu using AI"
+                >
+                  <span>✨ EN → Urdu</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={isAiTranslating}
+                  onClick={() => handleAiConvertLanguage("ur_to_en", "Bilingual", true)}
+                  className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 font-extrabold text-[11px] flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
+                  title="Convert Urdu questions & options to English using AI"
+                >
+                  <span>✨ Urdu → EN</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={isAiTranslating}
+                  onClick={() => handleAiConvertLanguage("auto_both", "Bilingual", false)}
+                  className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-[11px] flex items-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+                  title="Ensure all questions have both English and Urdu (Nastaliq) versions"
+                >
+                  {isAiTranslating ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span>AI Converting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Languages className="w-3 h-3" />
+                      <span>AI Both (EN + UR)</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
+
+            {/* Smart AI Missing Language / Single-Medium Detection Banner (Hidden in Print) */}
+            {(!languageCoverage.isCompleteBilingual || languageMode !== "Bilingual") && !translationBannerDismissed && (
+              <div className="no-print mb-4 p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950 via-slate-900 to-indigo-950 text-white border border-emerald-500/30 shadow-lg flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <Languages className="w-5 h-5 text-emerald-300" />
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-xs sm:text-sm font-black tracking-tight text-white">
+                        {!languageCoverage.isCompleteBilingual
+                          ? "Paper is Missing Bilingual (English / Urdu) Translations"
+                          : `Paper Currently Set to ${languageMode} Only Mode`}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[10px] font-black uppercase tracking-wider">
+                        AI Bilingual Engine
+                      </span>
+                    </div>
+                    <p className="text-[11px] sm:text-xs text-slate-300 mt-0.5 leading-relaxed">
+                      {languageCoverage.hasMissingUrdu && languageCoverage.hasMissingEnglish
+                        ? `${languageCoverage.missingEnCount} question(s) need English and ${languageCoverage.missingUrCount} question(s) need Urdu.`
+                        : languageCoverage.hasMissingUrdu
+                        ? `${
+                            languageCoverage.missingUrCount > 0
+                              ? `${languageCoverage.missingUrCount} question(s)`
+                              : `${languageCoverage.missingMcqUrOptions} MCQ(s)`
+                          } contain only English. Convert English → Urdu or generate both with 1 click.`
+                        : languageCoverage.hasMissingEnglish
+                        ? `${languageCoverage.missingEnCount} question(s) contain only Urdu. Convert Urdu → English or generate both with 1 click.`
+                        : "Convert or regenerate English ↔ Urdu translations anytime using AI."}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end shrink-0">
+                  <button
+                    type="button"
+                    disabled={isAiTranslating}
+                    onClick={() => handleAiConvertLanguage("en_to_ur", "Bilingual", true)}
+                    className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-emerald-200 border border-white/15 font-extrabold text-xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <span>🇵🇰 English → Urdu</span>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isAiTranslating}
+                    onClick={() => handleAiConvertLanguage("ur_to_en", "Bilingual", true)}
+                    className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-indigo-200 border border-white/15 font-extrabold text-xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <span>🇬🇧 Urdu → English</span>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isAiTranslating}
+                    onClick={() => handleAiConvertLanguage("auto_both", "Bilingual", false)}
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    {isAiTranslating ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Generating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5 fill-slate-950" />
+                        <span>Generate Both (EN + UR)</span>
+                      </>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTranslationBannerDismissed(true)}
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                    title="Dismiss banner"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
 
             {testDensity === "2_per_page" ? (
               <div className="w-full overflow-x-auto pb-6 print:overflow-visible print:pb-0">
