@@ -34,15 +34,15 @@ export interface WordExportOptions {
   answerKeyItems?: { number: number; question: string; answer: string }[];
 }
 
-// Printable A4 width in Twips (DXA):
-// A4 width = 11906 DXA (210mm). Margins = 480 DXA left + 480 DXA right = 960 DXA.
-// Exact printable content width = 10946 DXA (~193mm) so exams fit cleanly on 1 single page!
+// Printable A4 width in Twips (DXA).
+// Use Word-safe 12.7 mm side margins instead of the very narrow web-print margins.
+// This lets fixed-width tables render consistently in Microsoft Word and LibreOffice.
 const PAGE_WIDTH_DXA = 11906;
 const PAGE_HEIGHT_DXA = 16838;
-const MARGIN_X_DXA = 480;
-const MARGIN_Y_DXA = 340;
-const CONTENT_WIDTH_DXA = PAGE_WIDTH_DXA - MARGIN_X_DXA * 2; // 10946 DXA
-const HALF_WIDTH_DXA = Math.floor(CONTENT_WIDTH_DXA / 2); // 5473 DXA
+const MARGIN_X_DXA = 720;
+const MARGIN_Y_DXA = 600;
+const CONTENT_WIDTH_DXA = PAGE_WIDTH_DXA - MARGIN_X_DXA * 2; // 10466 DXA
+const HALF_WIDTH_DXA = Math.floor(CONTENT_WIDTH_DXA / 2); // 5233 DXA
 
 const ENGLISH_FONT = "Calibri";
 const ENGLISH_HEADING_FONT = "Arial";
@@ -243,7 +243,8 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
   const isBilingual = languageMode === "Bilingual";
   const isFbiseStyle = headerStyle === "style2";
 
-  // Calculate content density so font sizes and spacing compress automatically to fit on 1 page
+  // Word documents should preserve readable typography and flow onto another page when
+  // needed. Compressing an entire exam to one page makes Word table layout unstable.
   const totalQuestions = paperData.sections.reduce((acc, s) => acc + s.questions.length, 0);
   const totalChars = paperData.sections.reduce(
     (sum, s) =>
@@ -259,12 +260,13 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
     0
   );
 
-  const isDensePaper = totalChars > 1400 || totalQuestions > 11;
-  // Font sizes in half-points (18 = 9pt, 19 = 9.5pt, 20 = 10pt, 21 = 10.5pt)
-  const EN_Q_SIZE = isDensePaper ? 18 : 19;
-  const UR_Q_SIZE = isDensePaper ? 20 : 21;
-  const EN_OPT_SIZE = isDensePaper ? 17 : 18;
-  const UR_OPT_SIZE = isDensePaper ? 18 : 19;
+  const isDensePaper = totalChars > 1800 || totalQuestions > 15;
+  // Font sizes in half-points. Keep a comfortable minimum even for long papers;
+  // Word can add a page, while tiny text or compressed cells cannot be repaired.
+  const EN_Q_SIZE = isDensePaper ? 19 : 20;
+  const UR_Q_SIZE = isDensePaper ? 21 : 22;
+  const EN_OPT_SIZE = isDensePaper ? 18 : 19;
+  const UR_OPT_SIZE = isDensePaper ? 19 : 20;
 
   const docChildren: (Paragraph | Table)[] = [];
 
@@ -313,7 +315,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
   // =========================================================================
   // 1. INSTITUTION & BOARD HEADER BOX (Compact 1-Page Board Style)
   // =========================================================================
-  // Column widths: Left (1750) + Center (7446) + Right (1750) = 10946 DXA
+  // Column widths always add up to CONTENT_WIDTH_DXA.
   const leftColWidth = 1750;
   const centerColWidth = CONTENT_WIDTH_DXA - leftColWidth * 2;
   const rightColWidth = 1750;

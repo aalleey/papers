@@ -24,6 +24,7 @@ import {
   RotateCcw,
   AlertCircle,
   SlidersHorizontal,
+  Save,
 } from "lucide-react";
 import { parseRawTextToExam, ExamPaperData, ExamSection } from "@/lib/quick-paper-parser";
 import { MathRenderer } from "@/components/MathRenderer";
@@ -709,6 +710,37 @@ export default function QuickPaperPage() {
 
   const formattedCodeDigits = (paperCode || "3044").padEnd(4, "0").slice(0, 4).split("");
   const totalQuestionsCount = paperData.sections.reduce((acc, s) => acc + s.questions.length, 0);
+  const questionSummary = paperData.sections.reduce(
+    (summary, section) => {
+      summary[section.type] = (summary[section.type] || 0) + section.questions.length;
+      return summary;
+    },
+    {} as Record<string, number>
+  );
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("paperwala_quick_paper_draft", rawText);
+    } catch {
+      // Draft saving is an optional browser convenience.
+    }
+  }, [rawText]);
+
+  const restoreDraft = () => {
+    try {
+      const draft = localStorage.getItem("paperwala_quick_paper_draft");
+      if (!draft) {
+        showToast("No saved draft found on this device");
+        return;
+      }
+      setRawText(draft);
+      const parsed = parseRawTextToExam(draft);
+      setPaperData((previous) => ({ ...previous, ...parsed }));
+      showToast("Restored your saved quick-paper draft");
+    } catch {
+      setStatusMessage({ text: "Your browser could not restore the saved draft.", type: "error" });
+    }
+  };
 
   // Compute total character volume so base font size adapts automatically when Fit-to-1-Page is enabled
   const totalContentChars = paperData.sections.reduce(
@@ -1928,6 +1960,30 @@ export default function QuickPaperPage() {
 
             {/* Live Raw Paper Textarea */}
             <div className="flex-1 p-3.5 sm:p-4 flex flex-col gap-2.5 min-h-[360px]">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <div className="rounded-xl border border-blue-100 bg-blue-50 px-2.5 py-2">
+                  <div className="text-[10px] font-black uppercase tracking-wide text-blue-700">MCQs</div>
+                  <div className="mt-0.5 text-lg font-black text-blue-950 tabular-nums">{questionSummary.mcq || 0}</div>
+                </div>
+                <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-2.5 py-2">
+                  <div className="text-[10px] font-black uppercase tracking-wide text-emerald-700">Short</div>
+                  <div className="mt-0.5 text-lg font-black text-emerald-950 tabular-nums">{questionSummary.short || 0}</div>
+                </div>
+                <div className="rounded-xl border border-violet-100 bg-violet-50 px-2.5 py-2">
+                  <div className="text-[10px] font-black uppercase tracking-wide text-violet-700">Long</div>
+                  <div className="mt-0.5 text-lg font-black text-violet-950 tabular-nums">{questionSummary.long || 0}</div>
+                </div>
+                <div className="rounded-xl border border-amber-100 bg-amber-50 px-2.5 py-2">
+                  <div className="text-[10px] font-black uppercase tracking-wide text-amber-700">Marks</div>
+                  <div className="mt-0.5 text-lg font-black text-amber-950 tabular-nums">{paperData.totalMarks || 0}</div>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px]">
+                <span className="font-semibold text-slate-600"><strong className="text-slate-900">Quick flow:</strong> paste or generate → review the live paper → export Word or print PDF.</span>
+                <button onClick={restoreDraft} className="inline-flex items-center gap-1 font-black text-indigo-700 hover:text-indigo-900">
+                  <Save className="w-3.5 h-3.5" /> Restore draft
+                </button>
+              </div>
               <textarea
                 value={rawText}
                 onChange={(e) => {

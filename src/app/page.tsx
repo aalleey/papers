@@ -195,6 +195,38 @@ export default function Home() {
               "text": "Yes. Every generated paper can include a 4-circle OMR bubble sheet for students and an automated grading answer key across 4 anti-cheating shuffled Paper Codes (A, B, C, D).",
             },
           },
+          {
+            "@type": "Question",
+            "name": "Which classes and subjects does PaperWala support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "PaperWala supports 9th Class (Matric Part-I), 10th Class (Matric Part-II), 1st Year (11th / FSc & ICS Part-I), and 2nd Year (12th / FSc & ICS Part-II), covering Computer Science, Mathematics, Physics, Chemistry, Biology, English, Urdu, Islamiat, and Pakistan Studies on the Punjab and FBISE 2026-27 syllabus.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "How long does it take to create one exam paper with PaperWala?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Most teachers finish a complete paper in under a minute using the 1-Click Auto Pattern, which fills a balanced MCQ, short-question, and long-question layout automatically. Formatting, school headers, and marks are applied without manual editing.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Is PaperWala useful for academies that run weekly tests?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Academies reuse the same school header and switch the chapter each week. Shuffled Paper Codes A-D and automatic answer keys make weekly testing practical for several batches without repeating formatting work.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Can I edit a generated paper after downloading it?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The .docx download is a fully editable Microsoft Word file, so teachers can reword questions, change marks, or add academy instructions before printing. PDFs are best for immediate printing.",
+            },
+          },
         ],
       },
     ],
@@ -923,6 +955,57 @@ export default function Home() {
         </section>
 
         {/* =========================================================================
+            LONG-FORM SEO INTRO: WHAT IS AN ONLINE PAPER MAKER
+            ========================================================================= */}
+        <section id="what-is-paper-maker" className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6" aria-labelledby="what-is-heading">
+          <h2 id="what-is-heading" className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            What Is an Online Paper Maker for Pakistani Schools?
+          </h2>
+
+          <div className="space-y-4 text-sm sm:text-[15px] text-slate-600 leading-relaxed">
+            <p>
+              An <strong>online paper maker</strong> is a web-based tool that builds a complete examination paper — header, instructions, MCQs, short questions, long questions, marks, and answer key — from a ready question bank instead of typing everything from scratch in InPage or Microsoft Word. Teachers choose a class, a board, a subject, and a chapter; the software arranges the questions into the official <strong>board pattern</strong> format and lets them download the final paper as a PDF or an editable Word file.
+            </p>
+            <p>
+              <strong>PaperWala</strong> is built specifically for the Pakistani examination system. Instead of a generic quiz builder, it follows the structures used by the <strong>Punjab Boards of Intermediate and Secondary Education (BISE)</strong> — Lahore, Gujranwala, Rawalpindi, Faisalabad, Multan, Sargodha, Bahawalpur, DG Khan and Sahiwal — and the <strong>Federal Board (FBISE Islamabad)</strong>. That means papers already carry the sections, marks distribution, MCQ option grids, and attempt-any instructions that examiners, principals, and students expect to see on a real board paper.
+            </p>
+            <p>
+              Most schools in Pakistan currently produce test papers in one of three ways: typing each question manually into InPage and exporting to PDF, editing a reused Word template from a previous year, or paying a typist to assemble the paper a few days before the exam. Each of these approaches costs hours per paper, and a single formatting mistake can shift marks, misalign Urdu text, or leave a question repeated twice. PaperWala replaces that cycle with a <strong>chapter-wise verified question bank</strong>, a <strong>1-click auto pattern</strong> that balances MCQ, short, and long questions, and a <strong>live paper editor</strong> where the school name, crest, exam title, and time duration can be changed in seconds. The same paper can then be printed on A4, exported to Word for further editing, or duplicated into <strong>Paper Codes A, B, C, and D</strong> to reduce copying in adjacent rows during the exam.
+            </p>
+            <p>
+              Because everything runs in the browser, there is nothing to install and no <strong>InPage</strong> license or Nastaliq font setup to worry about. Urdu text is rendered with the <strong>Noto Nastaliq Urdu</strong> font, mathematical expressions are typeset with <strong>KaTeX</strong>, and the final output is optimised for black-and-white photocopying — the way papers are actually reproduced in Pakistani schools.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 text-xs">
+            <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/70">
+              <a href="#how-it-works" className="font-extrabold text-emerald-800 hover:underline">
+                3-Step Paper Generation
+              </a>
+              <p className="text-slate-600 mt-1 leading-relaxed">
+                Choose questions, add your school header, then print or download the paper.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200/70">
+              <a href="#board-comparison" className="font-extrabold text-indigo-800 hover:underline">
+                Board Pattern vs InPage
+              </a>
+              <p className="text-slate-600 mt-1 leading-relaxed">
+                See why teachers are moving from manual Urdu typesetting to an online generator.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/70">
+              <a href="#classes-subjects" className="font-extrabold text-amber-800 hover:underline">
+                Classes &amp; Subjects Covered
+              </a>
+              <p className="text-slate-600 mt-1 leading-relaxed">
+                9th, 10th, 1st Year &amp; 2nd Year across science, computer, and general subjects.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
             QUESTION BANK CHAPTER LAUNCHERS
             ========================================================================= */}
         <section id="active-chapters" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
@@ -1203,6 +1286,192 @@ export default function Home() {
         </section>
 
         {/* =========================================================================
+            FEATURE DEEP DIVE (SEO CONTENT)
+            ========================================================================= */}
+        <section id="features" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10" aria-labelledby="features-heading">
+          <div className="text-center max-w-3xl mx-auto space-y-2">
+            <span className="text-xs font-black text-emerald-700 uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+              Features
+            </span>
+            <h2 id="features-heading" className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              Everything a Pakistani Teacher Needs in One Paper Maker
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+              From authentic Urdu Nastaliq typography to editable Word export, every part of PaperWala is designed around the way exam papers are actually prepared, printed, and marked in Pakistan.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              {
+                icon: <FileText className="w-5 h-5" />,
+                tint: "bg-emerald-50 text-emerald-700 border-emerald-200",
+                title: "Urdu Nastaliq Without InPage",
+                body: "Urdu questions render in authentic Noto Nastaliq Urdu directly in the browser. No InPage license, no font installation, and no broken ligatures after copying text between computers.",
+              },
+              {
+                icon: <BookOpen className="w-5 h-5" />,
+                tint: "bg-indigo-50 text-indigo-700 border-indigo-200",
+                title: "Verified Chapter-Wise Question Bank",
+                body: "Every MCQ, short question, and long question is stored per unit for the current 2026-27 Punjab and FBISE syllabus, so teachers are never guessing whether a question still belongs on the paper.",
+              },
+              {
+                icon: <Layers className="w-5 h-5" />,
+                tint: "bg-teal-50 text-teal-700 border-teal-200",
+                title: "1-Click Auto Board Pattern",
+                body: "The auto pattern button picks a balanced mix of 1-mark MCQs, 2-mark short questions, and long questions, matching the section structure of a standard board paper instead of a random shuffle.",
+              },
+              {
+                icon: <ShieldCheck className="w-5 h-5" />,
+                tint: "bg-amber-50 text-amber-700 border-amber-200",
+                title: "Paper Codes A, B, C & D",
+                body: "Generate four shuffled versions of the same paper with matching answer keys. Useful for large halls where students sit close together and copying between rows is difficult to prevent.",
+              },
+              {
+                icon: <FileSpreadsheet className="w-5 h-5" />,
+                tint: "bg-blue-50 text-blue-700 border-blue-200",
+                title: "Editable Word (.docx) & PDF",
+                body: "Download an editable Microsoft Word document with aligned English and Urdu columns, or print a 1-page auto-fit A4 PDF that needs no manual margin or font-size adjustments before photocopying.",
+              },
+              {
+                icon: <FileCheck2 className="w-5 h-5" />,
+                tint: "bg-purple-50 text-purple-700 border-purple-200",
+                title: "Answer Keys & OMR Bubble Sheets",
+                body: "Each paper can ship with a teacher grading key and a standard four-circle OMR bubble sheet, so marking MCQs takes minutes and results are easy to tally for the whole class.",
+              },
+            ].map((f) => (
+              <article key={f.title} className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all space-y-3">
+                <div className={`w-10 h-10 rounded-2xl border flex items-center justify-center ${f.tint}`}>
+                  {f.icon}
+                </div>
+                <h3 className="text-base font-extrabold text-slate-900">{f.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{f.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* =========================================================================
+            COMPARISON TABLE (SEO CONTENT)
+            ========================================================================= */}
+        <section id="board-comparison" className="py-16 bg-slate-100/70 border-y border-slate-200/80" aria-labelledby="comparison-heading">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div className="text-center max-w-3xl mx-auto space-y-2">
+              <span className="text-xs font-black text-emerald-700 uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                Comparison
+              </span>
+              <h2 id="comparison-heading" className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Online Paper Maker vs. InPage, Word Templates &amp; Manual Typing
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                A quick comparison of how most academies prepare papers today and what changes when the whole process runs online.
+              </p>
+            </div>
+
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-xs">
+              <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[640px]">
+                <caption className="sr-only">
+                  Comparison of InPage, Microsoft Word templates, manual typing, and PaperWala online paper maker
+                </caption>
+                <thead>
+                  <tr className="bg-slate-900 text-white text-xs">
+                    <th scope="col" className="p-3.5 font-extrabold">Factor</th>
+                    <th scope="col" className="p-3.5 font-extrabold">InPage</th>
+                    <th scope="col" className="p-3.5 font-extrabold">Word Templates</th>
+                    <th scope="col" className="p-3.5 font-extrabold">Outsourced Typing</th>
+                    <th scope="col" className="p-3.5 font-extrabold text-emerald-300">PaperWala Online</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 text-slate-600">
+                  {[
+                    ["Setup required", "InPage license & Nastaliq fonts", "Saved template per class", "None (but paid per paper)", "None — browser only"],
+                    ["Urdu quality", "Manual formatting", "Depends on fonts installed", "Depends on typist", "Native Noto Nastaliq"],
+                    ["Math formulas", "Manual symbols", "Limited equation editor", "Often flattened to images", "KaTeX typesetting"],
+                    ["Board pattern", "Assembled by hand", "Reused from last year", "Typist's experience", "1-click auto pattern"],
+                    ["Reuses questions", "Copy-paste each time", "Copy-paste each time", "Starts over", "Chapter-wise question bank"],
+                    ["Paper versions A-D", "Manual duplication", "Manual duplication", "Extra charge", "Generated automatically"],
+                    ["Answer key & OMR", "Usually skipped", "Usually skipped", "Usually skipped", "Included per paper"],
+                    ["Time per paper", "2–4 hours", "1–2 hours", "1–3 days wait", "Under a minute"],
+                  ].map((row) => (
+                    <tr key={row[0]} className="hover:bg-slate-50/80">
+                      <th scope="row" className="p-3.5 font-bold text-slate-900 bg-slate-50/60">{row[0]}</th>
+                      <td className="p-3.5">{row[1]}</td>
+                      <td className="p-3.5">{row[2]}</td>
+                      <td className="p-3.5">{row[3]}</td>
+                      <td className="p-3.5 font-semibold text-emerald-800 bg-emerald-50/50">{row[4]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            CLASSES & SUBJECTS COVERAGE (SEO CONTENT)
+            ========================================================================= */}
+        <section id="classes-subjects" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10" aria-labelledby="classes-heading">
+          <div className="text-center max-w-3xl mx-auto space-y-2">
+            <span className="text-xs font-black text-emerald-700 uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+              Syllabus Coverage
+            </span>
+            <h2 id="classes-heading" className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              Built for 9th, 10th, 1st Year &amp; 2nd Year — Punjab BISE and FBISE
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+              PaperWala is designed for the classes where test-paper preparation takes the most time: Matric (9th and 10th) and Intermediate (1st Year and 2nd Year), including FSc and ICS streams. The same school header can be reused across every class in an academy.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              {
+                title: "9th Class (Matric Part-I)",
+                desc: "Chapter-wise papers for new-syllabus science and computer subjects, ideal for monthly tests and send-up practice.",
+              },
+              {
+                title: "10th Class (Matric Part-II)",
+                desc: "Board-pattern preparation papers with MCQs, short questions, and long questions for the final matric examination.",
+              },
+              {
+                title: "1st Year (11th / FSc & ICS)",
+                desc: "Inter part-I test papers that mirror the pairing scheme used by Punjab colleges and FBISE-affiliated institutions.",
+              },
+              {
+                title: "2nd Year (12th / FSc & ICS)",
+                desc: "Pre-board and annual exam papers with sectioned marks distribution, time allowed, and teacher answer keys.",
+              },
+            ].map((c) => (
+              <article key={c.title} className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs space-y-2">
+                <h3 className="text-sm font-extrabold text-slate-900">{c.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{c.desc}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
+            <article className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <h3 className="font-extrabold text-slate-900 text-sm">For School Principals</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Standardise the paper format across every teacher and class. The same header, crest, and instructions can be used for first term, mid-term, send-up, and annual examinations, which keeps the school&apos;s printed papers visually consistent.
+              </p>
+            </article>
+            <article className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <h3 className="font-extrabold text-slate-900 text-sm">For Academy Owners</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Run weekly tests for multiple batches without asking a typist each time. Auto-generated shuffled paper codes and answer keys let an academy handle large batches with the same staff that already manage admissions and fees.
+              </p>
+            </article>
+            <article className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <h3 className="font-extrabold text-slate-900 text-sm">For Individual Teachers</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Prepare class tests in the gaps between lectures instead of late at night. Choose questions from the unit you are teaching, download the Word file, and adjust any wording your students need.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        {/* =========================================================================
             FAQ ACCORDION
             ========================================================================= */}
         <section id="faq" className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -1243,6 +1512,22 @@ export default function Home() {
               {
                 q: "Does PaperWala automatically generate Answer Keys and Bubble Sheets?",
                 a: "Yes. Every generated paper automatically includes teacher grading keys and standard 4-circle OMR bubble sheets for students across 4 shuffled anti-cheating Paper Codes (A, B, C, D).",
+              },
+              {
+                q: "Which classes and subjects does PaperWala support?",
+                a: "PaperWala is designed for 9th Class (Matric Part-I), 10th Class (Matric Part-II), 1st Year (11th / FSc & ICS Part-I), and 2nd Year (12th / FSc & ICS Part-II). Available subjects include Computer Science, Mathematics, Physics, Chemistry, Biology, English, Urdu, Islamiat, and Pakistan Studies, with the active question bank expanding unit by unit for the Punjab and FBISE 2026-27 syllabus.",
+              },
+              {
+                q: "How long does it take to create one exam paper?",
+                a: "Most teachers finish a complete paper in under a minute once questions are selected. Choosing questions from a chapter takes the longest, and the 1-Click Auto Pattern can fill a balanced MCQ, short-question, and long-question layout in a single click. Formatting, headers, and marks are applied automatically.",
+              },
+              {
+                q: "Is PaperWala useful for academies that run weekly tests?",
+                a: "Yes. Academies typically reuse the same school header and simply switch the chapter each week. Shuffled Paper Codes A-D and automatic answer keys make it practical to run weekly tests for several batches without repeating the same formatting work.",
+              },
+              {
+                q: "Can I edit a generated paper after downloading it?",
+                a: "Yes. The .docx download is a fully editable Microsoft Word file, so you can reword a question, change marks, or add your academy's instructions before printing. PDFs are intended for immediate printing, while the Word file is the better choice when further changes are needed.",
               },
             ].map((faq, idx) => (
               <div
