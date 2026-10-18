@@ -40,9 +40,19 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await sendWelcomeEmail(targetClient);
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || "Email provider failed to send email.", result },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json({
       success: true,
-      message: `Welcome email dispatched to ${targetClient.email}`,
+      simulated: Boolean(result.simulated),
+      message: result.simulated
+        ? `Email saved to Outbox in Simulation Mode (add SMTP_HOST or RESEND_API_KEY in .env.local for live email delivery)`
+        : `Welcome email sent to ${targetClient.email}`,
       result,
     });
   } catch (err: unknown) {

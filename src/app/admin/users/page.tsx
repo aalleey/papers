@@ -1959,8 +1959,15 @@ export default function AdminUsersPage() {
                     });
                     const data = await res.json();
                     if (!res.ok) throw new Error(data.error || "Failed to send email");
-                    showToast(`Welcome email successfully sent to ${emailPreviewClient.email}!`);
-                    setEmailPreviewClient(null);
+                    if (data.simulated || data.result?.simulated) {
+                      showToast(
+                        data.message || "Simulated only: Add SMTP_HOST or RESEND_API_KEY in .env.local to send real emails.",
+                        "error"
+                      );
+                    } else {
+                      showToast(`Welcome email successfully sent to ${emailPreviewClient.email}!`);
+                      setEmailPreviewClient(null);
+                    }
                   } catch (e: unknown) {
                     const msg = e instanceof Error ? e.message : "Failed to send";
                     showToast(msg, "error");

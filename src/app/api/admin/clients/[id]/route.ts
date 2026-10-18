@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getPlanPermissions, SubscriptionPlanId } from "@/lib/types";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -132,6 +133,9 @@ export async function PUT(
       }
     }
 
+    const wasPending = client.subscription.status !== "active" || client.isVerified === false;
+    const isNowActive = targetSub.status === "active" || isVerified === true;
+
     const updated = await db.updateClient(id, {
       fullName: fullName !== undefined ? fullName : client.fullName,
       email: email !== undefined ? email : client.email,
@@ -144,7 +148,16 @@ export async function PUT(
       paymentSubmission: paymentSubmission !== undefined ? paymentSubmission : client.paymentSubmission,
     });
 
-    return NextResponse.json({ success: true, client: updated });
+    let emailResult = null;
+    if (updated && wasPending && isNowActive) {
+      try {
+        emailResult = await sendWelcomeEmail(updated);
+      } catch (emailErr) {
+        console.warn("Failed to dispatch approval email:", emailErr);
+      }
+    }
+
+    return NextResponse.json({ success: true, client: updated, emailResult });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to update client";
     return NextResponse.json({ error: message }, { status: 500 });
