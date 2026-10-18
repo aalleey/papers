@@ -22,6 +22,7 @@ import {
   ShieldCheck,
   FileText,
   WalletCards,
+  Flag,
 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 
@@ -32,6 +33,7 @@ interface AdminNavProps {
 const primaryNavItems = [
   { href: "/admin/users", label: "Registered Educators", badge: "CRM", icon: Users },
   { href: "/admin/finance", label: "Finance & Invoices", badge: "New", icon: WalletCards },
+  { href: "/admin/reports", label: "Flagged Questions", badge: "Queue", icon: Flag },
   { href: "/admin/questions", label: "Questions Bank", badge: "KaTeX", icon: HelpCircle },
   { href: "/admin/import", label: "HTML & CSV Import", badge: "Bulk", icon: Upload },
 ];

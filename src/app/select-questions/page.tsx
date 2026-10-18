@@ -15,6 +15,7 @@ import {
   SUBSCRIPTION_PLANS,
   getPlanPermissions,
   isPaidSubscriber,
+  QuestionReportCategory,
 } from "@/lib/types";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
@@ -56,6 +57,8 @@ import {
   Brain,
   Loader2,
   Plus,
+  Flag,
+  AlertTriangle,
 } from "lucide-react";
 
 interface AiTopicSearchResponse {
@@ -153,6 +156,79 @@ export default function SelectQuestionsPage() {
   const [showAiResultsMode, setShowAiResultsMode] = useState(false);
 
   const [authChecked, setAuthChecked] = useState(false);
+
+  // Flagged Question Error Reporting State
+  const [reportingQuestion, setReportingQuestion] = useState<Question | null>(null);
+  const [reportCategory, setReportCategory] = useState<QuestionReportCategory>("wrong_answer");
+  const [reportDescription, setReportDescription] = useState("");
+  const [reportSuggestedFix, setReportSuggestedFix] = useState("");
+  const [reportSuggestedOption, setReportSuggestedOption] = useState<number | null>(null);
+  const [submittingReport, setSubmittingReport] = useState(false);
+  const [reportedQuestionIds, setReportedQuestionIds] = useState<Set<string>>(new Set());
+  const [reportToast, setReportToast] = useState<string | null>(null);
+
+  const openReportModal = (q: Question) => {
+    setReportingQuestion(q);
+    setReportCategory(q.type === "mcq" ? "wrong_answer" : "typo");
+    setReportDescription("");
+    const en = q.translations?.find((t) => t.language === "en");
+    setReportSuggestedFix(en?.text || "");
+    setReportSuggestedOption(q.type === "mcq" ? (q.correct_option || 1) : null);
+  };
+
+  const handleSubmitQuestionReport = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reportingQuestion) return;
+    try {
+      setSubmittingReport(true);
+      const en = reportingQuestion.translations?.find((t) => t.language === "en");
+      const ur = reportingQuestion.translations?.find((t) => t.language === "ur");
+      const res = await fetch("/api/reports", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId: reportingQuestion.id,
+          chapterId: reportingQuestion.chapter_id || currentChapter?.id || null,
+          subjectName: currentSubject?.name || null,
+          chapterTitle: currentChapter
+            ? `Unit-${currentChapter.number}: ${currentChapter.title}`
+            : null,
+          questionType: reportingQuestion.type,
+          questionSnapshot: {
+            textEn: en?.text || "",
+            textUr: ur?.text || null,
+            optionsEn: Array.isArray(en?.options) ? en?.options : null,
+            optionsUr: Array.isArray(ur?.options) ? ur?.options : null,
+            correctOption: reportingQuestion.correct_option ?? null,
+            answerEn: en?.answer || null,
+            answerUr: ur?.answer || null,
+            marks: reportingQuestion.marks || 1,
+          },
+          category: reportCategory,
+          description:
+            reportDescription.trim() ||
+            `Flagged ${reportCategory.replace("_", " ")} during paper preparation`,
+          suggestedFix:
+            reportSuggestedFix.trim() && reportSuggestedFix.trim() !== (en?.text || "").trim()
+              ? reportSuggestedFix.trim()
+              : null,
+          suggestedCorrectOption:
+            reportingQuestion.type === "mcq" && reportCategory === "wrong_answer"
+              ? reportSuggestedOption
+              : null,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to submit report");
+      setReportedQuestionIds((prev) => new Set(prev).add(reportingQuestion.id));
+      setReportingQuestion(null);
+      setReportToast("Question flagged & sent to Admin Review Queue for 1-click fix!");
+      setTimeout(() => setReportToast(null), 4000);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubmittingReport(false);
+    }
+  };
 
   // Load questions for a specific class, subject, and chapter (Only accessible if logged in)
   async function loadQuestionsData(
@@ -2005,6 +2081,8 @@ export default function SelectQuestionsPage() {
                           isSelected={selectedIds.has(q.id)}
                           languageMode={languageMode}
                           onToggle={() => toggleQuestion(q.id)}
+                          onReport={() => openReportModal(q)}
+                          isReported={reportedQuestionIds.has(q.id)}
                         />
                       ))}
                     </div>
@@ -2051,6 +2129,8 @@ export default function SelectQuestionsPage() {
                           isSelected={selectedIds.has(q.id)}
                           languageMode={languageMode}
                           onToggle={() => toggleQuestion(q.id)}
+                          onReport={() => openReportModal(q)}
+                          isReported={reportedQuestionIds.has(q.id)}
                         />
                       ))}
                     </div>
@@ -2097,6 +2177,8 @@ export default function SelectQuestionsPage() {
                           isSelected={selectedIds.has(q.id)}
                           languageMode={languageMode}
                           onToggle={() => toggleQuestion(q.id)}
+                          onReport={() => openReportModal(q)}
+                          isReported={reportedQuestionIds.has(q.id)}
                         />
                       ))}
                     </div>
@@ -2299,6 +2381,151 @@ export default function SelectQuestionsPage() {
         </div>
       )}
 
+      {/* Report Question Error / Wrong Answer Modal */}
+      {reportingQuestion && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="my-8 w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl border border-rose-200 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between bg-gradient-to-r from-rose-600 via-rose-700 to-orange-600 px-6 py-4 text-white">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-white/15 p-2">
+                  <Flag className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-black text-base">Report Question Typo / Wrong Key</h2>
+                  <p className="text-[11px] text-rose-100">
+                    Sent directly to the Admin Review Queue for 1-click correction
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setReportingQuestion(null)}
+                className="rounded-xl p-1.5 text-rose-100 hover:bg-white/10 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmitQuestionReport} className="p-6 space-y-4 text-xs sm:text-sm">
+              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-800 font-bold">
+                <MathRenderer
+                  content={
+                    reportingQuestion.translations?.find((t) => t.language === "en")?.text || ""
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="block font-black text-slate-800 text-xs uppercase tracking-wider mb-1.5">
+                  Issue Category
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {(
+                    [
+                      { id: "wrong_answer", label: "Wrong Answer Key" },
+                      { id: "typo", label: "Typo / Spelling" },
+                      { id: "urdu_translation", label: "Urdu Translation" },
+                      { id: "math_formula", label: "Math / Formula" },
+                      { id: "wrong_marks", label: "Marks / Syllabus" },
+                      { id: "other", label: "Other Issue" },
+                    ] as const
+                  ).map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setReportCategory(cat.id)}
+                      className={`px-3 py-2 rounded-xl text-xs font-bold border text-left transition-all cursor-pointer ${
+                        reportCategory === cat.id
+                          ? "bg-rose-50 border-rose-500 text-rose-900 ring-2 ring-rose-500/20 font-black"
+                          : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {reportingQuestion.type === "mcq" && reportCategory === "wrong_answer" && (
+                <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 space-y-2">
+                  <span className="block text-xs font-black text-amber-900">
+                    Which option is actually the correct answer?
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4].map((num) => (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={() => setReportSuggestedOption(num)}
+                        className={`flex-1 py-2 rounded-xl font-black text-xs transition-all cursor-pointer ${
+                          reportSuggestedOption === num
+                            ? "bg-emerald-600 text-white shadow-sm"
+                            : "bg-white border border-amber-300 text-slate-700 hover:bg-amber-100"
+                        }`}
+                      >
+                        Option {String.fromCharCode(64 + num)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block font-bold text-slate-700 text-xs mb-1">
+                  Describe the issue (Optional)
+                </label>
+                <textarea
+                  rows={2}
+                  value={reportDescription}
+                  onChange={(e) => setReportDescription(e.target.value)}
+                  placeholder="E.g. According to PTB page 42, Option B is correct..."
+                  className="w-full rounded-xl border border-slate-300 p-2.5 text-xs font-medium focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 outline-none"
+                />
+              </div>
+
+              {reportCategory !== "wrong_answer" && (
+                <div>
+                  <label className="block font-bold text-slate-700 text-xs mb-1">
+                    Suggested Corrected Question Text (Optional — enables 1-Click Fix for Admin)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={reportSuggestedFix}
+                    onChange={(e) => setReportSuggestedFix(e.target.value)}
+                    className="w-full rounded-xl border border-slate-300 p-2.5 text-xs font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                  />
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2.5 pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setReportingQuestion(null)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submittingReport}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-orange-600 hover:from-rose-500 hover:to-orange-500 text-white font-black text-xs shadow-md flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Flag className="w-3.5 h-3.5" />
+                  <span>{submittingReport ? "Submitting..." : "Submit Report to Admin"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Report Submitted Toast */}
+      {reportToast && (
+        <div className="fixed top-4 right-4 z-50 px-4 py-3 rounded-2xl bg-emerald-600 text-white shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm font-bold animate-in slide-in-from-top-3">
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <span>{reportToast}</span>
+        </div>
+      )}
+
       {/* Client Authentication Modal */}
       <ClientAuthModal
         isOpen={showAuthModal}
@@ -2334,6 +2561,8 @@ interface QuestionCardProps {
   isSelected: boolean;
   languageMode: "English" | "Urdu" | "Bilingual";
   onToggle: () => void;
+  onReport?: () => void;
+  isReported?: boolean;
 }
 
 function QuestionCard({
@@ -2342,6 +2571,8 @@ function QuestionCard({
   isSelected,
   languageMode,
   onToggle,
+  onReport,
+  isReported,
 }: QuestionCardProps) {
   const [showAnswer, setShowAnswer] = useState(false);
   const enTrans = question.translations?.find((t) => t.language === "en");
@@ -2480,6 +2711,25 @@ function QuestionCard({
               <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-bold border border-amber-200 text-[10px]">
                 {question.concept_tag}
               </span>
+            )}
+
+            {onReport && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onReport();
+                }}
+                title="Report typo or wrong answer key to Admin"
+                className={`px-2 py-0.5 rounded-full font-bold text-[10px] border inline-flex items-center gap-1 transition-all cursor-pointer ${
+                  isReported
+                    ? "bg-rose-100 text-rose-800 border-rose-300"
+                    : "bg-slate-50 hover:bg-rose-50 text-slate-500 hover:text-rose-700 border-slate-200 hover:border-rose-200"
+                }`}
+              >
+                <Flag className="w-2.5 h-2.5" />
+                <span>{isReported ? "Reported" : "Report"}</span>
+              </button>
             )}
           </div>
         </div>
