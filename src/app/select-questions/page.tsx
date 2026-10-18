@@ -668,6 +668,7 @@ export default function SelectQuestionsPage() {
       type: manualQuestion.type,
       source: "extra",
       source_ref: "Manually added",
+      source_note: null,
       concept_tag: "Manual question",
       correct_option: manualQuestion.type === "mcq" ? manualQuestion.correctOption : null,
       marks: Math.max(1, Number(manualQuestion.marks) || 1),
