@@ -28,6 +28,7 @@ import {
 import { parseRawTextToExam, ExamPaperData, ExamSection } from "@/lib/quick-paper-parser";
 import { MathRenderer } from "@/components/MathRenderer";
 import { exportPaperToDocx } from "@/lib/docx-export";
+import { BrandEmblem, generatePaperWalaCrestDataUrl } from "@/components/BrandLogo";
 
 export interface PaperTemplate {
   id: string;
@@ -1501,9 +1502,7 @@ export default function QuickPaperPage() {
               <ArrowLeft className="w-4 h-4" />
             </Link>
 
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-[0_3px_0_0_#065f46,inset_0_1px_1px_rgba(255,255,255,0.6)] font-black text-sm shrink-0">
-              ⚡
-            </div>
+            <BrandEmblem size="sm" />
 
             <div className="min-w-0">
               <div className="flex items-center gap-2">
@@ -1575,10 +1574,34 @@ export default function QuickPaperPage() {
             <button
               onClick={() => logoInputRef.current?.click()}
               className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/90 hover:bg-white border border-slate-200/90 text-slate-800 text-xs font-bold shadow-2xs cursor-pointer"
-              title="Upload institution or academy logo"
+              title="Upload custom school or academy logo"
             >
               <ImageIcon className="w-3.5 h-3.5 text-blue-600" />
-              <span className="hidden lg:inline">{logoBase64 ? "Change Logo" : "Logo"}</span>
+              <span className="hidden lg:inline">{logoBase64 ? "Change Logo" : "Upload Logo"}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                if (logoBase64) {
+                  setLogoBase64(null);
+                  showToast("Paper logo removed");
+                } else {
+                  const crest = generatePaperWalaCrestDataUrl();
+                  if (crest) {
+                    setLogoBase64(crest);
+                    showToast("Official PaperWala Academic Crest applied!");
+                  }
+                }
+              }}
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-extrabold shadow-2xs cursor-pointer transition-all ${
+                logoBase64
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                  : "bg-amber-50/90 hover:bg-amber-100 text-amber-900 border-amber-300/90"
+              }`}
+              title={logoBase64 ? "Click to remove crest/logo from paper" : "Stamp Official PaperWala Board Crest onto Paper & Word (.docx)"}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span className="hidden xl:inline">{logoBase64 ? "Clear Crest" : "Official Crest"}</span>
             </button>
 
             <button

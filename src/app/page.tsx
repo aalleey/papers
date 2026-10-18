@@ -32,11 +32,14 @@ import {
   FileText,
   Menu,
   X,
+  Brain,
+  Loader2,
 } from "lucide-react";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
 import { ClientAuthModal } from "@/components/ClientAuthModal";
-import { ClientUser, isPaidSubscriber } from "@/lib/types";
+import { BrandLogo, BrandEmblem } from "@/components/BrandLogo";
+import { ClientUser, isPaidSubscriber, Question } from "@/lib/types";
 
 export default function Home() {
   const [clientUser, setClientUser] = useState<ClientUser | null>(null);
@@ -46,6 +49,51 @@ export default function Home() {
   // Interactive preview state for the Hero Mock Paper
   const [heroLang, setHeroLang] = useState<"Bilingual" | "English" | "Urdu">("Bilingual");
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
+
+  // Interactive AI Topic Search state on Homepage
+  const [homeTopicQuery, setHomeTopicQuery] = useState("");
+  const [homeSubject, setHomeSubject] = useState("Computer Science");
+  const [homeAiLoading, setHomeAiLoading] = useState(false);
+  const [homeAiResult, setHomeAiResult] = useState<{
+    query: string;
+    topicTitleEn: string;
+    topicTitleUr: string;
+    summaryEn: string;
+    boardImportance: string;
+    keyConcepts: string[];
+    questions: Question[];
+  } | null>(null);
+
+  async function handleHomeAiSearch(overrideTopic?: string, overrideSubject?: string) {
+    const q = (overrideTopic !== undefined ? overrideTopic : homeTopicQuery).trim();
+    if (!q) return;
+    try {
+      setHomeAiLoading(true);
+      const res = await fetch("/api/ai-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: q,
+          className: "10th",
+          subjectName: overrideSubject || homeSubject,
+          questionType: "all",
+          difficulty: "all",
+          mcqCount: 4,
+          shortCount: 3,
+          longCount: 2,
+          includeDbMatches: true,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.questions) {
+        setHomeAiResult(data);
+      }
+    } catch (e) {
+      console.error("Homepage AI topic search failed:", e);
+    } finally {
+      setHomeAiLoading(false);
+    }
+  }
 
   // Comprehensive SEO Structured Data (SoftwareApplication + HowTo + FAQPage)
   const jsonLdSchema = {
@@ -196,24 +244,7 @@ export default function Home() {
         <div className="pointer-events-auto max-w-7xl mx-auto rounded-[22px] bg-gradient-to-b from-white/65 via-white/40 to-white/55 backdrop-blur-3xl border border-white/90 ring-1 ring-slate-900/[0.04] shadow-[0_22px_55px_-12px_rgba(15,23,42,0.18),0_6px_20px_-4px_rgba(16,185,129,0.12),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(255,255,255,0.7)] transition-all duration-200">
           <div className="px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
             {/* Zone 1: 3D Liquid Glass Brand Emblem & Wordmark */}
-            <Link
-              href="/"
-              className="flex items-center gap-3 group whitespace-nowrap shrink-0"
-              id="nav-brand-logo"
-            >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-[0_4px_0_0_#065f46,0_8px_16px_-2px_rgba(16,185,129,0.45),inset_0_2px_2px_rgba(255,255,255,0.7)] group-hover:-translate-y-0.5 group-active:translate-y-0.5 transition-all duration-150">
-                <BookOpen className="w-4 h-4 drop-shadow-xs" />
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="font-extrabold text-lg tracking-tight text-slate-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.95)]">
-                  PaperWala
-                </span>
-                <span className="text-slate-400 text-xs" aria-hidden="true">·</span>
-                <span className="font-urdu text-emerald-700 text-base font-bold drop-shadow-[0_1px_0_rgba(255,255,255,0.95)]">
-                  پیپر والا
-                </span>
-              </div>
-            </Link>
+            <BrandLogo id="nav-brand-logo" size="md" variant="full" />
 
             {/* Zone 2: 3D Recessed Liquid Glass Navigation Track (Desktop) */}
             <nav
@@ -492,10 +523,8 @@ export default function Home() {
                   ================================================================= */}
               <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-slate-200/80 border border-slate-200/90 max-w-3xl mx-auto text-left mt-8 space-y-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-100 gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                      🎓
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <BrandEmblem size="sm" />
                     <div>
                       <h2 className="text-sm sm:text-base font-black text-slate-900">
                         Official BISE Examination Generation System
@@ -619,6 +648,226 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            AI TOPIC SEARCH & LIVE QUESTION DISCOVERY ENGINE
+            ========================================================================= */}
+        <section id="ai-topic-search" className="py-14 bg-gradient-to-br from-slate-950 via-indigo-950 to-emerald-950 text-white relative overflow-hidden border-y border-emerald-500/30">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
+            <div className="text-center max-w-3xl mx-auto space-y-3">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span>AI Topic Search &amp; Question Finder</span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+                Search Any Topic &amp; View Board Pattern Questions Instantly
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Type any chapter topic, scientific law, mathematical formula, or concept below. Our AI Topic Search instantly displays bilingual <strong>MCQs, Short Questions, and Long Questions</strong> for that exact topic.
+              </p>
+            </div>
+
+            {/* Search Input Card */}
+            <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl p-4 sm:p-6 shadow-2xl space-y-4">
+              <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+                <div className="relative flex-1">
+                  <Search className="w-4 h-4 text-emerald-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={homeTopicQuery}
+                    onChange={(e) => setHomeTopicQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleHomeAiSearch();
+                      }
+                    }}
+                    placeholder="Enter any topic (e.g., 'Flowcharts & Algorithms', 'Ohm's Law', 'Quadratic Formula', 'Cell Division')..."
+                    className="w-full pl-10 pr-9 py-3 rounded-2xl bg-slate-900/80 border border-white/20 focus:border-emerald-400 text-xs sm:text-sm font-bold text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30"
+                  />
+                  {homeTopicQuery && (
+                    <button
+                      onClick={() => {
+                        setHomeTopicQuery("");
+                        setHomeAiResult(null);
+                      }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
+                <select
+                  value={homeSubject}
+                  onChange={(e) => setHomeSubject(e.target.value)}
+                  className="px-3.5 py-3 rounded-2xl bg-slate-900/80 border border-white/20 text-white text-xs sm:text-sm font-bold focus:outline-none focus:border-emerald-400 cursor-pointer"
+                >
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Physics">Physics</option>
+                  <option value="Mathematics">Mathematics</option>
+                  <option value="Chemistry">Chemistry</option>
+                  <option value="Biology">Biology</option>
+                  <option value="English">English</option>
+                </select>
+
+                <button
+                  onClick={() => handleHomeAiSearch()}
+                  disabled={homeAiLoading || !homeTopicQuery.trim()}
+                  className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-500 hover:from-emerald-300 hover:to-teal-400 disabled:opacity-50 text-slate-950 font-black text-xs sm:text-sm shadow-[0_4px_0_0_#065f46] active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+                >
+                  {homeAiLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Searching...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      <span>Search Topic Questions</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Popular Topic Chips */}
+              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                <span className="text-emerald-300 font-bold flex items-center gap-1">
+                  <Brain className="w-3.5 h-3.5" />
+                  <span>Try Topic:</span>
+                </span>
+                {[
+                  { topic: "Problem Solving & Flowcharts", subject: "Computer Science" },
+                  { topic: "Operating System Kernel", subject: "Computer Science" },
+                  { topic: "Ohm's Law & Resistance", subject: "Physics" },
+                  { topic: "Quadratic Formula", subject: "Mathematics" },
+                  { topic: "Chemical Equilibrium", subject: "Chemistry" },
+                  { topic: "Mitosis & Meiosis", subject: "Biology" },
+                ].map((chip) => (
+                  <button
+                    key={chip.topic}
+                    onClick={() => {
+                      setHomeTopicQuery(chip.topic);
+                      setHomeSubject(chip.subject);
+                      handleHomeAiSearch(chip.topic, chip.subject);
+                    }}
+                    className="px-3 py-1 rounded-xl bg-white/10 hover:bg-emerald-500/30 border border-white/15 text-slate-200 hover:text-white font-bold transition-all cursor-pointer"
+                  >
+                    {chip.topic}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Live AI Topic Search Results Display */}
+            {homeAiResult && (
+              <div className="max-w-6xl mx-auto bg-white text-slate-900 rounded-3xl p-5 sm:p-8 shadow-2xl border border-emerald-200 space-y-6 animate-in fade-in duration-200">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <span className="px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase">
+                        {homeAiResult.boardImportance}
+                      </span>
+                      <span className="px-2.5 py-0.5 rounded-md bg-indigo-100 text-indigo-800 text-[11px] font-black">
+                        {homeAiResult.questions.length} Questions Found
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-baseline gap-3">
+                      <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                        {homeAiResult.topicTitleEn}
+                      </h3>
+                      {homeAiResult.topicTitleUr && (
+                        <span className="font-urdu text-lg text-emerald-700 font-bold">
+                          {homeAiResult.topicTitleUr}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1">{homeAiResult.summaryEn}</p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    <Link
+                      href={`/select-questions?ai_topic=${encodeURIComponent(homeAiResult.query)}`}
+                      className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-md flex items-center gap-1.5"
+                    >
+                      <span>Open Topic in Paper Maker</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Questions Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {homeAiResult.questions.map((q, idx) => {
+                    const enT = q.translations?.find((t) => t.language === "en");
+                    const urT = q.translations?.find((t) => t.language === "ur");
+                    const optsEn = Array.isArray(enT?.options) ? enT.options : [];
+                    return (
+                      <div
+                        key={q.id}
+                        className="rounded-2xl border border-slate-200 p-4 bg-slate-50/70 hover:bg-white hover:border-emerald-300 transition-all flex flex-col justify-between space-y-3"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between gap-2">
+                            <span
+                              className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase ${
+                                q.type === "mcq"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : q.type === "short"
+                                  ? "bg-emerald-100 text-emerald-800"
+                                  : "bg-purple-100 text-purple-800"
+                              }`}
+                            >
+                              Q.{idx + 1} &bull; {q.type.toUpperCase()} ({q.marks} Marks)
+                            </span>
+                            {q.source_ref && (
+                              <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
+                                {q.source_ref}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="text-xs font-bold text-slate-900 leading-relaxed">
+                            <MathRenderer content={enT?.text || ""} />
+                          </div>
+
+                          {urT?.text && (
+                            <div className="font-urdu text-sm text-indigo-950 text-right leading-loose" dir="rtl">
+                              <MathRenderer content={urT.text} />
+                            </div>
+                          )}
+                        </div>
+
+                        {q.type === "mcq" && optsEn.length > 0 && (
+                          <div className="pt-2 border-t border-slate-200/80 grid grid-cols-2 gap-1.5 text-[11px]">
+                            {optsEn.map((opt, oIdx) => {
+                              const isCorrect = q.correct_option === oIdx + 1;
+                              return (
+                                <div
+                                  key={oIdx}
+                                  className={`px-2 py-1 rounded-lg border truncate ${
+                                    isCorrect
+                                      ? "bg-emerald-50 border-emerald-400 text-emerald-900 font-bold"
+                                      : "bg-white border-slate-200 text-slate-600"
+                                  }`}
+                                >
+                                  <span className="font-black mr-1">
+                                    {String.fromCharCode(65 + oIdx)}.
+                                  </span>
+                                  {opt}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -1145,15 +1394,7 @@ export default function Home() {
       <footer className="border-t border-slate-200 bg-white py-12 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm">
-                <BookOpen className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="font-extrabold text-slate-900 text-base">PaperWala (پیپر والا)</div>
-                <div className="text-[10px] text-emerald-700">Pakistani School Exam Paper Generator</div>
-              </div>
-            </div>
+            <BrandLogo size="sm" subtitle="Pakistani School Exam Paper Generator" />
 
             <div className="flex flex-wrap items-center justify-center gap-5 text-slate-600 font-semibold text-xs">
               <Link href="/quick-paper" className="hover:text-emerald-700 transition-colors">

@@ -21,6 +21,7 @@ import { UrduText } from "@/components/UrduText";
 import { getUrduTranslation } from "@/lib/urdu-translations";
 import { SubscriptionModal } from "@/components/SubscriptionModal";
 import { ClientAuthModal } from "@/components/ClientAuthModal";
+import { BrandLogo } from "@/components/BrandLogo";
 import {
   ChevronUp,
   ChevronDown,
@@ -51,7 +52,24 @@ import {
   LogOut,
   GraduationCap,
   CirclePlus,
+  Search,
+  Brain,
+  Loader2,
+  Plus,
 } from "lucide-react";
+
+interface AiTopicSearchResponse {
+  query: string;
+  topicTitleEn: string;
+  topicTitleUr: string;
+  summaryEn: string;
+  summaryUr: string;
+  boardImportance: string;
+  keyConcepts: string[];
+  dbMatchCount: number;
+  aiGeneratedCount: number;
+  questions: Question[];
+}
 
 export default function SelectQuestionsPage() {
   const router = useRouter();
@@ -121,6 +139,18 @@ export default function SelectQuestionsPage() {
     optionD: "",
     correctOption: 1,
   });
+
+  // Persistent map of all seen questions (across chapters + AI topic searches) so selections are never lost
+  const [knownQuestionsMap, setKnownQuestionsMap] = useState<Record<string, Question>>({});
+
+  // AI Topic Search state
+  const [aiTopicQuery, setAiTopicQuery] = useState("");
+  const [sidebarTopicSearch, setSidebarTopicSearch] = useState("");
+  const [aiQuestionType, setAiQuestionType] = useState<"all" | "mcq" | "short" | "long">("all");
+  const [aiDifficulty, setAiDifficulty] = useState<"all" | "easy" | "medium" | "hard">("all");
+  const [aiSearchLoading, setAiSearchLoading] = useState(false);
+  const [aiSearchResult, setAiSearchResult] = useState<AiTopicSearchResponse | null>(null);
+  const [showAiResultsMode, setShowAiResultsMode] = useState(false);
 
   const [authChecked, setAuthChecked] = useState(false);
 
@@ -237,8 +267,34 @@ export default function SelectQuestionsPage() {
       // 3. Process Questions
       if (data.questions?.length) {
         setAllQuestions(data.questions);
+        setKnownQuestionsMap((prev) => {
+          const next = { ...prev };
+          for (const q of data.questions as Question[]) {
+            next[q.id] = q;
+          }
+          return next;
+        });
       } else {
         setAllQuestions([]);
+      }
+
+      // Restore cached selected question objects from sessionStorage if present
+      const savedQJson = sessionStorage.getItem("papermaker_selected_questions");
+      if (savedQJson) {
+        try {
+          const parsedQs = JSON.parse(savedQJson);
+          if (Array.isArray(parsedQs) && parsedQs.length > 0) {
+            setKnownQuestionsMap((prev) => {
+              const next = { ...prev };
+              for (const q of parsedQs as Question[]) {
+                if (q && q.id) next[q.id] = q;
+              }
+              return next;
+            });
+          }
+        } catch {
+          // ignore
+        }
       }
 
       // Check if there are previously selected questions in sessionStorage
@@ -278,6 +334,13 @@ export default function SelectQuestionsPage() {
           }
           setClientUser(authData.client);
           await loadQuestionsData();
+
+          // If navigated with ?ai_topic=... in URL, automatically run AI Topic Search
+          const urlTopic = new URLSearchParams(window.location.search).get("ai_topic");
+          if (urlTopic && urlTopic.trim()) {
+            setAiTopicQuery(urlTopic.trim());
+            handleAiTopicSearch(urlTopic.trim());
+          }
         } else {
           setClientUser(null);
           setLoading(false);
@@ -292,6 +355,117 @@ export default function SelectQuestionsPage() {
 
     init();
   }, []);
+
+  // Run AI Topic Search to find & synthesize questions for any topic
+  async function handleAiTopicSearch(overrideQuery?: string) {
+    const targetQuery = (overrideQuery !== undefined ? overrideQuery : aiTopicQuery).trim();
+    if (!targetQuery) return;
+
+    try {
+      setAiSearchLoading(true);
+      const activeClassName =
+        classesList.find((c) => c.id === selectedClassId)?.name || "Class 10th";
+      const activeSubjectName = currentSubject?.name || "Computer Science";
+
+      const res = await fetch("/api/ai-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: targetQuery,
+          className: activeClassName,
+          subjectName: activeSubjectName,
+          chapterId: currentChapter?.id || "",
+          questionType: aiQuestionType,
+          difficulty: aiDifficulty,
+          mcqCount: 6,
+          shortCount: 5,
+          longCount: 2,
+          includeDbMatches: true,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.questions) {
+        setAiSearchResult(data);
+        setShowAiResultsMode(true);
+        setKnownQuestionsMap((prev) => {
+          const next = { ...prev };
+          for (const q of data.questions as Question[]) {
+            next[q.id] = q;
+          }
+          return next;
+        });
+      }
+    } catch (err) {
+      console.error("AI Topic Search failed:", err);
+    } finally {
+      setAiSearchLoading(false);
+    }
+  }
+
+  // Suggested high-yield topics based on active subject
+  const suggestedAiTopics = useMemo(() => {
+    const subLower = (currentSubject?.name || "").toLowerCase();
+    if (subLower.includes("physics")) {
+      return [
+        "Simple Harmonic Motion",
+        "Ohm's Law & Resistance",
+        "Reflection & Lenses",
+        "Electrostatics & Coulomb's Law",
+        "Logic Gates & Digital Electronics",
+        "Atomic & Nuclear Physics",
+      ];
+    }
+    if (subLower.includes("chemistry")) {
+      return [
+        "Chemical Equilibrium",
+        "Acids, Bases and Salts",
+        "Organic Chemistry & Hydrocarbons",
+        "Biochemistry & Carbohydrates",
+        "Atmospheric Pollution",
+        "Water Hardness",
+      ];
+    }
+    if (subLower.includes("biology")) {
+      return [
+        "Gaseous Exchange in Humans",
+        "Homeostasis & Kidney",
+        "Coordination & Nervous System",
+        "Inheritance & Mendel's Laws",
+        "Biotechnology & Fermentation",
+        "Cell Division (Mitosis)",
+      ];
+    }
+    if (subLower.includes("math")) {
+      return [
+        "Quadratic Equations & Formula",
+        "Theory of Quadratic Equations",
+        "Partial Fractions",
+        "Sets and Functions",
+        "Trigonometric Identities",
+        "Circle Theorems",
+      ];
+    }
+    return [
+      "Operating System & Kernel",
+      "Problem Solving & Flowcharts",
+      "Loops & Control Structures in C",
+      "Arrays & Data Structures",
+      "System Recovery & Maintenance",
+      "Digital Entrepreneurship",
+    ];
+  }, [currentSubject]);
+
+  // Filtered sidebar topics based on sidebarTopicSearch
+  const filteredSidebarTopics = useMemo(() => {
+    const q = sidebarTopicSearch.trim().toLowerCase();
+    if (!q) return topics;
+    return topics.filter(
+      (t) =>
+        t.title.toLowerCase().includes(q) ||
+        (t.title_ur && t.title_ur.includes(sidebarTopicSearch.trim()))
+    );
+  }, [topics, sidebarTopicSearch]);
 
   async function handleLogout() {
     try {
@@ -358,49 +532,59 @@ export default function SelectQuestionsPage() {
     return counts;
   }, [allQuestions]);
 
+  // Active question pool (either AI Topic Search results or current Chapter questions)
+  const activeQuestionPool = useMemo(() => {
+    if (showAiResultsMode && aiSearchResult) {
+      return aiSearchResult.questions;
+    }
+    return allQuestions;
+  }, [showAiResultsMode, aiSearchResult, allQuestions]);
+
   // Filtered Questions based on active filters
   const filteredQuestions = useMemo(() => {
-    return allQuestions.filter((q) => {
-      // 1. Topic Filter
-      if (!selectedTopicFilters.has("ALL")) {
-        if (selectedTopicFilters.has("exercise_source")) {
-          if (q.source !== "exercise") return false;
-        } else if (!q.topic_id || !selectedTopicFilters.has(q.topic_id)) {
-          return false;
+    return activeQuestionPool.filter((q) => {
+      // If viewing only selected across all chapters/AI searches, use active pool + known selected
+      if (viewOnlySelected && !selectedIds.has(q.id)) {
+        return false;
+      }
+
+      // When in Chapter mode, apply chapter topic filter
+      if (!showAiResultsMode) {
+        if (!selectedTopicFilters.has("ALL")) {
+          if (selectedTopicFilters.has("exercise_source")) {
+            if (q.source !== "exercise") return false;
+          } else if (!q.topic_id || !selectedTopicFilters.has(q.topic_id)) {
+            return false;
+          }
         }
       }
 
-      // 2. Source Filter
+      // Source Filter
       if (sourceFilter === "exercise" && q.source !== "exercise") return false;
       if (sourceFilter === "additional" && q.source !== "extra") return false;
       if (sourceFilter === "board" && q.source !== "past_paper") return false;
 
-      // 3. Skip ALP Filter
+      // Skip ALP Filter
       if (skipALP && (q.concept_tag?.toLowerCase().includes("alp") || q.source_ref?.toLowerCase().includes("alp"))) {
-        return false;
-      }
-
-      // 4. View Only Selected filter
-      if (viewOnlySelected && !selectedIds.has(q.id)) {
         return false;
       }
 
       return true;
     });
-  }, [allQuestions, selectedTopicFilters, sourceFilter, skipALP, viewOnlySelected, selectedIds]);
+  }, [activeQuestionPool, showAiResultsMode, selectedTopicFilters, sourceFilter, skipALP, viewOnlySelected, selectedIds]);
 
   // Split into categories
   const mcqQuestions = useMemo(() => filteredQuestions.filter((q) => q.type === "mcq"), [filteredQuestions]);
   const shortQuestions = useMemo(() => filteredQuestions.filter((q) => q.type === "short"), [filteredQuestions]);
   const longQuestions = useMemo(() => filteredQuestions.filter((q) => q.type === "long"), [filteredQuestions]);
 
-  // Selected counts breakdown
+  // Selected counts breakdown (across both chapter questions and AI-searched questions!)
   const selectedCounts = useMemo(() => {
     let mcq = 0;
     let short = 0;
     let long = 0;
     for (const id of selectedIds) {
-      const q = allQuestions.find((item) => item.id === id);
+      const q = knownQuestionsMap[id] || allQuestions.find((item) => item.id === id);
       if (q) {
         if (q.type === "mcq") mcq++;
         else if (q.type === "short") short++;
@@ -408,7 +592,7 @@ export default function SelectQuestionsPage() {
       }
     }
     return { mcq, short, long, total: selectedIds.size };
-  }, [selectedIds, allQuestions]);
+  }, [selectedIds, knownQuestionsMap, allQuestions]);
 
   // Toggle selection of a question
   const toggleQuestion = (id: string) => {
@@ -518,7 +702,11 @@ export default function SelectQuestionsPage() {
       return;
     }
 
-    const selectedList = allQuestions.filter((q) => selectedIds.has(q.id));
+    const selectedList: Question[] = [];
+    for (const id of selectedIds) {
+      const q = knownQuestionsMap[id] || allQuestions.find((item) => item.id === id);
+      if (q) selectedList.push(q);
+    }
     sessionStorage.setItem("papermaker_selected_questions", JSON.stringify(selectedList));
     sessionStorage.setItem("papermaker_language_mode", languageMode);
     router.push("/paper-editor");
@@ -801,10 +989,11 @@ export default function SelectQuestionsPage() {
                 <ArrowLeft className="w-4 h-4" />
               </Link>
 
-              <Link href="/" className="hidden sm:flex items-baseline gap-1.5 shrink-0 pr-3 border-r border-slate-300/70">
-                <span className="font-extrabold text-sm tracking-tight text-slate-900">PaperWala</span>
-                <span className="font-urdu text-emerald-700 text-xs font-bold">پیپر والا</span>
-              </Link>
+              <BrandLogo
+                size="sm"
+                variant="compact"
+                className="hidden sm:inline-flex pr-3 border-r border-slate-300/70"
+              />
 
               <div className="flex items-center gap-2 min-w-0 truncate">
                 <h1 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight flex items-center gap-2 truncate">
@@ -1235,6 +1424,133 @@ export default function SelectQuestionsPage() {
                 </button>
               </div>
             </div>
+
+            {/* =========================================================================
+                AI SMART TOPIC SEARCH & QUESTION DISCOVERY BAR
+                ========================================================================= */}
+            <div className="pt-2.5 border-t border-indigo-100/80">
+              <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-emerald-950 rounded-2xl p-2.5 sm:p-3 border border-indigo-500/30 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.25),inset_0_1px_0_rgba(255,255,255,0.18)] text-white">
+                <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-2">
+                  {/* Search Input */}
+                  <div className="relative flex-1 flex items-center">
+                    <div className="absolute left-3 flex items-center gap-1.5 pointer-events-none">
+                      <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
+                    </div>
+                    <input
+                      type="text"
+                      value={aiTopicQuery}
+                      onChange={(e) => setAiTopicQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAiTopicSearch();
+                        }
+                      }}
+                      placeholder="AI Topic Search: Type any topic or concept (e.g., 'Flowcharts', 'Ohm's Law', 'Quadratic Formula', 'Operating System')..."
+                      className="w-full pl-9 pr-9 py-2 rounded-xl bg-white/10 hover:bg-white/15 focus:bg-white/15 border border-white/20 focus:border-emerald-400 text-xs sm:text-sm font-bold text-white placeholder:text-slate-300/80 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 transition-all"
+                      id="input-ai-topic-search"
+                    />
+                    {aiTopicQuery && (
+                      <button
+                        onClick={() => {
+                          setAiTopicQuery("");
+                          if (showAiResultsMode) {
+                            setShowAiResultsMode(false);
+                          }
+                        }}
+                        className="absolute right-2.5 p-1 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+                        title="Clear AI topic search"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Filters & Trigger Button */}
+                  <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+                    <select
+                      value={aiQuestionType}
+                      onChange={(e) => setAiQuestionType(e.target.value as any)}
+                      className="px-2.5 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-emerald-400 cursor-pointer"
+                      title="Filter AI Search by Question Type"
+                    >
+                      <option value="all" className="text-slate-900">All Types (MCQ + Short + Long)</option>
+                      <option value="mcq" className="text-slate-900">MCQs Only</option>
+                      <option value="short" className="text-slate-900">Short Questions Only</option>
+                      <option value="long" className="text-slate-900">Long Questions Only</option>
+                    </select>
+
+                    <select
+                      value={aiDifficulty}
+                      onChange={(e) => setAiDifficulty(e.target.value as any)}
+                      className="px-2.5 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-emerald-400 cursor-pointer"
+                      title="Filter AI Search by Difficulty"
+                    >
+                      <option value="all" className="text-slate-900">All Difficulties</option>
+                      <option value="easy" className="text-slate-900">Easy / Conceptual</option>
+                      <option value="medium" className="text-slate-900">Medium / Board Standard</option>
+                      <option value="hard" className="text-slate-900">Hard / Analytical SLO</option>
+                    </select>
+
+                    <button
+                      onClick={() => handleAiTopicSearch()}
+                      disabled={aiSearchLoading || !aiTopicQuery.trim()}
+                      id="btn-ai-topic-search"
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-500 hover:from-emerald-300 hover:to-teal-400 disabled:opacity-50 text-slate-950 font-black text-xs shadow-[0_3px_0_0_#065f46] active:translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                    >
+                      {aiSearchLoading ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" />
+                          <span>Searching Topic...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Search className="w-3.5 h-3.5 stroke-[2.5]" />
+                          <span>AI Search Topic</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Quick Suggested Topic Chips */}
+                <div className="mt-2 pt-2 border-t border-white/10 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px]">
+                  <span className="font-extrabold text-emerald-300 shrink-0 flex items-center gap-1">
+                    <Brain className="w-3 h-3" />
+                    <span>Quick Topics:</span>
+                  </span>
+                  {suggestedAiTopics.map((topicChip) => {
+                    const isActiveChip =
+                      showAiResultsMode &&
+                      aiSearchResult?.query.toLowerCase() === topicChip.toLowerCase();
+                    return (
+                      <button
+                        key={topicChip}
+                        onClick={() => {
+                          setAiTopicQuery(topicChip);
+                          handleAiTopicSearch(topicChip);
+                        }}
+                        className={`px-2.5 py-0.5 rounded-lg font-bold transition-all shrink-0 cursor-pointer ${
+                          isActiveChip
+                            ? "bg-emerald-400 text-slate-950 shadow-xs"
+                            : "bg-white/10 hover:bg-white/20 text-slate-200 border border-white/15"
+                        }`}
+                      >
+                        {topicChip}
+                      </button>
+                    );
+                  })}
+                  {showAiResultsMode && (
+                    <button
+                      onClick={() => setShowAiResultsMode(false)}
+                      className="ml-auto px-2.5 py-0.5 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 border border-amber-400/40 font-extrabold shrink-0 cursor-pointer"
+                    >
+                      &larr; Back to Chapter Questions
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -1310,27 +1626,104 @@ export default function SelectQuestionsPage() {
           )}
         </div>
 
-        {/* DESKTOP VERTICAL SIDEBAR: TOPIC FILTER */}
+        {/* DESKTOP VERTICAL SIDEBAR: TOPIC FILTER + AI TOPIC DISCOVERY */}
         <aside className="hidden lg:block w-72 xl:w-80 bg-white rounded-2xl border border-indigo-100 shadow-md shadow-indigo-950/5 overflow-hidden shrink-0 sticky top-28">
           <div className="px-4 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-800 text-white flex items-center justify-between">
             <span className="font-black text-xs uppercase tracking-wider flex items-center gap-2">
               <Filter className="w-3.5 h-3.5 text-indigo-200" />
-              Filter by Topic
+              Topics &amp; AI Search
             </span>
             <button
-              onClick={() => setSelectedTopicFilters(new Set(["ALL"]))}
+              onClick={() => {
+                setSelectedTopicFilters(new Set(["ALL"]));
+                setSidebarTopicSearch("");
+                setShowAiResultsMode(false);
+              }}
               className="text-[10px] text-indigo-200 hover:text-white font-bold underline transition-colors"
             >
               Reset
             </button>
           </div>
 
-          <ul className="divide-y divide-slate-100 text-xs max-h-[calc(100vh-220px)] overflow-y-auto">
+          {/* Sidebar Topic Search & AI Trigger */}
+          <div className="p-2.5 bg-indigo-50/50 border-b border-indigo-100 space-y-2">
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={sidebarTopicSearch}
+                onChange={(e) => setSidebarTopicSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && sidebarTopicSearch.trim()) {
+                    setAiTopicQuery(sidebarTopicSearch.trim());
+                    handleAiTopicSearch(sidebarTopicSearch.trim());
+                  }
+                }}
+                placeholder="Filter or AI search any topic..."
+                className="w-full pl-8 pr-7 py-1.5 rounded-xl bg-white border border-indigo-200 text-xs font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {sidebarTopicSearch && (
+                <button
+                  onClick={() => setSidebarTopicSearch("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+
+            {sidebarTopicSearch.trim() && (
+              <button
+                onClick={() => {
+                  const q = sidebarTopicSearch.trim();
+                  setAiTopicQuery(q);
+                  handleAiTopicSearch(q);
+                }}
+                disabled={aiSearchLoading}
+                className="w-full py-1.5 px-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-emerald-600 hover:from-indigo-500 hover:to-emerald-500 text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer"
+              >
+                <Sparkles className="w-3 h-3 text-emerald-200" />
+                <span className="truncate">AI Search &ldquo;{sidebarTopicSearch.trim()}&rdquo;</span>
+              </button>
+            )}
+          </div>
+
+          <ul className="divide-y divide-slate-100 text-xs max-h-[calc(100vh-280px)] overflow-y-auto">
+            {/* Active AI Topic Search Item */}
+            {aiSearchResult && (
+              <li
+                onClick={() => setShowAiResultsMode(true)}
+                className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
+                  showAiResultsMode
+                    ? "bg-gradient-to-r from-emerald-50 to-teal-50 font-black text-emerald-950 border-l-4 border-emerald-600"
+                    : "bg-emerald-50/40 hover:bg-emerald-50 text-emerald-900"
+                }`}
+              >
+                <div className="flex items-center gap-2 pr-2 min-w-0">
+                  <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <div className="truncate">
+                    <span className="block font-black text-xs truncate">
+                      AI: {aiSearchResult.topicTitleEn}
+                    </span>
+                    <span className="block text-[10px] text-emerald-700 font-semibold">
+                      Click to view topic questions
+                    </span>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[11px] font-black shrink-0">
+                  {aiSearchResult.questions.length}
+                </span>
+              </li>
+            )}
+
             {/* All Topics */}
             <li
-              onClick={() => toggleTopic("ALL")}
+              onClick={() => {
+                setShowAiResultsMode(false);
+                toggleTopic("ALL");
+              }}
               className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
-                selectedTopicFilters.has("ALL")
+                !showAiResultsMode && selectedTopicFilters.has("ALL")
                   ? "bg-gradient-to-r from-indigo-50 to-blue-50 font-bold text-indigo-900 border-l-4 border-indigo-600"
                   : "hover:bg-slate-50 text-slate-700"
               }`}
@@ -1338,11 +1731,11 @@ export default function SelectQuestionsPage() {
               <div className="flex items-center gap-2.5">
                 <input
                   type="checkbox"
-                  checked={selectedTopicFilters.has("ALL")}
+                  checked={!showAiResultsMode && selectedTopicFilters.has("ALL")}
                   readOnly
                   className="rounded text-indigo-600 pointer-events-none h-4 w-4"
                 />
-                <span className="font-bold">All Topics</span>
+                <span className="font-bold">All Chapter Topics</span>
               </div>
               <span className="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[11px] font-black">
                 {allQuestions.length}
@@ -1350,20 +1743,23 @@ export default function SelectQuestionsPage() {
             </li>
 
             {/* Individual Topics */}
-            {topics.map((t) => {
-              const isSelected = selectedTopicFilters.has(t.id);
+            {filteredSidebarTopics.map((t) => {
+              const isSelected = !showAiResultsMode && selectedTopicFilters.has(t.id);
               const count = topicCounts[t.id] || 0;
               return (
                 <li
                   key={t.id}
-                  onClick={() => toggleTopic(t.id)}
-                  className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
+                  onClick={() => {
+                    setShowAiResultsMode(false);
+                    toggleTopic(t.id);
+                  }}
+                  className={`group px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
                     isSelected
                       ? "bg-gradient-to-r from-indigo-50 to-blue-50 font-bold text-indigo-900 border-l-4 border-indigo-600"
                       : "hover:bg-slate-50 text-slate-700"
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 pr-2 leading-tight">
+                  <div className="flex items-center gap-2.5 pr-2 leading-tight min-w-0">
                     <input
                       type="checkbox"
                       checked={isSelected}
@@ -1374,24 +1770,41 @@ export default function SelectQuestionsPage() {
                       {/^\d+\./.test(t.title) ? t.title : `${currentChapter?.number || 2}.${t.number} ${t.title}`}
                     </span>
                   </div>
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[11px] font-bold shrink-0 ${
-                      isSelected
-                        ? "bg-indigo-600 text-white"
-                        : "bg-slate-100 text-slate-600"
-                    }`}
-                  >
-                    {count}
-                  </span>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setAiTopicQuery(t.title);
+                        handleAiTopicSearch(t.title);
+                      }}
+                      title={`Generate & find more questions on "${t.title}" with AI`}
+                      className="opacity-0 group-hover:opacity-100 px-1.5 py-0.5 rounded bg-emerald-100 hover:bg-emerald-600 text-emerald-800 hover:text-white text-[10px] font-extrabold transition-all flex items-center gap-0.5"
+                    >
+                      <Sparkles className="w-2.5 h-2.5" />
+                      <span>AI</span>
+                    </button>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[11px] font-bold shrink-0 ${
+                        isSelected
+                          ? "bg-indigo-600 text-white"
+                          : "bg-slate-100 text-slate-600"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </div>
                 </li>
               );
             })}
 
             {/* Exercise Filter */}
             <li
-              onClick={() => toggleTopic("exercise_source")}
+              onClick={() => {
+                setShowAiResultsMode(false);
+                toggleTopic("exercise_source");
+              }}
               className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
-                selectedTopicFilters.has("exercise_source")
+                !showAiResultsMode && selectedTopicFilters.has("exercise_source")
                   ? "bg-gradient-to-r from-indigo-50 to-blue-50 font-bold text-indigo-900 border-l-4 border-indigo-600"
                   : "hover:bg-slate-50 text-slate-700"
               }`}
@@ -1399,7 +1812,7 @@ export default function SelectQuestionsPage() {
               <div className="flex items-center gap-2.5">
                 <input
                   type="checkbox"
-                  checked={selectedTopicFilters.has("exercise_source")}
+                  checked={!showAiResultsMode && selectedTopicFilters.has("exercise_source")}
                   readOnly
                   className="rounded text-indigo-600 pointer-events-none h-4 w-4"
                 />
@@ -1414,6 +1827,99 @@ export default function SelectQuestionsPage() {
 
         {/* QUESTIONS CONTAINER */}
         <main className="flex-1 w-full space-y-6">
+          {/* =========================================================================
+              AI TOPIC SEARCH INTELLIGENCE BANNER (SHOWN WHEN AI SEARCH IS ACTIVE)
+              ========================================================================= */}
+          {showAiResultsMode && aiSearchResult && (
+            <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-emerald-950 rounded-2xl p-4 sm:p-6 text-white border border-emerald-500/40 shadow-xl space-y-4">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[11px] font-black uppercase tracking-wider">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                      AI Topic Search Results
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-md bg-amber-500/20 border border-amber-400/30 text-amber-300 text-[11px] font-bold">
+                      {aiSearchResult.boardImportance}
+                    </span>
+                    {aiSearchResult.dbMatchCount > 0 && (
+                      <span className="px-2.5 py-0.5 rounded-md bg-blue-500/20 border border-blue-400/30 text-blue-200 text-[11px] font-bold">
+                        {aiSearchResult.dbMatchCount} Bank Matches
+                      </span>
+                    )}
+                    <span className="px-2.5 py-0.5 rounded-md bg-indigo-500/20 border border-indigo-400/30 text-indigo-200 text-[11px] font-bold">
+                      {aiSearchResult.aiGeneratedCount} AI Board Questions
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap items-baseline gap-3 pt-1">
+                    <h2 className="text-lg sm:text-2xl font-black tracking-tight text-white">
+                      {aiSearchResult.topicTitleEn}
+                    </h2>
+                    {aiSearchResult.topicTitleUr && (
+                      <span className="font-urdu text-base sm:text-xl text-emerald-300">
+                        {aiSearchResult.topicTitleUr}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    {aiSearchResult.summaryEn}
+                  </p>
+                </div>
+
+                {/* Batch Action Buttons */}
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => selectAllInGroup(aiSearchResult.questions)}
+                    className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-black text-xs shadow-md flex items-center gap-1.5 cursor-pointer transition-all"
+                  >
+                    <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
+                    <span>
+                      {aiSearchResult.questions.every((q) => selectedIds.has(q.id))
+                        ? "Deselect Topic Questions"
+                        : `Select All (${aiSearchResult.questions.length})`}
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => handleAiTopicSearch(aiSearchResult.query)}
+                    disabled={aiSearchLoading}
+                    className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all"
+                  >
+                    <RotateCcw className={`w-3.5 h-3.5 ${aiSearchLoading ? "animate-spin" : ""}`} />
+                    <span>Regenerate</span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowAiResultsMode(false)}
+                    className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-slate-200 font-bold text-xs cursor-pointer transition-all"
+                  >
+                    Back to Chapter
+                  </button>
+                </div>
+              </div>
+
+              {/* Key Sub-Concepts Covered */}
+              {aiSearchResult.keyConcepts?.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                  <span className="text-slate-400 font-bold mr-1">Sub-concepts covered:</span>
+                  {aiSearchResult.keyConcepts.map((concept, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setAiTopicQuery(concept);
+                        handleAiTopicSearch(concept);
+                      }}
+                      className="px-2.5 py-0.5 rounded-lg bg-white/10 hover:bg-emerald-500/30 border border-white/15 text-emerald-200 font-semibold transition-colors cursor-pointer"
+                      title={`Drill down into "${concept}"`}
+                    >
+                      {concept}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
           {filteredQuestions.length === 0 ? (
             <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500 shadow-md space-y-4">
               <div className="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
@@ -1812,6 +2318,7 @@ function QuestionCard({
   languageMode,
   onToggle,
 }: QuestionCardProps) {
+  const [showAnswer, setShowAnswer] = useState(false);
   const enTrans = question.translations?.find((t) => t.language === "en");
   const urTrans = question.translations?.find((t) => t.language === "ur");
 
@@ -1822,7 +2329,7 @@ function QuestionCard({
   }, [enTrans, urTrans]);
 
   const showEnglish = languageMode === "English" || languageMode === "Bilingual";
-  const showUrdu = languageMode === "Urdu" || languageMode === "Bilingual";
+  const hasModelAnswer = Boolean(enTrans?.answer || urTrans?.answer);
 
   const optionsEn: string[] = useMemo(() => {
     const raw = enTrans?.options;
@@ -1884,6 +2391,13 @@ function QuestionCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
+            {question.source_note?.toLowerCase().includes("ai") && (
+              <span className="px-2 py-0.5 rounded-md bg-gradient-to-r from-indigo-600 to-emerald-600 text-white font-black text-[10px] flex items-center gap-1 shadow-2xs">
+                <Sparkles className="w-2.5 h-2.5" />
+                AI Topic
+              </span>
+            )}
+
             {question.source === "exercise" && (
               <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 text-[10px] flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -1969,6 +2483,41 @@ function QuestionCard({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Model Answer Preview for Short / Long Questions */}
+      {question.type !== "mcq" && hasModelAnswer && (
+        <div className="mt-2.5 pt-2 border-t border-slate-100">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowAnswer(!showAnswer);
+            }}
+            className="text-[11px] font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 cursor-pointer"
+          >
+            <Eye className="w-3 h-3" />
+            <span>{showAnswer ? "Hide Model Answer" : "View Model Answer / Key"}</span>
+          </button>
+          {showAnswer && (
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="mt-2 p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80 text-[11px] text-slate-800 space-y-1.5"
+            >
+              {enTrans?.answer && (
+                <div className="font-medium leading-relaxed">
+                  <span className="font-black text-emerald-800 mr-1">Ans:</span>
+                  <MathRenderer content={enTrans.answer} />
+                </div>
+              )}
+              {urTrans?.answer && languageMode !== "English" && (
+                <div className="font-urdu text-xs text-emerald-950 text-right leading-loose" dir="rtl">
+                  <MathRenderer content={urTrans.answer} />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </article>

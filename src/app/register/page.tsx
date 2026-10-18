@@ -24,6 +24,7 @@ import {
   AlertCircle,
   HelpCircle,
 } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -181,28 +182,9 @@ export default function RegisterPage() {
 
       {/* Brand Header */}
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md text-center space-y-2 px-4">
-        <Link href="/" className="inline-flex items-center gap-3 group">
-          <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-[0_5px_0_0_#065f46,0_12px_24px_-4px_rgba(16,185,129,0.45),inset_0_2px_2px_rgba(255,255,255,0.75)] group-hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150">
-            <span
-              className="pointer-events-none absolute inset-x-1.5 top-1 h-2.5 rounded-t-full bg-gradient-to-b from-white/60 to-transparent"
-              aria-hidden="true"
-            />
-            <BookOpen className="w-6 h-6 relative z-10 drop-shadow" />
-          </div>
-          <div className="text-left">
-            <div className="flex items-center gap-2">
-              <span className="font-black text-2xl tracking-tight text-slate-900 leading-none drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
-                PaperWala
-              </span>
-              <span className="font-urdu text-emerald-700 text-xl font-bold leading-none drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
-                پیپر والا
-              </span>
-            </div>
-            <span className="text-[11px] text-slate-600 font-semibold block mt-1">
-              Pakistan&apos;s #1 Exam Paper Generator
-            </span>
-          </div>
-        </Link>
+        <div className="flex justify-center">
+          <BrandLogo size="lg" subtitle="Pakistan's #1 Exam Paper Generator" />
+        </div>
 
         {/* Multi-step Progress Indicator in Liquid Glass Capsule */}
         <div className="pt-3 flex items-center justify-center">

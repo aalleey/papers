@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { SUBSCRIPTION_PLANS, SubscriptionPlanId, ClientUser } from "@/lib/types";
 import { ClientAuthModal } from "@/components/ClientAuthModal";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function PricingPage() {
   const router = useRouter();
@@ -92,15 +93,7 @@ export default function PricingPage() {
               >
                 <ArrowLeft className="w-4 h-4" />
               </Link>
-              <Link href="/" className="flex items-baseline gap-2">
-                <span className="text-lg font-extrabold tracking-tight text-slate-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
-                  PaperWala
-                </span>
-                <span className="text-slate-400 text-xs" aria-hidden="true">·</span>
-                <span className="font-urdu text-emerald-700 font-bold text-base drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
-                  پیپر والا
-                </span>
-              </Link>
+              <BrandLogo size="sm" variant="compact" />
             </div>
 
             <nav className="hidden md:flex items-center gap-1.5 p-1.5 rounded-xl bg-slate-900/[0.04] backdrop-blur-md border border-white/70 shadow-[inset_0_2px_4px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.9)] text-xs font-semibold text-slate-700">
