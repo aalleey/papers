@@ -2199,25 +2199,18 @@ export default function SelectQuestionsPage() {
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-xs font-bold text-slate-800 w-full sm:w-auto">
             <span className="flex items-center gap-1.5 bg-gradient-to-r from-blue-50 to-indigo-50 px-3 py-1.5 rounded-xl border-2 border-blue-200/80 shadow-sm">
               <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600" />
-      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-b from-white/95 via-white/90 to-white/95 backdrop-blur-2xl saturate-150 border-t border-white/90 shadow-[0_-12px_35px_-8px_rgba(15,23,42,0.14),inset_0_2px_2px_0_#ffffff] py-2 sm:py-3 px-2.5 sm:px-8">
-        <div className="max-w-[1700px] mx-auto flex flex-wrap sm:flex-row items-center justify-between gap-2 sm:gap-4">
-          {/* Counters row */}
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-3 text-[11px] sm:text-xs font-bold text-slate-800 w-full sm:w-auto">
-            <span className="flex items-center gap-1 bg-blue-50/90 px-2 sm:px-2.5 py-1 rounded-xl border border-blue-200/80 shadow-2xs">
               <span className="text-slate-600">MCQs:</span>
               <span className="font-black text-blue-700 tabular-nums text-sm">{selectedCounts.mcq}</span>
             </span>
 
             <span className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-50 to-teal-50 px-3 py-1.5 rounded-xl border-2 border-emerald-200/80 shadow-sm">
               <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600" />
-            <span className="flex items-center gap-1 bg-emerald-50/90 px-2 sm:px-2.5 py-1 rounded-xl border border-emerald-200/80 shadow-2xs">
               <span className="text-slate-600">Shorts:</span>
               <span className="font-black text-emerald-700 tabular-nums text-sm">{selectedCounts.short}</span>
             </span>
 
             <span className="flex items-center gap-1.5 bg-gradient-to-r from-purple-50 to-fuchsia-50 px-3 py-1.5 rounded-xl border-2 border-purple-200/80 shadow-sm">
               <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-purple-500 to-fuchsia-600" />
-            <span className="flex items-center gap-1 bg-purple-50/90 px-2 sm:px-2.5 py-1 rounded-xl border border-purple-200/80 shadow-2xs">
               <span className="text-slate-600">Longs:</span>
               <span className="font-black text-purple-700 tabular-nums text-sm">{selectedCounts.long}</span>
             </span>
