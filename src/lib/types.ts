@@ -437,3 +437,47 @@ export interface InvoiceRecord {
   transactionRef?: string | null;
   notes?: string | null;
 }
+
+export type QuestionReportCategory =
+  | "typo"
+  | "wrong_answer"
+  | "urdu_translation"
+  | "math_formula"
+  | "wrong_marks"
+  | "other";
+
+export type QuestionReportStatus = "open" | "resolved" | "dismissed";
+
+export interface QuestionReportSnapshot {
+  textEn: string;
+  textUr?: string | null;
+  optionsEn?: string[] | null;
+  optionsUr?: string[] | null;
+  correctOption?: number | null;
+  answerEn?: string | null;
+  answerUr?: string | null;
+  marks: number;
+}
+
+export interface QuestionReportRecord {
+  id: string;
+  questionId: string;
+  chapterId?: string | null;
+  subjectName?: string | null;
+  chapterTitle?: string | null;
+  questionType: QuestionType;
+  questionSnapshot: QuestionReportSnapshot;
+  category: QuestionReportCategory;
+  description: string;
+  suggestedFix?: string | null;
+  suggestedCorrectOption?: number | null;
+  reporterId?: string | null;
+  reporterName: string;
+  reporterEmail?: string | null;
+  academyName?: string | null;
+  status: QuestionReportStatus;
+  adminNotes?: string | null;
+  resolvedAt?: string | null;
+  createdAt: string;
+}
+

@@ -15,6 +15,7 @@ import {
   SUBSCRIPTION_PLANS,
   getPlanPermissions,
   isPaidSubscriber,
+  QuestionReportCategory,
 } from "@/lib/types";
 import { MathRenderer } from "@/components/MathRenderer";
 import { UrduText } from "@/components/UrduText";
@@ -56,6 +57,8 @@ import {
   Brain,
   Loader2,
   Plus,
+  Flag,
+  AlertTriangle,
 } from "lucide-react";
 
 interface AiTopicSearchResponse {
@@ -153,6 +156,79 @@ export default function SelectQuestionsPage() {
   const [showAiResultsMode, setShowAiResultsMode] = useState(false);
 
   const [authChecked, setAuthChecked] = useState(false);
+
+  // Flagged Question Error Reporting State
+  const [reportingQuestion, setReportingQuestion] = useState<Question | null>(null);
+  const [reportCategory, setReportCategory] = useState<QuestionReportCategory>("wrong_answer");
+  const [reportDescription, setReportDescription] = useState("");
+  const [reportSuggestedFix, setReportSuggestedFix] = useState("");
+  const [reportSuggestedOption, setReportSuggestedOption] = useState<number | null>(null);
+  const [submittingReport, setSubmittingReport] = useState(false);
+  const [reportedQuestionIds, setReportedQuestionIds] = useState<Set<string>>(new Set());
+  const [reportToast, setReportToast] = useState<string | null>(null);
+
+  const openReportModal = (q: Question) => {
+    setReportingQuestion(q);
+    setReportCategory(q.type === "mcq" ? "wrong_answer" : "typo");
+    setReportDescription("");
+    const en = q.translations?.find((t) => t.language === "en");
+    setReportSuggestedFix(en?.text || "");
+    setReportSuggestedOption(q.type === "mcq" ? (q.correct_option || 1) : null);
+  };
+
+  const handleSubmitQuestionReport = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reportingQuestion) return;
+    try {
+      setSubmittingReport(true);
+      const en = reportingQuestion.translations?.find((t) => t.language === "en");
+      const ur = reportingQuestion.translations?.find((t) => t.language === "ur");
+      const res = await fetch("/api/reports", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId: reportingQuestion.id,
+          chapterId: reportingQuestion.chapter_id || currentChapter?.id || null,
+          subjectName: currentSubject?.name || null,
+          chapterTitle: currentChapter
+            ? `Unit-${currentChapter.number}: ${currentChapter.title}`
+            : null,
+          questionType: reportingQuestion.type,
+          questionSnapshot: {
+            textEn: en?.text || "",
+            textUr: ur?.text || null,
+            optionsEn: Array.isArray(en?.options) ? en?.options : null,
+            optionsUr: Array.isArray(ur?.options) ? ur?.options : null,
+            correctOption: reportingQuestion.correct_option ?? null,
+            answerEn: en?.answer || null,
+            answerUr: ur?.answer || null,
+            marks: reportingQuestion.marks || 1,
+          },
+          category: reportCategory,
+          description:
+            reportDescription.trim() ||
+            `Flagged ${reportCategory.replace("_", " ")} during paper preparation`,
+          suggestedFix:
+            reportSuggestedFix.trim() && reportSuggestedFix.trim() !== (en?.text || "").trim()
+              ? reportSuggestedFix.trim()
+              : null,
+          suggestedCorrectOption:
+            reportingQuestion.type === "mcq" && reportCategory === "wrong_answer"
+              ? reportSuggestedOption
+              : null,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to submit report");
+      setReportedQuestionIds((prev) => new Set(prev).add(reportingQuestion.id));
+      setReportingQuestion(null);
+      setReportToast("Question flagged & sent to Admin Review Queue for 1-click fix!");
+      setTimeout(() => setReportToast(null), 4000);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubmittingReport(false);
+    }
+  };
 
   // Load questions for a specific class, subject, and chapter (Only accessible if logged in)
   async function loadQuestionsData(
@@ -972,7 +1048,14 @@ export default function SelectQuestionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f6fb] text-slate-800 font-sans pb-36 selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-[#f0fdf4] to-[#fdf4ff] text-slate-800 font-sans pb-36 selection:bg-indigo-500 selection:text-white relative">
+      {/* Ambient color blobs for depth */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10" aria-hidden="true">
+        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-blue-400/[0.07] via-indigo-400/[0.05] to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-emerald-400/[0.07] via-teal-400/[0.04] to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 w-[600px] h-[500px] bg-gradient-to-tr from-violet-400/[0.06] via-fuchsia-400/[0.04] to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-2/3 right-1/4 w-[400px] h-[400px] bg-gradient-to-tl from-amber-400/[0.05] via-orange-400/[0.03] to-transparent rounded-full blur-3xl" />
+      </div>
       {/* =========================================================================
           TOP SMART HEADER (TRANSPARENT 3D GLASS COMMAND BAR + FILTER TOOLBAR)
           ========================================================================= */}
@@ -1576,18 +1659,18 @@ export default function SelectQuestionsPage() {
         <div className="lg:hidden w-full bg-white rounded-xl border border-indigo-100 shadow-sm overflow-hidden">
           <button
             onClick={() => setMobileTopicsOpen(!mobileTopicsOpen)}
-            className="w-full px-4 py-3 bg-gradient-to-r from-indigo-50 to-blue-50 flex items-center justify-between text-xs font-bold text-indigo-900"
+            className="w-full px-4 py-3 bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-700 flex items-center justify-between text-xs font-black text-white"
           >
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-indigo-600" />
+              <Filter className="w-4 h-4 text-indigo-200" />
               <span>Filter by Topic ({topics.length} Topics Available)</span>
               {!selectedTopicFilters.has("ALL") && (
-                <span className="px-2 py-0.5 rounded-full bg-indigo-600 text-white text-[10px]">
+                <span className="px-2 py-0.5 rounded-full bg-emerald-400 text-slate-950 text-[10px] font-black">
                   Filtered
                 </span>
               )}
             </div>
-            {mobileTopicsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            {mobileTopicsOpen ? <ChevronUp className="w-4 h-4 text-indigo-200" /> : <ChevronDown className="w-4 h-4 text-indigo-200" />}
           </button>
 
           {mobileTopicsOpen && (
@@ -1628,8 +1711,8 @@ export default function SelectQuestionsPage() {
         </div>
 
         {/* DESKTOP VERTICAL SIDEBAR: TOPIC FILTER + AI TOPIC DISCOVERY */}
-        <aside className="hidden lg:block w-72 xl:w-80 bg-white rounded-2xl border border-indigo-100 shadow-md shadow-indigo-950/5 overflow-hidden shrink-0 sticky top-28">
-          <div className="px-4 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-800 text-white flex items-center justify-between">
+        <aside className="hidden lg:block w-72 xl:w-80 bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-indigo-200/80 shadow-lg shadow-indigo-500/10 overflow-hidden shrink-0 sticky top-28">
+          <div className="px-4 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-700 text-white flex items-center justify-between">
             <span className="font-black text-xs uppercase tracking-wider flex items-center gap-2">
               <Filter className="w-3.5 h-3.5 text-indigo-200" />
               Topics &amp; AI Search
@@ -1725,7 +1808,7 @@ export default function SelectQuestionsPage() {
               }}
               className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
                 !showAiResultsMode && selectedTopicFilters.has("ALL")
-                  ? "bg-gradient-to-r from-indigo-50 to-blue-50 font-bold text-indigo-900 border-l-4 border-indigo-600"
+                  ? "bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-transparent font-black text-indigo-950 border-l-4 border-indigo-600"
                   : "hover:bg-slate-50 text-slate-700"
               }`}
             >
@@ -1736,17 +1819,31 @@ export default function SelectQuestionsPage() {
                   readOnly
                   className="rounded text-indigo-600 pointer-events-none h-4 w-4"
                 />
-                <span className="font-bold">All Chapter Topics</span>
+                <span className="font-extrabold">All Chapter Topics</span>
               </div>
-              <span className="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[11px] font-black">
+              <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-black shadow-2xs ${
+                !showAiResultsMode && selectedTopicFilters.has("ALL")
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
+                  : "bg-indigo-100 text-indigo-800"
+              }`}>
                 {allQuestions.length}
               </span>
             </li>
 
             {/* Individual Topics */}
-            {filteredSidebarTopics.map((t) => {
+            {filteredSidebarTopics.map((t, idx) => {
               const isSelected = !showAiResultsMode && selectedTopicFilters.has(t.id);
               const count = topicCounts[t.id] || 0;
+              // Cycle through subtle badge hues for visual richness
+              const badgeColors = [
+                "bg-blue-50 text-blue-700 border-blue-200",
+                "bg-emerald-50 text-emerald-700 border-emerald-200",
+                "bg-purple-50 text-purple-700 border-purple-200",
+                "bg-amber-50 text-amber-700 border-amber-200",
+                "bg-teal-50 text-teal-700 border-teal-200",
+              ];
+              const topicColorClass = badgeColors[idx % badgeColors.length];
+
               return (
                 <li
                   key={t.id}
@@ -1756,7 +1853,7 @@ export default function SelectQuestionsPage() {
                   }}
                   className={`group px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
                     isSelected
-                      ? "bg-gradient-to-r from-indigo-50 to-blue-50 font-bold text-indigo-900 border-l-4 border-indigo-600"
+                      ? "bg-gradient-to-r from-indigo-500/15 via-violet-500/10 to-transparent font-black text-indigo-950 border-l-4 border-indigo-600"
                       : "hover:bg-slate-50 text-slate-700"
                   }`}
                 >
@@ -1767,11 +1864,11 @@ export default function SelectQuestionsPage() {
                       readOnly
                       className="rounded text-indigo-600 pointer-events-none shrink-0 h-4 w-4"
                     />
-                    <span className="line-clamp-2">
+                    <span className="line-clamp-2 font-medium">
                       {/^\d+\./.test(t.title) ? t.title : `${currentChapter?.number || 2}.${t.number} ${t.title}`}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1779,16 +1876,16 @@ export default function SelectQuestionsPage() {
                         handleAiTopicSearch(t.title);
                       }}
                       title={`Generate & find more questions on "${t.title}" with AI`}
-                      className="opacity-0 group-hover:opacity-100 px-1.5 py-0.5 rounded bg-emerald-100 hover:bg-emerald-600 text-emerald-800 hover:text-white text-[10px] font-extrabold transition-all flex items-center gap-0.5"
+                      className="opacity-0 group-hover:opacity-100 px-1.5 py-0.5 rounded-md bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[10px] font-black transition-all flex items-center gap-0.5 shadow-2xs hover:scale-105"
                     >
                       <Sparkles className="w-2.5 h-2.5" />
                       <span>AI</span>
                     </button>
                     <span
-                      className={`px-2 py-0.5 rounded-full text-[11px] font-bold shrink-0 ${
+                      className={`px-2 py-0.5 rounded-full text-[11px] font-black border transition-colors shrink-0 ${
                         isSelected
-                          ? "bg-indigo-600 text-white"
-                          : "bg-slate-100 text-slate-600"
+                          ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white border-transparent shadow-2xs"
+                          : topicColorClass
                       }`}
                     >
                       {count}
@@ -1806,7 +1903,7 @@ export default function SelectQuestionsPage() {
               }}
               className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-all ${
                 !showAiResultsMode && selectedTopicFilters.has("exercise_source")
-                  ? "bg-gradient-to-r from-indigo-50 to-blue-50 font-bold text-indigo-900 border-l-4 border-indigo-600"
+                  ? "bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-transparent font-black text-emerald-950 border-l-4 border-emerald-600"
                   : "hover:bg-slate-50 text-slate-700"
               }`}
             >
@@ -1945,28 +2042,28 @@ export default function SelectQuestionsPage() {
             <>
               {/* SECTION 1: MULTIPLE CHOICE QUESTIONS (Vibrant Royal Blue / Indigo Theme) */}
               {mcqQuestions.length > 0 && (
-                <section className="bg-white rounded-2xl border border-blue-100 shadow-md shadow-blue-950/5 overflow-hidden">
+                <section className="bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-blue-200/80 shadow-lg shadow-blue-500/10 overflow-hidden ring-1 ring-blue-100">
                   {/* Accordion Header */}
-                  <div className="px-4 sm:px-6 py-3.5 bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-white border-b border-blue-100 flex items-center justify-between flex-wrap gap-2">
+                  <div className="px-4 sm:px-6 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-between flex-wrap gap-2">
                     <button
                       onClick={() => setAccordionOpen((prev) => ({ ...prev, mcq: !prev.mcq }))}
-                      className="flex items-center gap-2.5 font-black text-sm sm:text-base text-blue-950 hover:text-blue-700 transition-colors"
+                      className="flex items-center gap-2.5 font-black text-sm sm:text-base text-white hover:text-blue-100 transition-colors"
                       id="accordion-toggle-mcq"
                     >
-                      <div className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold">
+                      <div className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur-sm text-white flex items-center justify-center text-xs font-black border border-white/30 shadow-inner">
                         A
                       </div>
-                      <span>Multiple Choice Questions</span>
-                      <span className="px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-xs font-black">
+                      <span className="drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">Multiple Choice Questions</span>
+                      <span className="px-3 py-0.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-black border border-white/20">
                         {mcqQuestions.length}
                       </span>
-                      {accordionOpen.mcq ? <ChevronUp className="w-4 h-4 text-blue-600" /> : <ChevronDown className="w-4 h-4 text-blue-600" />}
+                      {accordionOpen.mcq ? <ChevronUp className="w-4 h-4 text-blue-200" /> : <ChevronDown className="w-4 h-4 text-blue-200" />}
                     </button>
 
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => selectAllInGroup(mcqQuestions)}
-                        className="px-3 py-1.5 text-xs font-bold text-blue-700 bg-white hover:bg-blue-50 rounded-lg border border-blue-200 shadow-2xs transition-all active:scale-95"
+                        className="px-3 py-1.5 text-xs font-bold text-blue-700 bg-white/90 hover:bg-white rounded-lg border border-white/80 shadow-md transition-all active:scale-95"
                       >
                         {mcqQuestions.every((q) => selectedIds.has(q.id)) ? "Deselect All MCQs" : "Select All MCQs"}
                       </button>
@@ -1984,6 +2081,8 @@ export default function SelectQuestionsPage() {
                           isSelected={selectedIds.has(q.id)}
                           languageMode={languageMode}
                           onToggle={() => toggleQuestion(q.id)}
+                          onReport={() => openReportModal(q)}
+                          isReported={reportedQuestionIds.has(q.id)}
                         />
                       ))}
                     </div>
@@ -1993,27 +2092,27 @@ export default function SelectQuestionsPage() {
 
               {/* SECTION 2: SHORT QUESTIONS (Vibrant Emerald / Teal Theme) */}
               {shortQuestions.length > 0 && (
-                <section className="bg-white rounded-2xl border border-emerald-100 shadow-md shadow-emerald-950/5 overflow-hidden">
-                  <div className="px-4 sm:px-6 py-3.5 bg-gradient-to-r from-emerald-50/90 via-teal-50/60 to-white border-b border-emerald-100 flex items-center justify-between flex-wrap gap-2">
+                <section className="bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-emerald-200/80 shadow-lg shadow-emerald-500/10 overflow-hidden ring-1 ring-emerald-100">
+                  <div className="px-4 sm:px-6 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 flex items-center justify-between flex-wrap gap-2">
                     <button
                       onClick={() => setAccordionOpen((prev) => ({ ...prev, short: !prev.short }))}
-                      className="flex items-center gap-2.5 font-black text-sm sm:text-base text-emerald-950 hover:text-emerald-700 transition-colors"
+                      className="flex items-center gap-2.5 font-black text-sm sm:text-base text-white hover:text-emerald-100 transition-colors"
                       id="accordion-toggle-short"
                     >
-                      <div className="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">
+                      <div className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur-sm text-white flex items-center justify-center text-xs font-black border border-white/30 shadow-inner">
                         B
                       </div>
-                      <span>Short Questions</span>
-                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-black">
+                      <span className="drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">Short Questions</span>
+                      <span className="px-3 py-0.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-black border border-white/20">
                         {shortQuestions.length}
                       </span>
-                      {accordionOpen.short ? <ChevronUp className="w-4 h-4 text-emerald-600" /> : <ChevronDown className="w-4 h-4 text-emerald-600" />}
+                      {accordionOpen.short ? <ChevronUp className="w-4 h-4 text-emerald-200" /> : <ChevronDown className="w-4 h-4 text-emerald-200" />}
                     </button>
 
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => selectAllInGroup(shortQuestions)}
-                        className="px-3 py-1.5 text-xs font-bold text-emerald-700 bg-white hover:bg-emerald-50 rounded-lg border border-emerald-200 shadow-2xs transition-all active:scale-95"
+                        className="px-3 py-1.5 text-xs font-bold text-emerald-700 bg-white/90 hover:bg-white rounded-lg border border-white/80 shadow-md transition-all active:scale-95"
                       >
                         {shortQuestions.every((q) => selectedIds.has(q.id)) ? "Deselect All Shorts" : "Select All Shorts"}
                       </button>
@@ -2030,6 +2129,8 @@ export default function SelectQuestionsPage() {
                           isSelected={selectedIds.has(q.id)}
                           languageMode={languageMode}
                           onToggle={() => toggleQuestion(q.id)}
+                          onReport={() => openReportModal(q)}
+                          isReported={reportedQuestionIds.has(q.id)}
                         />
                       ))}
                     </div>
@@ -2039,27 +2140,27 @@ export default function SelectQuestionsPage() {
 
               {/* SECTION 3: DETAILED / LONG QUESTIONS (Vibrant Violet / Fuchsia Theme) */}
               {longQuestions.length > 0 && (
-                <section className="bg-white rounded-2xl border border-purple-100 shadow-md shadow-purple-950/5 overflow-hidden">
-                  <div className="px-4 sm:px-6 py-3.5 bg-gradient-to-r from-purple-50/90 via-fuchsia-50/60 to-white border-b border-purple-100 flex items-center justify-between flex-wrap gap-2">
+                <section className="bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-purple-200/80 shadow-lg shadow-purple-500/10 overflow-hidden ring-1 ring-purple-100">
+                  <div className="px-4 sm:px-6 py-4 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 flex items-center justify-between flex-wrap gap-2">
                     <button
                       onClick={() => setAccordionOpen((prev) => ({ ...prev, long: !prev.long }))}
-                      className="flex items-center gap-2.5 font-black text-sm sm:text-base text-purple-950 hover:text-purple-700 transition-colors"
+                      className="flex items-center gap-2.5 font-black text-sm sm:text-base text-white hover:text-purple-100 transition-colors"
                       id="accordion-toggle-long"
                     >
-                      <div className="w-6 h-6 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs font-bold">
+                      <div className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur-sm text-white flex items-center justify-center text-xs font-black border border-white/30 shadow-inner">
                         C
                       </div>
-                      <span>Detailed / Long Questions</span>
-                      <span className="px-2.5 py-0.5 rounded-full bg-purple-600 text-white text-xs font-black">
+                      <span className="drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">Detailed / Long Questions</span>
+                      <span className="px-3 py-0.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-black border border-white/20">
                         {longQuestions.length}
                       </span>
-                      {accordionOpen.long ? <ChevronUp className="w-4 h-4 text-purple-600" /> : <ChevronDown className="w-4 h-4 text-purple-600" />}
+                      {accordionOpen.long ? <ChevronUp className="w-4 h-4 text-purple-200" /> : <ChevronDown className="w-4 h-4 text-purple-200" />}
                     </button>
 
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => selectAllInGroup(longQuestions)}
-                        className="px-3 py-1.5 text-xs font-bold text-purple-700 bg-white hover:bg-purple-50 rounded-lg border border-purple-200 shadow-2xs transition-all active:scale-95"
+                        className="px-3 py-1.5 text-xs font-bold text-purple-700 bg-white/90 hover:bg-white rounded-lg border border-white/80 shadow-md transition-all active:scale-95"
                       >
                         {longQuestions.every((q) => selectedIds.has(q.id)) ? "Deselect All Longs" : "Select All Longs"}
                       </button>
@@ -2076,6 +2177,8 @@ export default function SelectQuestionsPage() {
                           isSelected={selectedIds.has(q.id)}
                           languageMode={languageMode}
                           onToggle={() => toggleQuestion(q.id)}
+                          onReport={() => openReportModal(q)}
+                          isReported={reportedQuestionIds.has(q.id)}
                         />
                       ))}
                     </div>
@@ -2090,28 +2193,31 @@ export default function SelectQuestionsPage() {
       {/* =========================================================================
           STICKY BOTTOM BAR (3D LIQUID GLASS DOCK & 100% RESPONSIVE)
           ========================================================================= */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-b from-white/95 via-white/90 to-white/95 backdrop-blur-2xl saturate-150 border-t border-white/90 shadow-[0_-12px_35px_-8px_rgba(15,23,42,0.14),inset_0_2px_2px_0_#ffffff] py-2 sm:py-3 px-2.5 sm:px-8">
-        <div className="max-w-[1700px] mx-auto flex flex-wrap sm:flex-row items-center justify-between gap-2 sm:gap-4">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-white/90 via-indigo-50/40 to-white/90 backdrop-blur-2xl saturate-150 border-t-2 border-indigo-100/80 shadow-[0_-12px_35px_-8px_rgba(15,23,42,0.18),inset_0_2px_2px_0_#ffffff] py-2.5 sm:py-3 px-3 sm:px-8">
+        <div className="max-w-[1700px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
           {/* Counters row */}
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-3 text-[11px] sm:text-xs font-bold text-slate-800 w-full sm:w-auto">
-            <span className="flex items-center gap-1 bg-blue-50/90 px-2 sm:px-2.5 py-1 rounded-xl border border-blue-200/80 shadow-2xs">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-xs font-bold text-slate-800 w-full sm:w-auto">
+            <span className="flex items-center gap-1.5 bg-gradient-to-r from-blue-50 to-indigo-50 px-3 py-1.5 rounded-xl border-2 border-blue-200/80 shadow-sm">
+              <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600" />
               <span className="text-slate-600">MCQs:</span>
-              <span className="font-black text-blue-700 tabular-nums">{selectedCounts.mcq}</span>
+              <span className="font-black text-blue-700 tabular-nums text-sm">{selectedCounts.mcq}</span>
             </span>
 
-            <span className="flex items-center gap-1 bg-emerald-50/90 px-2 sm:px-2.5 py-1 rounded-xl border border-emerald-200/80 shadow-2xs">
+            <span className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-50 to-teal-50 px-3 py-1.5 rounded-xl border-2 border-emerald-200/80 shadow-sm">
+              <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600" />
               <span className="text-slate-600">Shorts:</span>
-              <span className="font-black text-emerald-700 tabular-nums">{selectedCounts.short}</span>
+              <span className="font-black text-emerald-700 tabular-nums text-sm">{selectedCounts.short}</span>
             </span>
 
-            <span className="flex items-center gap-1 bg-purple-50/90 px-2 sm:px-2.5 py-1 rounded-xl border border-purple-200/80 shadow-2xs">
+            <span className="flex items-center gap-1.5 bg-gradient-to-r from-purple-50 to-fuchsia-50 px-3 py-1.5 rounded-xl border-2 border-purple-200/80 shadow-sm">
+              <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-purple-500 to-fuchsia-600" />
               <span className="text-slate-600">Longs:</span>
-              <span className="font-black text-purple-700 tabular-nums">{selectedCounts.long}</span>
+              <span className="font-black text-purple-700 tabular-nums text-sm">{selectedCounts.long}</span>
             </span>
 
-            <div className="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-1 rounded-xl border border-amber-200 font-black text-amber-900 tabular-nums">
+            <div className="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50 px-3.5 py-1.5 rounded-xl border-2 border-amber-300/80 font-black text-amber-900 tabular-nums shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              <span>Total Selected: {selectedCounts.total}</span>
+              <span>Total Selected: <span className="text-sm">{selectedCounts.total}</span></span>
             </div>
           </div>
 
@@ -2275,6 +2381,151 @@ export default function SelectQuestionsPage() {
         </div>
       )}
 
+      {/* Report Question Error / Wrong Answer Modal */}
+      {reportingQuestion && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="my-8 w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl border border-rose-200 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between bg-gradient-to-r from-rose-600 via-rose-700 to-orange-600 px-6 py-4 text-white">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-white/15 p-2">
+                  <Flag className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-black text-base">Report Question Typo / Wrong Key</h2>
+                  <p className="text-[11px] text-rose-100">
+                    Sent directly to the Admin Review Queue for 1-click correction
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setReportingQuestion(null)}
+                className="rounded-xl p-1.5 text-rose-100 hover:bg-white/10 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmitQuestionReport} className="p-6 space-y-4 text-xs sm:text-sm">
+              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-800 font-bold">
+                <MathRenderer
+                  content={
+                    reportingQuestion.translations?.find((t) => t.language === "en")?.text || ""
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="block font-black text-slate-800 text-xs uppercase tracking-wider mb-1.5">
+                  Issue Category
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {(
+                    [
+                      { id: "wrong_answer", label: "Wrong Answer Key" },
+                      { id: "typo", label: "Typo / Spelling" },
+                      { id: "urdu_translation", label: "Urdu Translation" },
+                      { id: "math_formula", label: "Math / Formula" },
+                      { id: "wrong_marks", label: "Marks / Syllabus" },
+                      { id: "other", label: "Other Issue" },
+                    ] as const
+                  ).map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setReportCategory(cat.id)}
+                      className={`px-3 py-2 rounded-xl text-xs font-bold border text-left transition-all cursor-pointer ${
+                        reportCategory === cat.id
+                          ? "bg-rose-50 border-rose-500 text-rose-900 ring-2 ring-rose-500/20 font-black"
+                          : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {reportingQuestion.type === "mcq" && reportCategory === "wrong_answer" && (
+                <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 space-y-2">
+                  <span className="block text-xs font-black text-amber-900">
+                    Which option is actually the correct answer?
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4].map((num) => (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={() => setReportSuggestedOption(num)}
+                        className={`flex-1 py-2 rounded-xl font-black text-xs transition-all cursor-pointer ${
+                          reportSuggestedOption === num
+                            ? "bg-emerald-600 text-white shadow-sm"
+                            : "bg-white border border-amber-300 text-slate-700 hover:bg-amber-100"
+                        }`}
+                      >
+                        Option {String.fromCharCode(64 + num)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block font-bold text-slate-700 text-xs mb-1">
+                  Describe the issue (Optional)
+                </label>
+                <textarea
+                  rows={2}
+                  value={reportDescription}
+                  onChange={(e) => setReportDescription(e.target.value)}
+                  placeholder="E.g. According to PTB page 42, Option B is correct..."
+                  className="w-full rounded-xl border border-slate-300 p-2.5 text-xs font-medium focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 outline-none"
+                />
+              </div>
+
+              {reportCategory !== "wrong_answer" && (
+                <div>
+                  <label className="block font-bold text-slate-700 text-xs mb-1">
+                    Suggested Corrected Question Text (Optional — enables 1-Click Fix for Admin)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={reportSuggestedFix}
+                    onChange={(e) => setReportSuggestedFix(e.target.value)}
+                    className="w-full rounded-xl border border-slate-300 p-2.5 text-xs font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                  />
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2.5 pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setReportingQuestion(null)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submittingReport}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-orange-600 hover:from-rose-500 hover:to-orange-500 text-white font-black text-xs shadow-md flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Flag className="w-3.5 h-3.5" />
+                  <span>{submittingReport ? "Submitting..." : "Submit Report to Admin"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Report Submitted Toast */}
+      {reportToast && (
+        <div className="fixed top-4 right-4 z-50 px-4 py-3 rounded-2xl bg-emerald-600 text-white shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm font-bold animate-in slide-in-from-top-3">
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <span>{reportToast}</span>
+        </div>
+      )}
+
       {/* Client Authentication Modal */}
       <ClientAuthModal
         isOpen={showAuthModal}
@@ -2310,6 +2561,8 @@ interface QuestionCardProps {
   isSelected: boolean;
   languageMode: "English" | "Urdu" | "Bilingual";
   onToggle: () => void;
+  onReport?: () => void;
+  isReported?: boolean;
 }
 
 function QuestionCard({
@@ -2318,6 +2571,8 @@ function QuestionCard({
   isSelected,
   languageMode,
   onToggle,
+  onReport,
+  isReported,
 }: QuestionCardProps) {
   const [showAnswer, setShowAnswer] = useState(false);
   const enTrans = question.translations?.find((t) => t.language === "en");
@@ -2360,13 +2615,44 @@ function QuestionCard({
     return [];
   }, [dynamicUrdu.options_ur]);
 
+  // Type-specific color theming
+  const typeColors = useMemo(() => {
+    if (question.type === "mcq") return {
+      border: isSelected ? "border-blue-400" : "border-l-blue-500 border-slate-200/90",
+      selectedBg: "bg-gradient-to-br from-blue-50 via-indigo-50/70 to-violet-50/40",
+      ring: "ring-blue-500/40",
+      shadow: "shadow-blue-200/50",
+      checkBg: "bg-gradient-to-r from-blue-600 to-indigo-600",
+      indexColor: "text-blue-700",
+      accentDot: "bg-blue-500",
+    };
+    if (question.type === "short") return {
+      border: isSelected ? "border-emerald-400" : "border-l-emerald-500 border-slate-200/90",
+      selectedBg: "bg-gradient-to-br from-emerald-50 via-teal-50/70 to-cyan-50/40",
+      ring: "ring-emerald-500/40",
+      shadow: "shadow-emerald-200/50",
+      checkBg: "bg-gradient-to-r from-emerald-600 to-teal-600",
+      indexColor: "text-emerald-700",
+      accentDot: "bg-emerald-500",
+    };
+    return {
+      border: isSelected ? "border-purple-400" : "border-l-purple-500 border-slate-200/90",
+      selectedBg: "bg-gradient-to-br from-purple-50 via-fuchsia-50/70 to-pink-50/40",
+      ring: "ring-purple-500/40",
+      shadow: "shadow-purple-200/50",
+      checkBg: "bg-gradient-to-r from-purple-600 to-fuchsia-600",
+      indexColor: "text-purple-700",
+      accentDot: "bg-purple-500",
+    };
+  }, [question.type, isSelected]);
+
   return (
     <article
       onClick={onToggle}
-      className={`group relative rounded-2xl border p-4 text-xs transition-all duration-200 cursor-pointer select-none flex flex-col justify-between ${
+      className={`group relative rounded-2xl border-2 border-l-4 p-4 text-xs transition-all duration-200 cursor-pointer select-none flex flex-col justify-between ${typeColors.border} ${
         isSelected
-          ? "border-indigo-400 bg-gradient-to-br from-indigo-50/90 via-blue-50/50 to-white ring-2 ring-indigo-500/40 shadow-lg shadow-indigo-100"
-          : "border-slate-200/90 bg-white hover:border-indigo-300 hover:shadow-md hover:shadow-indigo-950/5"
+          ? `${typeColors.selectedBg} ring-2 ${typeColors.ring} shadow-lg ${typeColors.shadow}`
+          : "bg-white hover:shadow-md hover:shadow-slate-200/60 hover:-translate-y-0.5"
       }`}
     >
       {/* Top Header Row with Number and Badges */}
@@ -2374,28 +2660,37 @@ function QuestionCard({
         <div className="flex items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <div
-              className={`w-5 h-5 rounded-md flex items-center justify-center transition-colors ${
+              className={`w-5.5 h-5.5 rounded-md flex items-center justify-center transition-all duration-200 ${
                 isSelected
-                  ? "bg-indigo-600 text-white shadow-xs"
-                  : "border-2 border-slate-300 group-hover:border-indigo-400"
+                  ? `${typeColors.checkBg} text-white shadow-sm`
+                  : "border-2 border-slate-300 group-hover:border-indigo-400 group-hover:bg-indigo-50"
               }`}
             >
               {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
             </div>
             <span
               className={`font-black text-xs sm:text-sm tracking-tight ${
-                isSelected ? "text-indigo-950" : "text-slate-800"
+                isSelected ? typeColors.indexColor : "text-slate-800"
               }`}
             >
               Q.{index}
             </span>
+            {isSelected && (
+              <span className={`w-2 h-2 rounded-full ${typeColors.accentDot} animate-pulse`} />
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
             {question.source_note?.toLowerCase().includes("ai") && (
-              <span className="px-2 py-0.5 rounded-md bg-gradient-to-r from-indigo-600 to-emerald-600 text-white font-black text-[10px] flex items-center gap-1 shadow-2xs">
+              <span className="px-2 py-0.5 rounded-md bg-gradient-to-r from-violet-600 to-emerald-600 text-white font-black text-[10px] flex items-center gap-1 shadow-sm">
                 <Sparkles className="w-2.5 h-2.5" />
                 AI Topic
+              </span>
+            )}
+
+            {question.marks && (
+              <span className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-900 font-black border border-amber-300 text-[10px] shadow-sm">
+                {question.marks} {question.marks === 1 ? "mark" : "marks"}
               </span>
             )}
 
@@ -2416,6 +2711,25 @@ function QuestionCard({
               <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-bold border border-amber-200 text-[10px]">
                 {question.concept_tag}
               </span>
+            )}
+
+            {onReport && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onReport();
+                }}
+                title="Report typo or wrong answer key to Admin"
+                className={`px-2 py-0.5 rounded-full font-bold text-[10px] border inline-flex items-center gap-1 transition-all cursor-pointer ${
+                  isReported
+                    ? "bg-rose-100 text-rose-800 border-rose-300"
+                    : "bg-slate-50 hover:bg-rose-50 text-slate-500 hover:text-rose-700 border-slate-200 hover:border-rose-200"
+                }`}
+              >
+                <Flag className="w-2.5 h-2.5" />
+                <span>{isReported ? "Reported" : "Report"}</span>
+              </button>
             )}
           </div>
         </div>
@@ -2458,23 +2772,23 @@ function QuestionCard({
             return (
               <div
                 key={optIdx}
-                className={`p-2 rounded-xl flex items-start justify-between gap-2 text-[11px] transition-colors ${
+                className={`p-2.5 rounded-xl flex items-start justify-between gap-2 text-[11px] transition-all ${
                   isCorrect
-                    ? "bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-900 font-extrabold border-2 border-emerald-400 shadow-2xs"
-                    : "text-slate-700 bg-slate-50 border border-slate-200/80 hover:bg-slate-100"
+                    ? "bg-gradient-to-r from-emerald-100/90 via-teal-50 to-emerald-50 text-emerald-950 font-extrabold border-2 border-emerald-400 shadow-xs ring-1 ring-emerald-300"
+                    : "text-slate-700 bg-white/80 border border-slate-200/90 hover:border-indigo-200 hover:bg-slate-50/90"
                 }`}
               >
-                <div className="flex items-start gap-1.5 min-w-0 flex-1 break-words leading-snug">
+                <div className="flex items-start gap-2 min-w-0 flex-1 break-words leading-snug">
                   <span
-                    className={`w-5 h-5 rounded-md flex items-center justify-center font-black text-[10px] shrink-0 ${
+                    className={`w-5.5 h-5.5 rounded-lg flex items-center justify-center font-black text-[11px] shrink-0 shadow-2xs ${
                       isCorrect
-                        ? "bg-emerald-600 text-white"
-                        : "bg-slate-200 text-slate-700"
+                        ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white"
+                        : "bg-slate-100 text-slate-700 border border-slate-200"
                     }`}
                   >
                     {letter}
                   </span>
-                  <span className="break-words">{optEn}</span>
+                  <span className="break-words pt-0.5">{optEn}</span>
                 </div>
                 {languageMode === "Bilingual" && optUr && (
                   <span className="font-urdu text-xs text-slate-800 shrink-0 max-w-[52%] text-right break-words leading-relaxed pr-0.5" dir="rtl">
@@ -2496,24 +2810,24 @@ function QuestionCard({
               e.stopPropagation();
               setShowAnswer(!showAnswer);
             }}
-            className="text-[11px] font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 cursor-pointer"
+            className="text-[11px] font-black text-indigo-700 hover:text-indigo-900 bg-indigo-50/80 hover:bg-indigo-100/80 px-2.5 py-1 rounded-lg border border-indigo-200/70 inline-flex items-center gap-1.5 cursor-pointer transition-all"
           >
-            <Eye className="w-3 h-3" />
+            <Eye className="w-3.5 h-3.5 text-indigo-600" />
             <span>{showAnswer ? "Hide Model Answer" : "View Model Answer / Key"}</span>
           </button>
           {showAnswer && (
             <div
               onClick={(e) => e.stopPropagation()}
-              className="mt-2 p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80 text-[11px] text-slate-800 space-y-1.5"
+              className="mt-2.5 p-3 rounded-xl bg-gradient-to-br from-indigo-50/70 via-blue-50/40 to-emerald-50/40 border-2 border-indigo-200/80 text-[11px] text-slate-800 space-y-1.5 shadow-xs"
             >
               {enTrans?.answer && (
-                <div className="font-medium leading-relaxed">
-                  <span className="font-black text-emerald-800 mr-1">Ans:</span>
+                <div className="font-semibold leading-relaxed">
+                  <span className="font-black text-indigo-800 mr-1.5 bg-indigo-100/80 px-1.5 py-0.5 rounded text-[10px] uppercase">Answer Key:</span>
                   <MathRenderer content={enTrans.answer} />
                 </div>
               )}
               {urTrans?.answer && languageMode !== "English" && (
-                <div className="font-urdu text-xs text-emerald-950 text-right leading-loose" dir="rtl">
+                <div className="font-urdu text-xs text-indigo-950 text-right leading-loose pt-1 border-t border-indigo-100" dir="rtl">
                   <MathRenderer content={urTrans.answer} />
                 </div>
               )}

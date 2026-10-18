@@ -15,6 +15,7 @@ import {
   ClientPaperStats,
   EmailRecord,
   InvoiceRecord,
+  QuestionReportRecord,
 } from "./types";
 import {
   SEED_BOARDS,
@@ -245,6 +246,99 @@ interface MockStore {
   papers: PaperRecord[];
   emails: EmailRecord[];
   invoices: InvoiceRecord[];
+  reports: QuestionReportRecord[];
+}
+
+function buildSeedReports(questions: Question[]): QuestionReportRecord[] {
+  const mcq1 = questions.find((q) => q.type === "mcq") || questions[0];
+  const short1 = questions.find((q) => q.type === "short") || questions[1] || questions[0];
+  const mcq2 = questions.filter((q) => q.type === "mcq")[1] || mcq1;
+
+  const snap = (q?: Question) => {
+    const en = q?.translations?.find((t) => t.language === "en");
+    const ur = q?.translations?.find((t) => t.language === "ur");
+    return {
+      textEn: en?.text || "Sample board examination question text",
+      textUr: ur?.text || null,
+      optionsEn: en?.options || null,
+      optionsUr: ur?.options || null,
+      correctOption: q?.correct_option || 1,
+      answerEn: en?.answer || null,
+      answerUr: ur?.answer || null,
+      marks: q?.marks || 1,
+    };
+  };
+
+  const out: QuestionReportRecord[] = [];
+  if (mcq1) {
+    const ch = SEED_CHAPTERS.find((c) => c.id === mcq1.chapter_id);
+    const sub = SEED_SUBJECTS.find((s) => s.id === ch?.subject_id);
+    out.push({
+      id: "rep-seed-001",
+      questionId: mcq1.id,
+      chapterId: mcq1.chapter_id,
+      subjectName: sub?.name || "Computer Science",
+      chapterTitle: ch ? `Unit-${ch.number}: ${ch.title}` : "Unit-1 Operating Systems",
+      questionType: mcq1.type,
+      questionSnapshot: snap(mcq1),
+      category: "wrong_answer",
+      description: "The marked answer key option in the bubble sheet seems mismatched with the PTB textbook exercise key.",
+      suggestedFix: snap(mcq1).textEn,
+      suggestedCorrectOption: ((mcq1.correct_option || 1) % 4) + 1,
+      reporterId: "client-seed-001",
+      reporterName: "Professor Usman Khan",
+      reporterEmail: "usman.khan@apexacademy.edu.pk",
+      academyName: "Apex Science Academy Lahore",
+      status: "open",
+      createdAt: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
+    });
+  }
+  if (short1) {
+    const ch = SEED_CHAPTERS.find((c) => c.id === short1.chapter_id);
+    const sub = SEED_SUBJECTS.find((s) => s.id === ch?.subject_id);
+    out.push({
+      id: "rep-seed-002",
+      questionId: short1.id,
+      chapterId: short1.chapter_id,
+      subjectName: sub?.name || "Computer Science",
+      chapterTitle: ch ? `Unit-${ch.number}: ${ch.title}` : "Unit-2 System Recovery",
+      questionType: short1.type,
+      questionSnapshot: snap(short1),
+      category: "urdu_translation",
+      description: "Urdu terminology uses old syllabus phrasing; please update to match the 2026 PCTB bilingual glossary.",
+      suggestedFix: snap(short1).textEn + " (Define with two examples)",
+      reporterId: "client-seed-002",
+      reporterName: "Dr. Ayesha Siddiqui",
+      reporterEmail: "ayesha.s@kips.edu.pk",
+      academyName: "KIPS Preparatory College Rawalpindi",
+      status: "open",
+      createdAt: new Date(Date.now() - 9 * 3600 * 1000).toISOString(),
+    });
+  }
+  if (mcq2) {
+    const ch = SEED_CHAPTERS.find((c) => c.id === mcq2.chapter_id);
+    const sub = SEED_SUBJECTS.find((s) => s.id === ch?.subject_id);
+    out.push({
+      id: "rep-seed-003",
+      questionId: mcq2.id,
+      chapterId: mcq2.chapter_id,
+      subjectName: sub?.name || "Computer Science",
+      chapterTitle: ch ? `Unit-${ch.number}: ${ch.title}` : "Unit-1 Operating Systems",
+      questionType: mcq2.type,
+      questionSnapshot: snap(mcq2),
+      category: "typo",
+      description: "Minor punctuation typo at the end of the English question stem.",
+      reporterId: "client-seed-003",
+      reporterName: "Tariq Mehmood",
+      reporterEmail: "tariq.educator@punjabcollege.pk",
+      academyName: "Punjab Group of Colleges Multan",
+      status: "resolved",
+      adminNotes: "Fixed punctuation in English stem and verified options.",
+      resolvedAt: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 30 * 3600 * 1000).toISOString(),
+    });
+  }
+  return out;
 }
 
 // Helper to determine whether the app is executing in live production mode
@@ -275,6 +369,9 @@ function initMockStore(): MockStore {
     }
     if (!globalForStore.mockStore.invoices) {
       globalForStore.mockStore.invoices = [];
+    }
+    if (!globalForStore.mockStore.reports) {
+      globalForStore.mockStore.reports = isProd ? [] : buildSeedReports(globalForStore.mockStore.questions || []);
     }
     return globalForStore.mockStore;
   }
@@ -317,6 +414,7 @@ function initMockStore(): MockStore {
     papers: isProd ? [] : buildSeedPapers(),
     emails: [],
     invoices: [],
+    reports: isProd ? [] : buildSeedReports(initialQuestions),
   };
 
   globalForStore.mockStore = store;
@@ -1865,5 +1963,213 @@ export const db = {
       .filter((e) => e.to.toLowerCase() === to.toLowerCase())
       .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime())
       .map((e) => ({ ...e }));
+  },
+
+  // =========================================================================
+  // FLAGGED QUESTIONS & ERROR REPORTS QUEUE
+  // =========================================================================
+
+  async getQuestionReports(filters?: {
+    status?: string;
+    category?: string;
+    search?: string;
+  }): Promise<QuestionReportRecord[]> {
+    const adminClient = createAdminSupabaseClient();
+    const env = getCurrentDataEnvironment();
+    let list: QuestionReportRecord[] | null = null;
+
+    if (adminClient) {
+      try {
+        const { data, error } = await adminClient
+          .from("question_reports")
+          .select("*")
+          .eq("environment", env)
+          .order("created_at", { ascending: false });
+        if (!error && data) {
+          list = data.map((row) => ({
+            id: row.id,
+            questionId: row.question_id,
+            chapterId: row.chapter_id || null,
+            subjectName: row.subject_name || null,
+            chapterTitle: row.chapter_title || null,
+            questionType: row.question_type || "mcq",
+            questionSnapshot: row.question_snapshot || { textEn: "", marks: 1 },
+            category: row.category || "typo",
+            description: row.description || "",
+            suggestedFix: row.suggested_fix || null,
+            suggestedCorrectOption: row.suggested_correct_option ?? null,
+            reporterId: row.reporter_id || null,
+            reporterName: row.reporter_name || "Educator",
+            reporterEmail: row.reporter_email || null,
+            academyName: row.academy_name || null,
+            status: row.status || "open",
+            adminNotes: row.admin_notes || null,
+            resolvedAt: row.resolved_at || null,
+            createdAt: row.created_at,
+          }));
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
+    if (!list) {
+      const store = initMockStore();
+      list = store.reports
+        .slice()
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .map((r) => ({ ...r }));
+    }
+
+    if (filters?.status && filters.status !== "all") {
+      list = list.filter((r) => r.status === filters.status);
+    }
+    if (filters?.category && filters.category !== "all") {
+      list = list.filter((r) => r.category === filters.category);
+    }
+    if (filters?.search && filters.search.trim()) {
+      const s = filters.search.toLowerCase().trim();
+      list = list.filter(
+        (r) =>
+          r.description.toLowerCase().includes(s) ||
+          r.questionSnapshot.textEn.toLowerCase().includes(s) ||
+          (r.questionSnapshot.textUr && r.questionSnapshot.textUr.toLowerCase().includes(s)) ||
+          r.reporterName.toLowerCase().includes(s) ||
+          (r.academyName && r.academyName.toLowerCase().includes(s)) ||
+          (r.subjectName && r.subjectName.toLowerCase().includes(s)) ||
+          (r.chapterTitle && r.chapterTitle.toLowerCase().includes(s))
+      );
+    }
+
+    return list;
+  },
+
+  async getQuestionReportById(id: string): Promise<QuestionReportRecord | null> {
+    const all = await this.getQuestionReports();
+    return all.find((r) => r.id === id) || null;
+  },
+
+  async createQuestionReport(
+    data: Omit<QuestionReportRecord, "id" | "status" | "createdAt">
+  ): Promise<QuestionReportRecord> {
+    const id = `rep-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const createdAt = new Date().toISOString();
+    const record: QuestionReportRecord = {
+      ...data,
+      id,
+      status: "open",
+      createdAt,
+    };
+
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      try {
+        const { data: inserted, error } = await adminClient
+          .from("question_reports")
+          .insert({
+            id,
+            question_id: record.questionId,
+            chapter_id: record.chapterId || null,
+            subject_name: record.subjectName || null,
+            chapter_title: record.chapterTitle || null,
+            question_type: record.questionType,
+            question_snapshot: record.questionSnapshot,
+            category: record.category,
+            description: record.description,
+            suggested_fix: record.suggestedFix || null,
+            suggested_correct_option: record.suggestedCorrectOption ?? null,
+            reporter_id: record.reporterId || null,
+            reporter_name: record.reporterName,
+            reporter_email: record.reporterEmail || null,
+            academy_name: record.academyName || null,
+            status: "open",
+            environment: getCurrentDataEnvironment(),
+            created_at: createdAt,
+          })
+          .select()
+          .single();
+        if (!error && inserted) {
+          return { ...record, id: inserted.id };
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
+    const store = initMockStore();
+    store.reports.unshift(record);
+    return JSON.parse(JSON.stringify(record));
+  },
+
+  async updateQuestionReport(
+    id: string,
+    updates: Partial<
+      Pick<QuestionReportRecord, "status" | "adminNotes" | "resolvedAt" | "questionSnapshot">
+    >
+  ): Promise<QuestionReportRecord | null> {
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      try {
+        const payload: Record<string, unknown> = {};
+        if (updates.status !== undefined) payload.status = updates.status;
+        if (updates.adminNotes !== undefined) payload.admin_notes = updates.adminNotes;
+        if (updates.resolvedAt !== undefined) payload.resolved_at = updates.resolvedAt;
+        if (updates.questionSnapshot !== undefined) payload.question_snapshot = updates.questionSnapshot;
+
+        const { data, error } = await adminClient
+          .from("question_reports")
+          .update(payload)
+          .eq("id", id)
+          .select()
+          .single();
+        if (!error && data) {
+          return {
+            id: data.id,
+            questionId: data.question_id,
+            chapterId: data.chapter_id || null,
+            subjectName: data.subject_name || null,
+            chapterTitle: data.chapter_title || null,
+            questionType: data.question_type || "mcq",
+            questionSnapshot: data.question_snapshot,
+            category: data.category,
+            description: data.description,
+            suggestedFix: data.suggested_fix || null,
+            suggestedCorrectOption: data.suggested_correct_option ?? null,
+            reporterId: data.reporter_id || null,
+            reporterName: data.reporter_name,
+            reporterEmail: data.reporter_email || null,
+            academyName: data.academy_name || null,
+            status: data.status,
+            adminNotes: data.admin_notes || null,
+            resolvedAt: data.resolved_at || null,
+            createdAt: data.created_at,
+          };
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+
+    const store = initMockStore();
+    const report = store.reports.find((r) => r.id === id);
+    if (!report) return null;
+    Object.assign(report, updates);
+    return JSON.parse(JSON.stringify(report));
+  },
+
+  async deleteQuestionReport(id: string): Promise<boolean> {
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      try {
+        const { error } = await adminClient.from("question_reports").delete().eq("id", id);
+        if (!error) return true;
+      } catch {
+        // Fallback to store
+      }
+    }
+    const store = initMockStore();
+    const prev = store.reports.length;
+    store.reports = store.reports.filter((r) => r.id !== id);
+    return store.reports.length < prev;
   },
 };
