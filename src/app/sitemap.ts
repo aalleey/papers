@@ -11,49 +11,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
       : "https://paperwala.world");
 
   const now = new Date();
+  const ogImage = `${baseUrl}/opengraph-image`;
 
-  return [
-    {
-      url: baseUrl,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/select-questions`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/quick-paper`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/paper-editor`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/pricing`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/register`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/login`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
+  const routes: Array<{
+    path: string;
+    changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+    priority: number;
+  }> = [
+    { path: "", changeFrequency: "daily", priority: 1.0 },
+    { path: "/select-questions", changeFrequency: "daily", priority: 0.95 },
+    { path: "/quick-paper", changeFrequency: "daily", priority: 0.95 },
+    { path: "/paper-editor", changeFrequency: "weekly", priority: 0.9 },
+    { path: "/pricing", changeFrequency: "weekly", priority: 0.85 },
+    { path: "/register", changeFrequency: "monthly", priority: 0.75 },
+    { path: "/login", changeFrequency: "monthly", priority: 0.65 },
   ];
+
+  return routes.map((route) => {
+    const fullUrl = `${baseUrl}${route.path}`;
+    return {
+      url: fullUrl,
+      lastModified: now,
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
+      images: [ogImage],
+      alternates: {
+        languages: {
+          "en-PK": fullUrl,
+          "ur-PK": fullUrl,
+        },
+      },
+    };
+  });
 }
+

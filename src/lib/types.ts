@@ -83,7 +83,7 @@ export interface Question {
   marks: number;
   difficulty: QuestionDifficulty;
   is_active: boolean;
-  source_note: string | null;
+  source_note?: string | null;
   created_at?: string;
   translations?: QuestionTranslation[];
 }

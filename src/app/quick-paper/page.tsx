@@ -852,19 +852,19 @@ export default function QuickPaperPage() {
               {/* Left: Logo Box */}
               <div
                 className={`${
-                  is2Up ? "w-14 min-w-[54px] p-1" : "w-20 min-w-[72px] p-1"
+                  is2Up ? "w-14 min-w-[52px] p-1" : "w-14 sm:w-20 min-w-[54px] sm:min-w-[72px] p-1"
                 } border-r-2 border-black flex flex-col items-center justify-center bg-white shrink-0`}
               >
                 {logoBase64 ? (
                   <img
                     src={logoBase64}
                     alt="Logo"
-                    className={`${is2Up ? "max-h-10 max-w-[46px]" : "max-h-14 max-w-[64px]"} object-contain`}
+                    className={`${is2Up ? "max-h-10 max-w-[44px]" : "max-h-11 sm:max-h-14 max-w-[48px] sm:max-w-[64px]"} object-contain`}
                   />
                 ) : (
                   <div
                     className={`${
-                      is2Up ? "w-9 h-9" : "w-11 h-11"
+                      is2Up ? "w-9 h-9" : "w-9 h-9 sm:w-11 sm:h-11"
                     } border-2 border-emerald-700 rounded-full flex flex-col items-center justify-center p-0.5 bg-emerald-50 text-emerald-900 text-center font-black`}
                   >
                     <span className="text-[0.75em] leading-none">SEEK</span>
@@ -953,10 +953,10 @@ export default function QuickPaperPage() {
               {/* Right: 4-Digit Paper Code Box */}
               <div
                 className={`${
-                  is2Up ? "w-18 min-w-[68px] p-1" : "w-24 min-w-[84px] p-1"
+                  is2Up ? "w-18 min-w-[66px] p-1" : "w-18 sm:w-24 min-w-[68px] sm:min-w-[84px] p-1"
                 } flex flex-col items-center justify-center bg-white shrink-0 text-center`}
               >
-                <div className="text-[0.76em] font-bold uppercase tracking-tight text-black mb-0.5 leading-none">
+                <div className="text-[0.72em] sm:text-[0.76em] font-bold uppercase tracking-tight text-black mb-0.5 leading-none">
                   PAPER CODE
                 </div>
                 <div className="flex justify-center gap-0.5">
@@ -964,8 +964,8 @@ export default function QuickPaperPage() {
                     <div
                       key={dIdx}
                       className={`${
-                        is2Up ? "w-3.5 h-4" : "w-4 h-5"
-                      } border border-black flex items-center justify-center font-black font-mono text-[0.95em] bg-white tabular-nums`}
+                        is2Up ? "w-3.5 h-4" : "w-3.5 sm:w-4 h-4 sm:h-5"
+                      } border border-black flex items-center justify-center font-black font-mono text-[0.9em] sm:text-[0.95em] bg-white tabular-nums`}
                     >
                       {isEditMode && !isSecondCopy ? (
                         <>
@@ -2229,10 +2229,10 @@ export default function QuickPaperPage() {
                 </div>
               </div>
             ) : (
-              <div className="w-full overflow-x-auto pb-6 print:overflow-visible print:pb-0 flex justify-center">
+              <div className="w-full pb-6 print:overflow-visible print:pb-0 flex justify-center">
                 <div
                   id="printable-paper"
-                  className="w-full min-w-[660px] sm:min-w-0 max-w-[210mm] print:w-full print:max-w-full print:min-w-0"
+                  className="w-full min-w-0 max-w-[210mm] print:w-full print:max-w-full print:min-w-0"
                 >
                   {renderPaperContent(1)}
                 </div>

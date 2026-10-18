@@ -1,6 +1,6 @@
 {
   "name": "Question Paper Generator",
-  "description": "Create board-pattern exam papers online in 60 seconds. #1 online paper maker for 9th, 10th, FSc & ICS (Punjab BISE & FBISE) with Urdu Nastaliq, PDF & Word export.",
+  "description": "Create BISE & FBISE board-pattern exam papers online in 60 seconds. #1 paper maker for 9th, 10th, FSc & ICS with Bilingual Urdu Nastaliq, PDF & Word export.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

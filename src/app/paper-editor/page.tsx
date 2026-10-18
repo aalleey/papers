@@ -2343,7 +2343,7 @@ export default function PaperEditorPage() {
             } ${
               is2Up
                 ? "compact-2up p-2.5 sm:p-3 text-[9.5px] space-y-1.5 shadow-md"
-                : "p-6 sm:p-8 text-black space-y-3.5 shadow-xl"
+                : "p-3 sm:p-6 md:p-8 text-black space-y-3 sm:space-y-3.5 shadow-xl"
             } leading-tight`}
           >
             {/* Stylish Page Border Frame */}
@@ -2387,45 +2387,45 @@ export default function PaperEditorPage() {
                 ) : headerStyle === "style2" ? (
                   /* 2. Federal Board (FBISE) Header Layout */
                   <div className="border-2 border-black bg-white mb-0 p-2 text-center space-y-1.5 font-sans">
-                    <div className="flex items-center justify-between border-b border-black pb-1.5">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center justify-between border-b border-black pb-1.5 gap-2">
                       {/* Left: FBISE Logo or Crest */}
-                      <div className="w-20 flex items-center justify-center">
+                      <div className="w-12 sm:w-20 flex items-center justify-center shrink-0">
                         {logoBase64 ? (
                           <img
                             src={logoBase64}
                             alt="Logo"
-                            style={{ height: `${logoSize}px`, maxWidth: "120px", objectFit: "contain" }}
+                            style={{ height: `${Math.min(logoSize, 56)}px`, maxWidth: "100px", objectFit: "contain" }}
                           />
                         ) : (
-                          <div className="w-12 h-12 border border-black rounded-full flex items-center justify-center font-bold text-xs bg-slate-50">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 border border-black rounded-full flex items-center justify-center font-bold text-[10px] sm:text-xs bg-slate-50">
                             FBISE
                           </div>
                         )}
                       </div>
 
                       {/* Center: FBISE Official Title & Institution Name */}
-                      <div className="flex-1 text-center px-2">
+                      <div className="flex-1 min-w-[160px] text-center px-1 sm:px-2">
                         <div
                           contentEditable
                           suppressContentEditableWarning
                           onBlur={(e) => setInstitutionName(e.currentTarget.textContent || institutionName)}
                           style={{ fontSize: `${is2Up ? Math.min(instFontSize, 15) : instFontSize}px` }}
-                          className="font-black text-slate-900 uppercase tracking-tight outline-none"
+                          className="font-black text-slate-900 uppercase tracking-tight outline-none leading-tight"
                         >
                           {institutionName}
                         </div>
-                        <div className="font-bold text-xs uppercase tracking-wider text-slate-700">
+                        <div className="font-bold text-[10px] sm:text-xs uppercase tracking-wider text-slate-700">
                           FEDERAL BOARD OF INTERMEDIATE &amp; SECONDARY EDUCATION
                         </div>
-                        <div className="text-[11px] font-semibold text-slate-600">
+                        <div className="text-[10px] sm:text-[11px] font-semibold text-slate-600">
                           {paperTypeBanner} &bull; {subjectTitle} (Class: {classNameText})
                         </div>
                       </div>
 
                       {/* Right: Candidate Registration / Version Code */}
-                      <div className="w-24 border border-black p-1 text-center bg-slate-50">
-                        <div className="text-[9px] font-bold uppercase mb-0.5">VERSION CODE</div>
-                        <div className="text-sm font-black font-mono tracking-widest text-blue-900">
+                      <div className="w-20 sm:w-24 border border-black p-1 text-center bg-slate-50 shrink-0 ml-auto sm:ml-0">
+                        <div className="text-[8px] sm:text-[9px] font-bold uppercase mb-0.5">VERSION CODE</div>
+                        <div className="text-xs sm:text-sm font-black font-mono tracking-widest text-blue-900">
                           {currentPaperCode}
                         </div>
                         <div className="text-[8px] font-semibold text-slate-500 mt-0.5">VERSION {paperVersion}</div>
@@ -2433,16 +2433,16 @@ export default function PaperEditorPage() {
                     </div>
 
                     {/* Federal Board Candidate Fill Grid */}
-                    <div className="grid grid-cols-2 gap-2 text-[11px] font-bold text-left pt-0.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-[11px] font-bold text-left pt-0.5">
                       <div className="flex items-center gap-1">
                         <span>Roll No:</span>
                         <div className="flex gap-0.5">
                           {Array.from({ length: 6 }).map((_, rIdx) => (
-                            <div key={rIdx} className="w-4 h-5 border border-black text-center" />
+                            <div key={rIdx} className="w-3.5 sm:w-4 h-4 sm:h-5 border border-black text-center" />
                           ))}
                         </div>
                       </div>
-                      <div className="flex items-center justify-end gap-3 text-right">
+                      <div className="flex items-center gap-3 text-right">
                         <span>Total Marks: {totalMarks}</span>
                         <span>Time: {timeDuration}</span>
                       </div>
@@ -2465,23 +2465,17 @@ export default function PaperEditorPage() {
                     {/* Left Logo Box */}
                     {logoBase64 && (
                       <div
+                        className="shrink-0 flex items-center justify-center bg-white border-r-2 border-black p-0.5 sm:p-1"
                         style={{
-                          width: `${is2Up ? Math.min(logoSize, 36) + 6 : logoSize + 10}px`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          padding: "2px",
-                          background: "#fff",
-                          flexShrink: 0,
-                          borderRight: "2px solid #000",
+                          width: is2Up ? `${Math.min(logoSize, 36) + 6}px` : `clamp(48px, 14vw, ${logoSize + 10}px)`,
                         }}
                       >
                         <img
                           src={logoBase64}
                           alt="Logo"
                           style={{
-                            height: `${is2Up ? Math.min(logoSize, 36) : logoSize}px`,
-                            maxWidth: is2Up ? "90px" : "150px",
+                            maxHeight: `${is2Up ? Math.min(logoSize, 36) : logoSize}px`,
+                            width: "100%",
                             objectFit: "contain",
                             display: "block",
                           }}
@@ -2493,6 +2487,7 @@ export default function PaperEditorPage() {
                     <div
                       style={{
                         flexGrow: 1,
+                        minWidth: 0,
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "space-between",
@@ -2505,12 +2500,13 @@ export default function PaperEditorPage() {
                         suppressContentEditableWarning
                         onBlur={(e) => setInstitutionName(e.currentTarget.textContent || institutionName)}
                         style={{
-                          fontSize: `${is2Up ? Math.min(instFontSize, 15) : instFontSize}px`,
+                          fontSize: is2Up ? `${Math.min(instFontSize, 15)}px` : `clamp(13px, 3.8vw, ${instFontSize}px)`,
                           fontWeight: 800,
                           color: "#1a365d",
-                          padding: is2Up ? "3px 2px 2px 2px" : "6px 4px 3px 4px",
+                          padding: is2Up ? "3px 2px 2px 2px" : "5px 4px 3px 4px",
                           textTransform: "uppercase",
                           outline: "none",
+                          wordBreak: "break-word",
                         }}
                       >
                         {institutionName}
@@ -2524,8 +2520,8 @@ export default function PaperEditorPage() {
                           backgroundColor: "#1a365d",
                           color: "#ffffff",
                           fontWeight: "bold",
-                          fontSize: is2Up ? "10px" : "12px",
-                          padding: is2Up ? "1px 6px" : "2px 10px",
+                          fontSize: is2Up ? "10px" : "clamp(10px, 2.6vw, 12px)",
+                          padding: is2Up ? "1px 4px" : "2px 6px",
                           borderTop: "1px solid #000",
                           borderBottom: "1px solid #000",
                           textAlign: "center",
@@ -2537,13 +2533,14 @@ export default function PaperEditorPage() {
 
                       <div
                         style={{
-                          fontSize: is2Up ? "10px" : "12px",
+                          fontSize: is2Up ? "10px" : "clamp(10px, 2.6vw, 12px)",
                           fontWeight: "bold",
-                          padding: is2Up ? "1px 0" : "2px 0",
+                          padding: is2Up ? "1px 2px" : "2px 4px",
                           display: "flex",
+                          flexWrap: "wrap",
                           justifyContent: "center",
                           alignItems: "center",
-                          gap: is2Up ? "8px" : "15px",
+                          gap: is2Up ? "6px" : "10px",
                           color: "#000",
                         }}
                       >
@@ -2576,21 +2573,16 @@ export default function PaperEditorPage() {
                     {/* Right Paper Code Box */}
                     {includePaperCode && (
                       <div
+                        className="shrink-0 flex items-center justify-center bg-white p-0.5 sm:p-1"
                         style={{
-                          width: is2Up ? "82px" : "110px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          padding: "2px",
-                          flexShrink: 0,
-                          background: "#fff",
+                          width: is2Up ? "78px" : "clamp(74px, 20vw, 110px)",
                         }}
                       >
                         <div className="text-center">
                           <div
                             style={{
-                              fontSize: is2Up ? "8.5px" : "10px",
-                              marginBottom: is2Up ? "2px" : "4px",
+                              fontSize: is2Up ? "8px" : "clamp(8px, 2vw, 10px)",
+                              marginBottom: is2Up ? "2px" : "3px",
                             }}
                             className="font-bold uppercase tracking-tight text-center"
                           >
@@ -2601,15 +2593,15 @@ export default function PaperEditorPage() {
                               <div
                                 key={dIdx}
                                 style={{
-                                  width: is2Up ? "15px" : "20px",
-                                  height: is2Up ? "18px" : "24px",
-                                  border: "2px solid #000",
+                                  width: is2Up ? "14px" : "clamp(15px, 4vw, 20px)",
+                                  height: is2Up ? "18px" : "clamp(19px, 5vw, 24px)",
+                                  border: "1.5px solid #000",
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
                                   fontWeight: "bold",
                                   fontFamily: "Arial",
-                                  fontSize: is2Up ? "11px" : "14px",
+                                  fontSize: is2Up ? "10.5px" : "clamp(11px, 3vw, 14px)",
                                 }}
                               >
                                 {digit}
@@ -2695,16 +2687,16 @@ export default function PaperEditorPage() {
                     </td>
                   </tr>
 
-                  <tr style={{ backgroundColor: "#e3f2fd", height: is2Up ? "21px" : "26px" }}>
-                    <td colSpan={4} style={{ padding: is2Up ? "1px 2px" : "2px 4px", textAlign: "center", color: "#0d47a1" }}>
+                  <tr style={{ backgroundColor: "#e3f2fd", height: is2Up ? "21px" : "auto", minHeight: "26px" }}>
+                    <td colSpan={4} style={{ padding: is2Up ? "1px 2px" : "3px 4px", textAlign: "center", color: "#0d47a1" }}>
                       <div
                         style={{
                           display: "flex",
                           justifyContent: "space-around",
                           alignItems: "center",
                           gap: is2Up ? "4px" : "8px",
-                          fontSize: is2Up ? "9.5px" : "13px",
-                          flexWrap: "nowrap",
+                          fontSize: is2Up ? "9.5px" : "clamp(10.5px, 2.7vw, 13px)",
+                          flexWrap: "wrap",
                         }}
                       >
                         <div style={{ display: "flex", gap: is2Up ? "2px" : "4px" }}>
@@ -2959,7 +2951,7 @@ export default function PaperEditorPage() {
                       return (
                         <div key={q.id} className="group relative p-1 hover:bg-slate-50/80 rounded transition-colors">
                           {/* Question Action Toolbar */}
-                          <div className="no-print absolute top-0 right-0 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-xs px-1.5 py-0.5 z-10 transition-opacity">
+                          <div className="no-print absolute top-0 right-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 flex items-center gap-1 bg-white/95 border border-slate-300 rounded shadow-xs px-1.5 py-0.5 z-10 transition-opacity">
                             <button
                               onClick={() => handleTranslateSingleQuestion(q.id)}
                               disabled={translatingQuestionId === q.id}
@@ -3167,7 +3159,7 @@ export default function PaperEditorPage() {
                                   <MathRenderer content={en || ur} />
                                 </td>
                                 <td className="bilingual-urdu relative">
-                                  <div className="no-print absolute top-0 left-0 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-xs px-1 py-0.5 z-10 transition-opacity font-sans" dir="ltr">
+                                  <div className="no-print absolute top-0 left-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 flex items-center gap-1 bg-white/95 border border-slate-300 rounded shadow-xs px-1 py-0.5 z-10 transition-opacity font-sans" dir="ltr">
                                     <button
                                       onClick={() => handleTranslateSingleQuestion(q.id)}
                                       disabled={translatingQuestionId === q.id}
@@ -3298,7 +3290,7 @@ export default function PaperEditorPage() {
                                   <MathRenderer content={en || ur} />
                                 </td>
                                 <td className="bilingual-urdu font-bold relative">
-                                  <div className="no-print absolute top-0 left-0 opacity-0 group-hover:opacity-100 flex items-center gap-1 bg-white border border-slate-300 rounded shadow-xs px-1 py-0.5 z-10 transition-opacity font-sans" dir="ltr">
+                                  <div className="no-print absolute top-0 left-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 flex items-center gap-1 bg-white/95 border border-slate-300 rounded shadow-xs px-1 py-0.5 z-10 transition-opacity font-sans" dir="ltr">
                                     <button
                                       onClick={() => handleTranslateSingleQuestion(q.id)}
                                       disabled={translatingQuestionId === q.id}
@@ -3592,8 +3584,8 @@ export default function PaperEditorPage() {
                 </div>
               </div>
             ) : (
-              <div className="w-full overflow-x-auto pb-6 print:overflow-visible print:pb-0">
-                <div className="single-test-container min-w-[720px] sm:min-w-0">
+              <div className="w-full pb-6 print:overflow-visible print:pb-0">
+                <div className="single-test-container w-full min-w-0">
                   {renderExamPaperSheet(1)}
                 </div>
               </div>

@@ -6,15 +6,34 @@
   }
 }
 
+/* Prevent accidental horizontal page scroll on mobile screens */
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Hide scrollbars on horizontal pill strips while keeping scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* KaTeX custom sizing and scroll behavior */
 .katex-display {
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0.5rem 0;
+  max-width: 100%;
+  padding: 0.35rem 0;
 }
 
 .math-content .katex {
   font-size: 1.05em;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
 /* Standalone utilities */
@@ -261,6 +280,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 1px;
+  table-layout: fixed;
 }
 
 .bilingual-table td {
@@ -268,6 +288,8 @@
   padding: 2px 5px !important;
   vertical-align: top;
   line-height: 1.4 !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .bilingual-eng {
@@ -290,6 +312,7 @@
   padding: 0;
   direction: ltr !important;
   max-width: 100%;
+  overflow-x: auto;
 }
 
 .bubble-sheet-table {
@@ -351,7 +374,7 @@
 }
 
 .watermark-text {
-  font-size: 54px;
+  font-size: clamp(26px, 6.5vw, 54px);
   font-weight: 900;
   color: #000;
   transform: rotate(-35deg);
@@ -530,3 +553,24 @@
   display: block;
   object-fit: contain;
 }
+
+/* --- MOBILE SCREEN RESPONSIVENESS (DOES NOT AFFECT PRINT) --- */
+@media screen and (max-width: 640px) {
+  .bilingual-table td {
+    padding: 2px 3px !important;
+  }
+  .fb-table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .fb-table th,
+  .fb-table td {
+    padding: 3px 4px !important;
+    font-size: 10.5px;
+  }
+  .bubble-sheet-table {
+    min-width: 440px;
+  }
+}
+
