@@ -975,10 +975,10 @@ export default function SelectQuestionsPage() {
       {/* =========================================================================
           TOP SMART HEADER (TRANSPARENT 3D GLASS COMMAND BAR + FILTER TOOLBAR)
           ========================================================================= */}
-      <header className="sticky top-0 z-40 bg-white/55 backdrop-blur-2xl border-b border-white/80 shadow-[0_20px_50px_-12px_rgba(15,23,42,0.14),inset_0_2px_1px_0_rgba(255,255,255,0.95)] transition-all duration-200">
+      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-2xl border-b border-white/80 shadow-[0_20px_50px_-12px_rgba(15,23,42,0.14),inset_0_2px_1px_0_rgba(255,255,255,0.95)] transition-all duration-200 max-h-[80vh] overflow-y-auto md:max-h-none md:overflow-visible">
         {/* Top Transparent 3D Glass Navbar Row */}
-        <div className="border-b border-slate-200/60 bg-white/40 backdrop-blur-xl">
-          <div className="max-w-[1700px] mx-auto px-3 sm:px-6 h-15 flex items-center justify-between gap-4">
+        <div className="border-b border-slate-200/60 bg-white/60 backdrop-blur-xl">
+          <div className="max-w-[1700px] mx-auto px-2.5 sm:px-6 h-14 sm:h-15 flex items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center gap-3 min-w-0">
               <Link
                 href="/"
@@ -1467,14 +1467,14 @@ export default function SelectQuestionsPage() {
                   </div>
 
                   {/* Filters & Trigger Button */}
-                  <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+                  <div className="grid grid-cols-2 sm:flex sm:flex-nowrap items-center gap-1.5 sm:gap-2 shrink-0">
                     <select
                       value={aiQuestionType}
                       onChange={(e) => setAiQuestionType(e.target.value as any)}
-                      className="px-2.5 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-emerald-400 cursor-pointer"
+                      className="px-2 sm:px-2.5 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-[11px] sm:text-xs font-bold focus:outline-none focus:border-emerald-400 cursor-pointer w-full sm:w-auto truncate"
                       title="Filter AI Search by Question Type"
                     >
-                      <option value="all" className="text-slate-900">All Types (MCQ + Short + Long)</option>
+                      <option value="all" className="text-slate-900">All Types (MCQ+Short+Long)</option>
                       <option value="mcq" className="text-slate-900">MCQs Only</option>
                       <option value="short" className="text-slate-900">Short Questions Only</option>
                       <option value="long" className="text-slate-900">Long Questions Only</option>
@@ -1483,7 +1483,7 @@ export default function SelectQuestionsPage() {
                     <select
                       value={aiDifficulty}
                       onChange={(e) => setAiDifficulty(e.target.value as any)}
-                      className="px-2.5 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-emerald-400 cursor-pointer"
+                      className="px-2 sm:px-2.5 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-[11px] sm:text-xs font-bold focus:outline-none focus:border-emerald-400 cursor-pointer w-full sm:w-auto truncate"
                       title="Filter AI Search by Difficulty"
                     >
                       <option value="all" className="text-slate-900">All Difficulties</option>
@@ -1496,7 +1496,7 @@ export default function SelectQuestionsPage() {
                       onClick={() => handleAiTopicSearch()}
                       disabled={aiSearchLoading || !aiTopicQuery.trim()}
                       id="btn-ai-topic-search"
-                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-500 hover:from-emerald-300 hover:to-teal-400 disabled:opacity-50 text-slate-950 font-black text-xs shadow-[0_3px_0_0_#065f46] active:translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                      className="col-span-2 sm:col-span-1 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-500 hover:from-emerald-300 hover:to-teal-400 disabled:opacity-50 text-slate-950 font-black text-xs shadow-[0_3px_0_0_#065f46] active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                     >
                       {aiSearchLoading ? (
                         <>
@@ -2089,21 +2089,21 @@ export default function SelectQuestionsPage() {
       {/* =========================================================================
           STICKY BOTTOM BAR (3D LIQUID GLASS DOCK & 100% RESPONSIVE)
           ========================================================================= */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-b from-white/85 via-white/75 to-white/90 backdrop-blur-2xl saturate-150 border-t border-white/90 shadow-[0_-12px_35px_-8px_rgba(15,23,42,0.14),inset_0_2px_2px_0_#ffffff] py-2.5 sm:py-3 px-3 sm:px-8">
-        <div className="max-w-[1700px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-b from-white/95 via-white/90 to-white/95 backdrop-blur-2xl saturate-150 border-t border-white/90 shadow-[0_-12px_35px_-8px_rgba(15,23,42,0.14),inset_0_2px_2px_0_#ffffff] py-2 sm:py-3 px-2.5 sm:px-8">
+        <div className="max-w-[1700px] mx-auto flex flex-wrap sm:flex-row items-center justify-between gap-2 sm:gap-4">
           {/* Counters row */}
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-xs font-bold text-slate-800 w-full sm:w-auto">
-            <span className="flex items-center gap-1.5 bg-blue-50/90 px-2.5 py-1 rounded-xl border border-blue-200/80 shadow-2xs">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-3 text-[11px] sm:text-xs font-bold text-slate-800 w-full sm:w-auto">
+            <span className="flex items-center gap-1 bg-blue-50/90 px-2 sm:px-2.5 py-1 rounded-xl border border-blue-200/80 shadow-2xs">
               <span className="text-slate-600">MCQs:</span>
               <span className="font-black text-blue-700 tabular-nums">{selectedCounts.mcq}</span>
             </span>
 
-            <span className="flex items-center gap-1.5 bg-emerald-50/90 px-2.5 py-1 rounded-xl border border-emerald-200/80 shadow-2xs">
+            <span className="flex items-center gap-1 bg-emerald-50/90 px-2 sm:px-2.5 py-1 rounded-xl border border-emerald-200/80 shadow-2xs">
               <span className="text-slate-600">Shorts:</span>
               <span className="font-black text-emerald-700 tabular-nums">{selectedCounts.short}</span>
             </span>
 
-            <span className="flex items-center gap-1.5 bg-purple-50/90 px-2.5 py-1 rounded-xl border border-purple-200/80 shadow-2xs">
+            <span className="flex items-center gap-1 bg-purple-50/90 px-2 sm:px-2.5 py-1 rounded-xl border border-purple-200/80 shadow-2xs">
               <span className="text-slate-600">Longs:</span>
               <span className="font-black text-purple-700 tabular-nums">{selectedCounts.long}</span>
             </span>
@@ -2115,18 +2115,18 @@ export default function SelectQuestionsPage() {
           </div>
 
           {/* Action buttons row */}
-          <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto">
+          <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
             {selectedCounts.total > 0 && (
               <button
                 onClick={() => setViewOnlySelected(!viewOnlySelected)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer ${
+                className={`px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer shrink-0 ${
                   viewOnlySelected
                     ? "bg-amber-500 text-white hover:bg-amber-600 ring-2 ring-amber-300"
                     : "bg-white/90 text-indigo-700 hover:bg-indigo-50 border border-indigo-200"
                 }`}
               >
                 <Eye className="w-3.5 h-3.5" />
-                <span>{viewOnlySelected ? "Show All" : `View Selected (${selectedCounts.total})`}</span>
+                <span>{viewOnlySelected ? "Show All" : `Selected (${selectedCounts.total})`}</span>
               </button>
             )}
 

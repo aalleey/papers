@@ -240,11 +240,11 @@ export default function Home() {
       {/* =========================================================================
           TOP STICKY NAVBAR - iOS Liquid Glass 3D Floating Bar
           ========================================================================= */}
-      <header className="sticky top-3 z-50 px-3 sm:px-6 lg:px-8 pointer-events-none">
-        <div className="pointer-events-auto max-w-7xl mx-auto rounded-[22px] bg-gradient-to-b from-white/65 via-white/40 to-white/55 backdrop-blur-3xl border border-white/90 ring-1 ring-slate-900/[0.04] shadow-[0_22px_55px_-12px_rgba(15,23,42,0.18),0_6px_20px_-4px_rgba(16,185,129,0.12),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(255,255,255,0.7)] transition-all duration-200">
-          <div className="px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
+      <header className="sticky top-2 sm:top-3 z-50 px-2 sm:px-6 lg:px-8 pointer-events-none">
+        <div className="pointer-events-auto max-w-7xl mx-auto rounded-[20px] sm:rounded-[22px] bg-gradient-to-b from-white/75 via-white/55 to-white/70 backdrop-blur-3xl border border-white/90 ring-1 ring-slate-900/[0.04] shadow-[0_22px_55px_-12px_rgba(15,23,42,0.18),0_6px_20px_-4px_rgba(16,185,129,0.12),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(255,255,255,0.7)] transition-all duration-200">
+          <div className="px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-6">
             {/* Zone 1: 3D Liquid Glass Brand Emblem & Wordmark */}
-            <BrandLogo id="nav-brand-logo" size="md" variant="full" />
+            <BrandLogo id="nav-brand-logo" size="sm" variant="full" />
 
             {/* Zone 2: 3D Recessed Liquid Glass Navigation Track (Desktop) */}
             <nav
