@@ -8,6 +8,7 @@ import { MathRenderer } from "@/components/MathRenderer";
 import { getUrduTranslation } from "@/lib/urdu-translations";
 import { SubscriptionModal } from "@/components/SubscriptionModal";
 import { ClientAuthModal } from "@/components/ClientAuthModal";
+import { BrandEmblem, generatePaperWalaCrestDataUrl } from "@/components/BrandLogo";
 import { exportPaperToDocx } from "@/lib/docx-export";
 import { ExamSection } from "@/lib/quick-paper-parser";
 import {
@@ -917,9 +918,7 @@ export default function PaperEditorPage() {
             >
               <ArrowLeft className="w-4 h-4" />
             </Link>
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-[0_3px_0_0_#065f46,inset_0_1px_1px_rgba(255,255,255,0.6)] shrink-0 text-sm">
-              🎓
-            </div>
+            <BrandEmblem size="sm" />
             <div className="min-w-0">
               <div className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 leading-none mb-0.5 hidden sm:block">
                 Live Paper Studio
@@ -1430,24 +1429,40 @@ export default function PaperEditorPage() {
                   </div>
 
                   <div>
-                    <label className="font-semibold text-slate-600 block mb-1">Logo File</label>
+                    <label className="font-semibold text-slate-600 block mb-1">Logo / Academic Crest</label>
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleLogoUpload}
                       className="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
                     />
-                    {logoBase64 && (
+                    <div className="flex items-center justify-between gap-2 mt-2">
                       <button
+                        type="button"
                         onClick={() => {
-                          setLogoBase64(null);
-                          localStorage.removeItem("paperwala_logo");
+                          const crest = generatePaperWalaCrestDataUrl();
+                          if (crest) {
+                            setLogoBase64(crest);
+                            localStorage.setItem("paperwala_logo", crest);
+                          }
                         }}
-                        className="mt-1.5 text-[10.5px] font-bold text-rose-600 hover:underline cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 text-[10.5px] font-extrabold cursor-pointer transition-colors"
                       >
-                        Clear Logo
+                        ✨ Use Official PaperWala Crest
                       </button>
-                    )}
+                      {logoBase64 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setLogoBase64(null);
+                            localStorage.removeItem("paperwala_logo");
+                          }}
+                          className="text-[10.5px] font-bold text-rose-600 hover:underline cursor-pointer"
+                        >
+                          Clear Logo
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="pt-2 border-t border-slate-200">

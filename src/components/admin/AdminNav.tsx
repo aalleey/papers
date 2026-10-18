@@ -22,6 +22,7 @@ import {
   ShieldCheck,
   FileText,
 } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 
 interface AdminNavProps {
   user: AuthUser | null;
@@ -63,20 +64,7 @@ export function AdminNav({ user }: AdminNavProps) {
     <>
       {/* Mobile & Tablet Top Command Bar (< lg) */}
       <div className="lg:hidden flex items-center justify-between bg-slate-950/95 backdrop-blur-2xl text-white px-4 h-16 border-b border-slate-800/80 sticky top-0 z-40 shadow-lg">
-        <NextLink href="/" className="flex items-center gap-3">
-          <div className="relative w-9 h-9 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-[0_3px_0_0_#065f46,inset_0_1px_1px_rgba(255,255,255,0.6)]">
-            <BookOpen className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-extrabold text-sm tracking-tight text-white">PaperWala</span>
-              <span className="font-urdu text-emerald-400 text-xs font-bold">پیپر والا</span>
-            </div>
-            <span className="text-[10px] text-slate-400 font-semibold block">
-              Executive Admin Console
-            </span>
-          </div>
-        </NextLink>
+        <BrandLogo size="sm" theme="dark" subtitle="Executive Admin Console" />
 
         <div className="flex items-center gap-2">
           <NextLink
@@ -114,25 +102,7 @@ export function AdminNav({ user }: AdminNavProps) {
 
         {/* Brand Header */}
         <div className="px-5 h-20 border-b border-slate-800/80 flex items-center justify-between">
-          <NextLink href="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-[0_4px_0_0_#065f46,0_8px_16px_-2px_rgba(16,185,129,0.4),inset_0_2px_1px_rgba(255,255,255,0.65)] group-hover:-translate-y-0.5 transition-all">
-              <span
-                className="pointer-events-none absolute inset-x-1 top-0.5 h-2 rounded-t-full bg-gradient-to-b from-white/50 to-transparent"
-                aria-hidden="true"
-              />
-              <BookOpen className="w-5 h-5 relative z-10" />
-            </div>
-            <div>
-              <div className="font-black text-white text-base tracking-tight leading-none flex items-baseline gap-2">
-                <span>PaperWala</span>
-                <span className="font-urdu text-emerald-400 text-sm font-bold">پیپر والا</span>
-              </div>
-              <div className="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/25 text-[10px] text-emerald-400 font-bold uppercase tracking-wider">
-                <ShieldCheck className="w-3 h-3" />
-                <span>Admin Console</span>
-              </div>
-            </div>
-          </NextLink>
+          <BrandLogo size="md" theme="dark" subtitle="Executive Admin Console" />
           <button
             onClick={() => setMobileOpen(false)}
             className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900"
