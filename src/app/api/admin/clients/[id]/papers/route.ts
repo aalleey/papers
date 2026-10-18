@@ -20,10 +20,23 @@ export async function GET(
     return NextResponse.json({ error: "Client not found." }, { status: 404 });
   }
 
-  const [papers, stats] = await Promise.all([
+  const [papers, stats, allInvoices, emails, allReports] = await Promise.all([
     db.getPapersByClient(id),
     db.getClientPaperStats(id),
+    db.getInvoices(500),
+    db.getEmailsByRecipient(client.email),
+    db.getQuestionReports(),
   ]);
 
-  return NextResponse.json({ client, papers, stats });
+  const invoices = allInvoices.filter(
+    (inv) => inv.clientId === id || inv.clientEmail.toLowerCase() === client.email.toLowerCase()
+  );
+
+  const reports = allReports.filter(
+    (rep) =>
+      rep.reporterId === id ||
+      (rep.reporterEmail && rep.reporterEmail.toLowerCase() === client.email.toLowerCase())
+  );
+
+  return NextResponse.json({ client, papers, stats, invoices, emails, reports });
 }

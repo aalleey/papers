@@ -168,6 +168,16 @@ export interface ClientUser {
   createdAt: string;
   updatedAt?: string;
   notes?: string | null;
+  paperStats?: {
+    totalPapers: number;
+    papersThisMonth: number;
+    papersThisWeek: number;
+    totalQuestions: number;
+    totalMarks: number;
+    withAnswerKey: number;
+    lastPaperAt: string | null;
+    topSubjects: { subject: string; count: number }[];
+  };
 }
 
 export type PaperExportMode = "all" | "questions" | "key";

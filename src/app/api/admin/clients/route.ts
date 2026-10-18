@@ -19,8 +19,35 @@ export async function GET(req: NextRequest) {
   const status = searchParams.get("status") || undefined;
 
   try {
-    const clients = await db.getClients({ search, planId, status });
-    const allClients = await db.getClients();
+    const [clients, allClients] = await Promise.all([
+      db.getClients({ search, planId, status }),
+      db.getClients(),
+    ]);
+
+    // Enrich each client with paper generation telemetry
+    const enrichedClients = await Promise.all(
+      clients.map(async (c) => {
+        const paperStats = await db.getClientPaperStats(c.id);
+        return {
+          ...c,
+          paperStats: {
+            totalPapers: paperStats.totalPapers,
+            papersThisMonth: paperStats.papersThisMonth,
+            papersThisWeek: paperStats.papersThisWeek,
+            totalQuestions: paperStats.totalQuestions,
+            totalMarks: paperStats.totalMarks,
+            withAnswerKey: paperStats.withAnswerKey,
+            lastPaperAt: paperStats.lastPaperAt,
+            topSubjects: paperStats.bySubject.slice(0, 3),
+          },
+        };
+      })
+    );
+
+    const totalPapersGenerated = enrichedClients.reduce(
+      (sum, c) => sum + (c.paperStats?.totalPapers || 0),
+      0
+    );
 
     // Summary statistics for admin dashboard
     const stats = {
@@ -29,13 +56,14 @@ export async function GET(req: NextRequest) {
       pendingVerification: allClients.filter((c) => c.subscription.status === "pending_verification" || c.isVerified === false).length,
       free: allClients.filter((c) => c.subscription.planId === "free").length,
       paid: allClients.filter((c) => c.subscription.planId !== "free").length,
-      standard: allClients.filter((c) => c.subscription.planId === "standard").length,
+      standard: allClients.filter((c) => c.subscription.planId === "standard" || c.subscription.planId === "monthly").length,
       annual: allClients.filter((c) => c.subscription.planId === "annual").length,
       payAsYouGo: allClients.filter((c) => c.subscription.planId === "pay_as_you_go" || c.subscription.planId === "pay_per_paper").length,
       suspended: allClients.filter((c) => c.subscription.status === "suspended").length,
+      totalPapersGenerated,
     };
 
-    return NextResponse.json({ clients, stats });
+    return NextResponse.json({ clients: enrichedClients, stats });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to load clients";
     return NextResponse.json({ error: message }, { status: 500 });
