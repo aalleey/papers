@@ -10,36 +10,51 @@ export default function robots(): MetadataRoute.Robots {
       ? `https://${process.env.VERCEL_URL}`
       : "https://paperwala.world");
 
+  const allowedPaths = [
+    "/",
+    "/quick-paper",
+    "/select-questions",
+    "/paper-editor",
+    "/pricing",
+    "/register",
+    "/login",
+    "/opengraph-image",
+    "/twitter-image",
+    "/icon",
+    "/apple-icon",
+  ];
+
+  const disallowedPaths = [
+    "/api/",
+    "/admin/",
+    "/profile",
+    "/verification-pending",
+  ];
+
   return {
     rules: [
       {
         userAgent: "*",
-        allow: [
-          "/",
-          "/quick-paper",
-          "/select-questions",
-          "/paper-editor",
-          "/pricing",
-          "/register",
-          "/login",
-        ],
-        disallow: ["/api/", "/admin/"],
+        allow: allowedPaths,
+        disallow: disallowedPaths,
       },
       {
-        userAgent: "Googlebot",
-        allow: [
-          "/",
-          "/quick-paper",
-          "/select-questions",
-          "/paper-editor",
-          "/pricing",
-          "/register",
-          "/login",
+        userAgent: [
+          "Googlebot",
+          "Googlebot-Image",
+          "Bingbot",
+          "OAI-SearchBot",
+          "ChatGPT-User",
+          "PerplexityBot",
+          "ClaudeBot",
+          "Google-Extended",
         ],
-        disallow: ["/api/", "/admin/"],
+        allow: allowedPaths,
+        disallow: disallowedPaths,
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
     host: baseUrl,
   };
 }
+

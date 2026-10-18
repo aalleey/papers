@@ -173,6 +173,22 @@ export default function Home() {
           },
           {
             "@type": "Question",
+            "name": "Can I convert an English paper to Urdu or an Urdu paper to English using AI?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! In both the Live Paper Editor (/paper-editor) and AI Quick Paper Studio (/quick-paper), if your paper only contains English or only Urdu, you can click the AI Bilingual Converter to automatically generate accurate Urdu Nastaliq or English translations for every MCQ, Short Question, and Long Question.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Can I search any syllabus topic with AI to get board-pattern questions?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. PaperWala includes an AI Topic Search engine on the Question Bank (/select-questions) and homepage. Enter any chapter concept or SLO topic to immediately retrieve verified database matches plus AI-generated bilingual MCQs, Short Questions, and Long Questions.",
+            },
+          },
+          {
+            "@type": "Question",
             "name": "Can I download the exam paper in editable Microsoft Word (.docx) and 1-page PDF?",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -1498,6 +1514,14 @@ export default function Home() {
                 a: "No! PaperWala runs completely in your web browser. You do not need InPage, Arabic fonts, or any extra software. Authentic Noto Nastaliq Urdu and KaTeX Math formulas render natively with one click.",
               },
               {
+                q: "Can I convert an English paper to Urdu or an Urdu paper to English using AI?",
+                a: "Yes! In both the Live Paper Editor (/paper-editor) and AI Quick Paper Studio (/quick-paper), if your paper only contains English or only Urdu, you can click the AI Bilingual Converter to automatically generate accurate Urdu Nastaliq or English translations for every MCQ, Short Question, and Long Question.",
+              },
+              {
+                q: "Can I search any syllabus topic with AI to get board-pattern questions?",
+                a: "Yes. PaperWala includes an AI Topic Search engine on the Question Bank (/select-questions) and homepage. Enter any chapter concept or SLO topic to immediately retrieve verified database matches plus AI-generated bilingual MCQs, Short Questions, and Long Questions.",
+              },
+              {
                 q: "Can I download the exam paper in editable Microsoft Word (.docx) and 1-page PDF?",
                 a: "Yes! Both the AI Quick Paper Maker (/quick-paper) and Live Paper Editor (/paper-editor) let you download an editable Microsoft Word (.docx) file with properly aligned Bilingual Urdu/English columns and 4-column MCQ grids, or print a 1-page auto-fit A4 PDF.",
               },
@@ -1568,38 +1592,38 @@ export default function Home() {
                 Online Paper Maker for All Punjab Boards (BISE), Federal Board (FBISE) &amp; Classes
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                PaperWala is built for Pakistani schools, colleges, and coaching academies searching for a fast, accurate <strong>online paper maker with board pattern</strong>. Generate bilingual English &amp; Urdu Nastaliq question papers for daily class tests, weekly quizzes, monthly assessments, send-up exams, and pre-board papers.
+                PaperWala is built for Pakistani schools, colleges, and coaching academies searching for a fast, accurate <strong>online paper maker with board pattern</strong> (آن لائن پیپر بنانے والی ویب سائٹ). Generate bilingual English &amp; Urdu Nastaliq question papers for daily class tests, weekly quizzes, monthly assessments, send-up exams, and pre-board papers.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
-              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
+              <article className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
                 <h3 className="font-extrabold text-slate-900 text-sm">
                   Supported Educational Boards in Pakistan
                 </h3>
                 <ul className="space-y-1.5 text-slate-600">
-                  <li>&bull; <strong>BISE Lahore</strong> Board Pattern Paper Maker</li>
-                  <li>&bull; <strong>BISE Gujranwala &amp; Rawalpindi</strong> Online Test Generator</li>
-                  <li>&bull; <strong>BISE Faisalabad &amp; Multan</strong> Exam Paper Maker</li>
-                  <li>&bull; <strong>BISE Sargodha, Bahawalpur, DG Khan &amp; Sahiwal</strong></li>
-                  <li>&bull; <strong>FBISE Islamabad (Federal Board)</strong> SLO &amp; Board Pattern</li>
+                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>BISE Lahore</strong> Board Pattern Paper Maker</Link></li>
+                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>BISE Gujranwala &amp; Rawalpindi</strong> Online Test Generator</Link></li>
+                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>BISE Faisalabad &amp; Multan</strong> Exam Paper Maker</Link></li>
+                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>BISE Sargodha, Bahawalpur, DG Khan &amp; Sahiwal</strong></Link></li>
+                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>FBISE Islamabad (Federal Board)</strong> SLO &amp; Board Pattern</Link></li>
                 </ul>
-              </div>
+              </article>
 
-              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
+              <article className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
                 <h3 className="font-extrabold text-slate-900 text-sm">
                   Classes &amp; Subjects Question Bank
                 </h3>
                 <ul className="space-y-1.5 text-slate-600">
-                  <li>&bull; <strong>9th Class (Matric Part-I)</strong> Online Paper Maker</li>
-                  <li>&bull; <strong>10th Class (Matric Part-II)</strong> Board Pattern Generator</li>
-                  <li>&bull; <strong>1st Year (11th / FSc &amp; ICS Part-I)</strong> Test Maker</li>
-                  <li>&bull; <strong>2nd Year (12th / FSc &amp; ICS Part-II)</strong> Exam Creator</li>
+                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>9th Class (Matric Part-I)</strong> Online Paper Maker</Link></li>
+                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>10th Class (Matric Part-II)</strong> Board Pattern Generator</Link></li>
+                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>1st Year (11th / FSc &amp; ICS Part-I)</strong> Test Maker</Link></li>
+                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>2nd Year (12th / FSc &amp; ICS Part-II)</strong> Exam Creator</Link></li>
                   <li>&bull; Computer Science, Mathematics, Physics, Chemistry, Biology, English, Urdu, Islamiat &amp; Pak Studies</li>
                 </ul>
-              </div>
+              </article>
 
-              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
+              <article className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
                 <h3 className="font-extrabold text-slate-900 text-sm">
                   Direct Online Paper Making Tools
                 </h3>
@@ -1612,18 +1636,18 @@ export default function Home() {
                   </li>
                   <li>
                     <Link href="/select-questions" className="font-bold text-emerald-700 hover:underline">
-                      Chapter-Wise Question Bank Selector →
+                      Chapter-Wise Question Bank &amp; AI Topic Search →
                     </Link>{" "}
-                    Pick verified MCQs, Short Questions, and Long Questions with 1-click auto board pattern.
+                    Pick verified MCQs, Short Questions, and Long Questions or search any topic with AI.
                   </li>
                   <li>
                     <Link href="/paper-editor" className="font-bold text-emerald-700 hover:underline">
-                      Live Paper Studio (.docx &amp; 1-Page PDF) →
+                      Live Paper Studio, AI Bilingual &amp; Word/PDF →
                     </Link>{" "}
-                    Customize school header, 2-per-page landscape duplex mode, and Word download.
+                    Convert English↔Urdu with AI, customize school header, and export Word (.docx) or 1-page PDF.
                   </li>
                 </ul>
-              </div>
+              </article>
             </div>
           </div>
         </section>

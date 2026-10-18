@@ -1,8 +1,17 @@
 import React from "react";
+import type { Metadata } from "next";
 import { getCurrentUser } from "@/lib/auth";
 import { AdminNav } from "@/components/admin/AdminNav";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Admin Control Center",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AdminLayout({
   children,
