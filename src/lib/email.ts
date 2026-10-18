@@ -186,14 +186,24 @@ export interface SendEmailResult {
  * or gracefully logs to the server console and outbox store (Simulation Mode).
  */
 export async function sendWelcomeEmail(client: ClientUser): Promise<SendEmailResult> {
+  // Guard against phone-only registrations where client.email does not contain an '@'
+  if (!client.email || !client.email.includes("@")) {
+    return {
+      success: false,
+      error: `Cannot send email: "${client.email || "empty"}" is a phone number, not a valid email address.`,
+    };
+  }
+
   const subject = `Welcome to PaperWala (پیپر والا) - Pakistan's #1 Exam Paper Generator! 🎓`;
   const htmlContent = generateWelcomeEmailHtml(client);
   const previewText = `Welcome to PaperWala, ${client.fullName}! Your educator account for ${client.academyName || "your academy"} is ready.`;
 
+  const providerErrors: string[] = [];
+
   // 1. Try Resend REST API if RESEND_API_KEY is configured
   if (process.env.RESEND_API_KEY) {
     try {
-      const from = process.env.EMAIL_FROM || "PaperWala <welcome@paperwala.world>";
+      const from = process.env.EMAIL_FROM || "PaperWala <onboarding@resend.dev>";
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -223,9 +233,13 @@ export async function sendWelcomeEmail(client: ClientUser): Promise<SendEmailRes
         console.log(`[EMAIL] Welcome email sent via Resend to ${client.email} (ID: ${data.id})`);
         return { success: true, messageId: data.id };
       } else {
+        const errMsg = data?.message || data?.error || JSON.stringify(data);
+        providerErrors.push(`Resend API error: ${errMsg}`);
         console.warn(`[EMAIL] Resend returned error:`, data);
       }
     } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : "Resend network error";
+      providerErrors.push(`Resend exception: ${errMsg}`);
       console.error(`[EMAIL] Failed to send via Resend:`, err);
     }
   }
@@ -266,12 +280,31 @@ export async function sendWelcomeEmail(client: ClientUser): Promise<SendEmailRes
       return { success: true, messageId: info.messageId };
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "SMTP send error";
+      providerErrors.push(`SMTP error: ${msg}`);
       console.error(`[EMAIL] Failed to send via SMTP:`, msg);
     }
   }
 
-  // 3. Fallback / Dev Simulation Mode
-  // Safely records email into the outbox database so it can be verified in tests and admin panel
+  // If a real provider was configured but failed, record as "failed" and return the error
+  if (providerErrors.length > 0) {
+    const combinedError = providerErrors.join(" | ");
+    await db.saveEmail({
+      to: client.email,
+      recipientName: client.fullName,
+      subject,
+      template: "welcome",
+      status: "failed",
+      previewText,
+      htmlContent,
+      error: combinedError,
+    });
+    return {
+      success: false,
+      error: combinedError,
+    };
+  }
+
+  // 3. Fallback / Dev Simulation Mode (when no SMTP or Resend credentials are set)
   await db.saveEmail({
     to: client.email,
     recipientName: client.fullName,
@@ -280,7 +313,7 @@ export async function sendWelcomeEmail(client: ClientUser): Promise<SendEmailRes
     status: "simulated",
     previewText,
     htmlContent,
-    error: null,
+    error: "No RESEND_API_KEY or SMTP_HOST configured in environment variables.",
   });
 
   console.log(`--------------------------------------------------------------------------------`);
@@ -290,5 +323,9 @@ export async function sendWelcomeEmail(client: ClientUser): Promise<SendEmailRes
   console.log(`Status: Simulated (Configure RESEND_API_KEY or SMTP_HOST in .env.local for live delivery)`);
   console.log(`--------------------------------------------------------------------------------`);
 
-  return { success: true, simulated: true };
+  return {
+    success: true,
+    simulated: true,
+    error: "Simulated mode: Configure SMTP_HOST/SMTP_USER/SMTP_PASS or RESEND_API_KEY in .env.local to send real emails.",
+  };
 }

@@ -20,8 +20,8 @@ import { BrandLogo } from "@/components/BrandLogo";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [emailOrPhone, setEmailOrPhone] = useState("ali.khaliq50@gmail.com");
-  const [password, setPassword] = useState("laptop321");
+  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
