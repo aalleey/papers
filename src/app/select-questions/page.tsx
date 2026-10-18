@@ -51,6 +51,7 @@ import {
   LogIn,
   LogOut,
   GraduationCap,
+  CirclePlus,
   Search,
   Brain,
   Loader2,
@@ -112,6 +113,7 @@ export default function SelectQuestionsPage() {
   const [headerCollapsed, setHeaderCollapsed] = useState(false);
   const [viewOnlySelected, setViewOnlySelected] = useState(false);
   const [showCustomModal, setShowCustomModal] = useState(false);
+  const [showManualQuestionModal, setShowManualQuestionModal] = useState(false);
   const [mobileTopicsOpen, setMobileTopicsOpen] = useState(false);
 
   // Accordion state
@@ -126,6 +128,16 @@ export default function SelectQuestionsPage() {
     mcqs: 10,
     shorts: 5,
     longs: 2,
+  });
+  const [manualQuestion, setManualQuestion] = useState({
+    type: "short" as Question["type"],
+    text: "",
+    marks: 2,
+    optionA: "",
+    optionB: "",
+    optionC: "",
+    optionD: "",
+    correctOption: 1,
   });
 
   // Persistent map of all seen questions (across chapters + AI topic searches) so selections are never lost
@@ -643,6 +655,32 @@ export default function SelectQuestionsPage() {
     setShowCustomModal(false);
   };
 
+  const addManualQuestion = () => {
+    const text = manualQuestion.text.trim();
+    if (!text) return;
+    const id = `manual-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const options = [manualQuestion.optionA, manualQuestion.optionB, manualQuestion.optionC, manualQuestion.optionD]
+      .map((option) => option.trim());
+    const question: Question = {
+      id,
+      chapter_id: currentChapter?.id || "manual",
+      topic_id: null,
+      type: manualQuestion.type,
+      source: "extra",
+      source_ref: "Manually added",
+      concept_tag: "Manual question",
+      correct_option: manualQuestion.type === "mcq" ? manualQuestion.correctOption : null,
+      marks: Math.max(1, Number(manualQuestion.marks) || 1),
+      difficulty: "medium",
+      is_active: true,
+      translations: [{ language: "en", text, options: manualQuestion.type === "mcq" ? options : null, answer: null }],
+    };
+    setAllQuestions((previous) => [...previous, question]);
+    setSelectedIds((previous) => new Set([...previous, id]));
+    setManualQuestion({ type: "short", text: "", marks: 2, optionA: "", optionB: "", optionC: "", optionD: "", correctOption: 1 });
+    setShowManualQuestionModal(false);
+  };
+
   // Navigate to Paper Editor
   const handleGeneratePaper = () => {
     // 1. Must be logged in / have client session
@@ -1034,6 +1072,15 @@ export default function SelectQuestionsPage() {
               >
                 <SlidersHorizontal className="w-3.5 h-3.5 text-slate-600" />
                 <span className="hidden sm:inline">Custom</span>
+              </button>
+
+              <button
+                onClick={() => setShowManualQuestionModal(true)}
+                className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 border border-indigo-400 text-white text-xs font-bold shadow-[0_3px_0_0_#3730a3,inset_0_1px_0_rgba(255,255,255,.35)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap"
+                title="Add a question manually"
+              >
+                <CirclePlus className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Add Question</span>
               </button>
 
               <button
@@ -2180,6 +2227,48 @@ export default function SelectQuestionsPage() {
               >
                 Apply Selection
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showManualQuestionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="my-8 w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl border border-indigo-100">
+            <div className="flex items-center justify-between bg-gradient-to-r from-indigo-950 via-indigo-800 to-violet-700 px-6 py-5 text-white">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-white/15 p-2"><CirclePlus className="w-5 h-5" /></div>
+                <div><h2 className="font-black">Add Question Manually</h2><p className="text-xs text-indigo-100">It will be selected immediately and numbered automatically in the paper.</p></div>
+              </div>
+              <button onClick={() => setShowManualQuestionModal(false)} className="rounded-xl p-2 text-indigo-100 hover:bg-white/10 hover:text-white"><X className="w-5 h-5" /></button>
+            </div>
+            <div className="space-y-4 p-6 text-sm">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <label className="font-bold text-slate-700">Section
+                  <select value={manualQuestion.type} onChange={(e) => setManualQuestion({ ...manualQuestion, type: e.target.value as Question["type"] })} className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white p-2.5 font-semibold">
+                    <option value="mcq">MCQ</option><option value="short">Short Question</option><option value="long">Long Question</option>
+                  </select>
+                </label>
+                <label className="font-bold text-slate-700">Marks
+                  <input type="number" min="1" max="100" value={manualQuestion.marks} onChange={(e) => setManualQuestion({ ...manualQuestion, marks: Number(e.target.value) })} className="mt-1.5 w-full rounded-xl border border-slate-300 p-2.5 font-semibold" />
+                </label>
+                <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-900"><strong>Numbering:</strong><br />Placed in sequence inside its section.</div>
+              </div>
+              <label className="block font-bold text-slate-700">Question text
+                <textarea autoFocus rows={4} value={manualQuestion.text} onChange={(e) => setManualQuestion({ ...manualQuestion, text: e.target.value })} placeholder="Type your question here…" className="mt-1.5 w-full resize-y rounded-xl border border-slate-300 p-3 leading-relaxed focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none" />
+              </label>
+              {manualQuestion.type === "mcq" && (
+                <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><span className="font-black text-blue-950">Answer options</span><label className="text-xs font-bold text-blue-800">Correct answer <select value={manualQuestion.correctOption} onChange={(e) => setManualQuestion({ ...manualQuestion, correctOption: Number(e.target.value) })} className="ml-1 rounded-lg border border-blue-200 bg-white px-2 py-1"><option value={1}>A</option><option value={2}>B</option><option value={3}>C</option><option value={4}>D</option></select></label></div>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {(["optionA", "optionB", "optionC", "optionD"] as const).map((field, index) => <label key={field} className="font-bold text-slate-700">{String.fromCharCode(65 + index)}<input value={manualQuestion[field]} onChange={(e) => setManualQuestion({ ...manualQuestion, [field]: e.target.value })} placeholder={`Option ${String.fromCharCode(65 + index)}`} className="ml-2 w-[calc(100%-28px)] rounded-lg border border-slate-300 bg-white px-2.5 py-2 font-normal" /></label>)}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4">
+              <button onClick={() => setShowManualQuestionModal(false)} className="rounded-xl border border-slate-300 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-white">Cancel</button>
+              <button onClick={addManualQuestion} disabled={!manualQuestion.text.trim() || (manualQuestion.type === "mcq" && !manualQuestion.optionA.trim())} className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-black text-white shadow-md hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"><Check className="w-4 h-4" />Add &amp; Select Question</button>
             </div>
           </div>
         </div>
