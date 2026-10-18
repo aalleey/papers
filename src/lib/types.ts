@@ -418,3 +418,22 @@ export interface EmailRecord {
   error?: string | null;
 }
 
+export type InvoiceStatus = "draft" | "sent" | "paid" | "void";
+
+export interface InvoiceRecord {
+  id: string;
+  invoiceNumber: string;
+  clientId: string;
+  clientName: string;
+  clientEmail: string;
+  academyName?: string | null;
+  description: string;
+  amount: number;
+  status: InvoiceStatus;
+  dueDate: string | null;
+  issuedAt: string;
+  paidAt?: string | null;
+  paymentMethod?: string | null;
+  transactionRef?: string | null;
+  notes?: string | null;
+}

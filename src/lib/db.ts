@@ -14,6 +14,7 @@ import {
   PaperRecord,
   ClientPaperStats,
   EmailRecord,
+  InvoiceRecord,
 } from "./types";
 import {
   SEED_BOARDS,
@@ -243,6 +244,7 @@ interface MockStore {
   clients: ClientUser[];
   papers: PaperRecord[];
   emails: EmailRecord[];
+  invoices: InvoiceRecord[];
 }
 
 // Helper to determine whether the app is executing in live production mode
@@ -270,6 +272,9 @@ function initMockStore(): MockStore {
     }
     if (!globalForStore.mockStore.emails) {
       globalForStore.mockStore.emails = [];
+    }
+    if (!globalForStore.mockStore.invoices) {
+      globalForStore.mockStore.invoices = [];
     }
     return globalForStore.mockStore;
   }
@@ -311,6 +316,7 @@ function initMockStore(): MockStore {
     clients: isProd ? [] : [...SEED_CLIENTS],
     papers: isProd ? [] : buildSeedPapers(),
     emails: [],
+    invoices: [],
   };
 
   globalForStore.mockStore = store;
@@ -1661,6 +1667,69 @@ export const db = {
         .sort((a, b) => b.count - a.count),
       perDay,
     };
+  },
+
+  // =========================================================================
+  // FINANCE: INVOICES
+  // =========================================================================
+
+  async getInvoices(limit = 200): Promise<InvoiceRecord[]> {
+    const adminClient = createAdminSupabaseClient();
+    const environment = getCurrentDataEnvironment();
+    if (adminClient) {
+      try {
+        const { data, error } = await adminClient.from("invoices").select("*")
+          .eq("environment", environment).order("issued_at", { ascending: false }).limit(limit);
+        if (!error && data) return data.map((row) => ({
+          id: row.id, invoiceNumber: row.invoice_number, clientId: row.client_id,
+          clientName: row.client_name, clientEmail: row.client_email, academyName: row.academy_name,
+          description: row.description, amount: Number(row.amount), status: row.status,
+          dueDate: row.due_date, issuedAt: row.issued_at, paidAt: row.paid_at,
+          paymentMethod: row.payment_method, transactionRef: row.transaction_ref, notes: row.notes,
+        }));
+      } catch { /* fall back to local store */ }
+    }
+    return initMockStore().invoices.slice().sort((a, b) => b.issuedAt.localeCompare(a.issuedAt)).slice(0, limit);
+  },
+
+  async createInvoice(data: Omit<InvoiceRecord, "id" | "invoiceNumber" | "issuedAt">): Promise<InvoiceRecord> {
+    const id = `inv-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const issuedAt = new Date().toISOString();
+    const invoiceNumber = `PW-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
+    const record: InvoiceRecord = { ...data, id, invoiceNumber, issuedAt };
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      try {
+        const { data: inserted, error } = await adminClient.from("invoices").insert({
+          id, invoice_number: invoiceNumber, client_id: record.clientId, client_name: record.clientName,
+          client_email: record.clientEmail, academy_name: record.academyName || null, description: record.description,
+          amount: record.amount, status: record.status, due_date: record.dueDate, issued_at: issuedAt,
+          paid_at: record.paidAt || null, payment_method: record.paymentMethod || null,
+          transaction_ref: record.transactionRef || null, notes: record.notes || null,
+          environment: getCurrentDataEnvironment(),
+        }).select().single();
+        if (!error && inserted) return { ...record, id: inserted.id, invoiceNumber: inserted.invoice_number };
+      } catch { /* fall back to local store */ }
+    }
+    initMockStore().invoices.unshift(record);
+    return JSON.parse(JSON.stringify(record));
+  },
+
+  async updateInvoice(id: string, updates: Partial<Pick<InvoiceRecord, "status" | "paidAt" | "paymentMethod" | "transactionRef" | "notes">>): Promise<InvoiceRecord | null> {
+    const adminClient = createAdminSupabaseClient();
+    if (adminClient) {
+      try {
+        const { data, error } = await adminClient.from("invoices").update({
+          status: updates.status, paid_at: updates.paidAt, payment_method: updates.paymentMethod,
+          transaction_ref: updates.transactionRef, notes: updates.notes,
+        }).eq("id", id).select().single();
+        if (!error && data) return { id: data.id, invoiceNumber: data.invoice_number, clientId: data.client_id, clientName: data.client_name, clientEmail: data.client_email, academyName: data.academy_name, description: data.description, amount: Number(data.amount), status: data.status, dueDate: data.due_date, issuedAt: data.issued_at, paidAt: data.paid_at, paymentMethod: data.payment_method, transactionRef: data.transaction_ref, notes: data.notes };
+      } catch { /* fall back to local store */ }
+    }
+    const invoice = initMockStore().invoices.find((item) => item.id === id);
+    if (!invoice) return null;
+    Object.assign(invoice, updates);
+    return JSON.parse(JSON.stringify(invoice));
   },
 
   // =========================================================================
