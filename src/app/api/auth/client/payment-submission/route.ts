@@ -15,17 +15,13 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { transactionRef, senderPhone, senderName, amount, planRequested, notes } = body;
 
-    if (!transactionRef || !transactionRef.trim()) {
-      return NextResponse.json(
-        { error: "Transaction Reference / TID is required." },
-        { status: 400 }
-      );
-    }
+    // Transaction ID is optional; admin can verify via the WhatsApp screenshot instead
+    const tid = typeof transactionRef === "string" && transactionRef.trim() ? transactionRef.trim() : "Not provided";
 
     const paymentSubmission: PaymentSubmission = {
       method: "raast",
       raastId: "03092770207",
-      transactionRef: transactionRef.trim(),
+      transactionRef: tid,
       senderPhone: senderPhone?.trim() || client.phone || "",
       senderName: senderName?.trim() || client.fullName || "",
       amount: amount?.trim() || "2000",

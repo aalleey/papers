@@ -104,11 +104,6 @@ export default function RegisterPage() {
     e.preventDefault();
     setError(null);
 
-    if (!transactionRef.trim()) {
-      setError("Please enter the Raast Transaction ID / Reference Number.");
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -495,18 +490,17 @@ export default function RegisterPage() {
               <form onSubmit={handlePaymentSubmit} className="space-y-3.5">
                 <div>
                   <label className="block font-bold text-slate-800 mb-1">
-                    Transaction ID / Reference Number (TID) <span className="text-rose-500">*</span>
+                    Transaction ID / Reference Number (TID) <span className="text-slate-400 font-medium">(optional)</span>
                   </label>
                   <input
                     type="text"
-                    required
                     placeholder="e.g. 240819283712 or TRX-99214"
                     value={transactionRef}
                     onChange={(e) => setTransactionRef(e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-white/60 focus:bg-white/90 backdrop-blur-xl border border-white/90 focus:border-emerald-400 rounded-2xl outline-none shadow-[inset_0_2px_5px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.95)] focus:ring-4 focus:ring-emerald-500/15 font-mono text-xs font-semibold text-slate-900 placeholder:text-slate-400 transition-all"
                   />
                   <span className="text-[10px] text-slate-500 mt-1 block">
-                    Found on your bank transfer receipt SMS or app screenshot.
+                    Found on your bank transfer receipt SMS or app screenshot. You can skip it and send the screenshot on WhatsApp instead.
                   </span>
                 </div>
 
