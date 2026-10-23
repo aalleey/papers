@@ -143,6 +143,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.YANDEX_VERIFICATION,
+    other: process.env.BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+      : undefined,
+  },
   twitter: {
     card: "summary_large_image",
     site: "@PaperWalaPK",

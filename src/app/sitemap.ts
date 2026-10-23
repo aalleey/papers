@@ -1,4 +1,5 @@
 import { MetadataRoute } from "next";
+import { SEO_LANDINGS } from "@/lib/seo-landings";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl =
@@ -25,6 +26,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/pricing", changeFrequency: "weekly", priority: 0.85 },
     { path: "/register", changeFrequency: "monthly", priority: 0.75 },
     { path: "/login", changeFrequency: "monthly", priority: 0.65 },
+    ...SEO_LANDINGS.map((l) => ({
+      path: `/paper-maker/${l.slug}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    })),
   ];
 
   return routes.map((route) => {

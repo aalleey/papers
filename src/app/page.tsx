@@ -1727,6 +1727,17 @@ export default function Home() {
             </div>
           </div>
 
+          <nav aria-label="Paper makers" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-slate-500 text-[11px] font-medium">
+            <Link href="/paper-maker/9th-class-paper-maker" className="hover:text-emerald-700">9th Class Paper Maker</Link>
+            <Link href="/paper-maker/10th-class-paper-maker" className="hover:text-emerald-700">10th Class Paper Maker</Link>
+            <Link href="/paper-maker/fsc-ics-paper-maker" className="hover:text-emerald-700">FSc &amp; ICS Paper Maker</Link>
+            <Link href="/paper-maker/bise-punjab-board-paper-maker" className="hover:text-emerald-700">Punjab Board (BISE) Paper Maker</Link>
+            <Link href="/paper-maker/fbise-federal-board-paper-maker" className="hover:text-emerald-700">FBISE Federal Board Paper Maker</Link>
+            <Link href="/paper-maker/bilingual-urdu-english-paper-maker" className="hover:text-emerald-700">Urdu English Paper Maker</Link>
+            <Link href="/paper-maker/word-docx-exam-paper-generator" className="hover:text-emerald-700">Word (.docx) &amp; 1-Page PDF Paper Maker</Link>
+            <Link href="/paper-maker/online-paper-maker-pakistan" className="hover:text-emerald-700">Online Paper Maker Pakistan</Link>
+          </nav>
+
           <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-[11px]">
             <div>
               &copy; {new Date().getFullYear()} PaperWala PK. All rights reserved. Designed for Punjab Boards, Federal Board (FBISE), and Pakistani Schools.

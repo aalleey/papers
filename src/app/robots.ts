@@ -16,6 +16,7 @@ export default function robots(): MetadataRoute.Robots {
     "/select-questions",
     "/paper-editor",
     "/pricing",
+    "/paper-maker",
     "/register",
     "/login",
     "/opengraph-image",
