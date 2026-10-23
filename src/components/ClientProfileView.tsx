@@ -36,7 +36,9 @@ import {
   Send,
   ExternalLink,
   AlertTriangle,
+  LayoutTemplate,
 } from "lucide-react";
+import { PaperTemplateSettings } from "@/components/PaperTemplateSettings";
 import {
   ClientUser,
   PaperRecord,
@@ -102,7 +104,7 @@ export function ClientProfileView({
   onClientUpdated,
 }: Props) {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "papers" | "billing" | "communications" | "permissions"
+    "overview" | "papers" | "billing" | "communications" | "permissions" | "template"
   >("overview");
   const [search, setSearch] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("all");
@@ -366,7 +368,7 @@ export function ClientProfileView({
           {/* Left: Avatar + Identity + Credentials */}
           <div className="flex flex-col sm:flex-row items-start gap-5 flex-1 min-w-0">
             <div className="relative shrink-0">
-              <div className="w-22 h-22 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-emerald-400 via-teal-500 to-cyan-500 flex items-center justify-center text-3xl sm:text-4xl font-black text-slate-950 shadow-[0_8px_25px_-4px_rgba(16,185,129,0.55),inset_0_2px_3px_rgba(255,255,255,0.8)] ring-4 ring-white/15">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-emerald-400 via-teal-500 to-cyan-500 flex items-center justify-center text-3xl sm:text-4xl font-black text-slate-950 shadow-[0_8px_25px_-4px_rgba(16,185,129,0.55),inset_0_2px_3px_rgba(255,255,255,0.8)] ring-4 ring-white/15">
                 {client.fullName.charAt(0).toUpperCase()}
               </div>
               <div
@@ -571,7 +573,7 @@ export function ClientProfileView({
           </div>
 
           {/* Right: 3D Liquid Glass Subscription Card & Quick Controls */}
-          <div className="rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 p-5 min-w-[270px] xl:max-w-xs w-full space-y-4 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]">
+          <div className="rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 p-5 sm:min-w-[270px] xl:max-w-xs w-full space-y-4 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-black uppercase tracking-widest text-emerald-300">
                 Subscription Tier
@@ -723,11 +725,12 @@ export function ClientProfileView({
       {/* =====================================================================
           3. SEGMENTED GLASS NAVIGATION TABS
           ===================================================================== */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white/80 backdrop-blur-2xl p-2 rounded-2xl border border-white/90 shadow-[0_10px_25px_-8px_rgba(15,23,42,0.07),0_3px_0_0_rgba(203,213,225,0.5),inset_0_1px_0_#ffffff]">
-        <div className="flex flex-wrap items-center gap-1.5">
+      <div className="flex items-center gap-3 bg-white/80 backdrop-blur-2xl p-2 rounded-2xl border border-white/90 shadow-[0_10px_25px_-8px_rgba(15,23,42,0.07),0_3px_0_0_rgba(203,213,225,0.5),inset_0_1px_0_#ffffff] overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-1.5 min-w-max">
           {[
             { id: "overview", label: "Rich Profile & Analytics", icon: TrendingUp },
             { id: "papers", label: `Paper History (${papers.length})`, icon: FileText },
+            ...(isAdminView ? [] : [{ id: "template", label: "Paper Template", icon: LayoutTemplate }]),
             { id: "billing", label: `Billing & Raast (${invoices.length + (client.paymentSubmission ? 1 : 0)})`, icon: Receipt },
             { id: "communications", label: `Emails & Reports (${emails.length + reports.length})`, icon: Mail },
             { id: "permissions", label: "Entitlements & Access", icon: ShieldCheck },
@@ -739,7 +742,7 @@ export function ClientProfileView({
                 key={t.id}
                 type="button"
                 onClick={() => setActiveTab(t.id as typeof activeTab)}
-                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer ${
                   active
                     ? "bg-gradient-to-b from-slate-900 to-indigo-950 text-white shadow-[0_3px_0_0_#0f172a,0_8px_16px_-4px_rgba(15,23,42,0.3)] -translate-y-0.5"
                     : "text-slate-600 hover:text-slate-950 hover:bg-slate-100/80"
@@ -752,6 +755,11 @@ export function ClientProfileView({
           })}
         </div>
       </div>
+
+      {/* =====================================================================
+          TAB: PAPER TEMPLATE (user's default paper generation settings)
+          ===================================================================== */}
+      {activeTab === "template" && !isAdminView && <PaperTemplateSettings client={client} />}
 
       {/* =====================================================================
           TAB 1: OVERVIEW (ANALYTICS, QUESTION COMPOSITION, SYLLABUS FOOTPRINT)

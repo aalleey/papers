@@ -49,7 +49,7 @@ export default function ProfilePage() {
       {/* Top bar - Transparent 3D Glassmorphic Floating Bar */}
       <header className="sticky top-3 z-30 px-3 sm:px-6 pointer-events-none">
         <div className="pointer-events-auto max-w-6xl mx-auto rounded-2xl bg-white/45 backdrop-blur-2xl border border-white/80 shadow-[0_20px_50px_-12px_rgba(15,23,42,0.18),0_4px_16px_-2px_rgba(16,185,129,0.12),inset_0_2px_1px_0_rgba(255,255,255,0.95),inset_0_-2px_4px_0_rgba(15,23,42,0.06)]">
-          <div className="px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+          <div className="px-3 sm:px-6 py-2 sm:py-0 sm:h-16 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center gap-3 whitespace-nowrap shrink-0">
               <Link
                 href="/"
@@ -64,7 +64,7 @@ export default function ProfilePage() {
                 <span className="font-urdu text-emerald-700 font-bold text-base drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">پیپر والا</span>
               </Link>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               {client?.email?.toLowerCase() === "ali.khaliq50@gmail.com" && (
                 <Link
                   href="/admin/users"

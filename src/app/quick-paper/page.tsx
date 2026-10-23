@@ -25,8 +25,21 @@ import {
   AlertCircle,
   SlidersHorizontal,
   Save,
+  Layers,
+  X,
 } from "lucide-react";
-import { parseRawTextToExam, ExamPaperData, ExamSection } from "@/lib/quick-paper-parser";
+import {
+  parseRawTextToExam,
+  serializeExamDataToRawText,
+  getUrduOptionLabel,
+  normalizeOptionKey,
+  hasUrduScript,
+  isPureUrduText,
+  splitBilingualOptionText,
+  ExamPaperData,
+  ExamSection,
+  ExamQuestion,
+} from "@/lib/quick-paper-parser";
 import { MathRenderer } from "@/components/MathRenderer";
 import { exportPaperToDocx } from "@/lib/docx-export";
 import { BrandEmblem, generatePaperWalaCrestDataUrl } from "@/components/BrandLogo";
@@ -43,7 +56,7 @@ export interface PaperTemplate {
   timeAllowed: string;
   totalMarks: number;
   testNo: string;
-  headerStyle: "punjab-board-style1" | "classic" | "minimal";
+  headerStyle: "punjab-board-style1" | "fbise-style2" | "minimal";
   layout: "standard" | "two-column";
   fontFamily: "urdu" | "serif" | "sans";
   fontSize: number;
@@ -57,10 +70,21 @@ export interface PaperTemplate {
   instructionNoteUr: string;
 }
 
+interface ModalQuestionDraft {
+  questionNo: string;
+  questionTextEn: string;
+  questionTextUr: string;
+  marks: number;
+  optionA: string;
+  optionB: string;
+  optionC: string;
+  optionD: string;
+}
+
 const DEFAULT_TEMPLATES: PaperTemplate[] = [
   {
     id: "seek-academy-style1",
-    name: "Style 1: Punjab Boards / Seek Academy",
+    name: "Style 1: Punjab Boards (BISE)",
     institutionName: "SEEKACADEMY",
     paperTypeBanner: "EXAMINATION 2026-27",
     title: "کمپیوٹر سائنس / COMPUTER SCIENCE",
@@ -87,9 +111,9 @@ const DEFAULT_TEMPLATES: PaperTemplate[] = [
   },
   {
     id: "punjab-board-official",
-    name: "Style 2: BISE Punjab Board Urdu",
+    name: "Style 2: BISE Urdu Medium Board",
     institutionName: "گورنمنٹ ہائر سیکنڈری سکول / کالج",
-    paperTypeBanner: "ANNUAL EXAMINATION 2026",
+    paperTypeBanner: "سالانہ امتحان و تعلیمی ٹیسٹ 2026-27",
     title: "سالانہ امتحان و تعلیمی ٹیسٹ 2026",
     subject: "اردو لازمی",
     grade: "جماعت دہم (10th)",
@@ -113,8 +137,33 @@ const DEFAULT_TEMPLATES: PaperTemplate[] = [
       "تمام سوالات کے جوابات دی گئی جوابی کاپی پر تحریر کریں۔ کٹائی اور اوور رائٹنگ سے گریز کریں۔",
   },
   {
+    id: "fbise-official",
+    name: "Style 3: Federal Board (FBISE Boxed)",
+    institutionName: "APEX SCIENCE COLLEGE ISLAMABAD",
+    paperTypeBanner: "SECTIONAL ASSESSMENT 2026-27",
+    title: "FEDERAL BOARD PATTERN",
+    subject: "Physics / فزکس",
+    grade: "10th",
+    syllabus: "Unit 1-4",
+    timeAllowed: "1:30 Hours",
+    totalMarks: 30,
+    testNo: "02",
+    headerStyle: "fbise-style2",
+    layout: "standard",
+    fontFamily: "sans",
+    fontSize: 11.5,
+    showBorder: true,
+    borderStyle: "single",
+    showRollNo: true,
+    showWatermark: false,
+    watermarkText: "FBISE",
+    paperCode: "2045",
+    instructionNoteEn: "Attempt all sections within the provided time limit.",
+    instructionNoteUr: "مقررہ وقت کے اندر تمام سوالات حل کریں۔",
+  },
+  {
     id: "minimal-clean",
-    name: "Style 3: Compact Eco Class Test",
+    name: "Style 4: Compact Eco Class Test",
     institutionName: "APEX SCIENCE ACADEMY",
     paperTypeBanner: "WEEKLY UNIT ASSESSMENT",
     title: "UNIT TEST",
@@ -175,14 +224,16 @@ SECTION-III: DETAILED QUESTIONS (Marks: 10)
 5. نعت میں توصیف کی جاتی ہے:
 (الف) اولیاء کی   (ب) صحابہ کی   (ج) حضرت محمد ﷺ کی   (د) اللہ کی
 
-سوال - درج ذیل اشعار کی تشریح کریں - (5)
-(i) کعبے کی رونق کعبے کا منظر اللہ اکبر اللہ اکبر
-دیکھوں تو دیکھوں جاؤں برابر اللہ اکبر اللہ اکبر
-(ii) دلوں کے ساتھ جبیں جو خم نہیں کرتے
-وہ پائے مدحت خیرالامم نہیں کرتے
+حصہ دوم: مختصر سوالات (Marks: 10)
+1. حمد اور نعت میں بنیادی فرق واضح کریں۔
+2. امدادی فعل کی تعریف کریں اور دو مثالیں دیں۔
+3. مرزا غالب کے طرزِ تحریر کی دو خصوصیات لکھیں۔
+4. محاورہ اور روزمرہ میں کیا فرق ہے؟
+5. مطلع اور مقطع کی تعریف مع مثال تحریر کریں۔
 
-سوال - سیرت النبی صلی اللہ علیہ وآلہ وسلم کے عنوان پر ایک تفصیلی مضمون تحریر کریں - (10)
-سوال - دوست کے نام خط امتحان میں کامیابی کا ذکر کرنا (5)`,
+حصہ سوم: تفصیلی سوالات (Marks: 10)
+1. سیرت النبی صلی اللہ علیہ وآلہ وسلم کے عنوان پر ایک جامع مضمون تحریر کریں۔
+2. اپنے دوست کے نام خط لکھیں جس میں امتحان میں شاندار کامیابی پر مبارکباد دیں۔`,
 
   English: `SECTION-I: MULTIPLE CHOICE QUESTIONS (Marks: 5)
 1. The rate of change of velocity of a body is called:
@@ -213,6 +264,27 @@ export default function QuickPaperPage() {
   const [rawText, setRawText] = useState<string>(SAMPLE_PAPERS.Bilingual);
   const [paperLanguageMode, setPaperLanguageMode] = useState<"Urdu" | "English" | "Bilingual">("Bilingual");
   const [showTemplateModal, setShowTemplateModal] = useState(false);
+
+  // Add Section / Question Modal State
+  const [showAddSectionModal, setShowAddSectionModal] = useState(false);
+  const [modalTargetMode, setModalTargetMode] = useState<"new_section" | "existing_section">("new_section");
+  const [modalTargetSectionIdx, setModalTargetSectionIdx] = useState<number>(0);
+  const [modalSectionType, setModalSectionType] = useState<ExamSection["type"]>("short");
+  const [modalSectionTitleEn, setModalSectionTitleEn] = useState("SECTION-II: SHORT QUESTIONS");
+  const [modalSectionTitleUr, setModalSectionTitleUr] = useState("حصہ دوم: مختصر سوالات");
+  const [modalSectionMarks, setModalSectionMarks] = useState<number>(10);
+  const [modalQuestions, setModalQuestions] = useState<ModalQuestionDraft[]>([
+    {
+      questionNo: "(i)",
+      questionTextEn: "",
+      questionTextUr: "",
+      marks: 2,
+      optionA: "",
+      optionB: "",
+      optionC: "",
+      optionD: "",
+    },
+  ]);
 
   // AI Topic Generator State
   const [topicPrompt, setTopicPrompt] = useState("");
@@ -271,9 +343,316 @@ export default function QuickPaperPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
 
+  // Apply the logged-in user's saved paper template (institution, logo, print density)
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth/client/template")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        const t = d?.template;
+        if (cancelled || !t) return;
+        if (t.logoBase64) setLogoBase64(t.logoBase64);
+        if (t.testDensity) setPrintDensity(t.testDensity);
+        if (t.institutionName) setPaperData((prev) => ({ ...prev, institutionName: t.institutionName }));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  // Helper to get default question number label for a given section type and index
+  const getDefaultQuestionNo = (type: ExamSection["type"], index: number, totalSections: number = 2): string => {
+    if (type === "mcq") return `${index + 1}`;
+    if (type === "short") return `(${toRomanLower(index + 1)})`;
+    if (type === "long" || type === "essay" || type === "letter") {
+      return paperLanguageMode === "Urdu"
+        ? `سوال نمبر ${index + Math.max(3, totalSections + 1)}`
+        : `Q.${index + Math.max(3, totalSections + 1)}`;
+    }
+    if (type === "poetry") return `(${toRomanLower(index + 1)})`;
+    return `${index + 1}`;
+  };
+
+  // Open the "Add Section" Modal (either for a brand-new section or adding a question to an existing section)
+  const openAddSectionModal = (mode: "new_section" | "existing_section" = "new_section", sectionIdx?: number) => {
+    const nextSecNum = paperData.sections.length + 1;
+    const romanSec = toRomanLower(nextSecNum).toUpperCase();
+
+    if (mode === "existing_section" && sectionIdx !== undefined && paperData.sections[sectionIdx]) {
+      const targetSec = paperData.sections[sectionIdx];
+      const nextQIdx = targetSec.questions.length;
+      setModalTargetMode("existing_section");
+      setModalTargetSectionIdx(sectionIdx);
+      setModalSectionType(targetSec.type);
+      setModalSectionTitleEn(targetSec.titleEn || "");
+      setModalSectionTitleUr(targetSec.titleUr || "");
+      setModalSectionMarks(targetSec.marks || 10);
+      setModalQuestions([
+        {
+          questionNo: getDefaultQuestionNo(targetSec.type, nextQIdx, paperData.sections.length),
+          questionTextEn: "",
+          questionTextUr: "",
+          marks: targetSec.type === "mcq" ? 1 : targetSec.type === "long" ? 5 : 2,
+          optionA: "",
+          optionB: "",
+          optionC: "",
+          optionD: "",
+        },
+      ]);
+    } else {
+      const defaultType: ExamSection["type"] =
+        paperData.sections.length === 0
+          ? "mcq"
+          : paperData.sections.length === 1
+          ? "short"
+          : "long";
+      const defaultTitleEn =
+        defaultType === "mcq"
+          ? `SECTION-${romanSec}: MULTIPLE CHOICE QUESTIONS`
+          : defaultType === "short"
+          ? `SECTION-${romanSec}: SHORT QUESTIONS`
+          : `SECTION-${romanSec}: DETAILED QUESTIONS`;
+      const defaultTitleUr =
+        defaultType === "mcq"
+          ? `حصہ ${getUrduSectionOrdinal(nextSecNum)}: کثیر الانتخابی سوالات`
+          : defaultType === "short"
+          ? `حصہ ${getUrduSectionOrdinal(nextSecNum)}: مختصر سوالات`
+          : `حصہ ${getUrduSectionOrdinal(nextSecNum)}: تفصیلی سوالات`;
+
+      setModalTargetMode("new_section");
+      setModalTargetSectionIdx(Math.max(0, paperData.sections.length - 1));
+      setModalSectionType(defaultType);
+      setModalSectionTitleEn(defaultTitleEn);
+      setModalSectionTitleUr(defaultTitleUr);
+      setModalSectionMarks(defaultType === "mcq" ? 5 : 10);
+      setModalQuestions([
+        {
+          questionNo: getDefaultQuestionNo(defaultType, 0, nextSecNum),
+          questionTextEn: "",
+          questionTextUr: "",
+          marks: defaultType === "mcq" ? 1 : defaultType === "long" ? 5 : 2,
+          optionA: "",
+          optionB: "",
+          optionC: "",
+          optionD: "",
+        },
+      ]);
+    }
+
+    setShowAddSectionModal(true);
+  };
+
+  // Handle changing section type inside the Add Section Modal
+  const handleModalSectionTypeChange = (newType: ExamSection["type"]) => {
+    setModalSectionType(newType);
+    const nextSecNum = paperData.sections.length + 1;
+    const romanSec = toRomanLower(nextSecNum).toUpperCase();
+    const urduOrd = getUrduSectionOrdinal(nextSecNum);
+
+    if (newType === "mcq") {
+      setModalSectionTitleEn(`SECTION-${romanSec}: MULTIPLE CHOICE QUESTIONS`);
+      setModalSectionTitleUr(`حصہ ${urduOrd}: کثیر الانتخابی سوالات`);
+      setModalSectionMarks(5);
+    } else if (newType === "short") {
+      setModalSectionTitleEn(`SECTION-${romanSec}: SHORT QUESTIONS`);
+      setModalSectionTitleUr(`حصہ ${urduOrd}: مختصر سوالات`);
+      setModalSectionMarks(10);
+    } else if (newType === "long") {
+      setModalSectionTitleEn(`SECTION-${romanSec}: DETAILED QUESTIONS`);
+      setModalSectionTitleUr(`حصہ ${urduOrd}: تفصیلی سوالات`);
+      setModalSectionMarks(10);
+    } else if (newType === "poetry") {
+      setModalSectionTitleEn(`SECTION-${romanSec}: POETRY EXPLANATION`);
+      setModalSectionTitleUr(`حصہ ${urduOrd}: اشعار کی تشریح`);
+      setModalSectionMarks(5);
+    } else {
+      setModalSectionTitleEn(`SECTION-${romanSec}: ESSAY / APPLICATION`);
+      setModalSectionTitleUr(`حصہ ${urduOrd}: مضمون / درخواست`);
+      setModalSectionMarks(10);
+    }
+
+    setModalQuestions((prev) =>
+      prev.map((q, idx) => ({
+        ...q,
+        questionNo: getDefaultQuestionNo(newType, idx, nextSecNum),
+        marks: newType === "mcq" ? 1 : newType === "long" || newType === "essay" ? 5 : 2,
+      }))
+    );
+  };
+
+  const handleAddModalQuestionRow = () => {
+    const baseIdx =
+      modalTargetMode === "existing_section" && paperData.sections[modalTargetSectionIdx]
+        ? paperData.sections[modalTargetSectionIdx].questions.length + modalQuestions.length
+        : modalQuestions.length;
+
+    const activeType =
+      modalTargetMode === "existing_section" && paperData.sections[modalTargetSectionIdx]
+        ? paperData.sections[modalTargetSectionIdx].type
+        : modalSectionType;
+
+    setModalQuestions((prev) => [
+      ...prev,
+      {
+        questionNo: getDefaultQuestionNo(activeType, baseIdx, paperData.sections.length + 1),
+        questionTextEn: "",
+        questionTextUr: "",
+        marks: activeType === "mcq" ? 1 : activeType === "long" || activeType === "essay" ? 5 : 2,
+        optionA: "",
+        optionB: "",
+        optionC: "",
+        optionD: "",
+      },
+    ]);
+  };
+
+  const handleRemoveModalQuestionRow = (idx: number) => {
+    if (modalQuestions.length <= 1) return;
+    setModalQuestions((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleUpdateModalQuestionRow = (
+    idx: number,
+    field: keyof ModalQuestionDraft,
+    value: string | number
+  ) => {
+    setModalQuestions((prev) => {
+      const updated = [...prev];
+      updated[idx] = { ...updated[idx], [field]: value };
+      return updated;
+    });
+  };
+
+  // Submit handler for Add Section & Questions Modal
+  const handleConfirmAddSectionModal = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const activeType =
+      modalTargetMode === "existing_section" && paperData.sections[modalTargetSectionIdx]
+        ? paperData.sections[modalTargetSectionIdx].type
+        : modalSectionType;
+
+    const validDrafts = modalQuestions.filter(
+      (q) => q.questionTextEn.trim() !== "" || q.questionTextUr.trim() !== ""
+    );
+
+    if (validDrafts.length === 0) {
+      setStatusMessage({
+        text: "Please enter at least one question before adding to the paper.",
+        type: "error",
+      });
+      return;
+    }
+
+    const builtQuestions: ExamQuestion[] = validDrafts.map((draft, idx) => {
+      const rawPrimary = draft.questionTextEn.trim();
+      const rawSecondary = draft.questionTextUr.trim();
+
+      let qEn = rawPrimary;
+      let qUr = rawSecondary;
+
+      // Support "English | اردو" in a single field as well
+      if (rawPrimary.includes("|") && !rawSecondary) {
+        const parts = rawPrimary.split("|").map((s) => s.trim()).filter(Boolean);
+        qEn = parts[0] || rawPrimary;
+        qUr = parts[1] || parts[0] || rawPrimary;
+      } else if (!qEn && qUr) {
+        qEn = qUr;
+      } else if (qEn && !qUr) {
+        qUr = qEn;
+      }
+
+      let options: ExamQuestion["options"] = undefined;
+      if (activeType === "mcq") {
+        const rawOpts = [draft.optionA, draft.optionB, draft.optionC, draft.optionD];
+        options = rawOpts.map((rawOpt, oIdx) => {
+          const fallbackEn = `Option ${["A", "B", "C", "D"][oIdx]}`;
+          const fallbackUr = `آپشن ${["الف", "ب", "ج", "د"][oIdx]}`;
+          const trimmed = rawOpt.trim();
+          if (!trimmed) {
+            return {
+              key: ["A", "B", "C", "D"][oIdx],
+              textEn: paperLanguageMode === "Urdu" ? fallbackUr : fallbackEn,
+              textUr: paperLanguageMode === "English" ? fallbackEn : fallbackUr,
+            };
+          }
+          const { textEn, textUr } = splitBilingualOptionText(trimmed);
+          return {
+            key: ["A", "B", "C", "D"][oIdx],
+            textEn: textEn || textUr,
+            textUr: textUr || textEn,
+          };
+        });
+      }
+
+      return {
+        number: idx + 1,
+        customNumber: draft.questionNo.trim() || undefined,
+        questionEn: qEn,
+        questionUr: qUr,
+        marks: Number(draft.marks) || (activeType === "mcq" ? 1 : 2),
+        options,
+        poetryLines:
+          activeType === "poetry"
+            ? (qUr || qEn)
+                .split(/\r?\n/)
+                .map((l) => l.trim())
+                .filter(Boolean)
+            : undefined,
+      };
+    });
+
+    const updatedSections = [...paperData.sections];
+
+    if (modalTargetMode === "existing_section" && updatedSections[modalTargetSectionIdx]) {
+      const targetSec = { ...updatedSections[modalTargetSectionIdx] };
+      const startNum = targetSec.questions.length;
+      const renumbered = builtQuestions.map((q, idx) => ({
+        ...q,
+        number: startNum + idx + 1,
+      }));
+      targetSec.questions = [...targetSec.questions, ...renumbered];
+      const addedMarks = renumbered.reduce((sum, q) => sum + (q.marks || 0), 0);
+      targetSec.marks = (targetSec.marks || 0) + addedMarks;
+      updatedSections[modalTargetSectionIdx] = targetSec;
+    } else {
+      const computedSecMarks =
+        Number(modalSectionMarks) ||
+        builtQuestions.reduce((sum, q) => sum + (q.marks || 0), 0) ||
+        10;
+
+      const newSec: ExamSection = {
+        id: `sec-${Date.now()}`,
+        type: modalSectionType,
+        titleEn: modalSectionTitleEn.trim() || `SECTION-${updatedSections.length + 1}`,
+        titleUr: modalSectionTitleUr.trim() || modalSectionTitleEn.trim() || "نیا حصہ",
+        marks: computedSecMarks,
+        questions: builtQuestions,
+      };
+      updatedSections.push(newSec);
+    }
+
+    const newTotalMarks = updatedSections.reduce((acc, s) => acc + (Number(s.marks) || 0), 0);
+    const nextPaperData: ExamPaperData = {
+      ...paperData,
+      sections: updatedSections,
+      totalMarks: newTotalMarks || paperData.totalMarks,
+    };
+
+    setPaperData(nextPaperData);
+    setRawText(serializeExamDataToRawText(nextPaperData, paperLanguageMode));
+    setShowAddSectionModal(false);
+    showToast(
+      modalTargetMode === "existing_section"
+        ? `Added ${builtQuestions.length} question(s) to section!`
+        : `Added new section with ${builtQuestions.length} question(s) to the paper!`
+    );
   };
 
   // Load Sample Preset
@@ -282,6 +661,9 @@ export default function QuickPaperPage() {
     setRawText(text);
     setPaperLanguageMode(mode);
     const parsed = parseRawTextToExam(text);
+    setInstructionNote(
+      mode === "Urdu" ? activeTemplate.instructionNoteUr : activeTemplate.instructionNoteEn
+    );
     setPaperData((prev) => ({
       ...parsed,
       institutionName: prev.institutionName || activeTemplate.institutionName,
@@ -328,6 +710,11 @@ export default function QuickPaperPage() {
     const parsed = parseRawTextToExam(rawText);
     if (parsed.detectedLanguage) {
       setPaperLanguageMode(parsed.detectedLanguage);
+      setInstructionNote(
+        parsed.detectedLanguage === "Urdu"
+          ? activeTemplate.instructionNoteUr
+          : activeTemplate.instructionNoteEn
+      );
     }
     setPaperData((prev) => ({
       ...parsed,
@@ -575,7 +962,12 @@ export default function QuickPaperPage() {
     setPaperData({ ...paperData, sections: updated });
   };
 
-  const handleUpdateQuestionText = (sIdx: number, qIdx: number, field: "questionUr" | "questionEn", val: string) => {
+  const handleUpdateQuestionText = (
+    sIdx: number,
+    qIdx: number,
+    field: "questionUr" | "questionEn" | "customNumber",
+    val: string
+  ) => {
     const updated = [...paperData.sections];
     const q = { ...updated[sIdx].questions[qIdx], [field]: val };
     if (field === "questionUr" && !q.questionEn) q.questionEn = val;
@@ -599,59 +991,21 @@ export default function QuickPaperPage() {
     }
   };
 
-  const handleAddQuestion = (sIdx: number) => {
-    const updated = [...paperData.sections];
-    const sec = updated[sIdx];
-    const newNum = sec.questions.length + 1;
-    sec.questions.push({
-      number: newNum,
-      questionEn: "Write your new question here...",
-      questionUr: "نیا سوال یہاں درج کریں...",
-      marks: sec.type === "mcq" ? 1 : 2,
-      options:
-        sec.type === "mcq"
-          ? [
-              { key: "A", textEn: "Option A", textUr: "آپشن الف" },
-              { key: "B", textEn: "Option B", textUr: "آپشن ب" },
-              { key: "C", textEn: "Option C", textUr: "آپشن ج" },
-              { key: "D", textEn: "Option D", textUr: "آپشن د" },
-            ]
-          : undefined,
-    });
-    setPaperData({ ...paperData, sections: updated });
-    setIsEditMode(true);
-  };
-
   const handleDeleteQuestion = (sIdx: number, qIdx: number) => {
     const updated = [...paperData.sections];
     updated[sIdx].questions.splice(qIdx, 1);
-    setPaperData({ ...paperData, sections: updated });
-  };
-
-  const handleAddSection = () => {
-    const newSection: ExamSection = {
-      id: `sec-${paperData.sections.length + 1}`,
-      type: "short",
-      titleEn: `SECTION-${paperData.sections.length + 1}: SHORT QUESTIONS`,
-      titleUr: "حصہ دوم: مختصر سوالات",
-      marks: 10,
-      questions: [
-        {
-          number: 1,
-          questionEn: "Write short question text here.",
-          questionUr: "مختصر سوال کا متن یہاں لکھیں۔",
-          marks: 2,
-        },
-      ],
-    };
-    setPaperData({ ...paperData, sections: [...paperData.sections, newSection] });
-    showToast("Added new section to paper");
+    const nextData = { ...paperData, sections: updated };
+    setPaperData(nextData);
+    setRawText(serializeExamDataToRawText(nextData, paperLanguageMode));
   };
 
   const handleDeleteSection = (sIdx: number) => {
     const updated = [...paperData.sections];
     updated.splice(sIdx, 1);
-    setPaperData({ ...paperData, sections: updated });
+    const nextData = { ...paperData, sections: updated };
+    setPaperData(nextData);
+    setRawText(serializeExamDataToRawText(nextData, paperLanguageMode));
+    showToast("Removed section from paper");
   };
 
   const [isExportingDocx, setIsExportingDocx] = useState(false);
@@ -669,9 +1023,15 @@ export default function QuickPaperPage() {
         testNo: testNoText,
         paperCode,
         note: includeNote ? instructionNote : "",
+        noteUr: includeNote ? activeTemplate.instructionNoteUr : "",
         paperTypeBanner,
         logoBase64,
-        headerStyle: activeTemplate.headerStyle === "punjab-board-style1" ? "style1" : "minimal",
+        headerStyle:
+          activeTemplate.headerStyle === "fbise-style2"
+            ? "style2"
+            : activeTemplate.headerStyle === "punjab-board-style1"
+            ? "style1"
+            : "minimal",
         includeStudentInfo,
       });
 
@@ -694,7 +1054,6 @@ export default function QuickPaperPage() {
   };
 
   const handlePrint = () => {
-    // Re-measure right before invoking print dialog so printScale is 100% up-to-date
     if (sheetMeasureRef.current && fitToOnePage) {
       const h = sheetMeasureRef.current.scrollHeight;
       const targetMaxPx = printDensity === "2_per_page" ? 695 : 1015;
@@ -768,9 +1127,6 @@ export default function QuickPaperPage() {
 
     const updateScale = () => {
       const h = el.scrollHeight;
-      // Printable single-page height in CSS pixels:
-      // A4 Landscape (2_per_page) ~202mm => ~695px safe height
-      // A4 Portrait (1_per_page) ~288mm => ~1015px safe height
       const targetMaxPx = printDensity === "2_per_page" ? 695 : 1015;
       if (h > targetMaxPx) {
         const nextScale = Math.max(0.55, Number((targetMaxPx / h).toFixed(3)));
@@ -805,16 +1161,17 @@ export default function QuickPaperPage() {
     const isEnglishOnly = paperLanguageMode === "English";
     const isBilingual = paperLanguageMode === "Bilingual";
     const is2Up = printDensity === "2_per_page";
+    const isFbiseStyle = activeTemplate.headerStyle === "fbise-style2";
 
     // Calculate adaptive base font size so content stays compact on 1 page
     let basePx = is2Up ? Math.min(fontSize, 9.5) : fontSize;
     if (fitToOnePage) {
       if (is2Up) {
-        if (totalContentChars > 1600 || totalQuestionsCount > 12) basePx = Math.min(basePx, 8.2);
-        else if (totalContentChars > 1000 || totalQuestionsCount > 8) basePx = Math.min(basePx, 8.8);
+        if (totalContentChars > 1600 || totalQuestionsCount > 12) basePx = Math.min(basePx, 8.5);
+        else if (totalContentChars > 1000 || totalQuestionsCount > 8) basePx = Math.min(basePx, 9);
       } else {
-        if (totalContentChars > 2400 || totalQuestionsCount > 16) basePx = Math.min(basePx, 9.8);
-        else if (totalContentChars > 1600 || totalQuestionsCount > 11) basePx = Math.min(basePx, 10.5);
+        if (totalContentChars > 2400 || totalQuestionsCount > 16) basePx = Math.min(basePx, 10.2);
+        else if (totalContentChars > 1600 || totalQuestionsCount > 11) basePx = Math.min(basePx, 11);
       }
     }
 
@@ -825,12 +1182,12 @@ export default function QuickPaperPage() {
           showBorder ? "border-2 border-black" : "border border-slate-300"
         } ${
           is2Up
-            ? "p-2 sm:p-2.5"
-            : "p-3.5 sm:p-5 shadow-xl print:shadow-none"
+            ? "p-2.5 sm:p-3"
+            : "p-4 sm:p-6 shadow-xl print:shadow-none"
         }`}
         style={{
           boxSizing: "border-box",
-          lineHeight: is2Up ? "1.22" : "1.28",
+          lineHeight: is2Up ? "1.3" : "1.38",
           fontSize: `${basePx}px`,
         }}
       >
@@ -844,32 +1201,36 @@ export default function QuickPaperPage() {
         )}
 
         {/* ===================================================================
-            HEADER SECTION: STYLE 1 (PUNJAB BOARDS / SEEK ACADEMY) vs MINIMAL
+            HEADER SECTION: STYLE 1 (PUNJAB BOARDS) / STYLE 2 (FBISE) / MINIMAL
             =================================================================== */}
-        {activeTemplate.headerStyle === "punjab-board-style1" ? (
-          <header className="relative z-10 mb-1.5 font-sans select-text" dir="ltr">
+        {activeTemplate.headerStyle === "punjab-board-style1" || activeTemplate.headerStyle === "fbise-style2" ? (
+          <header className="relative z-10 mb-2 font-sans select-text" dir="ltr">
             <div className="border-2 border-black flex items-stretch w-full bg-white box-border mb-0">
               {/* Left: Logo Box */}
               <div
                 className={`${
-                  is2Up ? "w-14 min-w-[52px] p-1" : "w-14 sm:w-20 min-w-[54px] sm:min-w-[72px] p-1"
+                  is2Up ? "w-14 min-w-[52px] p-1" : "w-16 sm:w-20 min-w-[58px] sm:min-w-[76px] p-1.5"
                 } border-r-2 border-black flex flex-col items-center justify-center bg-white shrink-0`}
               >
                 {logoBase64 ? (
                   <img
                     src={logoBase64}
                     alt="Logo"
-                    className={`${is2Up ? "max-h-10 max-w-[44px]" : "max-h-11 sm:max-h-14 max-w-[48px] sm:max-w-[64px]"} object-contain`}
+                    className={`${
+                      is2Up ? "max-h-10 max-w-[44px]" : "max-h-12 sm:max-h-14 max-w-[52px] sm:max-w-[66px]"
+                    } object-contain`}
                   />
                 ) : (
                   <div
                     className={`${
-                      is2Up ? "w-9 h-9" : "w-9 h-9 sm:w-11 sm:h-11"
-                    } border-2 border-emerald-700 rounded-full flex flex-col items-center justify-center p-0.5 bg-emerald-50 text-emerald-900 text-center font-black`}
+                      is2Up ? "w-9 h-9" : "w-10 h-10 sm:w-12 sm:h-12"
+                    } border-2 border-[#1a365d] rounded-full flex flex-col items-center justify-center p-0.5 bg-slate-50 text-[#1a365d] text-center font-black`}
                   >
-                    <span className="text-[0.75em] leading-none">SEEK</span>
-                    <span className="text-[0.55em] uppercase tracking-tighter leading-none mt-0.5">
-                      ACADEMY
+                    <span className="text-[0.72em] leading-none">
+                      {isFbiseStyle ? "FBISE" : "BISE"}
+                    </span>
+                    <span className="text-[0.52em] uppercase tracking-tighter leading-none mt-0.5">
+                      BOARD
                     </span>
                   </div>
                 )}
@@ -877,7 +1238,11 @@ export default function QuickPaperPage() {
 
               {/* Center: Institution Name + Dark Blue Banner + Subject/Class */}
               <div className="flex-1 min-w-0 flex flex-col justify-between text-center border-r-2 border-black">
-                <div className="py-0.5 px-1.5 font-black text-[1.3em] text-[#1a365d] uppercase tracking-wider font-serif leading-tight">
+                <div
+                  className={`py-1 px-2 font-black text-[1.28em] text-[#1a365d] uppercase tracking-wide leading-tight ${
+                    hasUrduScript(paperData.institutionName) ? "font-urdu text-[1.35em] leading-[1.6]" : "font-serif"
+                  }`}
+                >
                   {isEditMode && !isSecondCopy ? (
                     <>
                       <input
@@ -896,7 +1261,11 @@ export default function QuickPaperPage() {
                 </div>
 
                 {/* Dark Blue Examination Banner */}
-                <div className="bg-[#1a365d] text-white font-black text-[0.84em] py-0.5 px-2 border-y border-black tracking-widest uppercase leading-tight">
+                <div
+                  className={`bg-[#1a365d] text-white font-black text-[0.85em] py-0.5 px-2 border-y border-black tracking-widest uppercase leading-tight ${
+                    hasUrduScript(paperTypeBanner) ? "font-urdu text-[0.95em] tracking-normal leading-[1.5]" : ""
+                  }`}
+                >
                   {isEditMode && !isSecondCopy ? (
                     <>
                       <input
@@ -913,38 +1282,46 @@ export default function QuickPaperPage() {
                 </div>
 
                 {/* Subject & Class Row */}
-                <div className="py-0.5 px-1.5 text-[0.94em] font-bold text-black flex items-center justify-center gap-2 flex-wrap leading-tight">
+                <div className="py-1 px-2 text-[0.95em] font-bold text-black flex items-center justify-center gap-3 flex-wrap leading-tight bg-slate-50/50">
                   <div className="flex items-center gap-1">
-                    <span className="font-extrabold">Subject:</span>
+                    <span className="font-extrabold text-slate-700">
+                      {isUrduOnly ? "مضمون:" : "Subject:"}
+                    </span>
                     {isEditMode && !isSecondCopy ? (
                       <>
                         <input
                           type="text"
                           value={paperData.subject}
                           onChange={(e) => setPaperData({ ...paperData, subject: e.target.value })}
-                          className="font-bold text-[1em] bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none w-28 text-center no-print"
+                          className="font-bold text-[1em] bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none w-32 text-center no-print"
                         />
                         <span className="print-only">{paperData.subject}</span>
                       </>
                     ) : (
-                      <span>{paperData.subject}</span>
+                      <span className={hasUrduScript(paperData.subject) ? "font-urdu text-[1.08em]" : ""}>
+                        {paperData.subject}
+                      </span>
                     )}
                   </div>
-                  <span>|</span>
+                  <span className="text-slate-400">|</span>
                   <div className="flex items-center gap-1">
-                    <span className="font-extrabold">Class:</span>
+                    <span className="font-extrabold text-slate-700">
+                      {isUrduOnly ? "جماعت:" : "Class:"}
+                    </span>
                     {isEditMode && !isSecondCopy ? (
                       <>
                         <input
                           type="text"
                           value={paperData.grade}
                           onChange={(e) => setPaperData({ ...paperData, grade: e.target.value })}
-                          className="font-bold text-[1em] bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none w-16 text-center no-print"
+                          className="font-bold text-[1em] bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none w-20 text-center no-print"
                         />
                         <span className="print-only">{paperData.grade}</span>
                       </>
                     ) : (
-                      <span>{paperData.grade}</span>
+                      <span className={hasUrduScript(paperData.grade) ? "font-urdu text-[1.05em]" : ""}>
+                        {paperData.grade}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -953,10 +1330,10 @@ export default function QuickPaperPage() {
               {/* Right: 4-Digit Paper Code Box */}
               <div
                 className={`${
-                  is2Up ? "w-18 min-w-[66px] p-1" : "w-18 sm:w-24 min-w-[68px] sm:min-w-[84px] p-1"
+                  is2Up ? "w-18 min-w-[66px] p-1" : "w-20 sm:w-24 min-w-[72px] sm:min-w-[88px] p-1.5"
                 } flex flex-col items-center justify-center bg-white shrink-0 text-center`}
               >
-                <div className="text-[0.72em] sm:text-[0.76em] font-bold uppercase tracking-tight text-black mb-0.5 leading-none">
+                <div className="text-[0.7em] sm:text-[0.75em] font-extrabold uppercase tracking-tight text-black mb-1 leading-none">
                   PAPER CODE
                 </div>
                 <div className="flex justify-center gap-0.5">
@@ -964,8 +1341,8 @@ export default function QuickPaperPage() {
                     <div
                       key={dIdx}
                       className={`${
-                        is2Up ? "w-3.5 h-4" : "w-3.5 sm:w-4 h-4 sm:h-5"
-                      } border border-black flex items-center justify-center font-black font-mono text-[0.9em] sm:text-[0.95em] bg-white tabular-nums`}
+                        is2Up ? "w-3.5 h-4" : "w-4 sm:w-4.5 h-5 sm:h-5.5"
+                      } border-[1.5px] border-black flex items-center justify-center font-black font-mono text-[0.92em] sm:text-[0.98em] bg-white tabular-nums`}
                     >
                       {isEditMode && !isSecondCopy ? (
                         <>
@@ -999,42 +1376,44 @@ export default function QuickPaperPage() {
               >
                 <tbody>
                   <tr className="border-b border-black">
-                    <td className="w-22 bg-[#f8f9fa] border-r border-black px-1.5 py-0.5 text-left whitespace-nowrap text-slate-800">
+                    <td className="w-24 bg-[#f8f9fa] border-r border-black px-2 py-1 text-left whitespace-nowrap text-slate-900">
                       Student Name:
                     </td>
-                    <td className="border-r-2 border-black px-1.5 py-0.5 bg-white w-1/3">
-                      <span className="border-b border-dotted border-slate-500 inline-block w-full min-h-[10px]" />
+                    <td className="border-r-2 border-black px-2 py-1 bg-white w-1/3">
+                      <span className="border-b border-dotted border-slate-500 inline-block w-full min-h-[12px]" />
                     </td>
-                    <td className="w-16 bg-[#fff3e0] border-r border-black px-1.5 py-0.5 text-left text-[#e65100] whitespace-nowrap">
+                    <td className="w-18 bg-[#fff3e0] border-r border-black px-2 py-1 text-left text-[#e65100] whitespace-nowrap">
                       Syllabus:
                     </td>
-                    <td className="px-1.5 py-0.5 bg-white text-slate-800">
+                    <td className="px-2 py-1 bg-white text-slate-900">
                       {isEditMode && !isSecondCopy ? (
                         <>
                           <input
                             type="text"
                             value={syllabusText}
                             onChange={(e) => setSyllabusText(e.target.value)}
-                            className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none font-medium text-[1em] text-slate-800 no-print"
+                            className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none font-bold text-[1em] text-slate-900 no-print"
                           />
-                          <span className="print-only font-medium">{syllabusText}</span>
+                          <span className="print-only font-bold">{syllabusText}</span>
                         </>
                       ) : (
-                        <span className="font-medium">{syllabusText}</span>
+                        <span className={`font-semibold ${hasUrduScript(syllabusText) ? "font-urdu" : ""}`}>
+                          {syllabusText}
+                        </span>
                       )}
                     </td>
                   </tr>
 
                   <tr className="bg-[#e3f2fd] text-[#0d47a1]">
-                    <td colSpan={4} className="px-1.5 py-0.5">
-                      <div className="flex items-center justify-between gap-1.5 text-[0.94em] flex-wrap font-bold leading-tight">
+                    <td colSpan={4} className="px-2 py-1">
+                      <div className="flex items-center justify-between gap-2 text-[0.94em] flex-wrap font-bold leading-tight">
                         <div className="flex items-center gap-1">
                           <span>Roll No:</span>
-                          <span className="border-b border-dotted border-[#0d47a1] w-12 inline-block" />
+                          <span className="border-b border-dotted border-[#0d47a1] w-14 inline-block" />
                         </div>
                         <span className="text-slate-400">|</span>
                         <div className="flex items-center gap-1">
-                          <span>Time:</span>
+                          <span>Time Allowed:</span>
                           {isEditMode && !isSecondCopy ? (
                             <>
                               <input
@@ -1043,12 +1422,14 @@ export default function QuickPaperPage() {
                                 onChange={(e) =>
                                   setPaperData({ ...paperData, timeAllowed: e.target.value })
                                 }
-                                className="w-14 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                                className="w-16 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
                               />
                               <span className="print-only">{paperData.timeAllowed}</span>
                             </>
                           ) : (
-                            <span>{paperData.timeAllowed}</span>
+                            <span className={hasUrduScript(paperData.timeAllowed) ? "font-urdu" : ""}>
+                              {paperData.timeAllowed}
+                            </span>
                           )}
                         </div>
                         <span className="text-slate-400">|</span>
@@ -1065,18 +1446,18 @@ export default function QuickPaperPage() {
                                     totalMarks: Number(e.target.value),
                                   })
                                 }
-                                className="w-10 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print tabular-nums"
+                                className="w-12 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print tabular-nums"
                               />
                               <span className="print-only">{paperData.totalMarks}</span>
                             </>
                           ) : (
-                            <span className="tabular-nums">{paperData.totalMarks}</span>
+                            <span className="tabular-nums font-black">{paperData.totalMarks}</span>
                           )}
                         </div>
                         <span className="text-slate-400">|</span>
                         <div className="flex items-center gap-1">
                           <span>Date:</span>
-                          <span>{paperData.date || "17-10-2026"}</span>
+                          <span className="tabular-nums">{paperData.date || "17-10-2026"}</span>
                         </div>
                         <span className="text-slate-400">|</span>
                         <div className="flex items-center gap-1">
@@ -1087,12 +1468,12 @@ export default function QuickPaperPage() {
                                 type="text"
                                 value={testNoText}
                                 onChange={(e) => setTestNoText(e.target.value)}
-                                className="w-8 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
+                                className="w-9 bg-amber-50 border-b border-dotted border-[#0d47a1] text-center font-bold focus:outline-none no-print"
                               />
                               <span className="print-only">{testNoText}</span>
                             </>
                           ) : (
-                            <span>{testNoText}</span>
+                            <span className="tabular-nums">{testNoText}</span>
                           )}
                         </div>
                       </div>
@@ -1104,9 +1485,16 @@ export default function QuickPaperPage() {
 
             {/* Instruction / Note Row */}
             {includeNote && (
-              <div className="mt-1 text-[0.86em] flex items-start gap-1 leading-tight">
-                <span className="bg-[#d4efdf] text-[#196f3d] px-1 py-0.2 rounded text-[0.92em] font-bold shrink-0">
-                  Note:
+              <div
+                className={`mt-1.5 px-2 py-1 bg-emerald-50/50 border border-emerald-200/90 rounded text-[0.88em] flex items-start gap-1.5 ${
+                  isUrduOnly || isPureUrduText(instructionNote)
+                    ? "flex-row-reverse text-right font-urdu leading-[1.75]"
+                    : "text-left leading-snug"
+                }`}
+                dir={isUrduOnly || isPureUrduText(instructionNote) ? "rtl" : "ltr"}
+              >
+                <span className="bg-[#d4efdf] text-[#196f3d] px-1.5 py-0.5 rounded text-[0.9em] font-extrabold shrink-0 font-sans">
+                  {isUrduOnly || isPureUrduText(instructionNote) ? "نوٹ:" : "Note:"}
                 </span>
                 {isEditMode && !isSecondCopy ? (
                   <>
@@ -1114,25 +1502,24 @@ export default function QuickPaperPage() {
                       rows={1}
                       value={instructionNote}
                       onChange={(e) => setInstructionNote(e.target.value)}
-                      className="w-full text-slate-800 bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none leading-tight no-print"
+                      className="w-full text-slate-900 bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none leading-tight no-print"
                     />
-                    <span className="print-only text-slate-800 leading-tight">
-                      {instructionNote}
-                    </span>
+                    <span className="print-only text-slate-900">{instructionNote}</span>
                   </>
                 ) : (
-                  <span className="text-slate-800 leading-tight">{instructionNote}</span>
+                  <span className="text-slate-900 font-medium">{instructionNote}</span>
                 )}
               </div>
             )}
           </header>
         ) : (
-          <header className="relative z-10 border-b-2 border-black pb-1.5 mb-2 text-center" dir="ltr">
-            <h1 className="text-[1.35em] font-black uppercase tracking-tight font-serif leading-tight">
+          <header className="relative z-10 border-b-2 border-black pb-2 mb-2.5 text-center" dir="ltr">
+            <h1 className="text-[1.35em] font-black uppercase tracking-tight font-serif leading-tight text-[#1a365d]">
               {paperData.institutionName}
             </h1>
-            <p className="text-[0.9em] font-bold uppercase text-slate-700 leading-tight">
-              {paperTypeBanner} &bull; {paperData.subject} (Class: {paperData.grade}) &bull; Marks: {paperData.totalMarks} &bull; Time: {paperData.timeAllowed}
+            <p className="text-[0.92em] font-bold uppercase text-slate-800 leading-tight mt-0.5">
+              {paperTypeBanner} &bull; {paperData.subject} (Class: {paperData.grade}) &bull; Marks:{" "}
+              {paperData.totalMarks} &bull; Time: {paperData.timeAllowed}
             </p>
           </header>
         )}
@@ -1140,36 +1527,48 @@ export default function QuickPaperPage() {
         {/* ===================================================================
             SECTIONS & QUESTIONS (Supports Bilingual, English & Urdu)
             =================================================================== */}
-        <div
-          className={`relative z-10 space-y-1.5 pt-0.5 ${
-            isUrduOnly ? "font-urdu" : "font-sans"
-          }`}
-          dir={isUrduOnly ? "rtl" : "ltr"}
-        >
+        <div className="relative z-10 space-y-2.5 pt-0.5">
           {paperData.sections.map((section, sIdx) => {
             const isMcqSection = section.type === "mcq";
+            const isLongSection = section.type === "long" || section.type === "essay" || section.type === "letter";
             const secTitleEn =
               section.titleEn ||
-              (isMcqSection ? "SECTION-I: OBJECTIVE (MCQs)" : "SECTION-II: SUBJECTIVE QUESTIONS");
+              (isMcqSection
+                ? "SECTION-I: MULTIPLE CHOICE QUESTIONS"
+                : isLongSection
+                ? "SECTION-III: DETAILED QUESTIONS"
+                : "SECTION-II: SHORT QUESTIONS");
             const secTitleUr =
               section.titleUr ||
-              (isMcqSection ? "حصہ اول: معروضی سوالات" : "حصہ دوم: انشائیہ سوالات");
+              (isMcqSection
+                ? "حصہ اول: کثیر الانتخابی سوالات"
+                : isLongSection
+                ? "حصہ سوم: تفصیلی سوالات"
+                : "حصہ دوم: مختصر سوالات");
+
+            const sectionIsPureUrdu =
+              isUrduOnly ||
+              (section.questions.length > 0 &&
+                section.questions.every((q) => isPureUrduText(q.questionUr) && q.questionEn === q.questionUr));
 
             return (
-              <div key={section.id || sIdx} className="space-y-1">
-                {/* Section Title Banner (Never Orphan at Bottom of Page) */}
-                <div className="section-header-keep pt-0.5 pb-0.5 border-b-2 border-black flex items-center justify-between gap-2 px-0.5">
-                  <div className="flex-1 flex items-center justify-between gap-2 flex-wrap">
-                    {/* English or Primary Section Title */}
-                    {(isEnglishOnly || isBilingual) && (
-                      <div className="font-black uppercase tracking-wider text-black text-[0.96em] leading-tight">
+              <div key={section.id || sIdx} className="space-y-1.5">
+                {/* Official Board Section Header Banner */}
+                <div
+                  className="section-header-keep bg-slate-100/95 border-y-2 border-black px-2 py-1 flex items-center justify-between gap-2"
+                  dir={isUrduOnly ? "rtl" : "ltr"}
+                >
+                  {/* Left: English Title (or Urdu Title in Urdu-Only Mode) */}
+                  <div className="flex-1 min-w-0 flex items-center justify-between gap-2 flex-wrap">
+                    {!isUrduOnly && (
+                      <div className="font-black uppercase tracking-wider text-slate-950 text-[0.95em] leading-tight font-sans">
                         {isEditMode && !isSecondCopy ? (
                           <>
                             <input
                               type="text"
                               value={secTitleEn}
                               onChange={(e) => handleUpdateSectionTitle(sIdx, "titleEn", e.target.value)}
-                              className="font-black uppercase text-black bg-amber-50/70 border-b border-dashed border-amber-500 focus:outline-none no-print min-w-[180px]"
+                              className="font-black uppercase text-black bg-amber-50/80 border-b border-dashed border-amber-500 focus:outline-none no-print min-w-[200px]"
                             />
                             <span className="print-only">{secTitleEn}</span>
                           </>
@@ -1179,16 +1578,26 @@ export default function QuickPaperPage() {
                       </div>
                     )}
 
-                    {/* Urdu Section Title */}
-                    {(isUrduOnly || isBilingual) && (
-                      <div className="font-black text-black text-[1.08em] font-urdu leading-snug" dir="rtl">
+                    {/* Center/Side Marks Badge */}
+                    {section.marks !== undefined && (
+                      <div className="text-[0.9em] font-extrabold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-300 tabular-nums shrink-0 font-sans">
+                        {isUrduOnly ? `کل نمبر: ${section.marks}` : `Marks: ${section.marks}`}
+                      </div>
+                    )}
+
+                    {/* Right: Urdu Section Title */}
+                    {(isUrduOnly || isBilingual || sectionIsPureUrdu) && (
+                      <div
+                        className="font-bold text-slate-950 text-[1.08em] font-urdu leading-[1.65]"
+                        dir="rtl"
+                      >
                         {isEditMode && !isSecondCopy ? (
                           <>
                             <input
                               type="text"
                               value={secTitleUr}
                               onChange={(e) => handleUpdateSectionTitle(sIdx, "titleUr", e.target.value)}
-                              className="font-black text-black bg-amber-50/70 border-b border-dashed border-amber-500 focus:outline-none no-print text-right"
+                              className="font-bold text-black bg-amber-50/80 border-b border-dashed border-amber-500 focus:outline-none no-print text-right font-urdu"
                             />
                             <span className="print-only">{secTitleUr}</span>
                           </>
@@ -1199,224 +1608,446 @@ export default function QuickPaperPage() {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {section.marks && (
-                      <div className="text-[0.92em] font-extrabold text-slate-900 tabular-nums">
-                        {isUrduOnly ? `(${section.marks} نمبر)` : `[ Marks: ${section.marks} ]`}
-                      </div>
-                    )}
-                    {isEditMode && !isSecondCopy && paperData.sections.length > 1 && (
+                  {/* Quick Section Action Buttons (Add Question Modal & Delete Section) */}
+                  {!isSecondCopy && (
+                    <div className="no-print flex items-center gap-1 shrink-0">
                       <button
-                        onClick={() => handleDeleteSection(sIdx)}
-                        className="no-print text-rose-600 hover:bg-rose-50 p-0.5 rounded"
-                        title="Delete Section"
+                        type="button"
+                        onClick={() => openAddSectionModal("existing_section", sIdx)}
+                        className="px-2 py-0.5 text-[10px] font-extrabold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded border border-emerald-300 flex items-center gap-1 font-sans cursor-pointer transition-colors"
+                        title="Add a question with Question No. to this section"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Plus className="w-3 h-3" />
+                        <span>Add Q</span>
                       </button>
-                    )}
-                  </div>
+                      {paperData.sections.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteSection(sIdx)}
+                          className="text-rose-600 hover:bg-rose-100 p-1 rounded cursor-pointer transition-colors"
+                          title="Delete Section"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                {/* MCQs Section */}
+                {/* =============================================================
+                    1. MCQs SECTION (Board-Standard 4-Column / 2x2 / FBISE Grid)
+                    ============================================================= */}
                 {isMcqSection ? (
-                  <div className="space-y-1 pt-0.5">
-                    {section.questions.map((q, qIdx) => {
-                      const qTextEn = q.questionEn || q.questionUr || "";
-                      const qTextUr = q.questionUr || q.questionEn || "";
-                      const hasDistinctUrdu = qTextUr && qTextUr !== qTextEn;
+                  isFbiseStyle ? (
+                    /* STYLE 2: FBISE BOXED MCQ TABLE */
+                    <table className="fb-table w-full text-[0.94em]">
+                      <thead className="bg-slate-100">
+                        <tr>
+                          <th className="w-[44%] text-left font-extrabold">
+                            {isUrduOnly ? "سوال (Question)" : "Question / سوال"}
+                          </th>
+                          {["A / الف", "B / ب", "C / ج", "D / د"].map((col, cIdx) => (
+                            <th key={cIdx} className="w-[14%] text-center font-extrabold">
+                              ({col})
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {section.questions.map((q, qIdx) => {
+                          const qTextEn = (q.questionEn || q.questionUr || "").trim();
+                          const qTextUr = (q.questionUr || q.questionEn || "").trim();
+                          const qIsPureUrdu = isUrduOnly || (isPureUrduText(qTextUr) && qTextEn === qTextUr);
+                          const hasDistinctUrdu = Boolean(qTextUr && qTextUr !== qTextEn);
+                          const qLabel = q.customNumber || `${qIdx + 1}`;
+                          const opts = q.options || [];
 
+                          return (
+                            <tr key={qIdx} className="break-inside-avoid">
+                              <td className="align-middle">
+                                <div className="space-y-1">
+                                  {!qIsPureUrdu && (
+                                    <div className="font-bold text-left leading-snug" dir="ltr">
+                                      <span className="font-extrabold mr-1">{qLabel}.</span>
+                                      <MathRenderer content={qTextEn} />
+                                    </div>
+                                  )}
+                                  {(qIsPureUrdu || (isBilingual && hasDistinctUrdu)) && (
+                                    <div
+                                      className="font-bold font-urdu text-right text-[1.06em] leading-[1.8]"
+                                      dir="rtl"
+                                    >
+                                      {qIsPureUrdu && (
+                                        <span className="font-extrabold font-sans ml-1">({qLabel})</span>
+                                      )}
+                                      <MathRenderer content={qTextUr} />
+                                    </div>
+                                  )}
+                                </div>
+                              </td>
+                              {[0, 1, 2, 3].map((oIdx) => {
+                                const opt = opts[oIdx];
+                                const oEn = (opt?.textEn || opt?.textUr || "").trim();
+                                const oUr = (opt?.textUr || opt?.textEn || "").trim();
+                                const optIsPureUrdu = isUrduOnly || (isPureUrduText(oUr) && oEn === oUr);
+                                const optHasDistinctUr = Boolean(oUr && oUr !== oEn);
+
+                                return (
+                                  <td key={oIdx} className="text-center align-middle">
+                                    {!optIsPureUrdu && oEn && (
+                                      <div className="font-medium leading-snug" dir="ltr">
+                                        <MathRenderer content={oEn} />
+                                      </div>
+                                    )}
+                                    {(optIsPureUrdu || (isBilingual && optHasDistinctUr)) && oUr && (
+                                      <div
+                                        className="font-urdu text-[1.04em] leading-[1.75] text-slate-900"
+                                        dir="rtl"
+                                      >
+                                        <MathRenderer content={oUr} />
+                                      </div>
+                                    )}
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  ) : (
+                    /* STYLE 1: PUNJAB BOARDS (BISE) STRUCTURED MCQ LAYOUT */
+                    <div className="divide-y divide-slate-200/90">
+                      {section.questions.map((q, qIdx) => {
+                        const qTextEn = (q.questionEn || q.questionUr || "").trim();
+                        const qTextUr = (q.questionUr || q.questionEn || "").trim();
+                        const qIsPureUrdu =
+                          isUrduOnly || (isPureUrduText(qTextUr) && qTextEn === qTextUr);
+                        const hasDistinctUrdu = Boolean(qTextUr && qTextUr !== qTextEn);
+                        const qLabel = q.customNumber
+                          ? q.customNumber.replace(/[:.\-۔]+$/, "")
+                          : `${qIdx + 1}`;
+
+                        // Determine whether options need 2x2 grid or 4-column grid
+                        const opts = q.options || [];
+                        const maxOptionLength = opts.reduce((max, o) => {
+                          const en = o.textEn || "";
+                          const ur = o.textUr || "";
+                          const len =
+                            isBilingual && ur && ur !== en
+                              ? en.length + ur.length + 3
+                              : (qIsPureUrdu ? ur : en).length;
+                          return Math.max(max, len);
+                        }, 0);
+                        const use2x2OptionGrid = maxOptionLength > 30;
+
+                        return (
+                          <div
+                            key={qIdx}
+                            className="py-1.5 first:pt-1 last:pb-0.5 text-[0.96em] break-inside-avoid group relative"
+                          >
+                            {/* Question Stem Row */}
+                            <div
+                              className={`flex items-start justify-between gap-3 font-bold text-slate-950 ${
+                                qIsPureUrdu ? "flex-row-reverse" : ""
+                              }`}
+                            >
+                              {/* English Stem (shown when English or Bilingual with English text) */}
+                              {!qIsPureUrdu && (isEnglishOnly || isBilingual) && (
+                                <div
+                                  className="flex-1 flex items-start gap-1.5 text-left leading-[1.35] font-sans"
+                                  dir="ltr"
+                                >
+                                  {isEditMode && !isSecondCopy ? (
+                                    <input
+                                      type="text"
+                                      value={qLabel}
+                                      onChange={(e) =>
+                                        handleUpdateQuestionText(sIdx, qIdx, "customNumber", e.target.value)
+                                      }
+                                      className="w-8 font-extrabold bg-amber-50 border-b border-dashed border-amber-500 text-center no-print"
+                                      title="Question No."
+                                    />
+                                  ) : null}
+                                  <span
+                                    className={`font-extrabold shrink-0 tabular-nums ${
+                                      isEditMode && !isSecondCopy ? "print-only" : ""
+                                    }`}
+                                  >
+                                    {qLabel}.
+                                  </span>
+                                  {isEditMode && !isSecondCopy ? (
+                                    <>
+                                      <textarea
+                                        rows={1}
+                                        value={qTextEn}
+                                        onChange={(e) =>
+                                          handleUpdateQuestionText(sIdx, qIdx, "questionEn", e.target.value)
+                                        }
+                                        className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none font-bold no-print"
+                                      />
+                                      <span className="print-only font-bold">
+                                        <MathRenderer content={qTextEn} />
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <span className="font-bold flex-1">
+                                      <MathRenderer content={qTextEn} />
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Urdu Stem (shown when Urdu-only, pure Urdu question, or Bilingual with distinct Urdu) */}
+                              {(qIsPureUrdu || (isBilingual && hasDistinctUrdu)) && (
+                                <div
+                                  className="flex-1 flex items-start gap-1.5 font-urdu text-right text-[1.08em] leading-[1.82]"
+                                  dir="rtl"
+                                >
+                                  {qIsPureUrdu && (
+                                    <span className="font-extrabold shrink-0 font-sans tabular-nums text-[0.92em]">
+                                      ({qLabel})
+                                    </span>
+                                  )}
+                                  {isEditMode && !isSecondCopy ? (
+                                    <>
+                                      <textarea
+                                        rows={1}
+                                        value={qTextUr}
+                                        onChange={(e) =>
+                                          handleUpdateQuestionText(sIdx, qIdx, "questionUr", e.target.value)
+                                        }
+                                        className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none font-bold font-urdu text-right no-print"
+                                      />
+                                      <span className="print-only font-bold font-urdu">
+                                        <MathRenderer content={qTextUr} />
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <span className="font-bold flex-1 font-urdu">
+                                      <MathRenderer content={qTextUr} />
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+
+                              {!isSecondCopy && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteQuestion(sIdx, qIdx)}
+                                  className={`no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 p-0.5 transition-opacity ${
+                                    isEditMode ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                                  }`}
+                                  title="Delete Question"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
+
+                            {/* Structured 4-Column or 2x2 Board MCQ Options Grid */}
+                            {opts.length > 0 && (
+                              <div
+                                className={`grid ${
+                                  use2x2OptionGrid
+                                    ? "grid-cols-1 sm:grid-cols-2 print:grid-cols-2 gap-x-4 gap-y-1"
+                                    : "grid-cols-2 sm:grid-cols-4 print:grid-cols-4 gap-x-3 gap-y-1"
+                                } pt-1 mt-0.5 text-[0.93em] font-medium text-slate-900 ${
+                                  qIsPureUrdu ? "pr-4 font-urdu" : "pl-4"
+                                }`}
+                                dir={qIsPureUrdu ? "rtl" : "ltr"}
+                              >
+                                {opts.map((opt, oIdx) => {
+                                  const oTextEn = (opt.textEn || opt.textUr || "").trim();
+                                  const oTextUr = (opt.textUr || opt.textEn || "").trim();
+                                  const optIsPureUrdu =
+                                    qIsPureUrdu || (isPureUrduText(oTextUr) && oTextEn === oTextUr);
+                                  const optHasDistinctUrdu = Boolean(oTextUr && oTextUr !== oTextEn);
+
+                                  const badgeLabel = optIsPureUrdu
+                                    ? getUrduOptionLabel(opt.key, oIdx)
+                                    : normalizeOptionKey(opt.key, oIdx);
+
+                                  return (
+                                    <div
+                                      key={oIdx}
+                                      className={`flex items-baseline gap-1.5 min-w-0 py-0.5 px-1.5 rounded bg-slate-50/70 border border-slate-200/80 ${
+                                        optIsPureUrdu
+                                          ? "text-right font-urdu leading-[1.8]"
+                                          : "text-left leading-[1.35]"
+                                      }`}
+                                      dir={optIsPureUrdu ? "rtl" : "ltr"}
+                                    >
+                                      <span
+                                        className={`font-extrabold shrink-0 text-slate-950 ${
+                                          optIsPureUrdu ? "font-urdu text-[0.98em]" : "font-sans text-[0.92em]"
+                                        }`}
+                                      >
+                                        ({badgeLabel})
+                                      </span>
+
+                                      {isEditMode && !isSecondCopy ? (
+                                        <>
+                                          <input
+                                            type="text"
+                                            value={optIsPureUrdu ? oTextUr : oTextEn}
+                                            onChange={(e) =>
+                                              handleUpdateOption(
+                                                sIdx,
+                                                qIdx,
+                                                oIdx,
+                                                optIsPureUrdu ? "textUr" : "textEn",
+                                                e.target.value
+                                              )
+                                            }
+                                            className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none text-[1em] no-print"
+                                          />
+                                          <span className="print-only break-words">
+                                            <MathRenderer content={optIsPureUrdu ? oTextUr : oTextEn} />
+                                          </span>
+                                        </>
+                                      ) : optIsPureUrdu ? (
+                                        <span className="break-words font-urdu text-[1.05em] leading-[1.8]">
+                                          <MathRenderer content={oTextUr} />
+                                        </span>
+                                      ) : isEnglishOnly || !optHasDistinctUrdu ? (
+                                        <span className="break-words font-sans">
+                                          <MathRenderer content={oTextEn} />
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex flex-wrap items-baseline gap-1 break-words">
+                                          <span className="font-sans">
+                                            <MathRenderer content={oTextEn} />
+                                          </span>
+                                          <span
+                                            className="font-urdu text-[1.04em] text-slate-800 leading-[1.75]"
+                                            dir="rtl"
+                                          >
+                                            (<MathRenderer content={oTextUr} />)
+                                          </span>
+                                        </span>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )
+                ) : section.type === "poetry" ? (
+                  /* =============================================================
+                     2. POETRY / STANZAS SECTION
+                     ============================================================= */
+                  <div className="space-y-1.5 py-1 font-urdu" dir="rtl">
+                    {section.questions.map((q, qIdx) => {
+                      const qLabel = q.customNumber || `(${toRomanLower(qIdx + 1)})`;
                       return (
                         <div
                           key={qIdx}
-                          className="space-y-0.5 text-[0.96em] break-inside-avoid pb-1 border-b border-slate-200/80 last:border-b-0"
+                          className="space-y-1 break-inside-avoid bg-slate-50/70 p-2 border border-slate-200 rounded group relative"
                         >
-                          {/* Question Stem Row */}
-                          <div className="flex items-start justify-between gap-2 font-bold text-slate-950">
-                            {/* Left / English Stem */}
-                            {(isEnglishOnly || isBilingual) && (
-                              <div className="flex-1 flex items-start gap-1 text-left leading-[1.24]" dir="ltr">
-                                <span className="font-extrabold shrink-0 tabular-nums">
-                                  {qIdx + 1}.
-                                </span>
-                                {isEditMode && !isSecondCopy ? (
-                                  <>
-                                    <textarea
-                                      rows={1}
-                                      value={qTextEn}
-                                      onChange={(e) =>
-                                        handleUpdateQuestionText(sIdx, qIdx, "questionEn", e.target.value)
-                                      }
-                                      className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none font-bold no-print"
-                                    />
-                                    <span className="print-only font-bold">
-                                      <MathRenderer content={qTextEn} />
-                                    </span>
-                                  </>
-                                ) : (
-                                  <span className="font-bold flex-1">
-                                    <MathRenderer content={qTextEn} />
-                                  </span>
-                                )}
-                              </div>
-                            )}
-
-                            {/* Right / Urdu Stem */}
-                            {(isUrduOnly || (isBilingual && hasDistinctUrdu)) && (
-                              <div
-                                className="flex-1 flex items-start gap-1 font-urdu text-right text-[1.06em] leading-[1.38]"
-                                dir="rtl"
-                              >
-                                {isUrduOnly && (
-                                  <span className="font-extrabold shrink-0 font-sans tabular-nums">
-                                    ({qIdx + 1})
-                                  </span>
-                                )}
-                                {isEditMode && !isSecondCopy ? (
-                                  <>
-                                    <textarea
-                                      rows={1}
-                                      value={qTextUr}
-                                      onChange={(e) =>
-                                        handleUpdateQuestionText(sIdx, qIdx, "questionUr", e.target.value)
-                                      }
-                                      className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none font-bold font-urdu text-right no-print"
-                                    />
-                                    <span className="print-only font-bold font-urdu">
-                                      <MathRenderer content={qTextUr} />
-                                    </span>
-                                  </>
-                                ) : (
-                                  <span className="font-bold flex-1 font-urdu">
-                                    <MathRenderer content={qTextUr} />
-                                  </span>
-                                )}
-                              </div>
-                            )}
-
-                            {isEditMode && !isSecondCopy && (
+                          <div className="flex items-center justify-between">
+                            <div className="text-[0.95em] font-bold text-slate-800 text-right leading-[1.6]">
+                              {`شعر ${qLabel}:`}
+                            </div>
+                            {!isSecondCopy && (
                               <button
+                                type="button"
                                 onClick={() => handleDeleteQuestion(sIdx, qIdx)}
-                                className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 p-0.5"
-                                title="Delete Question"
+                                className="no-print opacity-0 group-hover:opacity-100 text-rose-500 hover:text-rose-700 p-0.5"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             )}
                           </div>
-
-                          {/* Smart Single-Line Flex-Wrap MCQ Options */}
-                          {q.options && q.options.length > 0 && (
-                            <div
-                              className={`flex flex-wrap items-baseline justify-between gap-x-2.5 gap-y-0.5 pt-0.5 text-[0.92em] font-medium text-slate-900 leading-[1.24] ${
-                                isUrduOnly ? "pr-3 font-urdu" : "pl-3"
-                              }`}
-                              dir={isUrduOnly ? "rtl" : "ltr"}
-                            >
-                              {q.options.map((opt, oIdx) => {
-                                const oTextEn = opt.textEn || opt.textUr || "";
-                                const oTextUr = opt.textUr || opt.textEn || "";
-                                const displayOptText = isUrduOnly
-                                  ? oTextUr
-                                  : isEnglishOnly
-                                  ? oTextEn
-                                  : oTextUr && oTextUr !== oTextEn
-                                  ? `${oTextEn} (${oTextUr})`
-                                  : oTextEn;
-
-                                return (
-                                  <div
-                                    key={oIdx}
-                                    className="inline-flex items-baseline gap-1 min-w-[20%] max-w-full"
-                                  >
-                                    <span className="font-extrabold shrink-0">
-                                      ({opt.key})
-                                    </span>
-                                    {isEditMode && !isSecondCopy ? (
-                                      <>
-                                        <input
-                                          type="text"
-                                          value={isUrduOnly ? oTextUr : oTextEn}
-                                          onChange={(e) =>
-                                            handleUpdateOption(
-                                              sIdx,
-                                              qIdx,
-                                              oIdx,
-                                              isUrduOnly ? "textUr" : "textEn",
-                                              e.target.value
-                                            )
-                                          }
-                                          className="w-28 bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none text-[1em] no-print"
-                                        />
-                                        <span className="print-only break-words">
-                                          <MathRenderer content={displayOptText} />
-                                        </span>
-                                      </>
-                                    ) : (
-                                      <span className="break-words">
-                                        <MathRenderer content={displayOptText} />
-                                      </span>
-                                    )}
-                                  </div>
-                                );
-                              })}
+                          {q.poetryLines && q.poetryLines.length > 0 ? (
+                            q.poetryLines.map((line, pIdx) => (
+                              <div
+                                key={pIdx}
+                                className="font-urdu text-center text-[1.08em] font-bold text-slate-950 py-0.5 tracking-wide leading-[1.85]"
+                              >
+                                &ldquo;{line}&rdquo;
+                              </div>
+                            ))
+                          ) : (
+                            <div className="font-urdu text-center text-[1.08em] font-bold text-slate-950 py-0.5 leading-[1.85]">
+                              <MathRenderer content={q.questionUr || q.questionEn || ""} />
                             </div>
                           )}
                         </div>
                       );
                     })}
                   </div>
-                ) : section.type === "poetry" ? (
-                  /* Poetry Section */
-                  <div className="space-y-1 py-0.5 font-urdu" dir="rtl">
-                    {section.questions.map((q, qIdx) => (
-                      <div
-                        key={qIdx}
-                        className="space-y-0.5 break-inside-avoid bg-slate-50/60 p-1.5 border border-slate-200 rounded"
-                      >
-                        <div className="text-[0.92em] font-bold text-slate-700 text-right leading-tight">
-                          {`شعر (${toRomanLower(qIdx + 1)}):`}
-                        </div>
-                        {q.poetryLines?.map((line, pIdx) => (
-                          <div
-                            key={pIdx}
-                            className="font-urdu text-center text-[1.05em] font-bold text-slate-950 py-0.2 tracking-wide leading-[1.38]"
-                          >
-                            &ldquo;{line}&rdquo;
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
                 ) : (
-                  /* Subjective Questions (Short / Long / Essay) */
+                  /* =============================================================
+                     3. SUBJECTIVE QUESTIONS (SHORT / LONG / ESSAY / LETTER)
+                     ============================================================= */
                   <div
-                    className={`grid gap-1 pt-0.5 text-[0.96em] ${
-                      paperLayout === "two-column" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+                    className={`divide-y divide-slate-200/80 text-[0.96em] ${
+                      paperLayout === "two-column" && !isBilingual
+                        ? "grid grid-cols-1 sm:grid-cols-2 gap-x-4 divide-y-0"
+                        : ""
                     }`}
                   >
                     {section.questions.map((q, qIdx) => {
-                      const qTextEn = q.questionEn || q.questionUr || "";
-                      const qTextUr = q.questionUr || q.questionEn || "";
-                      const hasDistinctUrdu = qTextUr && qTextUr !== qTextEn;
-                      const romanNumLabel =
+                      const qTextEn = (q.questionEn || q.questionUr || "").trim();
+                      const qTextUr = (q.questionUr || q.questionEn || "").trim();
+                      const qIsPureUrdu =
+                        isUrduOnly || (isPureUrduText(qTextUr) && qTextEn === qTextUr);
+                      const hasDistinctUrdu = Boolean(qTextUr && qTextUr !== qTextEn);
+
+                      // Respect custom question number or generate standard board label
+                      const defaultSubLabelEn =
                         section.questions.length === 1 && section.type === "essay"
-                          ? ""
+                          ? "Q."
+                          : isLongSection
+                          ? `Q.${qIdx + 3}:`
                           : `(${toRomanLower(qIdx + 1)})`;
+
+                      const defaultSubLabelUr =
+                        section.questions.length === 1 && section.type === "essay"
+                          ? "سوال:"
+                          : isLongSection
+                          ? `سوال نمبر ${qIdx + 3}:`
+                          : `(${toRomanLower(qIdx + 1)})`;
+
+                      const displayLabelEn = q.customNumber || defaultSubLabelEn;
+                      const displayLabelUr = q.customNumber || defaultSubLabelUr;
 
                       return (
                         <div
                           key={qIdx}
-                          className="flex items-start justify-between gap-2 break-inside-avoid pb-0.5 border-b border-slate-200/80 last:border-b-0"
+                          className={`py-1.5 first:pt-1 last:pb-0.5 flex items-start justify-between gap-3 break-inside-avoid group ${
+                            qIsPureUrdu ? "flex-row-reverse" : ""
+                          }`}
                         >
                           {/* English Side */}
-                          {(isEnglishOnly || isBilingual) && (
+                          {!qIsPureUrdu && (isEnglishOnly || isBilingual) && (
                             <div
-                              className="flex-1 flex items-start gap-1 font-bold text-slate-950 text-left leading-[1.25]"
+                              className="flex-1 flex items-start gap-1.5 font-bold text-slate-950 text-left leading-[1.38] font-sans"
                               dir="ltr"
                             >
-                              {romanNumLabel && (
-                                <span className="font-extrabold shrink-0 tabular-nums">
-                                  {romanNumLabel}
+                              {isEditMode && !isSecondCopy ? (
+                                <input
+                                  type="text"
+                                  value={displayLabelEn}
+                                  onChange={(e) =>
+                                    handleUpdateQuestionText(sIdx, qIdx, "customNumber", e.target.value)
+                                  }
+                                  className="w-12 font-extrabold bg-amber-50 border-b border-dashed border-amber-500 text-center no-print shrink-0"
+                                  title="Question No."
+                                />
+                              ) : null}
+                              {displayLabelEn && (
+                                <span
+                                  className={`font-extrabold shrink-0 tabular-nums text-slate-900 ${
+                                    isEditMode && !isSecondCopy ? "print-only" : ""
+                                  }`}
+                                >
+                                  {displayLabelEn}
                                 </span>
                               )}
                               {isEditMode && !isSecondCopy ? (
@@ -1429,27 +2060,38 @@ export default function QuickPaperPage() {
                                     }
                                     className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none font-bold no-print"
                                   />
-                                  <span className="print-only font-bold">
+                                  <span className="print-only font-bold flex-1">
                                     <MathRenderer content={qTextEn} />
                                   </span>
                                 </>
                               ) : (
-                                <span>
+                                <span className="flex-1">
                                   <MathRenderer content={qTextEn} />
+                                  {isLongSection && q.marks && !hasDistinctUrdu && (
+                                    <span className="ml-1.5 text-[0.88em] font-extrabold text-slate-600 tabular-nums">
+                                      [{q.marks}]
+                                    </span>
+                                  )}
                                 </span>
                               )}
                             </div>
                           )}
 
                           {/* Urdu Side */}
-                          {(isUrduOnly || (isBilingual && hasDistinctUrdu)) && (
+                          {(qIsPureUrdu || (isBilingual && hasDistinctUrdu)) && (
                             <div
-                              className="flex-1 flex items-start gap-1 font-bold text-slate-950 font-urdu text-[1.06em] text-right leading-[1.38]"
+                              className="flex-1 flex items-start gap-1.5 font-bold text-slate-950 font-urdu text-[1.08em] text-right leading-[1.85]"
                               dir="rtl"
                             >
-                              {isUrduOnly && romanNumLabel && (
-                                <span className="font-extrabold shrink-0 font-sans tabular-nums">
-                                  {romanNumLabel}
+                              {displayLabelUr && (
+                                <span
+                                  className={`font-extrabold shrink-0 tabular-nums ${
+                                    hasUrduScript(displayLabelUr)
+                                      ? "font-urdu text-[0.98em]"
+                                      : "font-sans text-[0.9em]"
+                                  }`}
+                                >
+                                  {displayLabelUr}
                                 </span>
                               )}
                               {isEditMode && !isSecondCopy ? (
@@ -1462,22 +2104,30 @@ export default function QuickPaperPage() {
                                     }
                                     className="w-full bg-amber-50/60 border-b border-dashed border-amber-500 focus:outline-none resize-none font-bold font-urdu text-right no-print"
                                   />
-                                  <span className="print-only font-bold font-urdu">
+                                  <span className="print-only font-bold font-urdu flex-1">
                                     <MathRenderer content={qTextUr} />
                                   </span>
                                 </>
                               ) : (
-                                <span className="font-urdu">
+                                <span className="font-urdu flex-1">
                                   <MathRenderer content={qTextUr} />
+                                  {isLongSection && q.marks && (
+                                    <span className="mr-1.5 font-sans text-[0.84em] font-extrabold text-slate-700 tabular-nums">
+                                      ({q.marks})
+                                    </span>
+                                  )}
                                 </span>
                               )}
                             </div>
                           )}
 
-                          {isEditMode && !isSecondCopy && (
+                          {!isSecondCopy && (
                             <button
+                              type="button"
                               onClick={() => handleDeleteQuestion(sIdx, qIdx)}
-                              className="no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 p-0.5"
+                              className={`no-print text-rose-500 hover:text-rose-700 text-xs shrink-0 p-0.5 transition-opacity ${
+                                isEditMode ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                              }`}
                               title="Delete Question"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -1488,22 +2138,35 @@ export default function QuickPaperPage() {
                     })}
                   </div>
                 )}
-
-                {/* Add Question Button in Edit Mode */}
-                {isEditMode && !isSecondCopy && (
-                  <div className="no-print pt-1 flex justify-end">
-                    <button
-                      onClick={() => handleAddQuestion(sIdx)}
-                      className="px-2.5 py-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded-lg border border-emerald-300 flex items-center gap-1 font-sans cursor-pointer"
-                    >
-                      <Plus className="w-3 h-3" />
-                      <span>Add Question to Section</span>
-                    </button>
-                  </div>
-                )}
               </div>
             );
           })}
+
+          {/* On-Sheet Quick "Add Section" Button (Hidden when printing) */}
+          {!isSecondCopy && (
+            <div className="no-print pt-3 border-t border-dashed border-slate-300 flex flex-wrap items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={() => openAddSectionModal("new_section")}
+                className="px-4 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-300 font-extrabold text-xs flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+              >
+                <Plus className="w-4 h-4 text-indigo-600" />
+                <span>Add Section &amp; Questions</span>
+              </button>
+              {paperData.sections.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    openAddSectionModal("existing_section", paperData.sections.length - 1)
+                  }
+                  className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-extrabold text-xs flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+                >
+                  <Plus className="w-4 h-4 text-emerald-600" />
+                  <span>Add Question to Current Section</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -1547,7 +2210,8 @@ export default function QuickPaperPage() {
                 </span>
               </div>
               <p className="text-[11px] font-semibold text-slate-500 truncate hidden md:block">
-                {paperData.sections.length} Sections &bull; {totalQuestionsCount} Questions &bull; {paperData.totalMarks} Marks ({paperLanguageMode})
+                {paperData.sections.length} Sections &bull; {totalQuestionsCount} Questions &bull;{" "}
+                {paperData.totalMarks} Marks ({paperLanguageMode})
               </p>
             </div>
           </div>
@@ -1582,18 +2246,29 @@ export default function QuickPaperPage() {
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Paper Sheet ({totalQuestionsCount})
+              Print Sheet
             </button>
           </div>
 
-          {/* Right: Templates, Logo, Edit Toggle, Word & Print */}
+          {/* Right: Add Section Modal Button, Templates, Logo, Edit, Word & Print */}
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <button
+              type="button"
+              onClick={() => openAddSectionModal("new_section")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold shadow-[0_3px_0_0_#312e81] active:translate-y-0.5 transition-all cursor-pointer"
+              title="Add a new section with Question No. and Questions"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Add Section</span>
+            </button>
+
+            <button
               onClick={() => setShowTemplateModal(true)}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/90 hover:bg-white border border-slate-200/90 text-slate-800 font-bold text-xs shadow-2xs transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/90 hover:bg-white border border-slate-200/90 text-slate-800 text-xs font-bold shadow-2xs cursor-pointer"
+              title="Change Board Header & Paper Style"
             >
               <Palette className="w-3.5 h-3.5 text-indigo-600" />
-              <span className="hidden sm:inline">Templates</span>
+              <span className="hidden lg:inline">Templates</span>
             </button>
 
             <input
@@ -1609,7 +2284,7 @@ export default function QuickPaperPage() {
               title="Upload custom school or academy logo"
             >
               <ImageIcon className="w-3.5 h-3.5 text-blue-600" />
-              <span className="hidden lg:inline">{logoBase64 ? "Change Logo" : "Upload Logo"}</span>
+              <span className="hidden xl:inline">{logoBase64 ? "Change Logo" : "Upload Logo"}</span>
             </button>
 
             <button
@@ -1630,7 +2305,11 @@ export default function QuickPaperPage() {
                   ? "bg-emerald-50 text-emerald-800 border-emerald-300"
                   : "bg-amber-50/90 hover:bg-amber-100 text-amber-900 border-amber-300/90"
               }`}
-              title={logoBase64 ? "Click to remove crest/logo from paper" : "Stamp Official PaperWala Board Crest onto Paper & Word (.docx)"}
+              title={
+                logoBase64
+                  ? "Click to remove crest/logo from paper"
+                  : "Stamp Official PaperWala Board Crest onto Paper & Word (.docx)"
+              }
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               <span className="hidden xl:inline">{logoBase64 ? "Clear Crest" : "Official Crest"}</span>
@@ -1684,6 +2363,350 @@ export default function QuickPaperPage() {
       </header>
 
       {/* =====================================================================
+          ADD SECTION & QUESTIONS MODAL
+          ===================================================================== */}
+      {showAddSectionModal && (
+        <div
+          className="no-print fixed inset-0 z-50 bg-slate-950/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+          onClick={() => setShowAddSectionModal(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl space-y-4 my-auto max-h-[92vh] overflow-y-auto"
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+                  <Layers className="w-5 h-5 text-indigo-600" />
+                  <span>Add Section &amp; Questions to Paper</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Enter the Question No. and Question text below to add directly onto your examination paper.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddSectionModal(false)}
+                className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleConfirmAddSectionModal} className="space-y-4">
+              {/* Target Mode Selector: New Section vs Existing Section */}
+              {paperData.sections.length > 0 && (
+                <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-extrabold">
+                  <button
+                    type="button"
+                    onClick={() => setModalTargetMode("new_section")}
+                    className={`flex-1 py-2 px-3 rounded-lg transition-all cursor-pointer ${
+                      modalTargetMode === "new_section"
+                        ? "bg-white text-indigo-700 shadow-xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    + Create New Section
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setModalTargetMode("existing_section")}
+                    className={`flex-1 py-2 px-3 rounded-lg transition-all cursor-pointer ${
+                      modalTargetMode === "existing_section"
+                        ? "bg-white text-emerald-700 shadow-xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    + Add to Existing Section ({paperData.sections.length})
+                  </button>
+                </div>
+              )}
+
+              {/* Section Configuration */}
+              {modalTargetMode === "new_section" ? (
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="sm:col-span-2">
+                      <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 mb-1">
+                        Section Type
+                      </label>
+                      <select
+                        value={modalSectionType}
+                        onChange={(e) =>
+                          handleModalSectionTypeChange(e.target.value as ExamSection["type"])
+                        }
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                      >
+                        <option value="short">Short Questions (مختصر سوالات)</option>
+                        <option value="long">Long / Detailed Questions (تفصیلی سوالات)</option>
+                        <option value="mcq">Multiple Choice Questions - MCQs (معروضی سوالات)</option>
+                        <option value="poetry">Poetry Explanation (اشعار کی تشریح)</option>
+                        <option value="essay">Essay / Letter / Application (مضمون / خط)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 mb-1">
+                        Section Marks
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        max={100}
+                        value={modalSectionMarks}
+                        onChange={(e) => setModalSectionMarks(Number(e.target.value))}
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-black text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 tabular-nums"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 mb-1">
+                        Section Heading (English)
+                      </label>
+                      <input
+                        type="text"
+                        value={modalSectionTitleEn}
+                        onChange={(e) => setModalSectionTitleEn(e.target.value)}
+                        placeholder="e.g., SECTION-II: SHORT QUESTIONS"
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 mb-1">
+                        Section Heading (Urdu / اردو)
+                      </label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={modalSectionTitleUr}
+                        onChange={(e) => setModalSectionTitleUr(e.target.value)}
+                        placeholder="مثال: حصہ دوم: مختصر سوالات"
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-bold font-urdu text-slate-900 text-right outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3.5 rounded-2xl bg-emerald-50/60 border border-emerald-200 space-y-1.5">
+                  <label className="block text-[11px] font-extrabold uppercase tracking-wider text-emerald-900">
+                    Select Section to Add Questions Into
+                  </label>
+                  <select
+                    value={modalTargetSectionIdx}
+                    onChange={(e) => {
+                      const idx = Number(e.target.value);
+                      setModalTargetSectionIdx(idx);
+                      const sec = paperData.sections[idx];
+                      if (sec) {
+                        setModalSectionType(sec.type);
+                        setModalQuestions((prev) =>
+                          prev.map((q, qRowIdx) => ({
+                            ...q,
+                            questionNo: getDefaultQuestionNo(
+                              sec.type,
+                              sec.questions.length + qRowIdx,
+                              paperData.sections.length
+                            ),
+                            marks: sec.type === "mcq" ? 1 : sec.type === "long" ? 5 : 2,
+                          }))
+                        );
+                      }
+                    }}
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-emerald-300 text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                  >
+                    {paperData.sections.map((sec, idx) => (
+                      <option key={sec.id || idx} value={idx}>
+                        Section {idx + 1}: {sec.titleEn || sec.titleUr} ({sec.questions.length} Qs)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Questions List: Question No. + Question Text (+ Options if MCQ) */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-700">
+                    Questions to Add ({modalQuestions.length})
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleAddModalQuestionRow}
+                    className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-extrabold flex items-center gap-1 cursor-pointer transition-colors"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add Another Question</span>
+                  </button>
+                </div>
+
+                <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
+                  {modalQuestions.map((qDraft, qIdx) => {
+                    const isMcqDraft =
+                      (modalTargetMode === "existing_section" &&
+                        paperData.sections[modalTargetSectionIdx]?.type === "mcq") ||
+                      (modalTargetMode === "new_section" && modalSectionType === "mcq");
+
+                    const primaryHasUrdu = hasUrduScript(qDraft.questionTextEn);
+
+                    return (
+                      <div
+                        key={qIdx}
+                        className="p-3.5 rounded-2xl bg-slate-50/90 border border-slate-200/90 space-y-2.5 relative"
+                      >
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-2.5">
+                          {/* Question No. Input */}
+                          <div className="w-full sm:w-28 shrink-0">
+                            <label className="block text-[10px] font-extrabold uppercase text-slate-500 mb-1">
+                              Question No.
+                            </label>
+                            <input
+                              type="text"
+                              value={qDraft.questionNo}
+                              onChange={(e) =>
+                                handleUpdateModalQuestionRow(qIdx, "questionNo", e.target.value)
+                              }
+                              placeholder="e.g. 1, (i), Q.3"
+                              className="w-full px-2.5 py-2 rounded-xl bg-white border border-slate-300 text-xs font-black text-indigo-900 text-center outline-none focus:ring-2 focus:ring-indigo-500"
+                            />
+                          </div>
+
+                          {/* Question Text (English or Urdu or Bilingual) */}
+                          <div className="flex-1 min-w-0">
+                            <label className="block text-[10px] font-extrabold uppercase text-slate-500 mb-1">
+                              Question (English, Urdu, or &ldquo;English | اردو&rdquo;)
+                            </label>
+                            <textarea
+                              rows={2}
+                              dir={primaryHasUrdu ? "rtl" : "ltr"}
+                              value={qDraft.questionTextEn}
+                              onChange={(e) =>
+                                handleUpdateModalQuestionRow(qIdx, "questionTextEn", e.target.value)
+                              }
+                              placeholder="Write your question here (e.g., Define an Algorithm. | الگورتھم کی تعریف کریں۔)"
+                              className={`w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 resize-y ${
+                                primaryHasUrdu ? "font-urdu text-right leading-[1.75]" : ""
+                              }`}
+                              required={qIdx === 0}
+                            />
+                          </div>
+
+                          {/* Marks Input & Delete Row */}
+                          <div className="w-full sm:w-20 shrink-0 flex sm:block items-center justify-between gap-2">
+                            <div className="flex-1">
+                              <label className="block text-[10px] font-extrabold uppercase text-slate-500 mb-1">
+                                Marks
+                              </label>
+                              <input
+                                type="number"
+                                min={1}
+                                max={50}
+                                value={qDraft.marks}
+                                onChange={(e) =>
+                                  handleUpdateModalQuestionRow(qIdx, "marks", Number(e.target.value))
+                                }
+                                className="w-full px-2 py-2 rounded-xl bg-white border border-slate-300 text-xs font-black text-center text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 tabular-nums"
+                              />
+                            </div>
+                            {modalQuestions.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveModalQuestionRow(qIdx)}
+                                className="mt-4 sm:mt-1.5 text-rose-500 hover:text-rose-700 text-[11px] font-bold flex items-center gap-1 cursor-pointer"
+                                title="Remove Question Row"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span className="sm:hidden">Remove</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Optional Separate Urdu Translation Line */}
+                        <div>
+                          <input
+                            type="text"
+                            dir="rtl"
+                            value={qDraft.questionTextUr}
+                            onChange={(e) =>
+                              handleUpdateModalQuestionRow(qIdx, "questionTextUr", e.target.value)
+                            }
+                            placeholder="اختیاری اردو ترجمہ یہاں لکھیں (Optional Urdu question text for Bilingual paper)"
+                            className="w-full px-3 py-1.5 rounded-xl bg-white/90 border border-slate-200 text-xs font-urdu text-right text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
+                          />
+                        </div>
+
+                        {/* MCQ Options (Shown when Section Type is MCQ) */}
+                        {isMcqDraft && (
+                          <div className="pt-1 border-t border-slate-200/80">
+                            <span className="block text-[10px] font-extrabold uppercase text-emerald-800 mb-1.5">
+                              MCQ Options — Supports English, Urdu (الف، ب، ج، د), or &ldquo;English (اردو)&rdquo;
+                            </span>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {(
+                                [
+                                  { field: "optionA", label: "(A) / (الف)" },
+                                  { field: "optionB", label: "(B) / (ب)" },
+                                  { field: "optionC", label: "(C) / (ج)" },
+                                  { field: "optionD", label: "(D) / (د)" },
+                                ] as const
+                              ).map((optMeta) => {
+                                const val = qDraft[optMeta.field];
+                                const optUrdu = isPureUrduText(val);
+                                return (
+                                  <div key={optMeta.field} className="flex items-center gap-1.5">
+                                    <span className="text-[11px] font-extrabold text-slate-600 w-16 shrink-0">
+                                      {optMeta.label}
+                                    </span>
+                                    <input
+                                      type="text"
+                                      dir={optUrdu ? "rtl" : "ltr"}
+                                      value={val}
+                                      onChange={(e) =>
+                                        handleUpdateModalQuestionRow(qIdx, optMeta.field, e.target.value)
+                                      }
+                                      placeholder={`Option ${optMeta.label}`}
+                                      className={`flex-1 px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500 ${
+                                        optUrdu ? "font-urdu text-right" : ""
+                                      }`}
+                                    />
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Modal Footer Buttons */}
+              <div className="border-t border-slate-100 pt-3 flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowAddSectionModal(false)}
+                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-emerald-600 hover:from-indigo-500 hover:to-emerald-500 text-white text-xs font-extrabold shadow-md flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Check className="w-4 h-4" />
+                  <span>Add to Paper</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* =====================================================================
           TEMPLATE SELECTION MODAL
           ===================================================================== */}
       {showTemplateModal && (
@@ -1702,7 +2725,7 @@ export default function QuickPaperPage() {
                   Select Examination Paper Template
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Switch between official Punjab Board, Urdu BISE, and Compact Class Test headers.
+                  Switch between official Punjab Board, Urdu BISE, Federal Board (FBISE), and Compact Class Test headers.
                 </p>
               </div>
               <button
@@ -1713,7 +2736,7 @@ export default function QuickPaperPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {templates.map((tpl) => (
                 <div
                   key={tpl.id}
@@ -1765,7 +2788,9 @@ export default function QuickPaperPage() {
         {(activeTab === "input" || activeTab === "split") && (
           <div
             className={`no-print flex flex-col bg-white/80 backdrop-blur-xl border-b lg:border-b-0 lg:border-r border-slate-200/90 ${
-              activeTab === "split" ? "w-full lg:w-[44%] xl:w-[42%] shrink-0" : "w-full max-w-4xl mx-auto my-4 rounded-3xl border shadow-lg"
+              activeTab === "split"
+                ? "w-full lg:w-[44%] xl:w-[42%] shrink-0"
+                : "w-full max-w-4xl mx-auto my-4 rounded-3xl border shadow-lg"
             }`}
           >
             {/* 1. AI Topic / Chapter Exam Generator Card */}
@@ -1963,24 +2988,38 @@ export default function QuickPaperPage() {
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 <div className="rounded-xl border border-blue-100 bg-blue-50 px-2.5 py-2">
                   <div className="text-[10px] font-black uppercase tracking-wide text-blue-700">MCQs</div>
-                  <div className="mt-0.5 text-lg font-black text-blue-950 tabular-nums">{questionSummary.mcq || 0}</div>
+                  <div className="mt-0.5 text-lg font-black text-blue-950 tabular-nums">
+                    {questionSummary.mcq || 0}
+                  </div>
                 </div>
                 <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-2.5 py-2">
                   <div className="text-[10px] font-black uppercase tracking-wide text-emerald-700">Short</div>
-                  <div className="mt-0.5 text-lg font-black text-emerald-950 tabular-nums">{questionSummary.short || 0}</div>
+                  <div className="mt-0.5 text-lg font-black text-emerald-950 tabular-nums">
+                    {questionSummary.short || 0}
+                  </div>
                 </div>
                 <div className="rounded-xl border border-violet-100 bg-violet-50 px-2.5 py-2">
                   <div className="text-[10px] font-black uppercase tracking-wide text-violet-700">Long</div>
-                  <div className="mt-0.5 text-lg font-black text-violet-950 tabular-nums">{questionSummary.long || 0}</div>
+                  <div className="mt-0.5 text-lg font-black text-violet-950 tabular-nums">
+                    {questionSummary.long || 0}
+                  </div>
                 </div>
                 <div className="rounded-xl border border-amber-100 bg-amber-50 px-2.5 py-2">
                   <div className="text-[10px] font-black uppercase tracking-wide text-amber-700">Marks</div>
-                  <div className="mt-0.5 text-lg font-black text-amber-950 tabular-nums">{paperData.totalMarks || 0}</div>
+                  <div className="mt-0.5 text-lg font-black text-amber-950 tabular-nums">
+                    {paperData.totalMarks || 0}
+                  </div>
                 </div>
               </div>
               <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px]">
-                <span className="font-semibold text-slate-600"><strong className="text-slate-900">Quick flow:</strong> paste or generate → review the live paper → export Word or print PDF.</span>
-                <button onClick={restoreDraft} className="inline-flex items-center gap-1 font-black text-indigo-700 hover:text-indigo-900">
+                <span className="font-semibold text-slate-600">
+                  <strong className="text-slate-900">Quick flow:</strong> paste, generate, or click{" "}
+                  <strong>Add Section</strong> &rarr; review live paper &rarr; export Word or print PDF.
+                </span>
+                <button
+                  onClick={restoreDraft}
+                  className="inline-flex items-center gap-1 font-black text-indigo-700 hover:text-indigo-900 cursor-pointer"
+                >
                   <Save className="w-3.5 h-3.5" /> Restore draft
                 </button>
               </div>
@@ -2014,8 +3053,9 @@ export default function QuickPaperPage() {
                     <span>Sync to Sheet</span>
                   </button>
                   <button
-                    onClick={handleAddSection}
-                    className="text-indigo-700 hover:text-indigo-900 flex items-center gap-1 cursor-pointer"
+                    type="button"
+                    onClick={() => openAddSectionModal("new_section")}
+                    className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 flex items-center gap-1 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Add Section</span>
@@ -2045,29 +3085,38 @@ export default function QuickPaperPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-center gap-1.5">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-600" />
-                  <span className="font-bold text-slate-500">Sheet Language:</span>
+                  <span className="font-bold text-slate-500">Language:</span>
                   <select
                     value={paperLanguageMode}
-                    onChange={(e) => setPaperLanguageMode(e.target.value as any)}
+                    onChange={(e) => {
+                      const nextMode = e.target.value as "Bilingual" | "Urdu" | "English";
+                      setPaperLanguageMode(nextMode);
+                      setInstructionNote(
+                        nextMode === "Urdu"
+                          ? activeTemplate.instructionNoteUr
+                          : activeTemplate.instructionNoteEn
+                      );
+                    }}
                     className="bg-slate-100 border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-900 font-extrabold cursor-pointer outline-none"
                   >
                     <option value="Bilingual">Bilingual (EN + UR)</option>
-                    <option value="Urdu">Urdu Only (RTL)</option>
+                    <option value="Urdu">Urdu Only (اردو RTL)</option>
                     <option value="English">English Only (LTR)</option>
                   </select>
                 </div>
 
                 <div className="flex items-center gap-1.5 border-l border-slate-200 pl-2">
-                  <span className="font-bold text-slate-500">Header:</span>
+                  <span className="font-bold text-slate-500">Board Style:</span>
                   <select
                     value={activeTemplate.headerStyle}
                     onChange={(e) => {
-                      const hStyle = e.target.value as any;
+                      const hStyle = e.target.value as PaperTemplate["headerStyle"];
                       setActiveTemplate({ ...activeTemplate, headerStyle: hStyle });
                     }}
                     className="bg-slate-100 border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-900 font-bold cursor-pointer outline-none"
                   >
-                    <option value="punjab-board-style1">Punjab Board Box</option>
+                    <option value="punjab-board-style1">Punjab Board (BISE)</option>
+                    <option value="fbise-style2">Federal Board (FBISE)</option>
                     <option value="minimal">Compact Minimal</option>
                   </select>
                 </div>
@@ -2093,6 +3142,15 @@ export default function QuickPaperPage() {
               </div>
 
               <div className="flex flex-wrap items-center gap-2.5 text-xs font-bold text-slate-700">
+                <button
+                  type="button"
+                  onClick={() => openAddSectionModal("new_section")}
+                  className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-[11px] flex items-center gap-1 shadow-2xs cursor-pointer"
+                >
+                  <Plus className="w-3 h-3" />
+                  <span>Add Section</span>
+                </button>
+
                 <div className="flex items-center bg-slate-100 rounded-lg p-0.5 border border-slate-300">
                   <button
                     onClick={() => setPrintDensity("1_per_page")}
@@ -2202,7 +3260,9 @@ export default function QuickPaperPage() {
                   <div className="no-print mb-3 py-2 px-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-bold text-emerald-900 flex items-center justify-between shadow-2xs">
                     <span className="flex items-center gap-1.5">
                       <Columns className="w-4 h-4 text-emerald-600" />
-                      <span>2 Papers on 1 Page Mode: Both copies print side-by-side on one Landscape A4 sheet.</span>
+                      <span>
+                        2 Papers on 1 Page Mode: Both copies print side-by-side on one Landscape A4 sheet.
+                      </span>
                     </span>
                     <span className="text-[11px] bg-emerald-200/80 text-emerald-950 px-2 py-0.5 rounded font-black">
                       {fitToOnePage && printScale < 1
@@ -2222,9 +3282,7 @@ export default function QuickPaperPage() {
                       </div>
                       {renderPaperContent(1)}
                     </div>
-                    <div className="duplex-print-column pl-2">
-                      {renderPaperContent(2)}
-                    </div>
+                    <div className="duplex-print-column pl-2">{renderPaperContent(2)}</div>
                   </div>
                 </div>
               </div>
@@ -2262,4 +3320,16 @@ function toRomanLower(num: number): string {
     }
   }
   return roman || "i";
+}
+
+function getUrduSectionOrdinal(num: number): string {
+  const map: Record<number, string> = {
+    1: "اول",
+    2: "دوم",
+    3: "سوم",
+    4: "چہارم",
+    5: "پنجم",
+    6: "ششم",
+  };
+  return map[num] || String(num);
 }

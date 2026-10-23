@@ -152,6 +152,37 @@ export interface SubscriptionInfo {
   canUnlimitedExport: boolean;
   canAccessAllClasses: boolean;
   maxQuestionsPerPaper: number;
+  /** User-defined paper generation template (persisted inside the subscription JSON). */
+  paperTemplate?: UserPaperTemplate | null;
+}
+
+/** Per-user defaults applied to every generated paper instead of the built-in defaults. */
+export interface UserPaperTemplate {
+  institutionName: string;
+  logoBase64: string | null;
+  logoSize: number;
+  headerStyle: "style1" | "style2";
+  paperTypeBanner: string;
+  languageMode: "Bilingual" | "English" | "Urdu";
+  paperSize: "a4" | "letter" | "legal";
+  testDensity: "1_per_page" | "2_per_page";
+  timeDuration: string;
+  instFontSize: number;
+  objFontSize: number;
+  subFontSize: number;
+  boldHeadingsOnly: boolean;
+  entireContentBold: boolean;
+  includeHeaderSection: boolean;
+  includeStudentSection: boolean;
+  includeBubbleSheet: boolean;
+  includeMcqAnswerKey: boolean;
+  includeInstructions: boolean;
+  instructionText: string;
+  includePaperBorder: boolean;
+  includeWatermark: boolean;
+  watermarkType: "text" | "image";
+  watermarkOpacity: number;
+  includePaperCode: boolean;
 }
 
 export interface ClientUser {
