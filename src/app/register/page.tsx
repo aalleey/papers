@@ -25,6 +25,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
+import { PaymentQr } from "@/components/PaymentQr";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -484,8 +485,11 @@ export default function RegisterPage() {
                   <li>Select <strong>Raast Payment</strong> and enter Raast ID: <strong>{RAAST_ID}</strong></li>
                   <li>Transfer exactly <strong>Rs. {amount}</strong> and copy the <strong>Transaction ID / TID</strong>.</li>
                   <li>Paste the TID below to submit for administrative approval.</li>
+                  <li>After submitting, send the payment screenshot to WhatsApp <strong>03473576122</strong>.</li>
                 </ol>
               </div>
+
+              <PaymentQr />
 
               {/* Payment Proof Form */}
               <form onSubmit={handlePaymentSubmit} className="space-y-3.5">

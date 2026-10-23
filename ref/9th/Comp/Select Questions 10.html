@@ -1,0 +1,2900 @@
+<!DOCTYPE html>
+<!-- saved from url=(0678)https://risingstarspakistan.com/appdata/pages/questions.php?board_id=Punjab&boardFolder=Punjab&boardName=Punjab%2BBoards&class_id=Punjab_9th_Tech&classFolder=9th_Tech&className=9th%2BTech&subject_id=Punjab_9th_Tech_Computer&subjectFolder=Computer&subjectName=Computer%2BTech&chapterIds=Punjab_9th_Tech_Computer_chapter10&chapterNames=Chapter%252010%2520-%2520Entrepreneurship%2520in%2520Digital%2520Age%2520%28%25DA%2588%25DB%258C%25D8%25AC%25DB%258C%25D9%25B9%25D9%2584%2520%25D8%25AF%25D9%2588%25D8%25B1%2520%25D9%2585%25DB%258C%25DA%25BA%2520%25D8%25A7%25D9%2586%25D9%25B9%25D8%25B1%25D9%25BE%25D8%25B1%25DB%258C%25D9%2586%25DB%258C%25D9%2588%25D8%25B1%25D8%25B4%25D9%25BE%29 -->
+<html lang="en" style="--header-height: 140px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Questions</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./Select Questions 10_files/css2" rel="stylesheet">
+
+<!-- KaTeX -->
+<link rel="stylesheet" href="./Select Questions 10_files/katex.min.css">
+<script defer="" src="./Select Questions 10_files/katex.min.js.download"></script>
+<script defer="" src="./Select Questions 10_files/auto-render.min.js.download"></script>
+
+<style>
+  :root { 
+    --primary-color: #1976d2; 
+    --success-color: #28a745; 
+    --danger-color: #dc3545; 
+    --bg-color: #f0f2f5;
+    --header-height: 150px;
+  }
+  
+  body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      margin: 0; 
+      padding-bottom: 100px; 
+      background-color: var(--bg-color); 
+      overflow-x: hidden;
+  }
+
+  /* --- FIXED SMART HEADER --- */
+  .fixed-header-wrapper {
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      z-index: 1000;
+      background: #fff; 
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .header-collapsed {
+      transform: translateY(-100%);
+  }
+
+  .header-content { padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  h1 { text-align: center; margin: 0 0 8px 0; font-size: 16px; color: #333; }
+  
+  .controls-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  @media (max-width: 600px) { .controls-grid { grid-template-columns: 1fr; } }
+  
+  .control-group { background: #f8f9fa; padding: 6px; border-radius: 6px; border: 1px solid #e0e0e0; }
+  .control-group h3 { font-size: 11px; margin: 0 0 4px 0; text-align: center; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+  
+  .switches, #language-controls, #source-controls { display: flex; justify-content: space-around; flex-wrap: wrap; }
+  .switch-label { font-size: 16px; display:flex; align-items:center; cursor:pointer; margin: 0 3px; white-space: nowrap; }
+  .switch-label input { margin-right: 4px; }
+  
+  input:disabled + span, input:disabled { cursor: not-allowed; color: #999; }
+
+  /* Chapter Navigation */
+  .chapter-header { 
+      background-color: #ffffff; padding: 8px 12px; border-top: 1px solid #f0f0f0; 
+      display: flex; justify-content: space-between; align-items: center;
+  }
+  .chapter-info { font-size: 13px; font-weight: 700; color: #333; flex-grow: 1; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .chapter-button { padding: 5px 10px; background-color: var(--primary-color); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+  .chapter-button:disabled { background-color: #cfd8dc; cursor: default; }
+
+  .board-tag { 
+      font-weight: 600; 
+      color: #673ab7; 
+      font-size: 0.8em; 
+      background: #f3e5f5; 
+      padding: 2px 10px; 
+      border-radius: 12px; 
+      border: 1px solid #d1c4e9; 
+      white-space: nowrap;
+      display: inline-block;
+      margin: 2px;
+  }
+
+  .meta-container {
+      text-align: center;
+      margin: 0 auto 8px auto;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 5px;
+  }
+
+  .mcq-board-footer {
+      margin-top: 10px;
+      border-top: 1px dashed #e0e0e0;
+      padding-top: 5px;
+      text-align: right;
+  }
+
+  /* --- TOGGLE ARROW --- */
+  .header-toggle-tab {
+      position: absolute;
+      bottom: -25px; 
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 25px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-top: none;
+      border-radius: 0 0 15px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1001;
+      transition: transform 0.3s ease;
+  }
+  
+  .arrow-icon {
+      border: solid var(--primary-color);
+      border-width: 0 3px 3px 0;
+      display: inline-block;
+      padding: 3px;
+      transition: transform 0.3s ease;
+  }
+  .up { transform: rotate(-135deg); -webkit-transform: rotate(-135deg); }
+  .down { transform: rotate(45deg); -webkit-transform: rotate(45deg); margin-bottom: 5px; }
+
+  /* --- LAYOUT WRAPPER FOR SIDEBAR + CONTENT --- */
+  #mainLayout {
+      max-width: 98%;
+      margin: 0 auto;
+      margin-top: 200px; /* Adjusted dynamically by JS */
+      transition: margin-top 0.3s ease;
+      display: flex;
+      gap: 20px;
+      padding: 0 12px;
+      align-items: flex-start;
+  }
+
+  #mainLayout.header-is-hidden {
+      margin-top: 40px !important;
+  }
+
+  /* --- STICKY SIDEBAR COMPONENT --- */
+  .sidebar-container {
+      width: 280px;
+      flex-shrink: 0;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      position: sticky;
+      top: calc(var(--header-height, 150px) + 15px);
+      height: calc(100vh - var(--header-height, 150px) - 150px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      margin-bottom: 100px;
+      transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1), height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebar-container::-webkit-scrollbar {
+      width: 6px;
+  }
+  .sidebar-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+  }
+
+  .sidebar-header {
+      padding: 14px 16px;
+      background: #f1f5f9;
+      border-bottom: 2px solid #e2e8f0;
+      font-weight: 800; 
+      font-size: 15px;
+      color: var(--primary-color); 
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+  }
+
+  .sidebar-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+  }
+
+  .sidebar-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+      cursor: pointer;
+      color: #374151;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+  }
+
+  .sidebar-item:hover {
+      background: #f8fafc;
+      color: var(--primary-color);
+  }
+
+  .sidebar-item.active {
+      background: #eff6ff;
+      color: var(--primary-color);
+      font-weight: 700;
+      border-left: 4px solid var(--primary-color);
+  }
+
+  .sidebar-item input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.1);
+      cursor: pointer;
+  }
+
+  .sidebar-count {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 2px 8px;
+      border-radius: 12px;
+  }
+  
+  .sidebar-item.active .sidebar-count {
+      background: var(--primary-color);
+      color: #fff;
+  }
+
+  @media (max-width: 900px) {
+      #mainLayout {
+          flex-direction: column;
+      }
+      .sidebar-container {
+          width: 100%;
+          position: static;
+          height: 200px;
+          margin-bottom: 15px;
+      }
+  }
+
+  /* --- COLLAPSIBLE ACCORDION SECTIONS --- */
+  .accordion-section {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 16px;
+  }
+
+  .accordion-header {
+      background: #f8fafc;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid #e2e8f0;
+      transition: background 0.2s;
+  }
+
+  .accordion-header:hover {
+      background: #f1f5f9;
+  }
+
+  .accordion-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--primary-color);
+      flex-grow: 1;
+  }
+
+  .accordion-title span {
+      color: #475569;
+      font-size: 14px;
+      font-weight: 700;
+      margin-left: 4px;
+  }
+
+  .accordion-arrow {
+      border: solid #64748b;
+      border-width: 0 2px 2px 0;
+      display: inline-block;
+      padding: 4px;
+      transform: rotate(45deg); /* Downward point */
+      transition: transform 0.2s ease;
+  }
+
+  .accordion-arrow.collapsed {
+      transform: rotate(-135deg); /* Upward point */
+  }
+
+  .accordion-content {
+      display: none;
+      padding: 16px;
+      background: var(--bg-color);
+  }
+
+  .accordion-content.open {
+      display: block;
+  }
+
+  /* --- CONTENT AREA --- */
+  .container { 
+      flex-grow: 1;
+      padding: 0; 
+      width: 100%; 
+  }
+
+  .mcq-grid, .question-section-grid { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 15px; 
+  }
+
+  /* --- QUESTION CARD (TAP TO SELECT MECHANICS) --- */
+  .question-card { 
+      margin-bottom: 12px; 
+      padding: 16px 12px 12px 12px; 
+      border: 1px solid #e0e0e0; 
+      border-radius: 8px; 
+      background-color: #fff; 
+      position: relative; 
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .question-card:hover {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      border-color: #cbd5e1;
+  }
+
+  /* Tap Highlight State (No Checkboxes) */
+  .question-card.selected {
+      background-color: #e3f2fd !important;
+      border: 2px solid var(--primary-color) !important;
+      box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+  }
+  /* --- ACTIONS FOR SELECTED CARDS (VIEW MODE ONLY) --- */
+  .card-actions {
+      position: absolute;
+      top: -12px;
+      right: -10px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+  }
+  .remove-btn, .replace-btn {
+      width: 26px;
+      height: 26px;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+  }
+  .remove-btn { background: var(--danger-color); font-size: 18px; }
+  .remove-btn:hover { transform: scale(1.1); background: #c82333; }
+  .replace-btn { background: var(--primary-color); }
+  .replace-btn:hover { transform: scale(1.1); background: #1565c0; }
+  
+  .question-card.rtl .card-actions {
+      right: auto;
+      left: -10px;
+  }
+
+  /* ALP Excluded question styling */
+  .question-card.alp-excluded {
+      background-color: #fff5f5;
+      border: 1px solid #feb2b2;
+  }
+
+  .question-card.alp-excluded.selected {
+      background-color: #ffebee !important;
+      border: 2px solid var(--danger-color) !important;
+  }
+
+  .question-card.alp-excluded .question-text {
+      color: #c53030 !important; 
+  }
+
+  .question-card.alp-excluded .remarks-tag {
+      background: #c53030 !important; 
+      color: white !important;
+  }
+
+  .assigned-tag { 
+      background: var(--primary-color); 
+      color: white; 
+      padding: 2px 8px; 
+      border-radius: 4px; 
+      font-size: 11px; 
+      margin-right: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+  }
+
+  .assigned-tag:hover {
+      background: #1565c0;
+  }
+
+  .question-card.rtl .assigned-tag { 
+      margin-right: 0; 
+      margin-left: 6px;
+  }
+
+  .question-card.alp-excluded .topic-tag,
+  .question-card.alp-excluded .exercise-tag,
+  .question-card.alp-excluded .remarks-tag {
+      opacity: 0.7;
+  }
+
+  .question-header { 
+      font-size: 13px; color: #444; font-weight: 700; display: flex; align-items: center; margin-bottom: 8px;
+      padding-right: 35px; height: 24px;
+  }
+  .q-number { flex: 0 0 auto; }
+  
+  .tags-container {
+      margin-left: auto;
+      display: flex;
+      gap: 5px;
+  }
+  .question-card.rtl .tags-container { margin-left: 0; margin-right: auto; }
+
+  .exercise-tag { 
+      font-weight: 600; color: var(--success-color); font-size: 0.85em; 
+      background: #e8f5e9; padding: 2px 8px; border-radius: 12px; border: 1px solid #c8e6c9; white-space: nowrap;
+  }
+  
+  .topic-container {
+      text-align: center;
+      margin: 0 auto 8px auto;
+  }
+
+  .topic-tag { 
+      font-weight: 600; 
+      color: #1565c0; 
+      font-size: 0.8em; 
+      background: #e3f2fd; 
+      padding: 4px 20px; 
+      border-radius: 20px; 
+      border: 1px solid #90caf9; 
+      white-space: normal; 
+      display: inline-block;
+      max-width: 100%;
+      word-break: break-word;
+      text-align: center;
+  }
+  .chapter-tag { 
+      font-weight: 600; 
+      color: #00695c; 
+      font-size: 0.8em; 
+      background: #e0f2f1; 
+      padding: 4px 12px; 
+      border-radius: 12px; 
+      border: 1px solid #b2dfdb; 
+      white-space: normal;
+      display: inline-block;
+      margin: 2px;
+      max-width: 100%;
+      word-break: break-word;
+      text-align: center;
+  }
+  .remarks-tag { 
+      font-weight: 600; color: #e65100; font-size: 0.85em; 
+      background: #fff3e0; padding: 2px 8px; border-radius: 12px; border: 1px solid #90caf9; white-space: nowrap;
+  }
+
+  .question-text { line-height: 1.6; font-size: 14px; color: #222; }
+  .question-text img { max-width: 100%; height: auto; display: block; margin: 5px 0; }
+
+  /* RTL Support */
+  .question-card.rtl { direction: rtl; }
+  .question-card.rtl .question-header { padding-right: 0; padding-left: 35px; }
+  .question-card.rtl .assigned-tag { margin-right: 0; margin-left: 6px; }
+
+  .question-card.rtl .katex .mord+.msupsub,
+  .katex-html{display:inline!important;white-space:nowrap}
+  .urdu-text .katex-display{text-align:center;direction:ltr;margin:.5em 0}
+  .urdu-text .katex{font-size:1.1em;line-height:1.2}
+  .urdu-text .katex:not(.katex-display){
+   direction:ltr;unicode-bidi:embed;display:inline-block;vertical-align:middle}
+
+  /* Options */
+  .options { 
+      list-style: none; 
+      padding: 0; 
+      margin-top: 12px; 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 10px 0; 
+  }
+
+  .option { 
+      display: flex; 
+      align-items: flex-start; 
+      font-size: 14px; 
+      width: 50%;             
+      box-sizing: border-box;
+      padding-right: 10px;
+  }
+
+  @media (max-width: 1200px) {
+      .mcq-grid, .question-section-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 800px) {
+      .mcq-grid, .question-section-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+      .option { width: 100%; padding-right: 0; }
+  }
+
+  .option b { 
+      margin-right: 8px; 
+      font-size: 13px; 
+      color: #555; 
+      flex-shrink: 0; 
+      padding-top: 2px; 
+  }
+  .correct-option { color: var(--success-color); font-weight: 700; }
+  .question-card.rtl .option { padding-left: 5px; padding-right: 0; }
+  .question-card.rtl .option b { 
+      margin-right: 0; 
+      margin-left: 8px; 
+  }
+  .option .urdu-text { 
+      font-size: 1.0em; 
+      line-height: 1.2;       
+      margin: 0;
+      padding: 0;
+  }
+ 
+  .q-number-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .modal-body h3 {
+      display: flex;
+      align-items: center;
+  }
+
+  .type-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+      font-size: 11px;
+      font-weight: bold;
+  }
+
+  .type-indicator.short {
+      background: #2e7d32;
+      color: white;
+  }
+
+  .type-indicator.long {
+      background: #1565c0;
+      color: white;
+  }
+  
+  /* Bilingual */
+  .urdu-text { font-family: 'Noto Nastaliq Urdu', sans-serif; font-size: 1.1em; line-height: 2.0; direction: rtl; text-align: right; }
+  .arabic-text { font-family: 'Amiri', 'Noto Naskh Arabic', serif; font-size: 1.2em; direction: rtl; }
+  .ltr-in-rtl { unicode-bidi: isolate; direction: ltr; display: inline-block; }
+  .bilingual-container { 
+      display: flex; 
+      flex-direction: row;    
+      justify-content: flex-start; 
+      align-items: center;    
+      gap: 10px; 
+      width: 100%;
+  }
+
+  .english-part { 
+      flex: 1;                
+      line-height: 1.4;
+  }
+
+  .urdu-part { 
+      flex: 1;                
+      direction: rtl;
+      text-align: right;
+  }
+  @media(max-width:500px) { .bilingual-container { flex-direction: column; } .english-part, .urdu-part { width: 100%; } }
+
+  /* --- BOTTOM BAR --- */
+  #bottom-bar { 
+      position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; 
+      padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); 
+      display: flex; justify-content: space-between; align-items: center; z-index: 1001; 
+  }
+  #counts span { font-size: 12px; font-weight: bold; margin-right: 8px; }
+  #btnNext { background: var(--success-color); color: #fff; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; }
+  #btnNext:disabled { background: #ccc; cursor: not-allowed; }
+
+  /* --- MODAL --- */
+  .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; justify-content:center; align-items:center; z-index:2000; padding:10px; box-sizing:border-box; }
+  .modal-content { background:#fff; border-radius:8px; width:100%; max-width:600px; max-height:90vh; display:flex; flex-direction:column; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+  .modal-header { padding: 12px 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+  .modal-header h2 { margin: 0; font-size: 18px; color: var(--primary-color); }
+  .modal-body { padding: 0; overflow-y: auto; background: #fafafa; flex-grow: 1; }
+  .modal-footer { padding: 10px 15px; border-top: 1px solid #eee; text-align: right; background: #fff; border-radius: 0 0 8px 8px; }
+
+  /* Modal Tabs */
+  .modal-tabs { display: flex; background: #f1f1f1; border-bottom: 1px solid #ccc; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .modal-tab { padding: 12px 16px; cursor: pointer; border: none; background: none; font-weight: 600; color: #555; white-space: nowrap; transition: 0.2s; }
+  .modal-tab.active { background: #fff; color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
+  .tab-content { padding: 20px; }
+  
+  .q-config-header { background: #e3f2fd; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 13px; border-left: 4px solid var(--primary-color); }
+  .modal-chapter-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 8px 12px; margin-bottom: 6px; border: 1px solid #eee; border-radius: 4px; }
+  .custom-input-field { width: 60px; padding: 4px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
+
+/* --- CUSTOM MODAL Q SELECTOR BAR --- */
+  .q-selector-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f1f5f9;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      border: 1px solid #cbd5e1;
+      flex-wrap: wrap;
+  }
+  .q-selector-bar label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+  }
+  .q-selector-dropdown {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #94a3b8;
+      font-weight: 700;
+      font-size: 13px;
+      background: white;
+      color: var(--primary-color);
+      cursor: pointer;
+      outline: none;
+  }
+  .add-q-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px dashed var(--primary-color);
+      background: #eff6ff;
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+  }
+  .add-q-btn:hover {
+      background: var(--primary-color);
+      color: white;
+  }
+
+/* --- MCQ PORTION STYLING --- */
+.portion-wrapper {
+    margin-bottom: 20px;
+}
+.portion-header-title {
+    background: #eef2f7;
+    color: #1a365d;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary-color);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.portion-tag-badge {
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+  /* --- UPGRADE MODAL --- */
+  .upgrade-modal-content { text-align: center; max-width: 400px; padding: 30px; height: auto; }
+  .upgrade-modal-content h2 { margin-top: 0; color: #1976d2; }
+  .upgrade-modal-content p { margin-bottom: 25px; color: #555; line-height: 1.6; }
+  .upgrade-btn { padding:10px 20px; background:#1976d2; color:white; border:none; border-radius:8px; cursor:pointer; font-weight: 500; }
+
+ /* --- BEAUTIFUL PROGRESS LOADER --- */
+  #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(240, 242, 245, 0.92);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  .loader-card {
+      background: #ffffff;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      width: 320px;
+      max-width: 90vw;
+  }
+
+  .loader-spinner {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 18px auto;
+      border: 4px solid #e3f2fd;
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+  }
+
+  .loader-status {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 6px;
+  }
+
+  .loader-subtext {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 16px;
+  }
+
+  .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 8px;
+  }
+
+  .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #1976d2, #42a5f5);
+      border-radius: 20px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .progress-percentage {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary-color);
+  }
+
+  @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+  }
+
+  #error { text-align: center; margin-top: 250px; color: var(--danger-color); font-weight: bold; width: 100%; }
+</style>
+</head>
+<body cz-shortcut-listen="true">
+
+<div class="fixed-header-wrapper" id="fixedHeader">
+    <div id="headerMainArea">
+        <div class="header-content">
+          <h1 id="pageHeader">Select: Computer Tech</h1>
+          <div class="controls-grid">
+            <div class="control-group">
+              <h3>Pattern</h3>
+              <div class="switches">
+                <label class="switch-label"><input type="checkbox" id="boardPatternSwitch"> Board</label>
+                <label class="switch-label"><input type="checkbox" id="autoSelectSwitch" disabled=""> Auto</label>
+                <label class="switch-label"><input type="checkbox" id="customPatternSwitch"> Custom</label>
+                <label class="switch-label" style="color:red; font-weight:bold;">  <input type="checkbox" id="skipALP"> Skip ALP</label>
+              </div>
+            </div>
+            <div class="control-group">
+              <h3>Source</h3>
+              <div id="source-controls">
+                 <label class="switch-label"><input type="radio" name="source" value="mixed" checked=""> Mixed</label>
+                 <label class="switch-label"><input type="radio" name="source" value="exercise"> Exercise</label>
+                 <label class="switch-label"><input type="radio" name="source" value="additional"> Extra</label>
+                 <label class="switch-label"><input type="radio" name="source" value="board"> Past Papers</label>
+              </div>
+            </div>
+            <div class="control-group">
+              <h3>Language</h3>
+              <div id="language-controls">
+                <label class="switch-label"><input type="radio" name="language" value="English" checked=""> Eng</label>
+                <label class="switch-label"><input type="radio" name="language" value="Urdu"> Urdu</label>
+                <label class="switch-label"><input type="radio" name="language" value="Bilingual"> Both</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chapter-header" id="chapterNavContainer">
+        <button class="chapter-button" id="btnPrevChap" disabled="">Prev</button>
+        <span class="chapter-info">Chapter 10 - Entrepreneurship in Digital Age (ڈیجیٹل دور میں انٹرپرینیورشپ)</span>
+        <button class="chapter-button" id="btnNextChap" disabled="">Next</button>
+    </div>
+    </div>
+    <!-- Toggle arrow container -->
+    <div class="header-toggle-tab" id="headerToggle">
+        <i class="arrow-icon up" id="toggleArrow"></i>
+    </div>
+</div>
+
+<div id="mainLayout" style="margin-top: 155px;">
+    <!-- Vertical Sidebar for Topics -->
+    <div class="sidebar-container" id="topicSidebar" style="display: flex;">
+        <div class="sidebar-header">Filter by Topic</div>
+        <ul class="sidebar-list" id="topicList">
+            <li class="sidebar-item active" onclick="toggleTopic('ALL')">
+                <input type="checkbox" checked="" style="pointer-events:none;">
+                All Topics <span class="sidebar-count">24</span>
+            </li>
+        
+                <li class="sidebar-item " onclick="toggleTopic('UNCATEGORIZED')">
+                    <input type="checkbox" style="pointer-events:none;">
+                    Uncategorized <span class="sidebar-count">24</span>
+                </li>
+            </ul>
+    </div>
+
+    <!-- Content Area with Collapsible Accordions -->
+    <div class="container" id="questionsContainer" style="display: block;">
+        
+        <!-- MCQ Accordion Section -->
+        <div class="accordion-section" id="accordion-mcq" style="display: block;">
+            <div class="accordion-header" onclick="toggleAccordion('mcq')">
+                <span class="accordion-title">Multiple Choice Questions (<span id="badge-mcq">10</span>)</span>
+                <i class="accordion-arrow" id="arrow-mcq"></i>
+            </div>
+            <div class="accordion-content open" id="content-mcq">
+                <div class="mcq-grid" id="grid-mcq" style="display: grid;"><div class="question-card " data-id="55134" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.1</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 1</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What is entrepreneurship?</div><div class="urdu-part urdu-text">انٹرپرینیورشپ (صنعت کاری) کیا ہے؟</div></div></div>
+            <ul class="options"><li class="option correct-option"><b>A)</b> <div><div class="bilingual-container"><div class="english-part">The process of starting a new business or organization</div><div class="urdu-part urdu-text">نیا کاروبار یا تنظیم شروع کرنے کا عمل</div></div></div></li><li class="option "><b>B)</b> <div><div class="bilingual-container"><div class="english-part">The process of buying and selling stocks</div><div class="urdu-part urdu-text">حصص (stocks) کی خرید و فروخت کا عمل</div></div></div></li><li class="option "><b>C)</b> <div><div class="bilingual-container"><div class="english-part">The process of working for a large company</div><div class="urdu-part urdu-text">کسی بڑی کمپنی کے لیے کام کرنے کا عمل</div></div></div></li><li class="option "><b>D)</b> <div><div class="bilingual-container"><div class="english-part">The process of creating a marketing campaign</div><div class="urdu-part urdu-text">مارکیٹنگ مہم چلانے کا عمل</div></div></div></li></ul>
+            
+        </div><div class="question-card " data-id="55135" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.2</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 2</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What is a key characteristic of entrepreneurs?</div><div class="urdu-part urdu-text">انٹرپرینیورز (صنعت کاروں) کی ایک اہم خصوصیت کیا ہے؟</div></div></div>
+            <ul class="options"><li class="option "><b>A)</b> <div><div class="bilingual-container"><div class="english-part">Avoiding risks</div><div class="urdu-part urdu-text">خطرات سے بچنا</div></div></div></li><li class="option "><b>B)</b> <div><div class="bilingual-container"><div class="english-part">Seeking job security</div><div class="urdu-part urdu-text">ملازمت کے تحفظ کی تلاش</div></div></div></li><li class="option correct-option"><b>C)</b> <div><div class="bilingual-container"><div class="english-part">Innovation</div><div class="urdu-part urdu-text">جدت طرازی (Innovation)</div></div></div></li><li class="option "><b>D)</b> <div><div class="bilingual-container"><div class="english-part">Following established methods</div><div class="urdu-part urdu-text">مروجہ طریقوں کی پیروی کرنا</div></div></div></li></ul>
+            
+        </div><div class="question-card " data-id="55136" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.3</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 3</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What is an example of a digital technology used by modern entrepreneurs?</div><div class="urdu-part urdu-text">جدید انٹرپرینیورز کے ذریعے استعمال ہونے والی ڈیجیٹل ٹیکنالوجی کی ایک مثال کیا ہے؟</div></div></div>
+            <ul class="options"><li class="option "><b>A)</b> <div><div class="bilingual-container"><div class="english-part">Newspaper advertisements</div><div class="urdu-part urdu-text">اخبارات کے اشتہارات</div></div></div></li><li class="option "><b>B)</b> <div><div class="bilingual-container"><div class="english-part">Television commercials</div><div class="urdu-part urdu-text">ٹیلی ویژن کے اشتہارات</div></div></div></li><li class="option correct-option"><b>C)</b> <div><div class="bilingual-container"><div class="english-part">Mobile apps</div><div class="urdu-part urdu-text">موبائل ایپس</div></div></div></li><li class="option "><b>D)</b> <div><div class="bilingual-container"><div class="english-part">Door-to-door sales</div><div class="urdu-part urdu-text">گھر گھر جا کر فروخت کرنا</div></div></div></li></ul>
+            
+        </div><div class="question-card " data-id="55137" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.4</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 4</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Which of the following is an example of a digital tool for creating and editing documents online?</div><div class="urdu-part urdu-text">درج ذیل میں سے کون سا آن لائن دستاویزات بنانے اور ان میں ترمیم کرنے کے ڈیجیٹل ٹول کی مثال ہے؟</div></div></div>
+            <ul class="options"><li class="option "><b>A)</b> <div><div class="bilingual-container"><div class="english-part">SurveyMonkey</div><div class="urdu-part urdu-text">سروے منکی (SurveyMonkey)</div></div></div></li><li class="option correct-option"><b>B)</b> <div><div class="bilingual-container"><div class="english-part">Google Docs</div><div class="urdu-part urdu-text">گوگل ڈاکس (Google Docs)</div></div></div></li><li class="option "><b>C)</b> <div><div class="bilingual-container"><div class="english-part">SEMrush</div><div class="urdu-part urdu-text">ایس ای ایم رش (SEMrush)</div></div></div></li><li class="option "><b>D)</b> <div><div class="bilingual-container"><div class="english-part">Zendesk</div><div class="urdu-part urdu-text">زین ڈیسک (Zendesk)</div></div></div></li></ul>
+            
+        </div><div class="question-card " data-id="55138" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.5</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 5</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Which tool is commonly used for optimizing website content for search engines?</div><div class="urdu-part urdu-text">سرچ انجنوں کے لیے ویب سائٹ کے مواد کو بہتر بنانے (optimize) کے لیے کون سا ٹول عام طور پر استعمال ہوتا ہے؟</div></div></div>
+            <ul class="options"><li class="option "><b>A)</b> <div><div class="bilingual-container"><div class="english-part">Hootsuite</div><div class="urdu-part urdu-text">ہوٹ سویٹ (Hootsuite)</div></div></div></li><li class="option correct-option"><b>B)</b> <div><div class="bilingual-container"><div class="english-part">Yoast SEO</div><div class="urdu-part urdu-text">یوسٹ ایس ای او (Yoast SEO)</div></div></div></li><li class="option "><b>C)</b> <div><div class="bilingual-container"><div class="english-part">Shopify</div><div class="urdu-part urdu-text">شاپی فائی (Shopify)</div></div></div></li><li class="option "><b>D)</b> <div><div class="bilingual-container"><div class="english-part">PayPal</div><div class="urdu-part urdu-text">پے پال (PayPal)</div></div></div></li></ul>
+            
+        </div><div class="question-card " data-id="55139" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.6</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 6</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Which of the following is NOT a technique for identifying market needs?</div><div class="urdu-part urdu-text">درج ذیل میں سے کون سی مارکیٹ کی ضروریات کی نشاندہی کرنے کی تکنیک نہیں ہے؟</div></div></div>
+            <ul class="options"><li class="option "><b>A)</b> <div><div class="bilingual-container"><div class="english-part">Surveys and Questionnaires</div><div class="urdu-part urdu-text">سروے اور سوالنامے</div></div></div></li><li class="option "><b>B)</b> <div><div class="bilingual-container"><div class="english-part">Market Research</div><div class="urdu-part urdu-text">مارکیٹ ریسرچ</div></div></div></li><li class="option "><b>C)</b> <div><div class="bilingual-container"><div class="english-part">Observation</div><div class="urdu-part urdu-text">مشاہدہ</div></div></div></li><li class="option correct-option"><b>D)</b> <div><div class="bilingual-container"><div class="english-part">Brainstorming</div><div class="urdu-part urdu-text">برین اسٹارمنگ (ذہنی مشق)</div></div></div></li></ul>
+            
+        </div><div class="question-card " data-id="55140" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.7</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 7</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What is the first step in the design thinking process?</div><div class="urdu-part urdu-text">ڈیزائن تھنکنگ کے عمل کا پہلا مرحلہ کیا ہے؟</div></div></div>
+            <ul class="options"><li class="option "><b>A)</b> <div><div class="bilingual-container"><div class="english-part">Prototyping</div><div class="urdu-part urdu-text">پروٹو ٹائپنگ</div></div></div></li><li class="option "><b>B)</b> <div><div class="bilingual-container"><div class="english-part">Testing</div><div class="urdu-part urdu-text">ٹیسٹنگ (جانچ)</div></div></div></li><li class="option correct-option"><b>C)</b> <div><div class="bilingual-container"><div class="english-part">Empathizing</div><div class="urdu-part urdu-text">ہمدردی کرنا / مسائل کو سمجھنا (Empathizing)</div></div></div></li><li class="option "><b>D)</b> <div><div class="bilingual-container"><div class="english-part">Defining</div><div class="urdu-part urdu-text">تعریف کرنا / تعین کرنا</div></div></div></li></ul>
+            
+        </div><div class="question-card " data-id="55141" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.8</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 8</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What is the primary purpose of creating a business plan?</div><div class="urdu-part urdu-text">بزنس پلان (کاروباری منصوبہ) بنانے کا بنیادی مقصد کیا ہے؟</div></div></div>
+            <ul class="options"><li class="option "><b>A)</b> <div><div class="bilingual-container"><div class="english-part">To attract investors</div><div class="urdu-part urdu-text">سرمایہ کاروں کو متوجہ کرنا</div></div></div></li><li class="option correct-option"><b>B)</b> <div><div class="bilingual-container"><div class="english-part">To outline strategies for growth</div><div class="urdu-part urdu-text">ترقی کے لیے حکمت عملیوں کا خاکہ بنانا</div></div></div></li><li class="option "><b>C)</b> <div><div class="bilingual-container"><div class="english-part">To study market trends</div><div class="urdu-part urdu-text">مارکیٹ کے رجحانات کا مطالعہ کرنا</div></div></div></li><li class="option "><b>D)</b> <div><div class="bilingual-container"><div class="english-part">To implement digital marketing strategies</div><div class="urdu-part urdu-text">ڈیجیٹل مارکیٹنگ کی حکمت عملیوں پر عمل درآمد کرنا</div></div></div></li></ul>
+            
+        </div><div class="question-card " data-id="55142" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.9</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 9</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What does market analysis involve?</div><div class="urdu-part urdu-text">مارکیٹ کے تجزیہ (Market analysis) میں کیا شامل ہے؟</div></div></div>
+            <ul class="options"><li class="option "><b>A)</b> <div><div class="bilingual-container"><div class="english-part">Calculating revenue forecasts</div><div class="urdu-part urdu-text">آمدنی کی پیشن گوئی کا حساب لگانا</div></div></div></li><li class="option correct-option"><b>B)</b> <div><div class="bilingual-container"><div class="english-part">Researching competitors and understanding customer needs</div><div class="urdu-part urdu-text">حریفوں پر تحقیق کرنا اور صارفین کی ضروریات کو سمجھنا</div></div></div></li><li class="option "><b>C)</b> <div><div class="bilingual-container"><div class="english-part">Developing pricing strategies</div><div class="urdu-part urdu-text">قیمتوں کے تعین کی حکمت عملی تیار کرنا</div></div></div></li><li class="option "><b>D)</b> <div><div class="bilingual-container"><div class="english-part">Implementing digital marketing campaigns</div><div class="urdu-part urdu-text">ڈیجیٹل مارکیٹنگ کی مہمات پر عمل درآمد کرنا</div></div></div></li></ul>
+            
+        </div><div class="question-card " data-id="55143" data-type="mcq" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.10</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 10</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Which Sustainable Development Goal (SDG) focuses on affordable and clean energy?</div><div class="urdu-part urdu-text">پائیدار ترقی کا کون سا ہدف (SDG) سستی اور صاف توانائی پر توجہ مرکوز کرتا ہے؟</div></div></div>
+            <ul class="options"><li class="option "><b>A)</b> <div><div class="bilingual-container"><div class="english-part">SDG5</div><div class="urdu-part urdu-text">SDG5</div></div></div></li><li class="option correct-option"><b>B)</b> <div><div class="bilingual-container"><div class="english-part">SDG7</div><div class="urdu-part urdu-text">SDG7</div></div></div></li><li class="option "><b>C)</b> <div><div class="bilingual-container"><div class="english-part">SDG12</div><div class="urdu-part urdu-text">SDG12</div></div></div></li><li class="option "><b>D)</b> <div><div class="bilingual-container"><div class="english-part">SDG17</div><div class="urdu-part urdu-text">SDG17</div></div></div></li></ul>
+            
+        </div></div>
+            </div>
+        </div>
+
+        <!-- Short Accordion Section -->
+        <div class="accordion-section" id="accordion-short" style="display: block;">
+            <div class="accordion-header" onclick="toggleAccordion('short')">
+                <span class="accordion-title">Short Questions (<span id="badge-short">8</span>)</span>
+                <i class="accordion-arrow" id="arrow-short"></i>
+            </div>
+            <div class="accordion-content open" id="content-short">
+                <div class="question-section-grid" id="grid-short" style="display: grid;"><div class="question-card " data-id="55144" data-type="short" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.1</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 1</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What is the meaning of the word entrepreneur and its origin?</div><div class="urdu-part urdu-text">لفظ انٹرپرینیور کا مطلب اور اس کا ماخذ کیا ہے؟</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55145" data-type="short" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.2</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 2</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">How do digital technologies help entrepreneurs reach a global audience?</div><div class="urdu-part urdu-text">ڈیجیٹل ٹیکنالوجیز کس طرح انٹرپرینیورز کو عالمی سامعین تک پہنچنے میں مدد دیتی ہیں؟</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55146" data-type="short" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.3</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 3</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What is an e-commerce platform, and why is it important for businesses?</div><div class="urdu-part urdu-text">ای کامرس پلیٹ فارم کیا ہے اور یہ کاروبار کے لیے کیوں ضروری ہے؟</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55147" data-type="short" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.4</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 4</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Why is it important to identify market needs when generating a business idea?</div><div class="urdu-part urdu-text">کاروباری آئیڈیا بناتے وقت مارکیٹ کی ضروریات کی نشاندہی کرنا کیوں ضروری ہے؟</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55148" data-type="short" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.5</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 5</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What is the main purpose of using design thinking in creative problem-solving?</div><div class="urdu-part urdu-text">تخلیقی مسائل کے حل میں ڈیزائن تھنکنگ کے استعمال کا بنیادی مقصد کیا ہے؟</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55149" data-type="short" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.6</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 6</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Explain the importance of market analysis in a business plan. Give an example relevant to a local business in Pakistan.</div><div class="urdu-part urdu-text">کاروباری منصوبے میں مارکیٹ تجزیہ کی اہمیت واضح کریں۔ پاکستان میں کسی مقامی کاروبار سے متعلق ایک مثال دیں۔</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55150" data-type="short" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.7</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 7</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">What are revenue models, and why are they essential components of a business plan?</div><div class="urdu-part urdu-text">ریونیو ماڈلز (Revenue models) کیا ہیں اور وہ کاروباری منصوبے کے لازمی اجزاء کیوں ہیں؟</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55151" data-type="short" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.8</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 8</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">How can businesses contribute to environmental sustainability according to the Sustainable Development Goals?</div><div class="urdu-part urdu-text">پائیدار ترقی کے اہداف (SDGs) کے مطابق کاروبار ماحولیاتی پائیداری میں کیسے حصہ ڈال سکتے ہیں؟</div></div></div>
+            
+            
+        </div></div>
+            </div>
+        </div>
+
+        <!-- Long Accordion Section -->
+        <div class="accordion-section" id="accordion-long" style="display: block;">
+            <div class="accordion-header" onclick="toggleAccordion('long')">
+                <span class="accordion-title">Long Questions (<span id="badge-long">6</span>)</span>
+                <i class="accordion-arrow" id="arrow-long"></i>
+            </div>
+            <div class="accordion-content open" id="content-long">
+                <div class="question-section-grid" id="grid-long" style="display: grid;"><div class="question-card " data-id="55152" data-type="long" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.1</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 1</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Explain why entrepreneurship is important for economic growth and innovation. Provide examples from the text to support your answer.</div><div class="urdu-part urdu-text">واضح کریں کہ معاشی ترقی اور جدت کے لیے انٹرپرینیورشپ کیوں اہم ہے۔ اپنے جواب کی تائید کے لیے متن سے مثالیں فراہم کریں۔</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55153" data-type="long" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.2</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 2</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Explain how market research tools, online marketing tools, and e-commerce platforms can work together to help a business succeed in the digital world.</div><div class="urdu-part urdu-text">وضاحت کریں کہ مارکیٹ ریسرچ ٹولز، آن لائن مارکیٹنگ ٹولز، اور ای کامرس پلیٹ فارمز مل کر ڈیجیٹل دنیا میں کسی کاروبار کو کامیاب بنانے میں کس طرح مدد کر سکتے ہیں۔</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55154" data-type="long" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.3</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 3</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Explain the design thinking process and how it can be applied to create a new product or service. Provide an example of how design thinking could be used to help farmers in rural Pakistan.</div><div class="urdu-part urdu-text">ڈیزائن تھنکنگ کے عمل کی وضاحت کریں اور یہ کہ اسے نئی پراڈکٹ یا سروس بنانے کے لیے کیسے استعمال کیا جا سکتا ہے۔ ایک مثال دیں کہ دیہی پاکستان میں کسانوں کی مدد کے لیے ڈیزائن تھنکنگ کو کس طرح استعمال کیا جا سکتا ہے۔</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55155" data-type="long" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.4</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 4</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Imagine you want to start a small online bookstore catering to students in your area. Develop a comprehensive business plan for your bookstore, including: (a) A market analysis focusing on student reading habits and competitors. (b) A revenue model outlining how you will generate income. (c) Digital marketing strategies you will use to promote your bookstore online.</div><div class="urdu-part urdu-text">تصور کریں کہ آپ اپنے علاقے کے طلباء کے لیے ایک چھوٹا آن لائن بک اسٹور شروع کرنا چاہتے ہیں۔ اپنے بک اسٹور کے لیے ایک جامع بزنس پلان تیار کریں، جس میں شامل ہو: (الف) طلباء کی مطالعہ کی عادات اور حریفوں پر توجہ مرکوز کرنے والا مارکیٹ تجزیہ۔ (ب) ایک ریونیو ماڈل جو آپ کی آمدنی کے ذرائع کو واضح کرے۔ (ج) ڈیجیٹل مارکیٹنگ کی حکمت عملی جو آپ اپنے بک اسٹور کو آن لائن فروغ دینے کے لیے استعمال کریں گے۔</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55156" data-type="long" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.5</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 5</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Ensure your answers are detailed and include practical examples relevant to starting your bookstore in Pakistan.</div><div class="urdu-part urdu-text">یقینی بنائیں کہ آپ کے جوابات تفصیلی ہیں اور ان میں پاکستان میں اپنا بک اسٹور شروع کرنے سے متعلق عملی مثالیں شامل ہیں۔</div></div></div>
+            
+            
+        </div><div class="question-card " data-id="55157" data-type="long" data-chapter-id="Punjab_9th_Tech_Computer_chapter10">
+            
+            
+            <div class="question-header">
+                
+                <span class="q-number">Q.6</span>
+                <div class="tags-container"><span class="exercise-tag">Ex: 6</span></div>
+            </div>
+            <div class="question-text"><div class="bilingual-container"><div class="english-part">Choose a local business in Pakistan and discuss how it aligns with one or more Sustainable Development Goals (SDGs). Include its impact on social, environmental, and economic sustainability.</div><div class="urdu-part urdu-text">پاکستان میں کسی مقامی کاروبار کا انتخاب کریں اور بحث کریں کہ یہ ایک یا زیادہ پائیدار ترقیاتی اہداف (SDGs) کے ساتھ کیسے ہم آہنگ ہے۔ سماجی، ماحولیاتی اور معاشی پائیداری پر اس کے اثرات شامل کریں۔</div></div></div>
+            
+            
+        </div></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="loading" style="opacity: 0; display: none;">
+    <div class="loader-card">
+        <div class="loader-spinner"></div>
+        <div class="loader-status" id="loaderStatus">Completed!</div>
+        <div class="loader-subtext" id="loaderSubtext">Ready to select questions</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar" style="width: 100%;"></div>
+        </div>
+        <div class="progress-percentage" id="progressPercent">100%</div>
+    </div>
+</div>
+<div id="error" style="display:none;"></div>
+
+<div id="bottom-bar">
+  <div id="counts">
+    <span id="mcqCountText" style="color: inherit;">MCQs: <span style="color: black;">6</span></span>
+    <span id="shortCountText" style="color: inherit;">Shorts: <span style="color: black;">11</span> <span style="color: green;">Q2:11</span></span>
+    <span id="longCountText" style="color: inherit;">Longs: <span style="color: black;">0</span> </span>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <!-- CLEAR ALL BUTTON -->
+    <button id="btnClearAll" style="background: rgb(220, 53, 69); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; display: block;">Clear All</button>
+    <!-- VIEW BUTTON -->
+    <button id="btnToggleView" style="background: rgb(23, 162, 184); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; display: block;">View Selected</button>
+    <button id="btnNext">✔ Update &amp; Return to Editor</button>
+  </div>
+</div>
+
+<!-- CUSTOM SELECTION MODAL -->
+<div class="modal-overlay" id="customSelectionModal">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h2>Custom Selection</h2>
+          <button onclick="closeCustomModal()" style="background:none; border:none; font-size:24px; cursor:pointer;">×</button>
+        </div>
+        <div class="modal-body" id="customModalBody">
+            <!-- Injected via JS -->
+        </div>
+        <div class="modal-footer">
+          <button onclick="closeCustomModal()" style="padding:8px 15px; margin-right:8px; border:1px solid #ccc; background:white; border-radius:4px; cursor:pointer;">Cancel</button>
+          <button onclick="performCustomSelection()" style="padding:8px 20px; background:var(--success-color); color:white; border:none; border-radius:4px; cursor:pointer;">Generate Questions</button>
+        </div>
+    </div>
+</div>
+
+<!-- UPGRADE / LIMIT MODAL -->
+<div class="modal-overlay" id="upgradeModal" style="display: none;">
+    <div class="modal-content upgrade-modal-content">
+        <h2>Limit Reached</h2>
+        <p id="upgradeMessage">Guests can only select a limited number of questions.</p>
+        <button id="closeUpgradeModalBtn" class="upgrade-btn">OK</button>
+    </div>
+</div>
+
+<script type="module">
+    // --- USER SESSION & LIMITS ---
+    const userType = sessionStorage.getItem('userType') || 'guest';
+    
+    // Define limits
+    const LIMITS = userType === 'guest' 
+        ? { mcq: 5, short: 5, long: 1 } 
+        : { mcq: 60, short: 60, long: 60 };
+
+    // --- STATE ---
+     let isViewingSelected = false; // <--- ADD IT HERE
+    let allMcqs = [], allShorts = [], allLongs = [];
+    let selectedQuestions = { mcq: [], short: [], long: [] };
+    let currentChapterIndex = 0;
+    let customConfigState = {}; 
+    let boardPatternData = null;
+    
+    // MULTI-SELECT STATE: 'ALL' indicates all topics are shown.
+    let selectedTopics = new Set(['ALL']);
+
+    // --- GENERAL/BOARD PICKING MODE STATE ---
+    let pickingMode = null;
+    let generalPickTimer = null;
+    let generalPickPendingId = null;
+    const GENERAL_PICK_DOUBLE_TAP_DELAY = 350; // ms window to detect a 2nd tap
+
+    // --- ACCORDION EXPAND/COLLAPSE STATE ---
+    let accordionState = {
+        mcq: true,
+        short: true,
+        long: true
+    };
+
+    // --- DOM ---
+    const mainLayout = document.getElementById('mainLayout'); 
+    const container = document.getElementById('questionsContainer');
+    const chapterNav = document.getElementById('chapterNavContainer');
+    const loadingDiv = document.getElementById('loading');
+    const headerWrapper = document.getElementById('fixedHeader');
+    const headerToggle = document.getElementById('headerToggle');
+    const toggleArrow = document.getElementById('toggleArrow');
+    const topicSidebar = document.getElementById('topicSidebar');
+    const topicList = document.getElementById('topicList');
+    
+    // Upgrade Modal DOM
+    const upgradeModal = document.getElementById('upgradeModal');
+    const upgradeMessage = document.getElementById('upgradeMessage');
+    const closeUpgradeModalBtn = document.getElementById('closeUpgradeModalBtn');
+
+    // --- HEADER TOGGLE AND HEIGHT SYNC LOGIC ---
+    function updateLayoutSpacing() {
+        const isCollapsed = headerWrapper.classList.contains('header-collapsed');
+        if (isCollapsed) {
+            document.documentElement.style.setProperty('--header-height', '0px');
+            mainLayout.style.marginTop = "40px";
+        } else {
+            const height = headerWrapper.offsetHeight || 150;
+            document.documentElement.style.setProperty('--header-height', height + 'px');
+            mainLayout.style.marginTop = (height + 15) + "px";
+        }
+    }
+
+    headerToggle.addEventListener('click', () => {
+        const isCollapsed = headerWrapper.classList.toggle('header-collapsed');
+        mainLayout.classList.toggle('header-is-hidden'); 
+        
+        if (isCollapsed) {
+            toggleArrow.classList.remove('up');
+            toggleArrow.classList.add('down');
+        } else {
+            toggleArrow.classList.remove('down');
+            toggleArrow.classList.add('up');
+        }
+        updateLayoutSpacing();
+    });
+
+    const resizeObserver = new ResizeObserver(entries => {
+        updateLayoutSpacing();
+    });
+    resizeObserver.observe(headerWrapper);
+
+    // --- URL PARAMS ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const chapterFiles = urlParams.get('chapterFiles')?.split(',') || [];
+    const chapterNames = urlParams.get('chapterNames')?.split(',') || [];
+    const boardFolder = urlParams.get('boardFolder');
+    const classFolder = urlParams.get('classFolder');
+    const subjectFolder = urlParams.get('subjectFolder');
+    // REPLACE WITH THIS:
+const rawSubjectName = urlParams.get('subjectName') || '';
+const subjectName = decodeURIComponent(rawSubjectName.replace(/\+/g, ' ')).trim();
+
+if(subjectName) document.getElementById('pageHeader').innerText = `Select: ${subjectName}`;
+
+    // --- LIMIT CHECKERS ---
+    function checkLimit(type) {
+        if (selectedQuestions[type].length >= LIMITS[type]) {
+            showUpgradeModal(`You have reached the limit for ${type.toUpperCase()}s.\n\n${userType === 'guest' ? 'Guests' : 'Users'} are limited to ${LIMITS[type]} ${type}s.`);
+            return false;
+        }
+        return true;
+    }
+
+    function showUpgradeModal(msg) {
+        upgradeMessage.innerText = msg || "Feature not available in Free version.";
+        upgradeModal.style.display = 'flex';
+    }
+
+    closeUpgradeModalBtn.addEventListener('click', () => {
+        upgradeModal.style.display = 'none';
+    });
+
+// --- 1. FETCH QUESTIONS DIRECTLY FROM DATABASE ---
+// --- PROGRESS LOADER CONTROLLER ---
+    function setProgress(percent, statusText, subText) {
+        const bar = document.getElementById('progressBar');
+        const pctText = document.getElementById('progressPercent');
+        const status = document.getElementById('loaderStatus');
+        const sub = document.getElementById('loaderSubtext');
+
+        if (bar) bar.style.width = `${percent}%`;
+        if (pctText) pctText.innerText = `${Math.round(percent)}%`;
+        if (status && statusText) status.innerText = statusText;
+        if (sub && subText) sub.innerText = subText;
+    }
+
+    // --- 1. FETCH QUESTIONS DIRECTLY FROM DATABASE ---
+// --- 1. FETCH QUESTIONS DIRECTLY FROM DATABASE ---
+    async function fetchAllData() {
+        const existingPaper = JSON.parse(localStorage.getItem('paperForEditor')) || null;
+
+        // Fallback: extract chapter IDs from existing saved questions if URL parameter is empty
+        let fallbackChapterIds = '';
+        let fallbackChapterNames = '';
+        if (existingPaper) {
+            const allSaved = [
+                ...(existingPaper.mcqQuestions || []),
+                ...(existingPaper.shortQuestions || []),
+                ...(existingPaper.longQuestions || [])
+            ];
+            fallbackChapterIds = [...new Set(allSaved.map(q => q.chapterId).filter(Boolean))].join(',');
+            fallbackChapterNames = [...new Set(allSaved.map(q => q.chapterName).filter(Boolean))].join(',');
+        }
+
+        const chapterIdsParam = (urlParams.get('chapterIds') || urlParams.get('chapterFiles') || existingPaper?.chapterIds || fallbackChapterIds || '').trim();
+        const subjectIdParam  = (urlParams.get('subject_id') || urlParams.get('subjectId') || existingPaper?.subjectId || '').trim();
+
+        if (!chapterIdsParam) {
+            loadingDiv.innerHTML = `
+                <div style="background:white; padding:20px; border-radius:8px; max-width:400px; margin:20px auto; box-shadow:0 2px 10px rgba(0,0,0,0.1); text-align:center;">
+                    <p style="color:var(--danger-color); font-weight:bold;">No chapters selected.</p>
+                    <p style="font-size:13px; color:#666;">Please go back and select at least one chapter.</p>
+                    <button onclick="window.history.back()" style="padding:8px 16px; background:var(--primary-color); color:white; border:none; border-radius:4px; cursor:pointer;">Go Back</button>
+                </div>`;
+            return;
+        }
+
+        try {
+            setProgress(15, "Initializing...", "Sending request to database");
+
+            let currentPct = 15;
+            const progressTimer = setInterval(() => {
+                if (currentPct < 75) {
+                    currentPct += (75 - currentPct) * 0.15;
+                    setProgress(currentPct, "Fetching Questions...", "Retrieving chapter data & patterns");
+                }
+            }, 120);
+
+            const apiUrl = `questions.php?action=fetch_db_questions&chapter_ids=${encodeURIComponent(chapterIdsParam)}&subject_id=${encodeURIComponent(subjectIdParam)}`;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            clearInterval(progressTimer);
+
+            if (!data.success) {
+                loadingDiv.innerHTML = `<p style="color:var(--danger-color); font-weight:bold;">${data.error || 'Failed to fetch questions.'}</p>`;
+                return;
+            }
+
+            setProgress(85, "Processing Data...", "Organizing MCQs, Shorts & Longs");
+
+            allMcqs   = data.mcqs   || [];
+            allShorts = data.shorts || [];
+            allLongs  = data.longs  || [];
+
+            if (data.boardPattern) {
+                boardPatternData = data.boardPattern.pattern_data ? data.boardPattern : { pattern_data: data.boardPattern };
+            }
+
+            // Populate chapterFiles and chapterNames for navigation tabs
+            const rawIds = chapterIdsParam.split(',');
+            const rawNames = (urlParams.get('chapterNames') || existingPaper?.chapterNames || fallbackChapterNames || '').split(',');
+            
+            chapterFiles.length = 0;
+            chapterNames.length = 0;
+            rawIds.forEach((id, idx) => {
+                const cleanId = id.trim();
+                if (cleanId) {
+                    chapterFiles.push(cleanId);
+                    chapterNames.push(rawNames[idx] || `Chapter ${idx + 1}`);
+                }
+            });
+
+            // Restore previous selections from editor if returning
+            if (existingPaper) {
+                selectedQuestions.mcq   = existingPaper.mcqQuestions   || [];
+                selectedQuestions.short = existingPaper.shortQuestions || [];
+                selectedQuestions.long  = existingPaper.longQuestions  || [];
+                
+                const btnNext = document.getElementById('btnNext');
+                if (btnNext) btnNext.innerText = "✔ Update & Return to Editor";
+            }
+
+            analyzeLanguageOptions();
+            generateTopicSidebar();
+            renderContent();
+            updateUiState();
+
+            // Finish loading
+            setProgress(100, "Completed!", "Ready to select questions");
+            setTimeout(() => {
+                loadingDiv.style.opacity = '0';
+                setTimeout(() => {
+                    loadingDiv.style.display = 'none';
+                    container.style.display = 'block';
+                    topicSidebar.style.display = 'flex';
+                }, 300);
+            }, 350);
+
+        } catch (err) {
+            console.error("Fetch questions failed:", err);
+            loadingDiv.innerHTML = `<p style="color:var(--danger-color); font-weight:bold;">Error connecting to database.</p>`;
+        }
+    }
+
+    // --- TOPIC SIDEBAR LOGIC (MULTI SELECT) ---
+    function generateTopicSidebar() {
+        const topics = new Map(); 
+        let uncategorizedCount = 0;
+        let totalCount = 0;
+
+        const countQ = (q) => {
+            const curCId = chapterFiles[currentChapterIndex].replace('.json', '');
+            if (q.chapterId !== curCId) return;
+
+            totalCount++;
+            if (!q.topic || q.topic.trim() === "") {
+                uncategorizedCount++;
+            } else {
+                const t = q.topic.trim();
+                topics.set(t, (topics.get(t) || 0) + 1);
+            }
+        };
+
+        allMcqs.forEach(countQ);
+        allShorts.forEach(countQ);
+        allLongs.forEach(countQ);
+
+        const sortedTopics = Array.from(topics.keys()).sort();
+        const isAll = selectedTopics.has('ALL');
+
+        // "All Topics" Item
+        let html = `
+            <li class="sidebar-item ${isAll ? 'active' : ''}" onclick="toggleTopic('ALL')">
+                <input type="checkbox" ${isAll ? 'checked' : ''} style="pointer-events:none;">
+                All Topics <span class="sidebar-count">${totalCount}</span>
+            </li>
+        `;
+
+        if (uncategorizedCount > 0) {
+            const isUncat = selectedTopics.has('UNCATEGORIZED');
+            html += `
+                <li class="sidebar-item ${isUncat ? 'active' : ''}" onclick="toggleTopic('UNCATEGORIZED')">
+                    <input type="checkbox" ${isUncat ? 'checked' : ''} style="pointer-events:none;">
+                    Uncategorized <span class="sidebar-count">${uncategorizedCount}</span>
+                </li>
+            `;
+        }
+
+        sortedTopics.forEach(topic => {
+            const count = topics.get(topic);
+            const isSel = selectedTopics.has(topic);
+            const safeTopic = topic.replace(/'/g, "\\'");
+            html += `
+                <li class="sidebar-item ${isSel ? 'active' : ''}" onclick="toggleTopic('${safeTopic}')">
+                    <input type="checkbox" ${isSel ? 'checked' : ''} style="pointer-events:none;">
+                    ${topic} <span class="sidebar-count">${count}</span>
+                </li>
+            `;
+        });
+
+        topicList.innerHTML = html;
+    }
+
+    window.toggleTopic = (topic) => {
+        if (topic === 'ALL') {
+            selectedTopics.clear();
+            selectedTopics.add('ALL');
+        } else {
+            if (selectedTopics.has('ALL')) {
+                selectedTopics.delete('ALL');
+            }
+            
+            if (selectedTopics.has(topic)) {
+                selectedTopics.delete(topic);
+            } else {
+                selectedTopics.add(topic);
+            }
+
+            if (selectedTopics.size === 0) {
+                selectedTopics.add('ALL');
+            }
+        }
+
+        generateTopicSidebar(); 
+        renderContent();        
+        
+        if(document.getElementById('customSelectionModal').style.display === 'flex') {
+             const activeBtn = document.querySelector('.modal-tab.active');
+             if(activeBtn) {
+                 const tabName = activeBtn.innerText.split(' ')[0]; 
+                 switchTab(tabName);
+             }
+        }
+    }
+
+    function matchesTopic(q) {
+        if (selectedTopics.has('ALL')) return true;
+        
+        const qTopic = q.topic ? q.topic.trim() : "";
+        if (qTopic === "") {
+            return selectedTopics.has('UNCATEGORIZED');
+        }
+        return selectedTopics.has(qTopic);
+    }
+
+    // --- ACCORDION TOGGLE MECHANICS ---
+    window.toggleAccordion = (type) => {
+        accordionState[type] = !accordionState[type];
+        const content = document.getElementById(`content-${type}`);
+        const arrow = document.getElementById(`arrow-${type}`);
+        if (accordionState[type]) {
+            content.classList.add('open');
+            arrow.classList.remove('collapsed');
+        } else {
+            content.classList.remove('open');
+            arrow.classList.add('collapsed');
+        }
+    };
+
+    // --- 2. RENDER CONTENT ---
+   function renderContent() {
+    if(chapterFiles.length === 0) return;
+    const langMode = document.querySelector('input[name="language"]:checked').value;
+
+    // --- NEW: Handle View Selected Mode ---
+    if (isViewingSelected) {
+        chapterNav.innerHTML = `<span class="chapter-info" style="font-size: 15px; color: var(--primary-color);">Viewing Selected Questions</span>`;
+        
+        populateAccordionSection('mcq', selectedQuestions.mcq, langMode);
+        populateAccordionSection('short', selectedQuestions.short, langMode);
+        populateAccordionSection('long', selectedQuestions.long, langMode);
+        
+        if (window.renderMathInElement) {
+            renderMathInElement(container, { 
+                delimiters: [
+                    {left: '$$', right: '$$', display: true}, 
+                    {left: '$', right: '$', display: false}, 
+                    {left: '\\(', right: '\\)', display: false}
+                ] 
+            });
+        }
+        return; // Stop here if viewing selected
+    }
+
+    // --- EXISTING: Normal Chapter View ---
+    const curCId = chapterFiles[currentChapterIndex].replace('.json', '');
+    const curCName = decodeURIComponent(chapterNames[currentChapterIndex] || `Chapter ${currentChapterIndex+1}`);
+
+    generateTopicSidebar(); 
+
+    chapterNav.innerHTML = `
+        <button class="chapter-button" id="btnPrevChap">Prev</button>
+        <span class="chapter-info">${curCName}</span>
+        <button class="chapter-button" id="btnNextChap">Next</button>
+    `;
+
+    const btnPrev = document.getElementById('btnPrevChap');
+    const btnNext = document.getElementById('btnNextChap');
+    
+    btnPrev.disabled = currentChapterIndex === 0;
+    btnNext.disabled = currentChapterIndex === chapterFiles.length - 1;
+
+    btnPrev.onclick = () => navigateChapter(-1);
+    btnNext.onclick = () => navigateChapter(1);
+
+    const sourceMode = document.querySelector('input[name="source"]:checked').value;
+    const skipALP = document.getElementById('skipALP')?.checked;
+
+    const filterQuestions = (list) => {
+        let filtered = list.filter(q => q.chapterId === curCId);
+        
+        if (skipALP) {
+            filtered = filtered.filter(q => !(q.remarks && q.remarks.includes("ALP Excluded")));
+        }
+
+        filtered = filtered.filter(q => matchesTopic(q));
+        filtered = filterBySource(filtered, sourceMode);
+        
+        return filtered;
+    };
+
+    populateAccordionSection('mcq', filterQuestions(allMcqs), langMode);
+    populateAccordionSection('short', filterQuestions(allShorts), langMode);
+    populateAccordionSection('long', filterQuestions(allLongs), langMode);
+    
+    if (window.renderMathInElement) {
+        renderMathInElement(container, { 
+            delimiters: [
+                {left: '$$', right: '$$', display: true}, 
+                {left: '$', right: '$', display: false}, 
+                {left: '\\(', right: '\\)', display: false}
+            ] 
+        });
+    }
+}
+
+function populateAccordionSection(type, questions, langMode) {
+    const accordion = document.getElementById(`accordion-${type}`);
+    const grid = document.getElementById(`grid-${type}`);
+    const badge = document.getElementById(`badge-${type}`);
+
+    badge.innerText = questions.length;
+    grid.innerHTML = '';
+
+    if (questions.length === 0) {
+        accordion.style.display = 'none';
+        return;
+    } else {
+        accordion.style.display = 'block';
+    }
+
+    const allSelectedIds = new Set([
+        ...selectedQuestions.mcq.map(q => q.id),
+        ...selectedQuestions.short.map(q => q.id),
+        ...selectedQuestions.long.map(q => q.id)
+    ]);
+
+    // Helper to generate individual question card HTML
+    const renderQuestionCard = (q, idx) => {
+        const card = document.createElement('div');
+        card.className = `question-card ${langMode === 'Urdu' ? 'rtl' : ''}`;
+        
+        if (q.remarks && q.remarks.includes("ALP Excluded")) {
+            card.classList.add('alp-excluded');
+        }
+        
+        if (allSelectedIds.has(q.id)) {
+            card.classList.add('selected');
+        }
+        
+        let actionButtonsHtml = '';
+        if (isViewingSelected && allSelectedIds.has(q.id)) {
+            actionButtonsHtml = `
+                <div class="card-actions">
+                    <div class="replace-btn" title="Replace Question">🔄</div>
+                    <div class="remove-btn" title="Remove Question">&times;</div>
+                </div>`;
+        }
+        
+        card.dataset.id = q.id;
+        card.dataset.type = type;
+        card.dataset.chapterId = q.chapterId;
+
+        const existing = selectedQuestions.mcq.find(sq => sq.id === q.id) || 
+                         selectedQuestions.short.find(sq => sq.id === q.id) || 
+                         selectedQuestions.long.find(sq => sq.id === q.id);
+        const assignedLabel = (existing && existing.assignedTo && type !== 'mcq') ? 
+            `<span class="assigned-tag" title="Click to reassign">${existing.assignedTo}</span>` : '';
+        
+        const exTag = q.exerciseLabel ? `<span class="exercise-tag">Ex: ${q.exerciseLabel}</span>` : '';
+        const remTag = q.remarks ? `<span class="remarks-tag">${q.remarks}</span>` : '';
+        const topicTag = q.topic ? `<span class="topic-tag">${q.topic}</span>` : '';
+        const boardTag = q.board ? `<span class="board-tag">${q.board}</span>` : '';
+        const chapterTag = (isViewingSelected && q.chapterName) ? `<span class="chapter-tag">${q.chapterName}</span>` : '';
+
+        const txt = getBilingualText(q.question, q.questionUrdu, langMode);
+        
+        let optsHtml = '';
+        let mcqBoardFooter = '';
+
+        if (type === 'mcq') {
+            optsHtml = '<ul class="options">';
+            const len = Math.max(q.options?.length||0, q.optionsUrdu?.length||0);
+            for(let i=0; i<len; i++) {
+                const oTxt = getBilingualText(q.options?.[i], q.optionsUrdu?.[i], langMode);
+                const cls = q.correctOption === i ? 'correct-option' : '';
+                optsHtml += `<li class="option ${cls}"><b>${String.fromCharCode(65+i)})</b> <div>${oTxt}</div></li>`;
+            }
+            optsHtml += '</ul>';
+            
+            if (q.board) {
+                mcqBoardFooter = `<div class="mcq-board-footer">${boardTag}</div>`;
+            }
+        }
+
+        const topMetaElements = [chapterTag, topicTag, (type !== 'mcq' ? boardTag : '')].filter(Boolean).join('');
+        const topMetaHtml = topMetaElements ? `<div class="meta-container">${topMetaElements}</div>` : '';
+
+        card.innerHTML = `
+            ${actionButtonsHtml}
+            ${topMetaHtml}
+            <div class="question-header">
+                ${assignedLabel}
+                <span class="q-number">Q.${idx+1}</span>
+                <div class="tags-container">${exTag}${remTag}</div>
+            </div>
+            <div class="question-text">${txt}</div>
+            ${optsHtml}
+            ${mcqBoardFooter}
+        `;
+        return card;
+    };
+
+    // --- PORTION-AWARE RENDERING ---
+    const hasPortions = questions.some(q => q.portion && String(q.portion).trim() !== "");
+
+    if (hasPortions) {
+        grid.style.display = 'block';
+
+        // 1. Group questions by portion
+        const portionMap = {};
+        const unassigned = [];
+
+        questions.forEach(q => {
+            const rawPortion = q.portion ? String(q.portion).trim() : '';
+            if (rawPortion !== '') {
+                const key = rawPortion.toLowerCase();
+                if (!portionMap[key]) {
+                    portionMap[key] = {
+                        portionKey: rawPortion,
+                        heading: q.portionHeading || q.portion_heading || rawPortion,
+                        items: []
+                    };
+                }
+                portionMap[key].items.push(q);
+            } else {
+                unassigned.push(q);
+            }
+        });
+
+        let globalIndex = 0;
+
+        // Render each portion with its heading
+        Object.values(portionMap).forEach(group => {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'portion-wrapper';
+
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'portion-header-title';
+            headerDiv.innerHTML = `<span class="portion-tag-badge">${group.portionKey}</span> <span>${group.heading}</span>`;
+            sectionDiv.appendChild(headerDiv);
+
+            const sectionGrid = document.createElement('div');
+            sectionGrid.className = (type === 'mcq') ? 'mcq-grid' : 'question-section-grid';
+
+            group.items.forEach(q => {
+                sectionGrid.appendChild(renderQuestionCard(q, globalIndex++));
+            });
+
+            sectionDiv.appendChild(sectionGrid);
+            grid.appendChild(sectionDiv);
+        });
+
+        // Questions without a portion
+        if (unassigned.length > 0) {
+            const extraGrid = document.createElement('div');
+            extraGrid.className = (type === 'mcq') ? 'mcq-grid' : 'question-section-grid';
+            unassigned.forEach(q => {
+                extraGrid.appendChild(renderQuestionCard(q, globalIndex++));
+            });
+            grid.appendChild(extraGrid);
+        }
+
+    } else {
+        // Standard view without portion grouping
+        grid.style.display = 'grid';
+        questions.forEach((q, idx) => {
+            grid.appendChild(renderQuestionCard(q, idx));
+        });
+    }
+}
+function shuffleWithinPortions(mcqList) {
+    const portions = {};
+    const others = [];
+
+    mcqList.forEach(q => {
+        if (q.portion) {
+            portions[q.portion] = portions[q.portion] || [];
+            portions[q.portion].push(q);
+        } else {
+            others.push(q);
+        }
+    });
+
+    const result = [];
+    Object.keys(portions).sort().forEach(portionKey => {
+        const shuffled = portions[portionKey].sort(() => 0.5 - Math.random());
+        result.push(...shuffled);
+    });
+
+    return [...result, ...others.sort(() => 0.5 - Math.random())];
+}
+
+    function getBilingualText(eng, urd, mode) {
+        const hasEng = eng && eng.trim();
+        const hasUrd = urd && urd.trim();
+        if (mode === 'English') return hasEng ? processText(eng) : processText(urd);
+        if (mode === 'Urdu') return `<div class="urdu-text">${hasUrd ? processText(urd) : processText(eng)}</div>`;
+        if(hasEng && hasUrd) return `<div class="bilingual-container"><div class="english-part">${processText(eng)}</div><div class="urdu-part urdu-text">${processText(urd)}</div></div>`;
+        if(hasEng) return processText(eng);
+        return `<div class="urdu-text">${processText(urd)}</div>`;
+    }
+
+    function showAssignDialog(questionId, type) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.style.display = 'flex';
+        
+        let dialogContent = '';
+        
+        if (type === 'mcq') {
+            dialogContent = `
+                <div style="padding: 20px; text-align: center;">
+                    <p style="margin-bottom: 20px; font-size: 16px; color: #333;">
+                        Add this MCQ to the Multiple Choice Questions section?
+                    </p>
+                    <div style="display: flex; justify-content: center; gap: 10px;">
+                        <button id="btnAssignMCQ" style="padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                            Add MCQ
+                        </button>
+                        <button id="btnCancel" style="padding: 10px 20px; border: 1px solid #ccc; background: white; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else {
+            dialogContent = `
+                <p style="margin-bottom: 15px; font-size: 14px; color: #555;">
+                    Assign this ${type} question to:
+                </p>
+                
+                <div style="margin-bottom: 20px;">
+                    <div style="background: #e8f5e9; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                        <h3 style="font-size: 14px; margin: 0 0 8px 0; color: #2e7d32; display: flex; align-items: center;">
+                            <span style="background: #2e7d32; color: white; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 8px; font-size: 12px;">S</span>
+                            Short Questions (Q1-Q10)
+                        </h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                            ${Array.from({length: 10}, (_, i) => 
+                                `<button class="q-number-btn" data-type="short" data-num="Q${i+1}" 
+                                    style="padding: 6px 12px; border: 1px solid #4caf50; background: white; border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s;"
+                                    onmouseover="this.style.backgroundColor='#e8f5e9'; this.style.borderColor='#2e7d32';"
+                                    onmouseout="this.style.backgroundColor='white'; this.style.borderColor='#4caf50';">
+                                    Q${i+1} Short
+                                </button>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <div style="background: #e3f2fd; padding: 10px; border-radius: 6px;">
+                        <h3 style="font-size: 14px; margin: 0 0 8px 0; color: #1565c0; display: flex; align-items: center;">
+                            <span style="background: #1565c0; color: white; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 8px; font-size: 12px;">L</span>
+                            Long Questions (Q1-Q10)
+                        </h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                            ${Array.from({length: 10}, (_, i) => 
+                                `<button class="q-number-btn" data-type="long" data-num="Q${i+1}" 
+                                    style="padding: 6px 12px; border: 1px solid #2196f3; background: white; border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s;"
+                                    onmouseover="this.style.backgroundColor='#e3f2fd'; this.style.borderColor='#1565c0';"
+                                    onmouseout="this.style.backgroundColor='white'; this.style.borderColor='#2196f3';">
+                                    Q${i+1} Long
+                                </button>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; text-align: center;">
+                    <p style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                        <strong>Tip:</strong> You can convert this ${type} question to ${type === 'short' ? 'Long' : 'Short'} by choosing from the other category.
+                    </p>
+                    <button id="btnCancel" style="padding: 8px 20px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer;">
+                        Cancel
+                    </button>
+                </div>
+            `;
+        }
+        
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: ${type === 'mcq' ? '400px' : '500px'};">
+                <div class="modal-header">
+                    <h2>${type === 'mcq' ? 'Add MCQ' : 'Assign Question'}</h2>
+                    <button onclick="this.closest('.modal-overlay').remove()" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    ${dialogContent}
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        if (type === 'mcq') {
+            modal.querySelector('#btnAssignMCQ').addEventListener('click', function() {
+                assignMCQ(questionId);
+                modal.remove();
+            });
+            
+            modal.querySelector('#btnCancel').addEventListener('click', function() {
+                modal.remove();
+            });
+        } else {
+            modal.querySelectorAll('.q-number-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const newType = this.dataset.type;
+                    const qNum = this.dataset.num;
+                    
+                    if (type !== newType) {
+                        if (!checkLimit(newType)) {
+                            return;
+                        }
+                    }
+                    
+                    assignQuestion(questionId, type, newType, qNum);
+                    modal.remove();
+                });
+            });
+            
+            modal.querySelector('#btnCancel').addEventListener('click', function() {
+                modal.remove();
+            });
+        }
+    }
+
+    function assignMCQ(questionId) {
+        const qObj = allMcqs.find(q => q.id === questionId);
+        if (qObj) {
+            selectedQuestions.mcq.push({ ...qObj, assignedTo: 'MCQ' });
+            renderContent();
+            updateUiState();
+        }
+    }
+
+    function assignQuestion(questionId, originalType, newType, qNum) {
+        let qObj;
+        
+        if (originalType === 'mcq') {
+            qObj = allMcqs.find(q => q.id === questionId);
+        } else if (originalType === 'short') {
+            qObj = allShorts.find(q => q.id === questionId);
+        } else {
+            qObj = allLongs.find(q => q.id === questionId);
+        }
+        
+        if (!qObj) return;
+        
+        selectedQuestions[newType].push({ 
+            ...qObj, 
+            assignedTo: qNum,
+            originalType: originalType 
+        });
+        
+        renderContent();
+        updateUiState();
+    }
+
+    function showPickingModeChoiceDialog(questionId, type) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.style.display = 'flex';
+
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 440px;">
+                <div class="modal-header">
+                    <h2>Choose Selection Workflow</h2>
+                    <button onclick="this.closest('.modal-overlay').remove()" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <p style="margin-bottom: 20px; font-size: 14px; color: #555; text-align:center;">
+                        Select how questions are allocated throughout this session.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button id="btnPickBoard" style="padding: 12px; background: var(--primary-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                            Board Pattern Setup<br><span style="font-weight:400; font-size:12px;">Manually map each item to a layout number</span>
+                        </button>
+                        <button id="btnPickGeneral" style="padding: 12px; background: var(--success-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                            General Flow<br><span style="font-weight:400; font-size:12px;">Continuous picking — Tap for Short, Double-Tap for Long</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        modal.querySelector('#btnPickBoard').addEventListener('click', () => {
+            pickingMode = 'board';
+            modal.remove();
+            showAssignDialog(questionId, type); 
+        });
+
+        modal.querySelector('#btnPickGeneral').addEventListener('click', () => {
+            pickingMode = 'general';
+            modal.remove();
+            handleGeneralPick(questionId, type);
+        });
+    }
+
+    function handleGeneralPick(questionId, originalType) {
+        const alreadySelected =
+            selectedQuestions.short.some(q => q.id === questionId) ||
+            selectedQuestions.long.some(q => q.id === questionId);
+
+        if (alreadySelected) {
+            removeQuestion(questionId, originalType);
+            generalPickPendingId = null;
+            if (generalPickTimer) { clearTimeout(generalPickTimer); generalPickTimer = null; }
+            return;
+        }
+
+        if (generalPickPendingId === questionId) {
+            clearTimeout(generalPickTimer);
+            generalPickTimer = null;
+            generalPickPendingId = null;
+            assignGeneralPick(questionId, originalType, 'long', 'Q3');
+            return;
+        }
+
+        generalPickPendingId = questionId;
+        generalPickTimer = setTimeout(() => {
+            assignGeneralPick(questionId, originalType, 'short', 'Q2');
+            generalPickPendingId = null;
+            generalPickTimer = null;
+        }, GENERAL_PICK_DOUBLE_TAP_DELAY);
+    }
+
+    function assignGeneralPick(questionId, originalType, newType, qNum) {
+        const qObj = originalType === 'short'
+            ? allShorts.find(q => q.id === questionId)
+            : allLongs.find(q => q.id === questionId);
+        if (!qObj) return;
+
+        if (!checkLimit(newType)) return;
+
+        selectedQuestions[newType].push({ ...qObj, assignedTo: qNum, originalType });
+        renderContent();
+        updateUiState();
+    }
+
+    function processText(text = '') {
+        if (!text || typeof text !== 'string') return '';
+        const latexBlocks = [];
+        const latexRegex = /\\\(.*?\\\)|\\\[.*?\\\]|\$\$.*?\ $\$|\$.*?\$/g;
+        const cleanedText = text.replace(/<style.*?>.*?<\/style>/gis, '');
+        let processedText = cleanedText.replace(latexRegex, (match) => {
+            latexBlocks.push(match);
+            return `__LATEX_PLACEHOLDER_${latexBlocks.length - 1}__`;
+        });
+        processedText = processedText.replace(/<!(.*?)<!/g, '<span class="arabic-text">$1</span>');
+        const tagLocations = [];
+        const htmlTagRegex = /<[^>]+>/g;
+        let tagMatch;
+        while ((tagMatch = htmlTagRegex.exec(processedText)) !== null) {
+            tagLocations.push({ start: tagMatch.index, end: tagMatch.index + tagMatch[0].length });
+        }
+        const numberUnitRegex = /\b-?\d+(?:\.\d+)?\s*[a-zA-Z%°Ωµ/²³]+\b/g;
+        processedText = processedText.replace(numberUnitRegex, (match, offset) => {
+            const matchStart = offset;
+            const matchEnd = offset + match.length;
+            const isInsideTag = tagLocations.some(tagRange => matchStart > tagRange.start && matchEnd < tagRange.end);
+            if (isInsideTag) return match;
+            else return `<span class="ltr-in-rtl">${match}</span>`;
+        });
+        const safeTags = "b|i|u|sup|sub|br|span|p|div|center|table|thead|tbody|tr|th|td|ol|ul|li|hr";
+        const preserveTagRegex = new RegExp(`<(/?)\\s*(${safeTags})([^>]*)>`, 'gi');
+        const preserved = processedText.replace(preserveTagRegex, "⍟$1$2$3⍟");
+        const escaped = preserved.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const restoreTagRegex = new RegExp(`⍟(/?)\\s*(${safeTags})([^⍟]*)⍟`, 'gi');
+        processedText = escaped.replace(restoreTagRegex, "<$1$2$3>");
+        latexBlocks.forEach((latexBlock, index) => {
+            const wrappedLatex = `<span class="ltr-in-rtl">${latexBlock}</span>`;
+            processedText = processedText.replace(`__LATEX_PLACEHOLDER_${index}__`, wrappedLatex);
+        });
+        return processedText;
+    }
+
+// --- 3. INTERACTION (TAP TO SELECT) ---
+    container.addEventListener('click', (e) => {
+        // Handle reassignment tag click
+        if (e.target.classList.contains('assigned-tag')) {
+            const card = e.target.closest('.question-card');
+            const type = card.dataset.type;
+            const id = card.dataset.id;
+            showReassignDialog(id, type);
+            return;
+        }
+
+        // --- Handle remove button click ---
+        if (e.target.closest('.remove-btn')) {
+            const card = e.target.closest('.question-card');
+            const type = card.dataset.type;
+            const id = card.dataset.id;
+            removeQuestion(id, type);
+            return;
+        }
+
+        // --- Handle replace button click ---
+        if (e.target.closest('.replace-btn')) {
+            const card = e.target.closest('.question-card');
+            const type = card.dataset.type;
+            const id = card.dataset.id;
+            const targetChapterId = card.dataset.chapterId;
+
+            // 1. Remove the current question so user has a free slot to replace it
+            removeQuestion(id, type);
+
+            // 2. Find the chapter index for this question
+            const foundIndex = chapterFiles.findIndex(file => file.replace('.json', '') === targetChapterId);
+            if (foundIndex !== -1) {
+                currentChapterIndex = foundIndex;
+            }
+
+            // 3. Exit "View Selected" mode to return to chapter view
+            isViewingSelected = false;
+            const btn = document.getElementById('btnToggleView');
+            const sidebar = document.getElementById('topicSidebar');
+            if (btn) {
+                btn.innerText = "View Selected";
+                btn.style.background = "#17a2b8";
+                btn.style.color = "#fff";
+            }
+            if(sidebar) sidebar.style.display = 'flex';
+
+            renderContent();
+            updateUiState();
+            return;
+        }
+        
+        const card = e.target.closest('.question-card');
+        if (!card) return;
+
+        const type = card.dataset.type;
+        const id = card.dataset.id;
+
+        const isSelected = selectedQuestions.mcq.some(q => q.id === id) ||
+                           selectedQuestions.short.some(q => q.id === id) ||
+                           selectedQuestions.long.some(q => q.id === id);
+
+        if (!isSelected) {
+            if (!checkLimit(type)) {
+                return;
+            }
+            
+            if (type === 'mcq') {
+                const qObj = allMcqs.find(q => q.id === id);
+                selectedQuestions.mcq.push({ ...qObj, assignedTo: 'MCQ' });
+                renderContent();
+                updateUiState();
+                return;
+            }
+
+            if (pickingMode === null) {
+                showPickingModeChoiceDialog(id, type);
+                return;
+            }
+
+            if (pickingMode === 'board') {
+                showAssignDialog(id, type); 
+                return;
+            }
+
+            handleGeneralPick(id, type);
+
+        } else {
+            // If in the main view, tapping a selected card unselects it.
+            // If in the "View Selected" mode, it ignores the tap and waits for the X button.
+            if (!isViewingSelected) {
+                removeQuestion(id, type);
+            }
+        }
+    });
+
+    window.navigateChapter = (dir) => {
+        if (dir === 1 && currentChapterIndex < chapterFiles.length - 1) currentChapterIndex++;
+        else if (dir === -1 && currentChapterIndex > 0) currentChapterIndex--;
+        renderContent();
+    }
+// --- 4. BOARD PATTERN LOGIC ---
+    document.getElementById('boardPatternSwitch').addEventListener('change', (e) => {
+        if (userType === 'guest' && e.target.checked) {
+            e.preventDefault();
+            e.target.checked = false;
+            showUpgradeModal("Guest accounts cannot configure board layouts. Please upgrade to Premium.");
+            return;
+        }
+
+        document.getElementById('customPatternSwitch').checked = false;
+        document.getElementById('autoSelectSwitch').disabled = !e.target.checked;
+        
+        if (!e.target.checked) {
+            document.getElementById('autoSelectSwitch').checked = false;
+            selectedQuestions = { mcq: [], short: [], long: [] };
+            renderContent();
+            updateUiState();
+        } else {
+            if (!boardPatternData || !boardPatternData.pattern_data) {
+                alert("Board pattern templates are not available for this subject.");
+                e.target.checked = false;
+                document.getElementById('autoSelectSwitch').disabled = true;
+                return;
+            }
+            document.getElementById('autoSelectSwitch').checked = true;
+            runAutoSelection();
+        }
+    });
+
+    document.getElementById('autoSelectSwitch').addEventListener('change', (e) => {
+        if (e.target.checked) runAutoSelection();
+        else { renderContent(); updateUiState(); }
+    });
+
+    function runAutoSelection() {
+        if (!boardPatternData || !boardPatternData.pattern_data) {
+            console.error("Pattern data not found");
+            return;
+        }
+
+        selectedQuestions = { mcq: [], short: [], long: [] };
+        const sourceMode = document.querySelector('input[name="source"]:checked')?.value || 'mixed';
+        const skipALP = document.getElementById('skipALP')?.checked;
+        const pattern = boardPatternData.pattern_data;
+        const usedIds = new Set();
+
+        const activeChapterIds = chapterFiles.map(f => String(f).trim().replace('.json', ''));
+        const subjectIdParam = urlParams.get('subject_id') || urlParams.get('subjectId') || '';
+
+        Object.keys(pattern).forEach(key => {
+            const config = pattern[key].questions || pattern[key];
+            if (!config) return;
+
+            let poolMcqs = [];
+            let poolShorts = [];
+            let poolLongs = [];
+
+            if (key.startsWith('BoardQ_')) {
+                // Questions spanning across all active chapters
+                poolMcqs = allMcqs.filter(q => activeChapterIds.includes(String(q.chapterId)));
+                poolShorts = allShorts.filter(q => activeChapterIds.includes(String(q.chapterId)));
+                poolLongs = allLongs.filter(q => activeChapterIds.includes(String(q.chapterId)));
+            } else {
+                // Match exact chapter ID, prefixed chapter ID, or raw key
+                const targetFullChapterId = `${subjectIdParam}_${key}`;
+                const matchedChapterId = activeChapterIds.find(id => id === key || id === targetFullChapterId || id.endsWith('_' + key) || id === key.replace('ch_', ''));
+
+                if (!matchedChapterId) return;
+
+                poolMcqs = allMcqs.filter(q => String(q.chapterId) === matchedChapterId);
+                poolShorts = allShorts.filter(q => String(q.chapterId) === matchedChapterId);
+                poolLongs = allLongs.filter(q => String(q.chapterId) === matchedChapterId);
+            }
+
+            // Apply Source Filter & Skip ALP
+            const applyFilter = (list) => {
+                let res = list.filter(q => !usedIds.has(q.id));
+                if (skipALP) res = res.filter(q => !(q.remarks && q.remarks.includes("ALP Excluded")));
+                return filterBySource(res, sourceMode);
+            };
+
+            const filteredMcqs = applyFilter(poolMcqs);
+            const filteredShorts = applyFilter(poolShorts);
+            const filteredLongs = applyFilter(poolLongs);
+
+            // 1. Pick MCQs (Q1)
+            const mcqCount = config.mcqs || config.mcq || config.Q1 || 0;
+            if (mcqCount > 0) {
+                selectRandom(filteredMcqs, mcqCount).forEach(q => {
+                    selectedQuestions.mcq.push({ ...q, assignedTo: 'Q1' });
+                    usedIds.add(q.id);
+                });
+            }
+
+            // 2. Pick Short Questions (Q2, Q3, Q4)
+            ['Q2', 'Q3', 'Q4'].forEach(qNum => {
+                if (config[qNum] > 0) {
+                    selectRandom(applyFilter(poolShorts), config[qNum]).forEach(q => {
+                        selectedQuestions.short.push({ ...q, assignedTo: qNum });
+                        usedIds.add(q.id);
+                    });
+                }
+            });
+
+            // 3. Pick Long Questions (Q5, Q6, Q7, Q8, Q9)
+            ['Q5', 'Q6', 'Q7', 'Q8', 'Q9'].forEach(qNum => {
+                if (config[qNum] > 0) {
+                    selectRandom(applyFilter(poolLongs), config[qNum]).forEach(q => {
+                        selectedQuestions.long.push({ ...q, assignedTo: qNum });
+                        usedIds.add(q.id);
+                    });
+                }
+            });
+        });
+
+        renderContent();
+        updateUiState();
+    }
+
+    function filterBySource(list, mode) {
+        if (mode === 'exercise') {
+            return list.filter(q => q.exerciseLabel);
+        }
+        if (mode === 'additional') {
+            return list.filter(q => !q.exerciseLabel);
+        }
+        if (mode === 'board') {
+            return list.filter(q => q.board && q.board.trim() !== "");
+        }
+        return list; 
+    }
+    
+    function selectRandom(list, count) {
+        return [...list].sort(() => 0.5 - Math.random()).slice(0, count);
+    }
+
+    // --- 5. CUSTOM MODAL ---
+// --- 5. CUSTOM MODAL (3 CATEGORIES + QUESTION DROPDOWN) ---
+    const customModal = document.getElementById('customSelectionModal');
+    const customBody  = document.getElementById('customModalBody');
+
+    // Central state for Custom Selection
+    let customState = {
+        activeCategory: 'mcq', // 'mcq' | 'short' | 'long'
+        shortQList: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10'],
+        longQList:  ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10'],
+        selectedShortQ: 'Q1',
+        selectedLongQ:  'Q1',
+        mcq:   {}, // { chapterId: count }
+        short: {}, // { 'Q1': { chapterId: count }, 'Q2': ... }
+        long:  {}  // { 'Q1': { chapterId: count }, 'Q2': ... }
+    };
+
+    document.getElementById('skipALP')?.addEventListener('change', renderContent);
+    document.getElementById('customPatternSwitch')?.addEventListener('change', (e) => {
+        if(e.target.checked) {
+            document.getElementById('boardPatternSwitch').checked = false;
+            document.getElementById('autoSelectSwitch').checked = false;
+            document.getElementById('autoSelectSwitch').disabled = true;
+            showCustomModal();
+        }
+    });
+
+    function showCustomModal() {
+        let topicText = selectedTopics.has('ALL') ? 'All Topics' : Array.from(selectedTopics).join(', ');
+        
+        let limitHtml = `<div style="background:#fff3cd; padding:8px 12px; margin-bottom:12px; border-radius:6px; font-size:13px; color:#856404; border:1px solid #ffeeba;">
+            <strong>Limits:</strong> ${LIMITS.mcq} MCQs, ${LIMITS.short} Shorts, ${LIMITS.long} Longs.<br>
+            <strong>Active Filter:</strong> ${topicText}
+        </div>`;
+
+        // Only 3 clean tabs
+        let tabsHtml = `
+            <div class="modal-tabs">
+                <button class="modal-tab ${customState.activeCategory === 'mcq' ? 'active' : ''}" onclick="switchCustomCategory('mcq')">MCQs</button>
+                <button class="modal-tab ${customState.activeCategory === 'short' ? 'active' : ''}" onclick="switchCustomCategory('short')">Short Questions</button>
+                <button class="modal-tab ${customState.activeCategory === 'long' ? 'active' : ''}" onclick="switchCustomCategory('long')">Long Questions</button>
+            </div>
+            <div id="customCategoryContainer" style="padding:15px 0;"></div>
+        `;
+
+        customBody.innerHTML = limitHtml + tabsHtml;
+        customModal.style.display = 'flex';
+        renderCustomCategoryContent();
+    }
+
+    window.switchCustomCategory = (cat) => {
+        customState.activeCategory = cat;
+        document.querySelectorAll('.modal-tab').forEach((tab, idx) => {
+            tab.classList.toggle('active', 
+                (cat === 'mcq' && idx === 0) || 
+                (cat === 'short' && idx === 1) || 
+                (cat === 'long' && idx === 2)
+            );
+        });
+        renderCustomCategoryContent();
+    };
+
+    function renderCustomCategoryContent() {
+        const container = document.getElementById('customCategoryContainer');
+        if (!container) return;
+
+        const cat = customState.activeCategory;
+        const sourceMode = document.querySelector('input[name="source"]:checked')?.value || 'mixed';
+        const skipALP = document.getElementById('skipALP')?.checked;
+
+        let controlsHtml = '';
+        let headerLabel = '';
+
+        if (cat === 'mcq') {
+            headerLabel = `Configuring MCQs (Q1) - Type: ${sourceMode.toUpperCase()}`;
+        } else {
+            const isShort = (cat === 'short');
+            const list = isShort ? customState.shortQList : customState.longQList;
+            const currentQ = isShort ? customState.selectedShortQ : customState.selectedLongQ;
+
+            headerLabel = `Configuring ${isShort ? 'Short' : 'Long'} Questions (${currentQ}) - Type: ${sourceMode.toUpperCase()}`;
+
+            let optionsHtml = list.map(q => `<option value="${q}" ${q === currentQ ? 'selected' : ''}>${q}</option>`).join('');
+
+            controlsHtml = `
+                <div class="q-selector-bar">
+                    <label>Select Question Number:</label>
+                    <select class="q-selector-dropdown" onchange="changeCustomQNumber(this.value)">
+                        ${optionsHtml}
+                    </select>
+                    <button type="button" class="add-q-btn" onclick="addNewCustomQNumber()">+ Add New Q</button>
+                </div>
+            `;
+        }
+
+        let chaptersHtml = '';
+        chapterFiles.forEach((file, idx) => {
+            const cid = file.replace('.json', '');
+            const cname = decodeURIComponent(chapterNames[idx] || `Ch ${idx + 1}`);
+
+            let pool = (cat === 'mcq' ? allMcqs : (cat === 'short' ? allShorts : allLongs)).filter(q => q.chapterId === cid);
+
+            if (skipALP) {
+                pool = pool.filter(q => !(q.remarks && q.remarks.includes("ALP Excluded")));
+            }
+            pool = filterBySource(pool, sourceMode);
+            pool = pool.filter(q => matchesTopic(q));
+
+            // Retrieve saved count for this input
+            let savedVal = 0;
+            if (cat === 'mcq') {
+                savedVal = customState.mcq[cid] || '';
+            } else if (cat === 'short') {
+                savedVal = customState.short[customState.selectedShortQ]?.[cid] || '';
+            } else {
+                savedVal = customState.long[customState.selectedLongQ]?.[cid] || '';
+            }
+
+            chaptersHtml += `
+                <div class="modal-chapter-item">
+                    <label style="font-size:13px; font-weight:500;">
+                        ${cname} <span style="color:#64748b; font-size:11px;">(Avail: ${pool.length})</span>
+                    </label>
+                    <input type="number" class="custom-input-field" 
+                           min="0" max="${pool.length}" placeholder="0" value="${savedVal}"
+                           oninput="updateCustomInputVal('${cid}', this.value)">
+                </div>
+            `;
+        });
+
+        container.innerHTML = `
+            ${controlsHtml}
+            <div class="q-config-header">
+                <strong>${headerLabel}</strong>
+            </div>
+            <div>${chaptersHtml}</div>
+        `;
+    }
+
+    window.changeCustomQNumber = (newQ) => {
+        if (customState.activeCategory === 'short') {
+            customState.selectedShortQ = newQ;
+        } else {
+            customState.selectedLongQ = newQ;
+        }
+        renderCustomCategoryContent();
+    };
+
+    window.addNewCustomQNumber = () => {
+        const isShort = (customState.activeCategory === 'short');
+        const list = isShort ? customState.shortQList : customState.longQList;
+        
+        const nextNum = list.length + 1;
+        const newQ = `Q${nextNum}`;
+        list.push(newQ);
+
+        if (isShort) customState.selectedShortQ = newQ;
+        else customState.selectedLongQ = newQ;
+
+        renderCustomCategoryContent();
+    };
+
+    window.updateCustomInputVal = (cid, val) => {
+        const count = parseInt(val) || 0;
+        const cat = customState.activeCategory;
+
+        if (cat === 'mcq') {
+            customState.mcq[cid] = count;
+        } else if (cat === 'short') {
+            if (!customState.short[customState.selectedShortQ]) {
+                customState.short[customState.selectedShortQ] = {};
+            }
+            customState.short[customState.selectedShortQ][cid] = count;
+        } else {
+            if (!customState.long[customState.selectedLongQ]) {
+                customState.long[customState.selectedLongQ] = {};
+            }
+            customState.long[customState.selectedLongQ][cid] = count;
+        }
+    };
+
+    window.performCustomSelection = () => {
+        const sourceMode = document.querySelector('input[name="source"]:checked')?.value || 'mixed';
+        const skipALP = document.getElementById('skipALP')?.checked;
+
+        // Calculate Totals across all question numbers
+        let totalMcq = Object.values(customState.mcq).reduce((a, b) => a + (b || 0), 0);
+
+        let totalShort = 0;
+        for (const qMap of Object.values(customState.short)) {
+            totalShort += Object.values(qMap).reduce((a, b) => a + (b || 0), 0);
+        }
+
+        let totalLong = 0;
+        for (const qMap of Object.values(customState.long)) {
+            totalLong += Object.values(qMap).reduce((a, b) => a + (b || 0), 0);
+        }
+
+        if (totalMcq > LIMITS.mcq || totalShort > LIMITS.short || totalLong > LIMITS.long) {
+            alert(`Selected counts exceed plan limits.\nRequested: ${totalMcq} MCQs, ${totalShort} Shorts, ${totalLong} Longs.\nMax Allowed: ${LIMITS.mcq} MCQs, ${LIMITS.short} Shorts, ${LIMITS.long} Longs.`);
+            return;
+        }
+
+        selectedQuestions = { mcq: [], short: [], long: [] };
+
+        // 1. Pick MCQs (Q1)
+        for (const [cid, count] of Object.entries(customState.mcq)) {
+            if (count > 0) {
+                let pool = allMcqs.filter(q => q.chapterId === cid);
+                if (skipALP) pool = pool.filter(q => !(q.remarks && q.remarks.includes("ALP Excluded")));
+                pool = filterBySource(pool, sourceMode);
+                pool = pool.filter(q => matchesTopic(q));
+
+                const existingIds = selectedQuestions.mcq.map(q => q.id);
+                pool = pool.filter(q => !existingIds.includes(q.id));
+                selectRandom(pool, count).forEach(q => selectedQuestions.mcq.push({ ...q, assignedTo: 'Q1' }));
+            }
+        }
+
+        // 2. Pick Short Questions (by their assigned Q number)
+        for (const [qNum, chapMap] of Object.entries(customState.short)) {
+            for (const [cid, count] of Object.entries(chapMap)) {
+                if (count > 0) {
+                    let pool = allShorts.filter(q => q.chapterId === cid);
+                    if (skipALP) pool = pool.filter(q => !(q.remarks && q.remarks.includes("ALP Excluded")));
+                    pool = filterBySource(pool, sourceMode);
+                    pool = pool.filter(q => matchesTopic(q));
+
+                    const existingIds = selectedQuestions.short.map(q => q.id);
+                    pool = pool.filter(q => !existingIds.includes(q.id));
+                    selectRandom(pool, count).forEach(q => selectedQuestions.short.push({ ...q, assignedTo: qNum }));
+                }
+            }
+        }
+
+        // 3. Pick Long Questions (by their assigned Q number)
+        for (const [qNum, chapMap] of Object.entries(customState.long)) {
+            for (const [cid, count] of Object.entries(chapMap)) {
+                if (count > 0) {
+                    let pool = allLongs.filter(q => q.chapterId === cid);
+                    if (skipALP) pool = pool.filter(q => !(q.remarks && q.remarks.includes("ALP Excluded")));
+                    pool = filterBySource(pool, sourceMode);
+                    pool = pool.filter(q => matchesTopic(q));
+
+                    const existingIds = selectedQuestions.long.map(q => q.id);
+                    pool = pool.filter(q => !existingIds.includes(q.id));
+                    selectRandom(pool, count).forEach(q => selectedQuestions.long.push({ ...q, assignedTo: qNum }));
+                }
+            }
+        }
+
+        renderContent();
+        updateUiState();
+        closeCustomModal();
+    };
+
+    window.closeCustomModal = () => {
+        customModal.style.display = 'none';
+        if (selectedQuestions.mcq.length === 0 && selectedQuestions.short.length === 0 && selectedQuestions.long.length === 0) {
+            document.getElementById('customPatternSwitch').checked = false;
+        }
+    };
+    // --- UTILS ---
+    function updateUiState() {
+        const m = selectedQuestions.mcq.length;
+        const s = selectedQuestions.short.length;
+        const l = selectedQuestions.long.length;
+        
+        const shortCounts = {};
+        const longCounts = {};
+        
+        selectedQuestions.short.forEach(q => {
+            const num = q.assignedTo || 'Manual';
+            shortCounts[num] = (shortCounts[num] || 0) + 1;
+        });
+        
+        selectedQuestions.long.forEach(q => {
+            const num = q.assignedTo || 'Manual';
+            longCounts[num] = (longCounts[num] || 0) + 1;
+        });
+        
+        const formatCounts = (counts) => {
+            return Object.entries(counts).map(([num, count]) => {
+                return `<span style="color: green;">${num}:${count}</span>`;
+            }).join(' ');
+        };
+        
+        const mText = document.getElementById('mcqCountText');
+        const sText = document.getElementById('shortCountText');
+        const lText = document.getElementById('longCountText');
+
+        mText.innerHTML = `MCQs: <span style="color: black;">${m}</span>`;
+        sText.innerHTML = `Shorts: <span style="color: black;">${s}</span> ${formatCounts(shortCounts)}`;
+        lText.innerHTML = `Longs: <span style="color: black;">${l}</span> ${formatCounts(longCounts)}`;
+
+        mText.style.color = m >= LIMITS.mcq ? 'red' : 'inherit';
+        sText.style.color = s >= LIMITS.short ? 'red' : 'inherit';
+        lText.style.color = l >= LIMITS.long ? 'red' : 'inherit';
+
+        document.getElementById('btnNext').disabled = (m+s+l) === 0;
+        // --- ADD THIS TO THE VERY END OF updateUiState() ---
+    const btnToggleView = document.getElementById('btnToggleView');
+    if (btnToggleView) {
+        // Show button if questions are selected OR if they are currently inside the "view selected" tab
+        btnToggleView.style.display = (m + s + l) > 0 || isViewingSelected ? 'block' : 'none';
+    }
+    // --- ADD THIS FOR CLEAR ALL BUTTON VISIBILITY ---
+    const btnClearAll = document.getElementById('btnClearAll');
+    if (btnClearAll) {
+        btnClearAll.style.display = (m + s + l) > 0 ? 'block' : 'none';
+    }
+    }
+
+    function showReassignDialog(questionId, currentType) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.style.display = 'flex';
+        
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h2>Reassign Question</h2>
+                    <button onclick="this.closest('.modal-overlay').remove()" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <p style="margin-bottom: 15px; font-size: 14px; color: #555;">
+                        Move this ${currentType} question to:
+                    </p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <div style="background: #e8f5e9; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                            <h3 style="font-size: 14px; margin: 0 0 8px 0; color: #2e7d32; display: flex; align-items: center;">
+                                <span style="background: #2e7d32; color: white; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 8px; font-size: 12px;">S</span>
+                                Short Questions (Q1-Q10)
+                            </h3>
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                ${Array.from({length: 10}, (_, i) => 
+                                    `<button class="q-number-btn" data-type="short" data-num="Q${i+1}" 
+                                        style="padding: 6px 12px; border: 1px solid #4caf50; background: white; border-radius: 4px; cursor: pointer; font-size: 13px;"
+                                        onmouseover="this.style.backgroundColor='#e8f5e9'; this.style.borderColor='#2e7d32';"
+                                        onmouseout="this.style.backgroundColor='white'; this.style.borderColor='#4caf50';">
+                                        Q${i+1} Short
+                                    </button>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        <div style="background: #e3f2fd; padding: 10px; border-radius: 6px;">
+                            <h3 style="font-size: 14px; margin: 0 0 8px 0; color: #1565c0; display: flex; align-items: center;">
+                                <span style="background: #1565c0; color: white; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 8px; font-size: 12px;">L</span>
+                                Long Questions (Q1-Q10)
+                            </h3>
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                ${Array.from({length: 10}, (_, i) => 
+                                    `<button class="q-number-btn" data-type="long" data-num="Q${i+1}" 
+                                        style="padding: 6px 12px; border: 1px solid #2196f3; background: white; border-radius: 4px; cursor: pointer; font-size: 13px;"
+                                        onmouseover="this.style.backgroundColor='#e3f2fd'; this.style.borderColor='#1565c0';"
+                                        onmouseout="this.style.backgroundColor='white'; this.style.borderColor='#2196f3';">
+                                        Q${i+1} Long
+                                    </button>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <button id="btnRemove" style="padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                Remove from Selection
+                            </button>
+                            <button id="btnCancel" style="padding: 8px 15px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer;">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        modal.querySelectorAll('.q-number-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const newType = this.dataset.type;
+                const newNum = this.dataset.num;
+                
+                if (currentType !== newType) {
+                    if (!checkLimit(newType)) {
+                        return;
+                    }
+                }
+                
+                reassignQuestion(questionId, currentType, newType, newNum);
+                modal.remove();
+            });
+        });
+        
+        modal.querySelector('#btnRemove').addEventListener('click', function() {
+            removeQuestion(questionId, currentType);
+            modal.remove();
+        });
+        
+        modal.querySelector('#btnCancel').addEventListener('click', function() {
+            modal.remove();
+        });
+    }
+
+    function reassignQuestion(questionId, oldType, newType, newNum) {
+        const questionIndex = selectedQuestions[oldType].findIndex(q => q.id === questionId);
+        if (questionIndex === -1) return;
+        
+        const question = selectedQuestions[oldType][questionIndex];
+        
+        selectedQuestions[oldType].splice(questionIndex, 1);
+        
+        selectedQuestions[newType].push({
+            ...question,
+            assignedTo: newNum,
+            originalType: question.originalType || oldType 
+        });
+        
+        renderContent();
+        updateUiState();
+    }
+
+    function removeQuestion(questionId, type) {
+        selectedQuestions.mcq = selectedQuestions.mcq.filter(q => q.id !== questionId);
+        selectedQuestions.short = selectedQuestions.short.filter(q => q.id !== questionId);
+        selectedQuestions.long = selectedQuestions.long.filter(q => q.id !== questionId);
+        
+        renderContent();
+        updateUiState();
+    }
+
+function analyzeLanguageOptions() {
+        const hasEng = allMcqs.some(q => q.question && q.question.trim()) || 
+                       allShorts.some(q => q.question && q.question.trim()) || 
+                       allLongs.some(q => q.question && q.question.trim());
+
+        const hasUrd = allMcqs.some(q => q.questionUrdu && q.questionUrdu.trim()) || 
+                       allShorts.some(q => q.questionUrdu && q.questionUrdu.trim()) || 
+                       allLongs.some(q => q.questionUrdu && q.questionUrdu.trim());
+
+        const rEng = document.querySelector('input[name="language"][value="English"]');
+        const rUrd = document.querySelector('input[name="language"][value="Urdu"]');
+        const rBi  = document.querySelector('input[name="language"][value="Bilingual"]');
+
+        if (!hasEng) rEng.disabled = true;
+        if (!hasUrd) rUrd.disabled = true;
+        if (!hasEng || !hasUrd) rBi.disabled = true;
+
+        // Auto-switch radio button selection based on available language
+        if (!hasEng && hasUrd) {
+            rUrd.checked = true;
+        } else if (hasEng && !hasUrd) {
+            rEng.checked = true;
+        }
+    }
+
+    document.querySelectorAll('input[name="source"]').forEach(el => el.addEventListener('change', () => {
+        if(document.getElementById('autoSelectSwitch').checked) runAutoSelection();
+        else renderContent();
+    }));
+    document.querySelectorAll('input[name="language"]').forEach(el => el.addEventListener('change', renderContent));
+    
+document.getElementById('btnNext').addEventListener('click', () => {
+        // Build paper object with silent session & persistent chapter metadata
+        const paper = {
+            mcqQuestions: selectedQuestions.mcq,
+            shortQuestions: selectedQuestions.short,
+            longQuestions: selectedQuestions.long,
+            className: decodeURIComponent(classFolder || urlParams.get('className') || ''),
+            boardName: decodeURIComponent(boardFolder || urlParams.get('boardName') || ''),
+            subjectName: decodeURIComponent(subjectName || urlParams.get('subjectName') || ''),
+            subjectId: urlParams.get('subject_id') || urlParams.get('subjectId') || '',
+            chapterIds: urlParams.get('chapterIds') || chapterFiles.join(','),
+            chapterNames: urlParams.get('chapterNames') || chapterNames.join(','),
+            generatedBy: 'SmartSelector',
+            boardPattern: boardPatternData,
+            
+            // Session Details
+            userRole:        null,
+            teacherName:     null,
+            teacherId:       null,
+            adminId:         null,
+            institutionName: null,
+            logoUrl:         null        };
+
+        // Save complete package to local storage
+        localStorage.setItem('paperForEditor', JSON.stringify(paper));
+
+        // Forward back to paper-editor.php
+        const selectedLang = document.querySelector('input[name="language"]:checked')?.value || 'Bilingual';
+        window.location.href = `paper-editor.php?language=${encodeURIComponent(selectedLang)}`;
+    });
+document.getElementById('btnToggleView').addEventListener('click', () => {
+    isViewingSelected = !isViewingSelected;
+    const btn = document.getElementById('btnToggleView');
+    const sidebar = document.getElementById('topicSidebar');
+    
+    if (isViewingSelected) {
+        btn.innerText = "Add More Questions";
+        btn.style.background = "#ffc107";
+        btn.style.color = "#000";
+        if(sidebar) sidebar.style.display = 'none'; // Hide sidebar filters while viewing
+    } else {
+        btn.innerText = "View Selected";
+        btn.style.background = "#17a2b8";
+        btn.style.color = "#fff";
+        if(sidebar) sidebar.style.display = 'flex'; // Bring back sidebar
+    }
+    
+    renderContent(); // Triggers the screen refresh seamlessly 
+});
+document.getElementById('btnClearAll').addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear all selected questions?')) {
+        selectedQuestions = { mcq: [], short: [], long: [] };
+        
+        // Reset switches if active
+        const autoSwitch = document.getElementById('autoSelectSwitch');
+        if (autoSwitch) autoSwitch.checked = false;
+        const customSwitch = document.getElementById('customPatternSwitch');
+        if (customSwitch) customSwitch.checked = false;
+
+        // If currently in 'View Selected' mode, return to standard chapter view
+        if (isViewingSelected) {
+            isViewingSelected = false;
+            const btn = document.getElementById('btnToggleView');
+            const sidebar = document.getElementById('topicSidebar');
+            if (btn) {
+                btn.innerText = "View Selected";
+                btn.style.background = "#17a2b8";
+                btn.style.color = "#fff";
+            }
+            if (sidebar) sidebar.style.display = 'flex';
+        }
+
+        renderContent();
+        updateUiState();
+    }
+});
+    fetchAllData();
+
+</script>
+
+</body></html>

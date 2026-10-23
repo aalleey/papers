@@ -21,6 +21,7 @@ import {
   Lock,
 } from "lucide-react";
 import { ClientUser } from "@/lib/types";
+import { PaymentQr } from "@/components/PaymentQr";
 
 export default function VerificationPendingPage() {
   const router = useRouter();
@@ -30,6 +31,9 @@ export default function VerificationPendingPage() {
   const [copiedRaast, setCopiedRaast] = useState(false);
 
   const RAAST_ID = "03092770207";
+  const ADMIN_WHATSAPP = "03473576122";
+  const ADMIN_WHATSAPP_INTL = "923473576122";
+  const [copiedWhatsapp, setCopiedWhatsapp] = useState(false);
 
   const loadProfile = async (silent = false) => {
     if (!silent) setLoading(true);
@@ -208,9 +212,49 @@ export default function VerificationPendingPage() {
                       {copiedRaast ? "Copied" : "Copy"}
                     </button>
                   </div>
+                  <PaymentQr />
                 </div>
               )}
             </div>
+
+            {/* After submitting: send payment screenshot / script to admin WhatsApp */}
+            {submission && (
+              <div className="p-4 rounded-2xl bg-green-50 border border-green-300 space-y-3 text-xs">
+                <div className="flex items-center gap-2 font-black text-green-900">
+                  <MessageCircle className="w-4 h-4 text-green-600" />
+                  <span>Send your payment screenshot on WhatsApp</span>
+                </div>
+                <p className="text-[11px] text-slate-700 leading-relaxed">
+                  You have submitted your payment. To get approved faster, please send the screenshot / script of your
+                  payment to this WhatsApp number:
+                </p>
+                <div className="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-white border border-green-200">
+                  <span className="font-mono font-black text-base text-green-800">{ADMIN_WHATSAPP}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(ADMIN_WHATSAPP);
+                      setCopiedWhatsapp(true);
+                      setTimeout(() => setCopiedWhatsapp(false), 2500);
+                    }}
+                    className="px-2.5 py-1 rounded bg-green-600 text-white text-[10px] font-bold cursor-pointer"
+                  >
+                    {copiedWhatsapp ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                <a
+                  href={`https://wa.me/${ADMIN_WHATSAPP_INTL}?text=${encodeURIComponent(
+                    `Assalam-o-Alaikum, I registered on PaperWala (${client?.fullName || ""}, ${client?.email || ""}) and submitted my payment. TID: ${submission.transactionRef}. Sending the payment screenshot here.`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-green-600 hover:bg-green-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Open WhatsApp &amp; Send Screenshot</span>
+                </a>
+              </div>
+            )}
 
             {/* What happens next box */}
             <div className="space-y-2 text-xs text-slate-600">
