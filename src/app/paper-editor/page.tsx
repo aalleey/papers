@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Question, ClientUser, SubscriptionPlanId, isPaidSubscriber } from "@/lib/types";
+import { Question, ClientUser, SubscriptionPlanId, UserPaperTemplate, isPaidSubscriber } from "@/lib/types";
 import { MathRenderer } from "@/components/MathRenderer";
 import { getUrduTranslation } from "@/lib/urdu-translations";
 import { SubscriptionModal } from "@/components/SubscriptionModal";
@@ -231,6 +231,40 @@ export default function PaperEditorPage() {
     }
   };
 
+  // Apply the user's saved paper template (set in Profile > Paper Template) over the defaults
+  const applyUserTemplate = (t?: UserPaperTemplate | null) => {
+    if (!t) return;
+    if (t.institutionName) setInstitutionName(t.institutionName);
+    if (t.logoBase64) setLogoBase64(t.logoBase64);
+    setLogoSize(t.logoSize);
+    setHeaderStyle(t.headerStyle);
+    setPaperTypeBanner(t.paperTypeBanner);
+    try {
+      if (!sessionStorage.getItem("papermaker_language_mode")) setLanguageMode(t.languageMode);
+    } catch {
+      setLanguageMode(t.languageMode);
+    }
+    setPaperSize(t.paperSize);
+    setTestDensity(t.testDensity);
+    setTimeDuration(t.timeDuration);
+    setInstFontSize(t.instFontSize);
+    setObjFontSize(t.objFontSize);
+    setSubFontSize(t.subFontSize);
+    setBoldHeadingsOnly(t.boldHeadingsOnly);
+    setEntireContentBold(t.entireContentBold);
+    setIncludeHeaderSection(t.includeHeaderSection);
+    setIncludeStudentSection(t.includeStudentSection);
+    setIncludeBubbleSheet(t.includeBubbleSheet);
+    setIncludeMcqAnswerKey(t.includeMcqAnswerKey);
+    setIncludeInstructions(t.includeInstructions);
+    setInstructionText(t.instructionText);
+    setIncludePaperBorder(t.includePaperBorder);
+    setIncludeWatermark(t.includeWatermark);
+    setWatermarkType(t.watermarkType);
+    setWatermarkOpacity(t.watermarkOpacity);
+    setIncludePaperCode(t.includePaperCode);
+  };
+
   // Image Upload Handlers
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -340,6 +374,7 @@ export default function PaperEditorPage() {
             setInstitutionName(data.client.academyName);
           }
           await loadEditorData();
+          applyUserTemplate(data.client.subscription?.paperTemplate);
         } else {
           setClientUser(null);
           setLoading(false);
@@ -3676,6 +3711,7 @@ export default function PaperEditorPage() {
           if (user.academyName && user.subscription.canCustomBranding) {
             setInstitutionName(user.academyName);
           }
+          applyUserTemplate(user.subscription?.paperTemplate);
         }}
       />
 

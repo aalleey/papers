@@ -108,6 +108,13 @@ export async function clearAdminSession(): Promise<void> {
 // CLIENT AUTHENTICATION & SUBSCRIPTION SESSION
 // =========================================================================
 
+// The paper template can embed a base64 logo, which would blow the 4KB cookie limit.
+// Live data is always re-read from the DB in getCurrentClient, so strip it from the cookie.
+function serializeClientCookie(user: ClientUser): string {
+  const { paperTemplate: _omit, ...subscription } = user.subscription || ({} as ClientUser["subscription"]);
+  return JSON.stringify({ ...user, subscription });
+}
+
 export async function getCurrentClient(): Promise<ClientUser | null> {
   const cookieStore = await cookies();
   const clientCookie = cookieStore.get(CLIENT_COOKIE)?.value;
@@ -159,7 +166,7 @@ export async function createClientSession(clientData: {
   });
 
   const cookieStore = await cookies();
-  cookieStore.set(CLIENT_COOKIE, JSON.stringify(user), {
+  cookieStore.set(CLIENT_COOKIE, serializeClientCookie(user), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -182,7 +189,7 @@ export async function updateClientSubscription(planId: SubscriptionPlanId): Prom
   const finalUser = updated || { ...current, subscription: newSub };
 
   const cookieStore = await cookies();
-  cookieStore.set(CLIENT_COOKIE, JSON.stringify(finalUser), {
+  cookieStore.set(CLIENT_COOKIE, serializeClientCookie(finalUser), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

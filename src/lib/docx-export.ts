@@ -15,7 +15,7 @@ import {
   ImageRun,
   PageOrientation,
 } from "docx";
-import { ExamPaperData, ExamQuestion } from "@/lib/quick-paper-parser";
+import { ExamPaperData, ExamQuestion, isPureUrduText } from "@/lib/quick-paper-parser";
 
 export interface WordExportOptions {
   paperData: ExamPaperData;
@@ -243,8 +243,6 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
   const isBilingual = languageMode === "Bilingual";
   const isFbiseStyle = headerStyle === "style2";
 
-  // Word documents should preserve readable typography and flow onto another page when
-  // needed. Compressing an entire exam to one page makes Word table layout unstable.
   const totalQuestions = paperData.sections.reduce((acc, s) => acc + s.questions.length, 0);
   const totalChars = paperData.sections.reduce(
     (sum, s) =>
@@ -261,8 +259,6 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
   );
 
   const isDensePaper = totalChars > 1800 || totalQuestions > 15;
-  // Font sizes in half-points. Keep a comfortable minimum even for long papers;
-  // Word can add a page, while tiny text or compressed cells cannot be repaired.
   const EN_Q_SIZE = isDensePaper ? 19 : 20;
   const UR_Q_SIZE = isDensePaper ? 21 : 22;
   const EN_OPT_SIZE = isDensePaper ? 18 : 19;
@@ -315,7 +311,6 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
   // =========================================================================
   // 1. INSTITUTION & BOARD HEADER BOX (Compact 1-Page Board Style)
   // =========================================================================
-  // Column widths always add up to CONTENT_WIDTH_DXA.
   const leftColWidth = 1750;
   const centerColWidth = CONTENT_WIDTH_DXA - leftColWidth * 2;
   const rightColWidth = 1750;
@@ -506,7 +501,6 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
   // 2. STUDENT DETAILS & SYLLABUS METADATA TABLE
   // =========================================================================
   if (includeStudentInfo) {
-    // 4 Columns: 1450 + 4023 + 1250 + 4223 = 10946 DXA
     const c1 = 1450;
     const c2 = 4023;
     const c3 = 1250;
@@ -842,11 +836,10 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
     };
 
     if (isBilingual) {
-      // 3-Column Section Bar: Left English (4700) | Center Marks (1546) | Right Urdu (4700) = 10946 DXA
       docChildren.push(
         new Table({
           width: { size: CONTENT_WIDTH_DXA, type: WidthType.DXA },
-          columnWidths: [4700, 1546, 4700],
+          columnWidths: [4460, 1546, 4460],
           layout: TableLayoutType.FIXED,
           borders: sectionBannerBorders,
           rows: [
@@ -854,7 +847,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
               cantSplit: true,
               children: [
                 new TableCell({
-                  width: { size: 4700, type: WidthType.DXA },
+                  width: { size: 4460, type: WidthType.DXA },
                   borders: borderNone,
                   margins: { top: 28, bottom: 28, left: 60, right: 40 },
                   verticalAlign: VerticalAlign.CENTER,
@@ -898,7 +891,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
                   ],
                 }),
                 new TableCell({
-                  width: { size: 4700, type: WidthType.DXA },
+                  width: { size: 4460, type: WidthType.DXA },
                   borders: borderNone,
                   margins: { top: 28, bottom: 28, left: 40, right: 60 },
                   verticalAlign: VerticalAlign.CENTER,
@@ -1054,14 +1047,14 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
     if (isMcq) {
       if (isFbiseStyle) {
         // --- STYLE 2: FEDERAL BOARD (FBISE) MASTER MCQ TABLE ---
-        const fbColWidths = [5346, 1400, 1400, 1400, 1400];
+        const fbColWidths = [4866, 1400, 1400, 1400, 1400];
         const fbRows: TableRow[] = [
           new TableRow({
             cantSplit: true,
             tableHeader: true,
             children: [
               new TableCell({
-                width: { size: 5346, type: WidthType.DXA },
+                width: { size: 4866, type: WidthType.DXA },
                 borders: borderSolidThin,
                 margins: compactCellMargins,
                 shading: { fill: "E2E8F0", type: ShadingType.CLEAR },
@@ -1114,13 +1107,14 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
         ];
 
         section.questions.forEach((q, qIdx) => {
-          const qNum = qIdx + 1;
+          const qNum = q.customNumber ? q.customNumber.replace(/[:.\-۔]+$/, "") : `${qIdx + 1}`;
           const qEn = formatMathForWord(q.questionEn || q.questionUr || "");
           const qUr = formatMathForWord(q.questionUr || q.questionEn || "");
+          const qIsPureUrdu = isUrduOnly || (isPureUrduText(qUr) && qEn === qUr);
           const hasDistinctUr = Boolean(qUr && qUr !== qEn);
 
           const stemParas: Paragraph[] = [];
-          if (!isUrduOnly && qEn) {
+          if (!qIsPureUrdu && qEn) {
             stemParas.push(
               new Paragraph({
                 alignment: AlignmentType.LEFT,
@@ -1142,13 +1136,13 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
               })
             );
           }
-          if (isUrduOnly || (isBilingual && hasDistinctUr)) {
+          if (qIsPureUrdu || (isBilingual && hasDistinctUr)) {
             stemParas.push(
               new Paragraph({
                 alignment: AlignmentType.RIGHT,
                 bidirectional: true,
                 children: [
-                  ...(isUrduOnly
+                  ...(qIsPureUrdu
                     ? [
                         new TextRun({
                           text: `(${qNum}) `,
@@ -1174,10 +1168,11 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
             const opt = opts[oIdx];
             const oEn = formatMathForWord(opt?.textEn || opt?.textUr || "");
             const oUr = formatMathForWord(opt?.textUr || opt?.textEn || "");
+            const optIsPureUrdu = qIsPureUrdu || (isPureUrduText(oUr) && oEn === oUr);
             const optHasUr = Boolean(oUr && oUr !== oEn);
 
             const cellParas: Paragraph[] = [];
-            if (!isUrduOnly && oEn) {
+            if (!optIsPureUrdu && oEn) {
               cellParas.push(
                 new Paragraph({
                   alignment: AlignmentType.CENTER,
@@ -1191,7 +1186,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
                 })
               );
             }
-            if (isUrduOnly || (isBilingual && optHasUr)) {
+            if (optIsPureUrdu || (isBilingual && optHasUr)) {
               cellParas.push(
                 new Paragraph({
                   alignment: AlignmentType.CENTER,
@@ -1221,7 +1216,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
               cantSplit: true,
               children: [
                 new TableCell({
-                  width: { size: 5346, type: WidthType.DXA },
+                  width: { size: 4866, type: WidthType.DXA },
                   borders: borderSolidThin,
                   margins: compactCellMargins,
                   verticalAlign: VerticalAlign.CENTER,
@@ -1244,14 +1239,15 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
         );
       } else {
         // --- STYLE 1: PUNJAB BOARDS COMPACT MCQ TABLE ---
-        // 4 equal option columns: 2736 + 2736 + 2737 + 2737 = 10946 DXA
-        const optColWidths = [2736, 2737, 2736, 2737];
+        const colW = Math.floor(CONTENT_WIDTH_DXA / 4);
+        const optColWidths = [colW, colW, colW, CONTENT_WIDTH_DXA - colW * 3];
         const allMcqRows: TableRow[] = [];
 
         section.questions.forEach((q, qIdx) => {
-          const qNum = qIdx + 1;
+          const qNum = q.customNumber ? q.customNumber.replace(/[:.\-۔]+$/, "") : `${qIdx + 1}`;
           const qEn = formatMathForWord(q.questionEn || q.questionUr || "");
           const qUr = formatMathForWord(q.questionUr || q.questionEn || "");
+          const qIsPureUrdu = isUrduOnly || (isPureUrduText(qUr) && qEn === qUr);
           const hasDistinctUr = Boolean(qUr && qUr !== qEn);
 
           // Row 1: Question Stem (with keepNext: true so stem is never separated from its options!)
@@ -1316,7 +1312,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
               })
             );
           } else {
-            const stemText = isUrduOnly ? qUr || qEn : qEn || qUr;
+            const stemText = qIsPureUrdu ? qUr || qEn : qEn || qUr;
             allMcqRows.push(
               new TableRow({
                 cantSplit: true,
@@ -1329,11 +1325,11 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
                     children: [
                       new Paragraph({
                         keepNext: true,
-                        alignment: isUrduOnly ? AlignmentType.RIGHT : AlignmentType.LEFT,
-                        bidirectional: isUrduOnly,
+                        alignment: qIsPureUrdu ? AlignmentType.RIGHT : AlignmentType.LEFT,
+                        bidirectional: qIsPureUrdu,
                         children: [
                           new TextRun({
-                            text: isUrduOnly ? `(${qNum}) ` : `${qNum}. `,
+                            text: qIsPureUrdu ? `(${qNum}) ` : `${qNum}. `,
                             bold: true,
                             size: EN_Q_SIZE,
                             font: ENGLISH_HEADING_FONT,
@@ -1342,8 +1338,8 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
                           new TextRun({
                             text: stemText,
                             bold: true,
-                            size: isUrduOnly ? UR_Q_SIZE : EN_Q_SIZE,
-                            font: isUrduOnly ? URDU_FONT : ENGLISH_FONT,
+                            size: qIsPureUrdu ? UR_Q_SIZE : EN_Q_SIZE,
+                            font: qIsPureUrdu ? URDU_FONT : ENGLISH_FONT,
                             color: "0F172A",
                           }),
                         ],
@@ -1374,8 +1370,9 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
             ) => {
               const oEn = formatMathForWord(opt.textEn || opt.textUr || "");
               const oUr = formatMathForWord(opt.textUr || opt.textEn || "");
+              const optIsPureUrdu = qIsPureUrdu || (isPureUrduText(oUr) && oEn === oUr);
               const optHasDistinctUr = Boolean(oUr && oUr !== oEn);
-              const optKeyLabel = isUrduOnly
+              const optKeyLabel = optIsPureUrdu
                 ? `(${getUrduOptionKey(opt.key)}) `
                 : `(${opt.key}) `;
 
@@ -1383,13 +1380,13 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
                 new TextRun({
                   text: optKeyLabel,
                   bold: true,
-                  size: isUrduOnly ? UR_OPT_SIZE : EN_OPT_SIZE,
-                  font: isUrduOnly ? URDU_FONT : ENGLISH_HEADING_FONT,
+                  size: optIsPureUrdu ? UR_OPT_SIZE : EN_OPT_SIZE,
+                  font: optIsPureUrdu ? URDU_FONT : ENGLISH_HEADING_FONT,
                   color: "0F172A",
                 }),
               ];
 
-              if (isUrduOnly) {
+              if (optIsPureUrdu) {
                 optionRuns.push(
                   new TextRun({
                     text: oUr,
@@ -1439,8 +1436,8 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
                 verticalAlign: VerticalAlign.CENTER,
                 children: [
                   new Paragraph({
-                    alignment: isUrduOnly ? AlignmentType.RIGHT : AlignmentType.LEFT,
-                    bidirectional: isUrduOnly,
+                    alignment: optIsPureUrdu ? AlignmentType.RIGHT : AlignmentType.LEFT,
+                    bidirectional: optIsPureUrdu,
                     children: optionRuns,
                   }),
                 ],
@@ -1451,14 +1448,13 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
               ...rawOptions.map((o) => {
                 const en = o.textEn || "";
                 const ur = o.textUr || "";
-                return isBilingual && ur !== en ? en.length + ur.length + 3 : (isUrduOnly ? ur : en).length;
+                return isBilingual && ur !== en ? en.length + ur.length + 3 : (qIsPureUrdu ? ur : en).length;
               })
             );
 
             if (maxOptLen > 28) {
-              // 2x2 grid (2 columns per row, each spanning 2 columns = 5473 DXA) so long bilingual options don't wrap into 3 lines
-              const row1Opts = isUrduOnly ? [rawOptions[1], rawOptions[0]] : [rawOptions[0], rawOptions[1]];
-              const row2Opts = isUrduOnly ? [rawOptions[3], rawOptions[2]] : [rawOptions[2], rawOptions[3]];
+              const row1Opts = qIsPureUrdu ? [rawOptions[1], rawOptions[0]] : [rawOptions[0], rawOptions[1]];
+              const row2Opts = qIsPureUrdu ? [rawOptions[3], rawOptions[2]] : [rawOptions[2], rawOptions[3]];
 
               allMcqRows.push(
                 new TableRow({
@@ -1477,8 +1473,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
                 })
               );
             } else {
-              // All 4 options on 1 single horizontal row
-              const orderedOptions = isUrduOnly ? [...rawOptions].reverse() : rawOptions;
+              const orderedOptions = qIsPureUrdu ? [...rawOptions].reverse() : rawOptions;
               allMcqRows.push(
                 new TableRow({
                   cantSplit: true,
@@ -1508,7 +1503,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
       // 5B. POETRY STANZAS RENDERING
       // =====================================================================
       section.questions.forEach((q, qIdx) => {
-        const romanNum = toRoman(qIdx + 1);
+        const romanNum = q.customNumber || `(${toRoman(qIdx + 1)})`;
         docChildren.push(
           new Paragraph({
             keepNext: true,
@@ -1517,7 +1512,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
             spacing: { before: 40, after: 15 },
             children: [
               new TextRun({
-                text: `شعر (${romanNum}):`,
+                text: `شعر ${romanNum}:`,
                 bold: true,
                 size: 19,
                 font: URDU_FONT,
@@ -1551,12 +1546,13 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
       const subRows: TableRow[] = [];
 
       section.questions.forEach((q: ExamQuestion, qIdx: number) => {
-        const romanLabel = isLongSection
-          ? `Q.${qIdx + 3}:`
-          : `(${toRoman(qIdx + 1)})`;
+        const romanLabel =
+          q.customNumber ||
+          (isLongSection ? `Q.${qIdx + 3}:` : `(${toRoman(qIdx + 1)})`);
 
         const qEn = formatMathForWord(q.questionEn || q.questionUr || "");
         const qUr = formatMathForWord(q.questionUr || q.questionEn || "");
+        const qIsPureUrdu = isUrduOnly || (isPureUrduText(qUr) && qEn === qUr);
         const hasDistinctUr = Boolean(qUr && qUr !== qEn);
         const marksSuffixEn = isLongSection && q.marks ? `  [${q.marks}]` : "";
         const marksSuffixUr = isLongSection && q.marks ? `  (${q.marks})` : "";
@@ -1569,7 +1565,6 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
         };
 
         if (isBilingual && hasDistinctUr) {
-          // Side-by-Side 2-Column Row: Left English (5473 DXA, LTR) | Right Urdu (5473 DXA, RTL)
           subRows.push(
             new TableRow({
               cantSplit: true,
@@ -1655,7 +1650,7 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
             })
           );
         } else {
-          const singleText = isUrduOnly ? qUr || qEn : qEn || qUr;
+          const singleText = qIsPureUrdu ? qUr || qEn : qEn || qUr;
           subRows.push(
             new TableRow({
               cantSplit: true,
@@ -1668,8 +1663,8 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
                   verticalAlign: VerticalAlign.TOP,
                   children: [
                     new Paragraph({
-                      alignment: isUrduOnly ? AlignmentType.RIGHT : AlignmentType.LEFT,
-                      bidirectional: isUrduOnly,
+                      alignment: qIsPureUrdu ? AlignmentType.RIGHT : AlignmentType.LEFT,
+                      bidirectional: qIsPureUrdu,
                       children: [
                         new TextRun({
                           text: `${romanLabel} `,
@@ -1680,15 +1675,15 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
                         }),
                         new TextRun({
                           text: singleText,
-                          bold: isUrduOnly || isLongSection,
-                          size: isUrduOnly ? UR_Q_SIZE : EN_Q_SIZE,
-                          font: isUrduOnly ? URDU_FONT : ENGLISH_FONT,
+                          bold: qIsPureUrdu || isLongSection,
+                          size: qIsPureUrdu ? UR_Q_SIZE : EN_Q_SIZE,
+                          font: qIsPureUrdu ? URDU_FONT : ENGLISH_FONT,
                           color: "0F172A",
                         }),
                         ...(isLongSection && q.marks
                           ? [
                               new TextRun({
-                                text: isUrduOnly ? marksSuffixUr : marksSuffixEn,
+                                text: qIsPureUrdu ? marksSuffixUr : marksSuffixEn,
                                 bold: true,
                                 size: 17,
                                 font: ENGLISH_HEADING_FONT,
@@ -1876,8 +1871,8 @@ export async function exportPaperToDocx(options: WordExportOptions): Promise<Blo
               orientation: PageOrientation.PORTRAIT,
             },
             margin: {
-              top: MARGIN_Y_DXA, // ~0.24 inch (6mm)
-              right: MARGIN_X_DXA, // ~0.33 inch (8.5mm)
+              top: MARGIN_Y_DXA,
+              right: MARGIN_X_DXA,
               bottom: MARGIN_Y_DXA,
               left: MARGIN_X_DXA,
             },
