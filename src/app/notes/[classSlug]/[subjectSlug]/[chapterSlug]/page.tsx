@@ -1,10 +1,43 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Sparkles, BookOpen } from "lucide-react";
+import { ArrowRight, Sparkles, BookOpen, Lock, CheckCircle2 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { NotesChapterViewer } from "@/components/NotesChapterViewer";
+import { getCurrentClient, isCurrentUserAdmin } from "@/lib/auth";
 import { getNotesChapter } from "@/lib/notes";
+import { isPaidSubscriber, Question } from "@/lib/types";
+
+const PUBLIC_PREVIEW_MCQS = 5;
+const PUBLIC_PREVIEW_SHORTS = 3;
+const PUBLIC_PREVIEW_LONGS = 1;
+
+function selectPublicPreviewQuestions(allQuestions: Question[]): Question[] {
+  const out: Question[] = [];
+  let mcqSeen = 0;
+  let shortSeen = 0;
+  let longSeen = 0;
+
+  for (const q of allQuestions) {
+    if (q.type === "mcq") {
+      if (mcqSeen < PUBLIC_PREVIEW_MCQS) {
+        out.push(q);
+        mcqSeen++;
+      }
+    } else if (q.type === "short") {
+      if (shortSeen < PUBLIC_PREVIEW_SHORTS) {
+        out.push(q);
+        shortSeen++;
+      }
+    } else if (q.type === "long") {
+      if (longSeen < PUBLIC_PREVIEW_LONGS) {
+        out.push(q);
+        longSeen++;
+      }
+    }
+  }
+  return out;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -71,18 +104,28 @@ export default async function ChapterNotesPage({
   params: Promise<{ classSlug: string; subjectSlug: string; chapterSlug: string }>;
 }) {
   const { classSlug, subjectSlug, chapterSlug } = await params;
-  const data = await getNotesChapter(classSlug, subjectSlug, chapterSlug);
+  const [data, clientUser, isAdmin] = await Promise.all([
+    getNotesChapter(classSlug, subjectSlug, chapterSlug),
+    getCurrentClient(),
+    isCurrentUserAdmin(),
+  ]);
   if (!data) notFound();
 
   const { cls, subject, chapter } = data;
+  const isUnlocked = isPaidSubscriber(clientUser, isAdmin);
+  const visibleQuestions = isUnlocked
+    ? chapter.questions
+    : selectPublicPreviewQuestions(chapter.questions);
+  const hasLockedQuestions = chapter.questions.length > visibleQuestions.length;
+
   const pageUrl = `${siteUrl}/notes/${cls.slug}/${subject.slug}/${chapter.slug}`;
   const subjectUrl = `${siteUrl}/notes/${cls.slug}/${subject.slug}`;
   const generatorUrl = `/select-questions?subject_id=${encodeURIComponent(
     chapter.subjectId
   )}&chapter_id=${encodeURIComponent(chapter.id)}`;
 
-  // Build FAQ schema from solved short questions (or top solved MCQs if short answers not yet generated)
-  const faqEntities = chapter.questions
+  // Build FAQ schema exclusively from publicly visible preview/unlocked questions (100% Google-compliant)
+  const faqEntities = visibleQuestions
     .filter((q) => {
       if (q.type !== "mcq") {
         return q.translations?.some((t) => Boolean(t.answer && t.answer.trim()));
@@ -128,6 +171,19 @@ export default async function ChapterNotesPage({
         educationalLevel: cls.displayName,
         learningResourceType: ["Study Notes", "Practice Quiz", "Question Bank"],
         inLanguage: ["en-PK", "ur-PK"],
+        isAccessibleForFree: false,
+        hasPart: [
+          {
+            "@type": "WebPageElement",
+            isAccessibleForFree: true,
+            cssSelector: ".notes-public-preview",
+          },
+          {
+            "@type": "WebPageElement",
+            isAccessibleForFree: false,
+            cssSelector: ".notes-paywall-gate",
+          },
+        ],
         isPartOf: { "@type": "CollectionPage", name: `${cls.name} ${subject.name} Notes`, url: subjectUrl },
       },
       {
@@ -228,6 +284,17 @@ export default async function ChapterNotesPage({
             <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600">
               {chapter.courseName}
             </span>
+            {isUnlocked ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                <CheckCircle2 className="w-3 h-3 text-emerald-700" />
+                <span>Paid Subscriber Unlocked</span>
+              </span>
+            ) : hasLockedQuestions ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
+                <Lock className="w-3 h-3 text-amber-700" />
+                <span>Sample Preview + Paid Full Access</span>
+              </span>
+            ) : null}
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 leading-tight">
@@ -297,7 +364,17 @@ export default async function ChapterNotesPage({
           chapterNumber={chapter.number}
           chapterTitle={chapter.title}
           topics={chapter.topics}
-          questions={chapter.questions}
+          questions={visibleQuestions}
+          isUnlocked={isUnlocked}
+          isLoggedInFreeUser={Boolean(clientUser && !isUnlocked)}
+          totalCounts={{
+            total: chapter.totalQuestions,
+            mcq: chapter.mcqCount,
+            short: chapter.shortCount,
+            long: chapter.longCount,
+            exercise: chapter.exerciseCount,
+            extra: chapter.extraCount,
+          }}
         />
 
         {/* Other Chapters in Same Subject */}

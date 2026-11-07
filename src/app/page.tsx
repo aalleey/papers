@@ -1073,7 +1073,7 @@ export default function Home() {
                   href="/notes/10th-class/computer-science/unit-3-introduction-to-python-programming"
                   className="w-full py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold text-center block transition-colors"
                 >
-                  Read Free Study Notes →
+                  View Study Notes &amp; MCQs →
                 </Link>
                 <Link
                   href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=3" : "/pricing"}
@@ -1107,7 +1107,7 @@ export default function Home() {
                   href="/notes/10th-class/computer-science/unit-2-system-recovery-and-advanced-maintenance"
                   className="w-full py-2 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 text-slate-700 hover:text-emerald-800 text-xs font-bold text-center block transition-colors"
                 >
-                  Read Free Study Notes →
+                  View Study Notes &amp; MCQs →
                 </Link>
                 <Link
                   href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=2" : "/pricing"}
@@ -1141,7 +1141,7 @@ export default function Home() {
                   href="/notes/10th-class/computer-science/unit-1-operating-systems-structure-and-services"
                   className="w-full py-2 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 text-slate-700 hover:text-emerald-800 text-xs font-bold text-center block transition-colors"
                 >
-                  Read Free Study Notes →
+                  View Study Notes &amp; MCQs →
                 </Link>
                 <Link
                   href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=1" : "/pricing"}
@@ -1175,7 +1175,7 @@ export default function Home() {
                   href="/notes/10th-class/computer-science/unit-8-digital-entrepreneurship"
                   className="w-full py-2 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 text-slate-700 hover:text-emerald-800 text-xs font-bold text-center block transition-colors"
                 >
-                  Read Free Study Notes →
+                  View Study Notes &amp; MCQs →
                 </Link>
                 <Link
                   href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=8" : "/pricing"}
@@ -1196,7 +1196,7 @@ export default function Home() {
               href="/notes"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-800 hover:text-emerald-800 text-xs font-extrabold shadow-2xs transition-all"
             >
-              <span>Browse All Free Chapter-Wise Study Notes &amp; Solved MCQs</span>
+              <span>Browse All Chapter-Wise Study Notes &amp; Solved MCQs</span>
               <ArrowRight className="w-3.5 h-3.5 text-emerald-600" />
             </Link>
           </div>
@@ -1727,9 +1727,9 @@ export default function Home() {
                   </li>
                   <li>
                     <Link href="/notes" className="font-bold text-emerald-700 hover:underline">
-                      Free Chapter-Wise Study Notes &amp; Solved MCQs →
+                      Chapter-Wise Study Notes &amp; Solved MCQs →
                     </Link>{" "}
-                    Read bilingual English &amp; Urdu Nastaliq MCQs, Short Questions, and Long Questions online.
+                    Preview solved bilingual English &amp; Urdu Nastaliq MCQs, Short Questions, and Long Questions online (full chapters unlocked for paid subscribers).
                   </li>
                   <li>
                     <Link href="/paper-maker" className="font-bold text-emerald-700 hover:underline">

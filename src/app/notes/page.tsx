@@ -15,7 +15,7 @@ const siteUrl =
 
 const pageTitle = "Study Notes, Solved MCQs & Chapter-Wise Questions | PaperWala";
 const pageDescription =
-  "Free chapter-wise solved MCQs, exercise & extra short questions, and long questions for 9th, 10th, FSc & ICS (2026-27 Punjab BISE & FBISE syllabus) in English & Urdu.";
+  "Chapter-wise solved MCQs, exercise & extra short questions, and long questions for 9th, 10th, FSc & ICS (2026-27 Punjab BISE & FBISE syllabus) in English & Urdu.";
 
 export const metadata: Metadata = {
   title: { absolute: pageTitle },
@@ -142,7 +142,7 @@ export default async function NotesHubPage() {
           </p>
 
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-3xl">
-            Read free chapter-wise solved MCQs, textbook exercise questions, and conceptual board questions for Pakistani schools and academies. Teachers can turn any chapter below into a formatted BISE or FBISE exam paper in one click.
+            Preview chapter-wise solved MCQs, textbook exercise questions, and conceptual board questions for Pakistani schools and academies. Active paid subscribers get full access to every solved question and can turn any chapter into a formatted BISE or FBISE exam paper in one click.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-2xl pt-1">
