@@ -116,6 +116,9 @@ export default function PaperMakerDirectoryPage() {
             aria-label="Page navigation"
             className="flex items-center gap-3 sm:gap-5 text-xs font-bold text-slate-600"
           >
+            <Link href="/notes" className="hidden sm:inline hover:text-emerald-700 transition-colors">
+              Study Notes
+            </Link>
             <Link href="/select-questions" className="hidden sm:inline hover:text-emerald-700 transition-colors">
               Question Bank
             </Link>

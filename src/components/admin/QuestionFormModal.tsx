@@ -65,6 +65,7 @@ export function QuestionFormModal({
   const [answerUr, setAnswerUr] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Initialize or reset form
@@ -136,6 +137,41 @@ export function QuestionFormModal({
 
   // Filter topics for selected chapter
   const filteredTopics = topics.filter((t) => t.chapter_id === chapterId);
+
+  const handleAiGenerateAnswer = async () => {
+    if (!textEn.trim() && !textUr.trim()) {
+      setError("Enter the English or Urdu question statement first so AI can write the solution.");
+      return;
+    }
+    try {
+      setAiGenerating(true);
+      setError(null);
+      const ch = chapters.find((c) => c.id === chapterId);
+      const res = await fetch("/api/admin/generate-answers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "preview",
+          type,
+          marks,
+          textEn,
+          textUr,
+          chapterTitle: ch ? `Unit ${ch.number}: ${ch.title}` : undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to generate answer");
+      }
+      if (data.answerEn) setAnswerEn(data.answerEn);
+      if (data.answerUr) setAnswerUr(data.answerUr);
+      if (!textUr.trim() && data.textUr) setTextUr(data.textUr);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to generate AI answer");
+    } finally {
+      setAiGenerating(false);
+    }
+  };
 
   // Live preview model
   const previewQuestion: Partial<Question> = {
@@ -519,9 +555,24 @@ export function QuestionFormModal({
                       {/* If Short/Long, show Answer */}
                       {type !== "mcq" && (
                         <div>
-                          <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
-                            Answer / Solution (English)
-                          </label>
+                          <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                            <label className="block text-xs font-bold text-slate-700 uppercase">
+                              Answer / Solution (English)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={handleAiGenerateAnswer}
+                              disabled={aiGenerating}
+                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-[11px] font-extrabold transition-colors disabled:opacity-60 cursor-pointer"
+                            >
+                              <Sparkles className="w-3 h-3 text-emerald-600" />
+                              <span>
+                                {aiGenerating
+                                  ? "Generating EN + Urdu..."
+                                  : "AI Generate Answer (EN + اردو)"}
+                              </span>
+                            </button>
+                          </div>
                           <textarea
                             rows={3}
                             value={answerEn}
@@ -598,9 +649,24 @@ export function QuestionFormModal({
 
                       {type !== "mcq" && (
                         <div>
-                          <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5 text-right font-urdu text-sm">
-                            اردو حل / جواب
-                          </label>
+                          <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                            <button
+                              type="button"
+                              onClick={handleAiGenerateAnswer}
+                              disabled={aiGenerating}
+                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-[11px] font-extrabold transition-colors disabled:opacity-60 cursor-pointer"
+                            >
+                              <Sparkles className="w-3 h-3 text-emerald-600" />
+                              <span>
+                                {aiGenerating
+                                  ? "Generating..."
+                                  : "AI Generate Answer (EN + اردو)"}
+                              </span>
+                            </button>
+                            <label className="block text-xs font-bold text-slate-700 uppercase text-right font-urdu text-sm">
+                              اردو حل / جواب
+                            </label>
+                          </div>
                           <textarea
                             rows={3}
                             dir="rtl"

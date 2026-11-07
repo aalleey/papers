@@ -33,7 +33,19 @@ import {
   Award,
   Bookmark,
   Languages,
+  Sparkles,
+  BookOpen,
 } from "lucide-react";
+
+function hasAnyAnswer(q: Question): boolean {
+  return Boolean(q.translations?.some((t) => Boolean(t.answer && t.answer.trim())));
+}
+
+function hasCompleteBilingualAnswer(q: Question): boolean {
+  const enAns = q.translations?.find((t) => t.language === "en")?.answer?.trim();
+  const urAns = q.translations?.find((t) => t.language === "ur")?.answer?.trim();
+  return Boolean(enAns && urAns);
+}
 
 export default function QuestionsAdminPage() {
   // Cascading hierarchy state
@@ -56,6 +68,7 @@ export default function QuestionsAdminPage() {
   const [filterSource, setFilterSource] = useState<string>("all");
   const [filterTopicId, setFilterTopicId] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [onlyMissingAnswers, setOnlyMissingAnswers] = useState(false);
 
   // Data & Modal state
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -63,6 +76,12 @@ export default function QuestionsAdminPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"create" | "edit" | "duplicate">("create");
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
+
+  // AI Solved Answer Generator state
+  const [batchGenerating, setBatchGenerating] = useState(false);
+  const [batchProgress, setBatchProgress] = useState<{ done: number; total: number } | null>(null);
+  const [aiRowId, setAiRowId] = useState<string | null>(null);
+  const [aiToast, setAiToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   // Initial load: Boards, Classes
   useEffect(() => {
@@ -229,6 +248,11 @@ export default function QuestionsAdminPage() {
       // Topic filter
       if (filterTopicId !== "all" && q.topic_id !== filterTopicId) return false;
 
+      // Missing solved answers filter (Short & Long only)
+      if (onlyMissingAnswers && (q.type === "mcq" || hasCompleteBilingualAnswer(q))) {
+        return false;
+      }
+
       // Search query
       if (searchQuery.trim()) {
         const sq = searchQuery.toLowerCase();
@@ -249,8 +273,123 @@ export default function QuestionsAdminPage() {
     filterDifficulty,
     filterSource,
     filterTopicId,
+    onlyMissingAnswers,
     searchQuery,
   ]);
+
+  const unansweredShortLongIds = useMemo(() => {
+    return filteredQuestions
+      .filter((q) => q.type !== "mcq" && !hasCompleteBilingualAnswer(q))
+      .map((q) => q.id);
+  }, [filteredQuestions]);
+
+  const currentClassName = useMemo(
+    () => classes.find((c) => c.id === selectedClassId)?.name || "",
+    [classes, selectedClassId]
+  );
+  const currentSubjectName = useMemo(
+    () => subjects.find((s) => s.id === selectedSubjectId)?.name || "",
+    [subjects, selectedSubjectId]
+  );
+  const currentChapterTitle = useMemo(() => {
+    if (selectedChapterId === "all") return "";
+    const ch = chapters.find((c) => c.id === selectedChapterId);
+    return ch ? `Unit ${ch.number}: ${ch.title}` : "";
+  }, [chapters, selectedChapterId]);
+
+  const mergeUpdatedQuestions = (updatedList: Question[]) => {
+    if (!updatedList.length) return;
+    const map = new Map(updatedList.map((u) => [u.id, u]));
+    setQuestions((prev) => prev.map((q) => map.get(q.id) || q));
+  };
+
+  const handleBatchGenerateAnswers = async () => {
+    if (batchGenerating || unansweredShortLongIds.length === 0) return;
+    const total = unansweredShortLongIds.length;
+    setBatchGenerating(true);
+    setBatchProgress({ done: 0, total });
+    setAiToast(null);
+
+    let solvedTotal = 0;
+    try {
+      const CHUNK_SIZE = 10;
+      for (let i = 0; i < total; i += CHUNK_SIZE) {
+        const chunk = unansweredShortLongIds.slice(i, i + CHUNK_SIZE);
+        const res = await fetch("/api/admin/generate-answers", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mode: "batch",
+            questionIds: chunk,
+            overwrite: false,
+            className: currentClassName,
+            subjectName: currentSubjectName,
+            chapterTitle: currentChapterTitle,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Batch AI answer generation failed.");
+        }
+        if (Array.isArray(data.updatedQuestions)) {
+          mergeUpdatedQuestions(data.updatedQuestions);
+          solvedTotal += data.updatedQuestions.length;
+        }
+        setBatchProgress({ done: Math.min(i + chunk.length, total), total });
+      }
+      setAiToast({
+        type: "success",
+        message: `Generated & saved bilingual (English + Urdu) study-notes answers for ${solvedTotal} Short/Long questions.`,
+      });
+    } catch (err: unknown) {
+      setAiToast({
+        type: "error",
+        message: err instanceof Error ? err.message : "Failed to generate AI answers.",
+      });
+    } finally {
+      setBatchGenerating(false);
+      setBatchProgress(null);
+    }
+  };
+
+  const handleSingleRowAiAnswer = async (q: Question) => {
+    if (aiRowId || batchGenerating || q.type === "mcq") return;
+    setAiRowId(q.id);
+    setAiToast(null);
+    const ch = chapters.find((c) => c.id === q.chapter_id);
+    try {
+      const res = await fetch("/api/admin/generate-answers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "batch",
+          questionIds: [q.id],
+          overwrite: hasCompleteBilingualAnswer(q),
+          className: currentClassName,
+          subjectName: currentSubjectName,
+          chapterTitle: ch ? `Unit ${ch.number}: ${ch.title}` : currentChapterTitle,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "AI answer generation failed.");
+      }
+      if (Array.isArray(data.updatedQuestions) && data.updatedQuestions.length > 0) {
+        mergeUpdatedQuestions(data.updatedQuestions);
+        setAiToast({
+          type: "success",
+          message: "Saved AI-generated English & Urdu answer for this question.",
+        });
+      }
+    } catch (err: unknown) {
+      setAiToast({
+        type: "error",
+        message: err instanceof Error ? err.message : "Failed to generate AI answer.",
+      });
+    } finally {
+      setAiRowId(null);
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -269,11 +408,37 @@ export default function QuestionsAdminPage() {
             </span>
           </div>
           <p className="text-xs text-slate-600 font-medium">
-            Browse, filter, edit, or import bilingual exam questions with KaTeX mathematical formulas and Noto Nastaliq Urdu.
+            Browse, filter, edit, or auto-generate solved Study Notes answers (English + Urdu Nastaliq) with AI.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          <Link
+            href="/notes"
+            target="_blank"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white/90 hover:bg-white border border-slate-200/90 text-slate-700 hover:text-emerald-800 font-extrabold text-xs shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all"
+          >
+            <BookOpen className="w-4 h-4 text-emerald-600" />
+            <span>View /notes</span>
+          </Link>
+
+          {unansweredShortLongIds.length > 0 && (
+            <button
+              type="button"
+              onClick={handleBatchGenerateAnswers}
+              disabled={batchGenerating}
+              title="Auto-generate and save English + Urdu Study Notes answers for filtered Short & Long questions"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-gradient-to-b from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 disabled:opacity-60 text-white font-extrabold text-xs border border-indigo-400/70 shadow-[0_3px_0_0_#3730a3,0_8px_18px_-4px_rgba(79,70,229,0.4),inset_0_1px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer tabular-nums"
+            >
+              <Sparkles className={`w-4 h-4 ${batchGenerating ? "animate-spin" : ""}`} />
+              <span>
+                {batchGenerating && batchProgress
+                  ? `Solving ${batchProgress.done}/${batchProgress.total}...`
+                  : `AI Solve Answers (${unansweredShortLongIds.length})`}
+              </span>
+            </button>
+          )}
+
           <Link
             href="/admin/import"
             className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white/90 hover:bg-white border border-slate-200/90 text-slate-800 font-extrabold text-xs shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all"
@@ -295,6 +460,28 @@ export default function QuestionsAdminPage() {
           </button>
         </div>
       </div>
+
+      {aiToast && (
+        <div
+          className={`p-3.5 rounded-2xl border text-xs font-bold flex items-center justify-between gap-3 ${
+            aiToast.type === "success"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+              : "bg-rose-50 border-rose-200 text-rose-700"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 shrink-0" />
+            <span>{aiToast.message}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setAiToast(null)}
+            className="text-[11px] font-extrabold underline opacity-75 hover:opacity-100 cursor-pointer"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Cascading Hierarchy Selection Bar */}
       <div className="bg-white/85 backdrop-blur-2xl p-4 sm:p-5 rounded-3xl border border-white/90 shadow-[0_12px_30px_-10px_rgba(15,23,42,0.08),0_3px_0_0_rgba(203,213,225,0.6)] space-y-3.5">
@@ -448,6 +635,20 @@ export default function QuestionsAdminPage() {
             <option value="past_paper">Past Board Papers</option>
             <option value="extra">Extra / Conceptual</option>
           </select>
+
+          {/* Missing Solved Answers Filter */}
+          <button
+            type="button"
+            onClick={() => setOnlyMissingAnswers((prev) => !prev)}
+            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-extrabold transition-all cursor-pointer ${
+              onlyMissingAnswers
+                ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
+                : "bg-white border-slate-200 text-slate-700 hover:border-indigo-300 hover:text-indigo-700"
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Missing Answers</span>
+          </button>
         </div>
       </div>
 
@@ -512,6 +713,23 @@ export default function QuestionsAdminPage() {
                       </div>
                     )}
 
+                    {q.type !== "mcq" && (
+                      <div className="pt-1">
+                        {hasAnyAnswer(q) ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <CheckCircle2 className="w-3 h-3" />
+                            <span>
+                              {hasCompleteBilingualAnswer(q) ? "Answer Saved (EN + اردو)" : "Answer Saved (Partial)"}
+                            </span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                            <span>No Study Notes Answer</span>
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     <div className="flex items-center justify-between pt-2 border-t border-slate-100">
                       <button
                         onClick={() => handleToggleActive(q.id)}
@@ -526,6 +744,17 @@ export default function QuestionsAdminPage() {
                       </button>
 
                       <div className="flex items-center gap-1.5">
+                        {q.type !== "mcq" && (
+                          <button
+                            type="button"
+                            onClick={() => handleSingleRowAiAnswer(q)}
+                            disabled={aiRowId === q.id || batchGenerating}
+                            title="AI Generate Study Notes Answer (EN + اردو)"
+                            className="p-1.5 rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 disabled:opacity-50"
+                          >
+                            <Sparkles className={`w-3.5 h-3.5 ${aiRowId === q.id ? "animate-spin" : ""}`} />
+                          </button>
+                        )}
                         <button
                           onClick={() => {
                             setSelectedQuestion(q);
@@ -622,12 +851,34 @@ export default function QuestionsAdminPage() {
                               </div>
                             )}
 
-                            {/* Extra Badges: Options count, source_ref, concept tag */}
+                            {/* Saved Answer Preview for Short & Long */}
+                            {q.type !== "mcq" && enTrans?.answer?.trim() && (
+                              <div className="p-2 rounded-lg bg-emerald-50/70 border border-emerald-200/80 text-xs text-emerald-950 line-clamp-2">
+                                <span className="font-extrabold text-emerald-800 mr-1.5">Ans:</span>
+                                <MathRenderer content={enTrans.answer} />
+                              </div>
+                            )}
+
+                            {/* Extra Badges: Options count, answer status, source_ref, concept tag */}
                             <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-slate-500">
                               {q.type === "mcq" && q.correct_option && (
                                 <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                                   Correct: Option {String.fromCharCode(64 + q.correct_option)}
                                 </span>
+                              )}
+                              {q.type !== "mcq" && (
+                                hasAnyAnswer(q) ? (
+                                  <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                                    <CheckCircle2 className="w-3 h-3" />
+                                    <span>
+                                      {hasCompleteBilingualAnswer(q) ? "Answer Saved (EN+UR)" : "Answer Saved"}
+                                    </span>
+                                  </span>
+                                ) : (
+                                  <span className="font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                                    No Answer
+                                  </span>
+                                )
                               )}
                               {q.concept_tag && (
                                 <span className="bg-slate-100 px-2 py-0.5 rounded text-slate-600">
@@ -703,6 +954,22 @@ export default function QuestionsAdminPage() {
                         {/* Actions */}
                         <td className="py-3.5 px-4 align-top text-right whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
+                            {q.type !== "mcq" && (
+                              <button
+                                type="button"
+                                onClick={() => handleSingleRowAiAnswer(q)}
+                                disabled={aiRowId === q.id || batchGenerating}
+                                title={
+                                  hasCompleteBilingualAnswer(q)
+                                    ? "Regenerate Study Notes Answer with AI (EN + اردو)"
+                                    : "AI Generate Study Notes Answer (EN + اردو)"
+                                }
+                                className="p-1.5 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 border border-transparent hover:border-indigo-200 disabled:opacity-50 transition-colors cursor-pointer"
+                              >
+                                <Sparkles className={`w-4 h-4 ${aiRowId === q.id ? "animate-spin" : ""}`} />
+                              </button>
+                            )}
+
                             <button
                               onClick={() => {
                                 setSelectedQuestion(q);

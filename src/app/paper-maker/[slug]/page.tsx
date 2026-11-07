@@ -152,6 +152,9 @@ export default async function SeoLandingPage({
             aria-label="Page navigation"
             className="flex items-center gap-3 sm:gap-5 text-xs font-bold text-slate-600"
           >
+            <Link href="/notes" className="hidden sm:inline hover:text-emerald-700 transition-colors">
+              Study Notes
+            </Link>
             <Link href="/paper-maker" className="hidden sm:inline hover:text-emerald-700 transition-colors">
               All Boards &amp; Subjects
             </Link>

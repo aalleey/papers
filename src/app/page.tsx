@@ -311,6 +311,12 @@ export default function Home() {
               >
                 Question Bank
               </a>
+              <Link
+                href="/notes"
+                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+              >
+                Study Notes
+              </Link>
               <a
                 href="#sample-paper"
                 className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
@@ -462,6 +468,13 @@ export default function Home() {
                 >
                   Question Bank
                 </a>
+                <Link
+                  href="/notes"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2 rounded-xl bg-white/80 border border-white shadow-[0_2px_0_0_#cbd5e1,inset_0_1px_1px_#ffffff] hover:text-emerald-700 transition-all"
+                >
+                  Study Notes
+                </Link>
                 <a
                   href="#sample-paper"
                   onClick={() => setMobileMenuOpen(false)}
@@ -1055,16 +1068,24 @@ export default function Home() {
                   <strong>147 Questions</strong> &bull; 70 MCQs, 69 Short, 8 Long
                 </div>
               </div>
-              <Link
-                href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=3" : "/pricing"}
-                className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
-                  clientUser && isPaidSubscriber(clientUser)
-                    ? "bg-emerald-600 hover:bg-emerald-700"
-                    : "bg-slate-900 hover:bg-slate-800"
-                }`}
-              >
-                {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
-              </Link>
+              <div className="space-y-2">
+                <Link
+                  href="/notes/10th-class/computer-science/unit-3-introduction-to-python-programming"
+                  className="w-full py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold text-center block transition-colors"
+                >
+                  Read Free Study Notes →
+                </Link>
+                <Link
+                  href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=3" : "/pricing"}
+                  className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
+                    clientUser && isPaidSubscriber(clientUser)
+                      ? "bg-emerald-600 hover:bg-emerald-700"
+                      : "bg-slate-900 hover:bg-slate-800"
+                  }`}
+                >
+                  {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
+                </Link>
+              </div>
             </div>
 
             {/* Unit 2 */}
@@ -1081,16 +1102,24 @@ export default function Home() {
                   <strong>210 Questions</strong> &bull; 103 MCQs, 102 Short, 5 Long
                 </div>
               </div>
-              <Link
-                href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=2" : "/pricing"}
-                className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
-                  clientUser && isPaidSubscriber(clientUser)
-                    ? "bg-emerald-600 hover:bg-emerald-700"
-                    : "bg-slate-900 hover:bg-slate-800"
-                }`}
-              >
-                {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
-              </Link>
+              <div className="space-y-2">
+                <Link
+                  href="/notes/10th-class/computer-science/unit-2-system-recovery-and-advanced-maintenance"
+                  className="w-full py-2 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 text-slate-700 hover:text-emerald-800 text-xs font-bold text-center block transition-colors"
+                >
+                  Read Free Study Notes →
+                </Link>
+                <Link
+                  href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=2" : "/pricing"}
+                  className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
+                    clientUser && isPaidSubscriber(clientUser)
+                      ? "bg-emerald-600 hover:bg-emerald-700"
+                      : "bg-slate-900 hover:bg-slate-800"
+                  }`}
+                >
+                  {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
+                </Link>
+              </div>
             </div>
 
             {/* Unit 1 */}
@@ -1107,16 +1136,24 @@ export default function Home() {
                   <strong>223 Questions</strong> &bull; 108 MCQs, 110 Short, 5 Long
                 </div>
               </div>
-              <Link
-                href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=1" : "/pricing"}
-                className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
-                  clientUser && isPaidSubscriber(clientUser)
-                    ? "bg-emerald-600 hover:bg-emerald-700"
-                    : "bg-slate-900 hover:bg-slate-800"
-                }`}
-              >
-                {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
-              </Link>
+              <div className="space-y-2">
+                <Link
+                  href="/notes/10th-class/computer-science/unit-1-operating-systems-structure-and-services"
+                  className="w-full py-2 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 text-slate-700 hover:text-emerald-800 text-xs font-bold text-center block transition-colors"
+                >
+                  Read Free Study Notes →
+                </Link>
+                <Link
+                  href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=1" : "/pricing"}
+                  className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
+                    clientUser && isPaidSubscriber(clientUser)
+                      ? "bg-emerald-600 hover:bg-emerald-700"
+                      : "bg-slate-900 hover:bg-slate-800"
+                  }`}
+                >
+                  {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
+                </Link>
+              </div>
             </div>
 
             {/* Unit 8 */}
@@ -1133,17 +1170,35 @@ export default function Home() {
                   <strong>180 Questions</strong> &bull; 80 MCQs, 85 Short, 15 Long
                 </div>
               </div>
-              <Link
-                href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=8" : "/pricing"}
-                className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
-                  clientUser && isPaidSubscriber(clientUser)
-                    ? "bg-emerald-600 hover:bg-emerald-700"
-                    : "bg-slate-900 hover:bg-slate-800"
-                }`}
-              >
-                {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
-              </Link>
+              <div className="space-y-2">
+                <Link
+                  href="/notes/10th-class/computer-science/unit-8-digital-entrepreneurship"
+                  className="w-full py-2 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 text-slate-700 hover:text-emerald-800 text-xs font-bold text-center block transition-colors"
+                >
+                  Read Free Study Notes →
+                </Link>
+                <Link
+                  href={clientUser && isPaidSubscriber(clientUser) ? "/select-questions?chapter=8" : "/pricing"}
+                  className={`w-full py-2.5 rounded-xl text-white text-xs font-bold text-center block transition-colors ${
+                    clientUser && isPaidSubscriber(clientUser)
+                      ? "bg-emerald-600 hover:bg-emerald-700"
+                      : "bg-slate-900 hover:bg-slate-800"
+                  }`}
+                >
+                  {clientUser && isPaidSubscriber(clientUser) ? "Generate Unit Paper →" : "Subscribe to Generate →"}
+                </Link>
+              </div>
             </div>
+          </div>
+
+          <div className="text-center pt-1">
+            <Link
+              href="/notes"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-800 hover:text-emerald-800 text-xs font-extrabold shadow-2xs transition-all"
+            >
+              <span>Browse All Free Chapter-Wise Study Notes &amp; Solved MCQs</span>
+              <ArrowRight className="w-3.5 h-3.5 text-emerald-600" />
+            </Link>
           </div>
         </section>
 
@@ -1671,6 +1726,12 @@ export default function Home() {
                     Convert English↔Urdu with AI, customize school header, and export Word (.docx) or 1-page PDF.
                   </li>
                   <li>
+                    <Link href="/notes" className="font-bold text-emerald-700 hover:underline">
+                      Free Chapter-Wise Study Notes &amp; Solved MCQs →
+                    </Link>{" "}
+                    Read bilingual English &amp; Urdu Nastaliq MCQs, Short Questions, and Long Questions online.
+                  </li>
+                  <li>
                     <Link href="/paper-maker" className="font-bold text-emerald-700 hover:underline">
                       Browse All 27 Board &amp; Subject Pages →
                     </Link>
@@ -1740,6 +1801,9 @@ export default function Home() {
               </Link>
               <Link href="/select-questions" className="hover:text-emerald-700 transition-colors">
                 Board Question Bank
+              </Link>
+              <Link href="/notes" className="hover:text-emerald-700 transition-colors">
+                Study Notes
               </Link>
               <Link href="/paper-editor" className="hover:text-emerald-700 transition-colors">
                 Paper Editor &amp; Word Export

@@ -1,7 +1,8 @@
 import { MetadataRoute } from "next";
 import { SEO_LANDINGS } from "@/lib/seo-landings";
+import { getNotesCatalog } from "@/lib/notes";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
     process.env.APP_URL ||
     process.env.NEXT_PUBLIC_SITE_URL ||
@@ -13,6 +14,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const now = new Date();
   const ogImage = `${baseUrl}/opengraph-image`;
+
+  const notesRoutes: Array<{
+    path: string;
+    changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+    priority: number;
+  }> = [{ path: "/notes", changeFrequency: "daily", priority: 0.92 }];
+
+  try {
+    const catalog = await getNotesCatalog();
+    for (const cls of catalog.classes) {
+      for (const subj of cls.subjects) {
+        notesRoutes.push({
+          path: `/notes/${subj.classSlug}/${subj.slug}`,
+          changeFrequency: "weekly",
+          priority: 0.88,
+        });
+        for (const ch of subj.chapters) {
+          notesRoutes.push({
+            path: `/notes/${ch.classSlug}/${ch.subjectSlug}/${ch.slug}`,
+            changeFrequency: "weekly",
+            priority: 0.85,
+          });
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Failed to build dynamic /notes sitemap routes:", err);
+  }
 
   const routes: Array<{
     path: string;
@@ -32,6 +61,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.9,
     })),
+    ...notesRoutes,
   ];
 
   return routes.map((route) => {
