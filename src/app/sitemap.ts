@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/select-questions", changeFrequency: "daily", priority: 0.95 },
     { path: "/quick-paper", changeFrequency: "daily", priority: 0.95 },
     { path: "/paper-editor", changeFrequency: "weekly", priority: 0.9 },
+    { path: "/paper-maker", changeFrequency: "weekly", priority: 0.9 },
     { path: "/pricing", changeFrequency: "weekly", priority: 0.85 },
     { path: "/register", changeFrequency: "monthly", priority: 0.75 },
     { path: "/login", changeFrequency: "monthly", priority: 0.65 },
@@ -50,4 +51,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 }
-

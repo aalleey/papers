@@ -1596,30 +1596,54 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 text-xs">
               <article className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
                 <h3 className="font-extrabold text-slate-900 text-sm">
-                  Supported Educational Boards in Pakistan
+                  Punjab BISE &amp; FBISE Boards
                 </h3>
                 <ul className="space-y-1.5 text-slate-600">
-                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>BISE Lahore</strong> Board Pattern Paper Maker</Link></li>
-                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>BISE Gujranwala &amp; Rawalpindi</strong> Online Test Generator</Link></li>
-                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>BISE Faisalabad &amp; Multan</strong> Exam Paper Maker</Link></li>
-                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>BISE Sargodha, Bahawalpur, DG Khan &amp; Sahiwal</strong></Link></li>
-                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>FBISE Islamabad (Federal Board)</strong> SLO &amp; Board Pattern</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-lahore-paper-maker" className="hover:text-emerald-700"><strong>BISE Lahore</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-gujranwala-paper-maker" className="hover:text-emerald-700"><strong>BISE Gujranwala</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-rawalpindi-paper-maker" className="hover:text-emerald-700"><strong>BISE Rawalpindi</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-faisalabad-paper-maker" className="hover:text-emerald-700"><strong>BISE Faisalabad</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-multan-paper-maker" className="hover:text-emerald-700"><strong>BISE Multan</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-sargodha-paper-maker" className="hover:text-emerald-700"><strong>BISE Sargodha</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-bahawalpur-paper-maker" className="hover:text-emerald-700"><strong>BISE Bahawalpur</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-dg-khan-paper-maker" className="hover:text-emerald-700"><strong>BISE DG Khan</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-sahiwal-paper-maker" className="hover:text-emerald-700"><strong>BISE Sahiwal</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/fbise-federal-board-paper-maker" className="hover:text-emerald-700"><strong>FBISE Islamabad</strong> SLO Paper Maker</Link></li>
                 </ul>
               </article>
 
               <article className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
                 <h3 className="font-extrabold text-slate-900 text-sm">
-                  Classes &amp; Subjects Question Bank
+                  Classes &amp; Streams
                 </h3>
                 <ul className="space-y-1.5 text-slate-600">
-                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>9th Class (Matric Part-I)</strong> Online Paper Maker</Link></li>
-                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>10th Class (Matric Part-II)</strong> Board Pattern Generator</Link></li>
-                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>1st Year (11th / FSc &amp; ICS Part-I)</strong> Test Maker</Link></li>
-                  <li>&bull; <Link href="/select-questions" className="hover:text-emerald-700"><strong>2nd Year (12th / FSc &amp; ICS Part-II)</strong> Exam Creator</Link></li>
-                  <li>&bull; Computer Science, Mathematics, Physics, Chemistry, Biology, English, Urdu, Islamiat &amp; Pak Studies</li>
+                  <li>&bull; <Link href="/paper-maker/9th-class-paper-maker" className="hover:text-emerald-700"><strong>9th Class (Matric Part-I)</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/10th-class-paper-maker" className="hover:text-emerald-700"><strong>10th Class (Matric Part-II)</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/1st-year-11th-class-paper-maker" className="hover:text-emerald-700"><strong>1st Year (11th Class)</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/2nd-year-12th-class-paper-maker" className="hover:text-emerald-700"><strong>2nd Year (12th Class)</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/fsc-ics-paper-maker" className="hover:text-emerald-700"><strong>FSc &amp; ICS Intermediate</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bise-punjab-board-paper-maker" className="hover:text-emerald-700"><strong>All 9 Punjab Boards</strong> Overview</Link></li>
+                  <li>&bull; <Link href="/paper-maker/bilingual-urdu-english-paper-maker" className="hover:text-emerald-700"><strong>Bilingual Urdu &amp; English</strong> Studio</Link></li>
+                  <li>&bull; <Link href="/paper-maker/word-docx-exam-paper-generator" className="hover:text-emerald-700"><strong>Word (.docx) &amp; 1-Page PDF</strong> Export</Link></li>
+                </ul>
+              </article>
+
+              <article className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
+                <h3 className="font-extrabold text-slate-900 text-sm">
+                  Subject-Wise Paper Makers
+                </h3>
+                <ul className="space-y-1.5 text-slate-600">
+                  <li>&bull; <Link href="/paper-maker/10th-class-computer-science-paper-maker" className="hover:text-emerald-700"><strong>10th Computer Science</strong> (Python &amp; OS)</Link></li>
+                  <li>&bull; <Link href="/paper-maker/9th-class-computer-science-paper-maker" className="hover:text-emerald-700"><strong>9th Computer Science</strong> Paper Maker</Link></li>
+                  <li>&bull; <Link href="/paper-maker/mathematics-paper-maker" className="hover:text-emerald-700"><strong>Mathematics</strong> (KaTeX Equations)</Link></li>
+                  <li>&bull; <Link href="/paper-maker/physics-paper-maker" className="hover:text-emerald-700"><strong>Physics</strong> (Theory &amp; Numericals)</Link></li>
+                  <li>&bull; <Link href="/paper-maker/chemistry-paper-maker" className="hover:text-emerald-700"><strong>Chemistry</strong> (Reactions &amp; Formulas)</Link></li>
+                  <li>&bull; <Link href="/paper-maker/biology-paper-maker" className="hover:text-emerald-700"><strong>Biology</strong> (Matric &amp; FSc Pre-Med)</Link></li>
+                  <li>&bull; <Link href="/paper-maker/english-paper-maker" className="hover:text-emerald-700"><strong>English</strong> (Grammar &amp; Translation)</Link></li>
+                  <li>&bull; <Link href="/paper-maker/urdu-islamiat-pak-studies-paper-maker" className="hover:text-emerald-700"><strong>Urdu, Islamiat &amp; Pak Studies</strong></Link></li>
                 </ul>
               </article>
 
@@ -1645,6 +1669,11 @@ export default function Home() {
                       Live Paper Studio, AI Bilingual &amp; Word/PDF →
                     </Link>{" "}
                     Convert English↔Urdu with AI, customize school header, and export Word (.docx) or 1-page PDF.
+                  </li>
+                  <li>
+                    <Link href="/paper-maker" className="font-bold text-emerald-700 hover:underline">
+                      Browse All 27 Board &amp; Subject Pages →
+                    </Link>
                   </li>
                 </ul>
               </article>
@@ -1727,15 +1756,34 @@ export default function Home() {
             </div>
           </div>
 
-          <nav aria-label="Paper makers" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-slate-500 text-[11px] font-medium">
-            <Link href="/paper-maker/9th-class-paper-maker" className="hover:text-emerald-700">9th Class Paper Maker</Link>
-            <Link href="/paper-maker/10th-class-paper-maker" className="hover:text-emerald-700">10th Class Paper Maker</Link>
-            <Link href="/paper-maker/fsc-ics-paper-maker" className="hover:text-emerald-700">FSc &amp; ICS Paper Maker</Link>
-            <Link href="/paper-maker/bise-punjab-board-paper-maker" className="hover:text-emerald-700">Punjab Board (BISE) Paper Maker</Link>
-            <Link href="/paper-maker/fbise-federal-board-paper-maker" className="hover:text-emerald-700">FBISE Federal Board Paper Maker</Link>
-            <Link href="/paper-maker/bilingual-urdu-english-paper-maker" className="hover:text-emerald-700">Urdu English Paper Maker</Link>
-            <Link href="/paper-maker/word-docx-exam-paper-generator" className="hover:text-emerald-700">Word (.docx) &amp; 1-Page PDF Paper Maker</Link>
-            <Link href="/paper-maker/online-paper-maker-pakistan" className="hover:text-emerald-700">Online Paper Maker Pakistan</Link>
+          <nav aria-label="Paper makers" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-slate-500 text-[11px] font-medium">
+            <Link href="/paper-maker" className="font-bold text-emerald-700 hover:underline">All Paper Makers</Link>
+            <Link href="/paper-maker/9th-class-paper-maker" className="hover:text-emerald-700">9th Class</Link>
+            <Link href="/paper-maker/10th-class-paper-maker" className="hover:text-emerald-700">10th Class</Link>
+            <Link href="/paper-maker/1st-year-11th-class-paper-maker" className="hover:text-emerald-700">1st Year</Link>
+            <Link href="/paper-maker/2nd-year-12th-class-paper-maker" className="hover:text-emerald-700">2nd Year</Link>
+            <Link href="/paper-maker/fsc-ics-paper-maker" className="hover:text-emerald-700">FSc &amp; ICS</Link>
+            <Link href="/paper-maker/bise-lahore-paper-maker" className="hover:text-emerald-700">BISE Lahore</Link>
+            <Link href="/paper-maker/bise-gujranwala-paper-maker" className="hover:text-emerald-700">BISE Gujranwala</Link>
+            <Link href="/paper-maker/bise-rawalpindi-paper-maker" className="hover:text-emerald-700">BISE Rawalpindi</Link>
+            <Link href="/paper-maker/bise-faisalabad-paper-maker" className="hover:text-emerald-700">BISE Faisalabad</Link>
+            <Link href="/paper-maker/bise-multan-paper-maker" className="hover:text-emerald-700">BISE Multan</Link>
+            <Link href="/paper-maker/bise-sargodha-paper-maker" className="hover:text-emerald-700">BISE Sargodha</Link>
+            <Link href="/paper-maker/bise-bahawalpur-paper-maker" className="hover:text-emerald-700">BISE Bahawalpur</Link>
+            <Link href="/paper-maker/bise-dg-khan-paper-maker" className="hover:text-emerald-700">BISE DG Khan</Link>
+            <Link href="/paper-maker/bise-sahiwal-paper-maker" className="hover:text-emerald-700">BISE Sahiwal</Link>
+            <Link href="/paper-maker/fbise-federal-board-paper-maker" className="hover:text-emerald-700">FBISE Islamabad</Link>
+            <Link href="/paper-maker/10th-class-computer-science-paper-maker" className="hover:text-emerald-700">10th Computer</Link>
+            <Link href="/paper-maker/9th-class-computer-science-paper-maker" className="hover:text-emerald-700">9th Computer</Link>
+            <Link href="/paper-maker/mathematics-paper-maker" className="hover:text-emerald-700">Mathematics</Link>
+            <Link href="/paper-maker/physics-paper-maker" className="hover:text-emerald-700">Physics</Link>
+            <Link href="/paper-maker/chemistry-paper-maker" className="hover:text-emerald-700">Chemistry</Link>
+            <Link href="/paper-maker/biology-paper-maker" className="hover:text-emerald-700">Biology</Link>
+            <Link href="/paper-maker/english-paper-maker" className="hover:text-emerald-700">English</Link>
+            <Link href="/paper-maker/urdu-islamiat-pak-studies-paper-maker" className="hover:text-emerald-700">Urdu &amp; Islamiat</Link>
+            <Link href="/paper-maker/bilingual-urdu-english-paper-maker" className="hover:text-emerald-700">Bilingual Urdu/English</Link>
+            <Link href="/paper-maker/word-docx-exam-paper-generator" className="hover:text-emerald-700">Word (.docx) &amp; PDF</Link>
+            <Link href="/paper-maker/online-paper-maker-pakistan" className="hover:text-emerald-700">Online Paper Maker PK</Link>
           </nav>
 
           <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-[11px]">
