@@ -8,13 +8,9 @@ import {
   SeoLandingCategory,
   getLandingsByCategory,
 } from "@/lib/seo-landings";
+import { SITE_URL } from "@/lib/site-url";
 
-const siteUrl =
-  process.env.APP_URL ||
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://paperwala.world");
+const siteUrl = SITE_URL;
 
 const hubTitle = "All Board, Class & Subject Paper Makers Online | PaperWala";
 const hubDescription =

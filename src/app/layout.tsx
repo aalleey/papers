@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Noto_Nastaliq_Urdu } from "next/font/google";
 import "katex/dist/katex.min.css";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site-url";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -17,12 +18,7 @@ const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
   display: "swap",
 });
 
-const siteUrl =
-  process.env.APP_URL ||
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://paperwala.world");
+const siteUrl = SITE_URL;
 
 export const viewport: Viewport = {
   width: "device-width",

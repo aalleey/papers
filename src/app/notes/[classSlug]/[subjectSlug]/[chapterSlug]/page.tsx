@@ -6,6 +6,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { NotesChapterViewer } from "@/components/NotesChapterViewer";
 import { getCurrentClient, isCurrentUserAdmin } from "@/lib/auth";
 import { getNotesChapter } from "@/lib/notes";
+import { SITE_URL } from "@/lib/site-url";
 import { isPaidSubscriber, Question } from "@/lib/types";
 
 const PUBLIC_PREVIEW_MCQS = 5;
@@ -41,12 +42,7 @@ function selectPublicPreviewQuestions(allQuestions: Question[]): Question[] {
 
 export const dynamic = "force-dynamic";
 
-const siteUrl =
-  process.env.APP_URL ||
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://paperwala.world");
+const siteUrl = SITE_URL;
 
 export async function generateMetadata({
   params,

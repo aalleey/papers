@@ -3,15 +3,11 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Sparkles, Layers } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { getNotesCatalog } from "@/lib/notes";
+import { SITE_URL } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
 
-const siteUrl =
-  process.env.APP_URL ||
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://paperwala.world");
+const siteUrl = SITE_URL;
 
 const pageTitle = "Study Notes, Solved MCQs & Chapter-Wise Questions | PaperWala";
 const pageDescription =

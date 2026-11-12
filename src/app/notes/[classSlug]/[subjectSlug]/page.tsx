@@ -4,15 +4,11 @@ import { notFound } from "next/navigation";
 import { ArrowRight, BookOpen, Sparkles } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { getNotesSubject } from "@/lib/notes";
+import { SITE_URL } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
 
-const siteUrl =
-  process.env.APP_URL ||
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://paperwala.world");
+const siteUrl = SITE_URL;
 
 export async function generateMetadata({
   params,

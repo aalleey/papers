@@ -1,17 +1,10 @@
 import { MetadataRoute } from "next";
 import { SEO_LANDINGS } from "@/lib/seo-landings";
 import { getNotesCatalog } from "@/lib/notes";
+import { SITE_URL } from "@/lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl =
-    process.env.APP_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "https://paperwala.world");
-
+  const baseUrl = SITE_URL;
   const now = new Date();
   const ogImage = `${baseUrl}/opengraph-image`;
 

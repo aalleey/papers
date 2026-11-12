@@ -1,17 +1,12 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl =
-    process.env.APP_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "https://paperwala.world");
+  const baseUrl = SITE_URL;
 
   const allowedPaths = [
     "/",
+    "/notes",
     "/quick-paper",
     "/select-questions",
     "/paper-editor",
@@ -58,4 +53,3 @@ export default function robots(): MetadataRoute.Robots {
     host: baseUrl,
   };
 }
-

@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site-url";
 
-const siteUrl =
-  process.env.APP_URL ||
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://paperwala.world");
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "School & Academy Pricing – Unlimited Online Paper Maker",
