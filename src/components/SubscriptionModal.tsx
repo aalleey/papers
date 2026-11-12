@@ -117,7 +117,7 @@ export function SubscriptionModal({
         {/* Footer Note */}
         <div className="text-center pt-1 text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Pay via HBL QR Code or Raast ID (03092770207) &amp; send screenshot on WhatsApp (03473576122).</span>
+          <span>Scan Official HBL QR Code (Ali Iada &bull; 11727901764099) &amp; send payment screenshot on WhatsApp (03473576122).</span>
         </div>
       </div>
     </div>

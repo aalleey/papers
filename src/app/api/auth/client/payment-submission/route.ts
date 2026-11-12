@@ -20,14 +20,14 @@ export async function POST(req: NextRequest) {
 
     const paymentSubmission: PaymentSubmission = {
       method: "raast",
-      raastId: "03092770207",
+      raastId: "03473576122",
       transactionRef: tid,
       senderPhone: senderPhone?.trim() || client.phone || "",
       senderName: senderName?.trim() || client.fullName || "",
       amount: amount?.trim() || "2000",
       planRequested: (planRequested as SubscriptionPlanId) || (client.subscription?.planId as SubscriptionPlanId) || "standard",
       submittedAt: new Date().toISOString(),
-      notes: notes?.trim() || "Raast payment awaiting admin verification.",
+      notes: notes?.trim() || "HBL QR / WhatsApp (03473576122) payment awaiting admin verification.",
     };
 
     // Update client with payment proof and lock profile under pending_verification
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         ...client.subscription,
         status: "pending_verification",
       },
-      notes: `[Raast TID: ${paymentSubmission.transactionRef} on 03092770207] ${notes?.trim() || ""}`,
+      notes: `[Payment TID: ${paymentSubmission.transactionRef} | WhatsApp: 03473576122] ${notes?.trim() || ""}`,
     });
 
     return NextResponse.json({

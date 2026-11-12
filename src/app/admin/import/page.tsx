@@ -188,23 +188,23 @@ export default function ImportPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 w-full min-w-0 max-w-full overflow-x-hidden">
       {/* Top Navigation Tabs */}
-      <div className="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+      <div className="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+        <div className="grid grid-cols-2 sm:flex items-center gap-1.5 w-full sm:w-auto">
           <button
             type="button"
             onClick={() => setActiveTab("html")}
-            className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black tracking-wide transition-all ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 sm:px-5 py-2.5 rounded-xl text-xs font-black tracking-wide transition-all cursor-pointer ${
               activeTab === "html"
                 ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
-            <FileCode className="w-4 h-4" />
-            <span>HTML Question Parser</span>
+            <FileCode className="w-4 h-4 shrink-0" />
+            <span className="truncate">HTML Parser</span>
             <span
-              className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
+              className={`hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
                 activeTab === "html"
                   ? "bg-indigo-500/40 text-indigo-100"
                   : "bg-indigo-100 text-indigo-700"
@@ -217,14 +217,14 @@ export default function ImportPage() {
           <button
             type="button"
             onClick={() => setActiveTab("csv")}
-            className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black tracking-wide transition-all ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 sm:px-5 py-2.5 rounded-xl text-xs font-black tracking-wide transition-all cursor-pointer ${
               activeTab === "csv"
                 ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
-            <FileSpreadsheet className="w-4 h-4" />
-            <span>CSV Spreadsheet Import</span>
+            <FileSpreadsheet className="w-4 h-4 shrink-0" />
+            <span className="truncate">CSV Import</span>
           </button>
         </div>
 
@@ -232,9 +232,9 @@ export default function ImportPage() {
           <a
             href="/api/template/csv"
             download="paper_maker_questions_template.csv"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs shadow-sm transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs shadow-sm transition-colors"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-4 h-4 shrink-0" />
             <span>Download CSV Template</span>
           </a>
         )}

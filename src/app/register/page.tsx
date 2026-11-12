@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  BookOpen,
   User,
   Lock,
   Phone,
@@ -17,15 +16,18 @@ import {
   Sparkles,
   ShieldCheck,
   Zap,
-  Copy,
-  Check,
   CreditCard,
-  Clock,
-  AlertCircle,
-  HelpCircle,
+  MessageCircle,
+  QrCode,
 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { PaymentQr } from "@/components/PaymentQr";
+import {
+  PaymentQr,
+  OFFICIAL_WHATSAPP,
+  OFFICIAL_WHATSAPP_INTL,
+  HBL_ACCOUNT_TITLE,
+  HBL_ACCOUNT_NUMBER,
+} from "@/components/PaymentQr";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -44,19 +46,9 @@ export default function RegisterPage() {
   const [senderName, setSenderName] = useState("");
   const [transactionRef, setTransactionRef] = useState("");
   const [amount, setAmount] = useState("2000");
-  const [copiedRaast, setCopiedRaast] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const RAAST_ID = "03092770207";
-  const RAAST_TITLE = "PaperWala Official (Raast)";
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedRaast(true);
-    setTimeout(() => setCopiedRaast(false), 2500);
-  };
 
   // Step 1: Submit Registration
   async function handleRegister(e: React.FormEvent) {
@@ -90,7 +82,7 @@ export default function RegisterPage() {
       }
       setAmount(selectedPlan === "annual" ? "3000" : "2000");
 
-      // Advance to step 2: Raast Payment
+      // Advance to step 2: HBL QR & WhatsApp Payment
       setStep("payment");
     } catch {
       setError("Network or server connection issue. Please try again.");
@@ -99,11 +91,10 @@ export default function RegisterPage() {
     }
   }
 
-  // Step 2: Submit Raast Payment Details
+  // Step 2: Submit Payment Details
   async function handlePaymentSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-
     setLoading(true);
 
     try {
@@ -116,7 +107,7 @@ export default function RegisterPage() {
           senderName: senderName.trim(),
           amount: amount.trim(),
           planRequested: selectedPlan,
-          notes: `New user registration payment via Raast ID ${RAAST_ID}`,
+          notes: `New user registration payment via HBL QR (${HBL_ACCOUNT_NUMBER}) / WhatsApp ${OFFICIAL_WHATSAPP}`,
         }),
       });
 
@@ -177,7 +168,7 @@ export default function RegisterPage() {
       </div>
 
       {/* Brand Header */}
-      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md text-center space-y-2 px-4">
+      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-lg text-center space-y-2 px-4">
         <div className="flex justify-center">
           <BrandLogo size="lg" subtitle="Pakistan's #1 Exam Paper Generator" />
         </div>
@@ -213,7 +204,7 @@ export default function RegisterPage() {
                 2
               </div>
               <span className={`text-xs font-bold ${step === "payment" ? "text-slate-900" : "text-slate-400"}`}>
-                Raast Payment
+                QR Payment
               </span>
             </div>
 
@@ -231,8 +222,12 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      <div className="relative z-10 mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="relative overflow-hidden bg-gradient-to-b from-white/65 via-white/45 to-white/60 backdrop-blur-3xl saturate-200 py-8 px-6 sm:px-8 rounded-3xl border border-white/90 shadow-[0_28px_70px_-15px_rgba(15,23,42,0.22),0_6px_0_0_rgba(203,213,225,0.65),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(16,185,129,0.08)] space-y-6">
+      <div
+        className={`relative z-10 mt-6 sm:mx-auto sm:w-full px-4 transition-all ${
+          step === "payment" ? "sm:max-w-lg" : "sm:max-w-md"
+        }`}
+      >
+        <div className="relative overflow-hidden bg-gradient-to-b from-white/75 via-white/55 to-white/70 backdrop-blur-3xl saturate-200 py-8 px-6 sm:px-8 rounded-3xl border border-white/90 shadow-[0_28px_70px_-15px_rgba(15,23,42,0.22),0_6px_0_0_rgba(203,213,225,0.65),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(16,185,129,0.08)] space-y-6">
           {/* Top Liquid Glass Specular Highlights */}
           <div
             className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"
@@ -258,7 +253,7 @@ export default function RegisterPage() {
                   Educator Registration
                 </h2>
                 <p className="text-xs text-slate-600 mt-0.5 font-medium">
-                  Register your account, then complete activation via official Raast payment.
+                  Register your account, then complete instant activation via HBL QR &amp; WhatsApp ({OFFICIAL_WHATSAPP}).
                 </p>
               </div>
 
@@ -285,7 +280,7 @@ export default function RegisterPage() {
                       aria-hidden="true"
                     />
                     <span className="block font-black text-xs text-slate-900 relative z-10">Standard Plan</span>
-                    <span className="block text-[11px] font-extrabold text-emerald-700 mt-0.5 relative z-10">Rs. 2000 / month</span>
+                    <span className="block text-[11px] font-extrabold text-emerald-700 mt-0.5 relative z-10">Rs. 2,000 / month</span>
                   </button>
 
                   <button
@@ -304,7 +299,7 @@ export default function RegisterPage() {
                       Best Value
                     </span>
                     <span className="block font-black text-xs text-slate-900">Annual Pro</span>
-                    <span className="block text-[11px] font-extrabold text-emerald-700 mt-0.5">Rs. 3000 / year</span>
+                    <span className="block text-[11px] font-extrabold text-emerald-700 mt-0.5">Rs. 3,000 / year</span>
                   </button>
                 </div>
               </div>
@@ -399,7 +394,7 @@ export default function RegisterPage() {
                       aria-hidden="true"
                     />
                     <span className="relative z-10 drop-shadow-[0_1px_1px_rgba(6,95,70,0.6)]">
-                      {loading ? "Processing..." : "Continue to Raast Payment"}
+                      {loading ? "Processing..." : "Continue to QR Payment"}
                     </span>
                     {!loading && <ArrowRight className="w-4 h-4 relative z-10" />}
                   </button>
@@ -408,103 +403,69 @@ export default function RegisterPage() {
             </>
           )}
 
-          {/* STEP 2: RAAST PAYMENT PROOF */}
+          {/* STEP 2: HBL QR & WHATSAPP PAYMENT PROOF */}
           {step === "payment" && (
             <div className="relative space-y-5 text-xs animate-in fade-in duration-300">
-              <div>
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100/90 text-amber-800 border border-amber-300 shadow-[inset_0_1px_0_#ffffff]">
-                  Step 2: Payment Required
-                </span>
-                <h2 className="text-xl font-black text-slate-900 tracking-tight mt-1">
-                  Pay via Raast ID
-                </h2>
-                <p className="text-xs text-slate-600 mt-0.5 font-medium">
-                  Transfer fee to the administrator&apos;s Raast ID below using any Pakistani banking app, Easypaisa, or JazzCash.
-                </p>
-              </div>
-
-              {/* Raast Account Card */}
-              <div className="bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 text-white p-5 rounded-2xl border border-emerald-400/30 shadow-[0_12px_30px_-6px_rgba(6,95,70,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)] relative overflow-hidden space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center font-black text-emerald-300 text-xs">
-                      ⚡
-                    </div>
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300 block leading-tight">
-                        Instant Raast Transfer
-                      </span>
-                      <span className="text-xs font-semibold text-slate-300">
-                        Zero transfer fees across all banks
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                    Rs. {amount}
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-[inset_0_1px_0_#ffffff] uppercase tracking-wider">
+                    <QrCode className="w-3 h-3 text-emerald-600" />
+                    Step 2: Instant QR Checkout
                   </span>
-                </div>
-
-                <div className="bg-black/30 backdrop-blur-md p-3.5 rounded-xl border border-white/10 space-y-1.5">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
-                    Official Raast ID:
-                  </span>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-mono text-xl sm:text-2xl font-black text-emerald-300 tracking-wider">
-                      {RAAST_ID}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => copyToClipboard(RAAST_ID)}
-                      className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
-                    >
-                      {copiedRaast ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                      <span>{copiedRaast ? "Copied!" : "Copy ID"}</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="text-[11px] text-emerald-200/90 flex items-center justify-between pt-1 border-t border-white/10">
-                  <span>Raast Title: <strong>{RAAST_TITLE}</strong></span>
-                  <span>Amount: <strong>PKR {amount}</strong></span>
+                  <h2 className="text-xl font-black text-slate-900 tracking-tight mt-1.5">
+                    Scan HBL QR &amp; Verify via WhatsApp
+                  </h2>
+                  <p className="text-xs text-slate-600 mt-0.5 font-medium leading-relaxed">
+                    Scan the official QR code below with any banking app, JazzCash, or Easypaisa, then submit &amp; send your screenshot on WhatsApp{" "}
+                    <strong className="font-mono text-emerald-700">{OFFICIAL_WHATSAPP}</strong>.
+                  </p>
                 </div>
               </div>
 
-              {/* Quick instructions */}
-              <div className="p-3.5 bg-white/55 backdrop-blur-md rounded-2xl border border-white/85 shadow-[inset_0_1px_0_#ffffff] space-y-1.5 text-[11px] text-slate-700">
-                <p className="font-bold text-slate-900 flex items-center gap-1.5">
-                  <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
-                  How to pay:
+              {/* Official HBL QR & WhatsApp 03473576122 Card */}
+              <PaymentQr amount={amount} />
+
+              {/* Quick 3-step instructions */}
+              <div className="p-4 bg-white/75 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-xs space-y-2 text-[11px] text-slate-700">
+                <p className="font-black text-slate-900 flex items-center gap-1.5 text-xs">
+                  <CreditCard className="w-4 h-4 text-emerald-600" />
+                  How to Pay &amp; Activate in 3 Easy Steps:
                 </p>
-                <ol className="list-decimal list-inside space-y-0.5 text-slate-600">
-                  <li>Open your Bank App (HBL, Meezan, Allied, etc.) or JazzCash / Easypaisa.</li>
-                  <li>Select <strong>Raast Payment</strong> and enter Raast ID: <strong>{RAAST_ID}</strong></li>
-                  <li>Transfer exactly <strong>Rs. {amount}</strong> and copy the <strong>Transaction ID / TID</strong>.</li>
-                  <li>Paste the TID below to submit for administrative approval.</li>
-                  <li>After submitting, send the payment screenshot to WhatsApp <strong>03473576122</strong>.</li>
+                <ol className="list-decimal list-inside space-y-1 text-slate-600 font-medium">
+                  <li>
+                    Scan the HBL QR above or transfer <strong>Rs. {amount}</strong> to{" "}
+                    <strong>{HBL_ACCOUNT_TITLE}</strong> (<code className="font-mono font-bold text-slate-800">{HBL_ACCOUNT_NUMBER}</code>).
+                  </li>
+                  <li>
+                    Click <strong>Submit Payment for Verification</strong> below (TID is optional).
+                  </li>
+                  <li>
+                    Send your payment screenshot / script on WhatsApp{" "}
+                    <strong className="font-mono text-emerald-700">{OFFICIAL_WHATSAPP}</strong> for instant activation.
+                  </li>
                 </ol>
               </div>
 
-              <PaymentQr />
-
               {/* Payment Proof Form */}
-              <form onSubmit={handlePaymentSubmit} className="space-y-3.5">
+              <form onSubmit={handlePaymentSubmit} className="space-y-3.5 pt-1">
                 <div>
                   <label className="block font-bold text-slate-800 mb-1">
-                    Transaction ID / Reference Number (TID) <span className="text-slate-400 font-medium">(optional)</span>
+                    Transaction ID / Reference Number (TID){" "}
+                    <span className="text-slate-400 font-medium">(optional)</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. 240819283712 or TRX-99214"
+                    placeholder="Optional — e.g. 240819283712 or skip & send screenshot on WhatsApp"
                     value={transactionRef}
                     onChange={(e) => setTransactionRef(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-white/60 focus:bg-white/90 backdrop-blur-xl border border-white/90 focus:border-emerald-400 rounded-2xl outline-none shadow-[inset_0_2px_5px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.95)] focus:ring-4 focus:ring-emerald-500/15 font-mono text-xs font-semibold text-slate-900 placeholder:text-slate-400 transition-all"
+                    className="w-full px-3.5 py-2.5 bg-white/80 focus:bg-white backdrop-blur-xl border border-slate-200/90 focus:border-emerald-400 rounded-2xl outline-none shadow-[inset_0_2px_5px_rgba(15,23,42,0.06)] focus:ring-4 focus:ring-emerald-500/15 font-mono text-xs font-semibold text-slate-900 placeholder:text-slate-400 transition-all"
                   />
                   <span className="text-[10px] text-slate-500 mt-1 block">
-                    Found on your bank transfer receipt SMS or app screenshot. You can skip it and send the screenshot on WhatsApp instead.
+                    You can leave this blank and send your receipt screenshot on WhatsApp ({OFFICIAL_WHATSAPP}).
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <div>
                     <label className="block font-bold text-slate-800 mb-1">
                       Sender Mobile Number
@@ -514,7 +475,7 @@ export default function RegisterPage() {
                       placeholder="e.g. 0300-1234567"
                       value={senderPhone}
                       onChange={(e) => setSenderPhone(e.target.value)}
-                      className="w-full px-3 py-2 bg-white/60 focus:bg-white/90 backdrop-blur-xl border border-white/90 focus:border-emerald-400 rounded-xl outline-none shadow-[inset_0_2px_4px_rgba(15,23,42,0.06)] text-xs font-medium"
+                      className="w-full px-3.5 py-2.5 bg-white/80 focus:bg-white backdrop-blur-xl border border-slate-200/90 focus:border-emerald-400 rounded-xl outline-none shadow-[inset_0_2px_4px_rgba(15,23,42,0.06)] text-xs font-semibold text-slate-900"
                     />
                   </div>
                   <div>
@@ -526,7 +487,7 @@ export default function RegisterPage() {
                       placeholder="e.g. Tariq Mehmood"
                       value={senderName}
                       onChange={(e) => setSenderName(e.target.value)}
-                      className="w-full px-3 py-2 bg-white/60 focus:bg-white/90 backdrop-blur-xl border border-white/90 focus:border-emerald-400 rounded-xl outline-none shadow-[inset_0_2px_4px_rgba(15,23,42,0.06)] text-xs font-medium"
+                      className="w-full px-3.5 py-2.5 bg-white/80 focus:bg-white backdrop-blur-xl border border-slate-200/90 focus:border-emerald-400 rounded-xl outline-none shadow-[inset_0_2px_4px_rgba(15,23,42,0.06)] text-xs font-semibold text-slate-900"
                     />
                   </div>
                 </div>
@@ -540,12 +501,27 @@ export default function RegisterPage() {
                     className="pointer-events-none absolute inset-x-2 top-0.5 h-3.5 rounded-t-full bg-gradient-to-b from-white/55 to-transparent"
                     aria-hidden="true"
                   />
-                  <span className="relative z-10">{loading ? "Submitting Application..." : "Submit Payment for Verification 🚀"}</span>
+                  <span className="relative z-10">
+                    {loading ? "Submitting Application..." : "Submit Payment for Verification 🚀"}
+                  </span>
                   {!loading && <ArrowRight className="w-4 h-4 relative z-10" />}
                 </button>
 
+                <a
+                  href={`https://wa.me/${OFFICIAL_WHATSAPP_INTL}?text=${encodeURIComponent(
+                    `Assalam-o-Alaikum, I registered on PaperWala (${fullName || "Educator"}, ${emailOrPhone || ""}) and sent Rs. ${amount} to HBL (${HBL_ACCOUNT_NUMBER}). Here is my payment screenshot / script for verification.`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full py-3 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-md"
+                >
+                  <MessageCircle className="w-4 h-4 text-emerald-400" />
+                  <span>Send Payment Screenshot on WhatsApp ({OFFICIAL_WHATSAPP})</span>
+                </a>
+
                 <p className="text-[11px] text-center text-slate-600">
-                  Profile will immediately enter <strong>Hold Verification</strong> until admin confirms your payment on Raast ID <strong>{RAAST_ID}</strong>.
+                  Need help buying or verifying? Message our official WhatsApp{" "}
+                  <strong className="font-mono text-slate-900">{OFFICIAL_WHATSAPP}</strong>.
                 </p>
               </form>
             </div>
@@ -563,7 +539,7 @@ export default function RegisterPage() {
             </div>
             <div className="flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span>Instant Raast (03092770207)</span>
+              <span>WhatsApp: {OFFICIAL_WHATSAPP}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />

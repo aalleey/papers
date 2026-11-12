@@ -95,10 +95,15 @@ export default function SelectQuestionsPage() {
   const [allSubjectsList, setAllSubjectsList] = useState<Subject[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
+  const [allChaptersList, setAllChaptersList] = useState<Chapter[]>([]);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+
+  // Step-by-step Class -> Subject -> Chapter selector wizard state
+  const [wizardMode, setWizardMode] = useState<boolean>(true);
+  const [wizardStep, setWizardStep] = useState<"class" | "subject" | "chapter">("class");
 
   // Selection state (Set of question IDs)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -319,9 +324,12 @@ export default function SelectQuestionsPage() {
       targetSubId = activeSub?.id || "";
 
       // 3. Process Chapters (filter by active subject)
+      const masterChapters: Chapter[] = data.allChapters || data.chapters || [];
+      setAllChaptersList(masterChapters);
+
       let availableChapters: Chapter[] = data.chapters || [];
-      if (targetSubId && availableChapters.length > 0) {
-        const subChapters = availableChapters.filter((c: Chapter) => c.subject_id === targetSubId);
+      if (targetSubId && masterChapters.length > 0) {
+        const subChapters = masterChapters.filter((c: Chapter) => c.subject_id === targetSubId);
         if (subChapters.length > 0) {
           availableChapters = subChapters;
         }
@@ -397,6 +405,33 @@ export default function SelectQuestionsPage() {
     async function init() {
       try {
         setLoading(true);
+        const searchParams = new URLSearchParams(window.location.search);
+        const hasDirectChapter = Boolean(
+          searchParams.get("chapter") ||
+            searchParams.get("chapter_id") ||
+            searchParams.get("chapterId") ||
+            searchParams.get("ai_topic")
+        );
+        const hasDirectSubject = Boolean(
+          searchParams.get("subject_id") || searchParams.get("subjectId")
+        );
+        const hasDirectClass = Boolean(
+          searchParams.get("class_id") || searchParams.get("classId")
+        );
+
+        if (hasDirectChapter) {
+          setWizardMode(false);
+        } else if (hasDirectSubject) {
+          setWizardMode(true);
+          setWizardStep("chapter");
+        } else if (hasDirectClass) {
+          setWizardMode(true);
+          setWizardStep("subject");
+        } else {
+          setWizardMode(true);
+          setWizardStep("class");
+        }
+
         const authRes = await fetch("/api/auth/client/me");
         const authData = await authRes.json();
         if (authData.client) {
@@ -1080,26 +1115,58 @@ export default function SelectQuestionsPage() {
               />
 
               <div className="flex items-center gap-2 min-w-0 truncate">
-                <h1 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight flex items-center gap-2 truncate">
-                  <span className="truncate">
-                    {currentSubject ? currentSubject.name : "Questions"}
-                  </span>
-                  {currentSubject?.name_ur && (
-                    <span className="font-urdu text-emerald-700 text-sm shrink-0">{currentSubject.name_ur}</span>
-                  )}
-                </h1>
-                <span className="hidden lg:inline-flex items-center gap-1.5 text-xs text-slate-500 font-semibold truncate">
-                  <span aria-hidden="true">·</span>
-                  <span>{classesList.find((c) => c.id === selectedClassId)?.name || "Class 10th"}</span>
-                  {currentChapter && (
-                    <>
-                      <span aria-hidden="true">·</span>
-                      <span className="text-emerald-700 font-bold truncate">
-                        Unit-{currentChapter.number}: {currentChapter.title}
+                {wizardMode ? (
+                  <div className="flex items-center gap-2 min-w-0 truncate">
+                    <h1 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight truncate">
+                      Generate Exam Paper
+                    </h1>
+                    <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-bold text-emerald-800">
+                      <span>Step {wizardStep === "class" ? "1" : wizardStep === "subject" ? "2" : "3"} of 3:</span>
+                      <span>
+                        {wizardStep === "class"
+                          ? "Choose Class"
+                          : wizardStep === "subject"
+                          ? "Choose Subject"
+                          : "Choose Chapter"}
                       </span>
-                    </>
-                  )}
-                </span>
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <h1 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight flex items-center gap-2 truncate">
+                      <span className="truncate">
+                        {currentSubject ? currentSubject.name : "Questions"}
+                      </span>
+                      {currentSubject?.name_ur && (
+                        <span className="font-urdu text-emerald-700 text-sm shrink-0">{currentSubject.name_ur}</span>
+                      )}
+                    </h1>
+                    <span className="hidden lg:inline-flex items-center gap-1.5 text-xs text-slate-500 font-semibold truncate">
+                      <span aria-hidden="true">·</span>
+                      <span>{classesList.find((c) => c.id === selectedClassId)?.name || "Class 10th"}</span>
+                      {currentChapter && (
+                        <>
+                          <span aria-hidden="true">·</span>
+                          <span className="text-emerald-700 font-bold truncate">
+                            Unit-{currentChapter.number}: {currentChapter.title}
+                          </span>
+                        </>
+                      )}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setWizardStep("class");
+                        setWizardMode(true);
+                      }}
+                      className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-[11px] font-extrabold transition-colors shrink-0 cursor-pointer"
+                      title="Change Class, Subject, or Chapter"
+                    >
+                      <Layers className="w-3 h-3 text-indigo-600" />
+                      <span>Change Class / Subject</span>
+                    </button>
+                  </>
+                )}
               </div>
             </div>
 
@@ -1127,54 +1194,58 @@ export default function SelectQuestionsPage() {
                 </Link>
               )}
 
-              <button
-                onClick={() => {
-                  if (!clientUser) {
-                    setShowAuthModal(true);
-                    return;
-                  }
-                  if (!clientUser.subscription.canAutoBoardPattern) {
-                    setSubModalTitle("Auto Board Pattern Generator is Locked");
-                    setSubModalSubtitle("Free Plan only allows manual question selection. Upgrade to Go as you pay (Rs. 30), Standard, or Annual Plan for automatic board selection.");
-                    setSubModalHighlight("standard");
-                    setShowSubModal(true);
-                    return;
-                  }
-                  applyCustomPattern(10, 5, 2);
-                }}
-                className="px-3 py-1.5 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white text-xs font-bold shadow-[0_3px_0_0_#065f46,0_6px_12px_-2px_rgba(16,185,129,0.35),inset_0_1px_0_rgba(255,255,255,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap"
-                title="Quick Auto Pick (10 MCQs, 5 Shorts, 2 Longs)"
-              >
-                <Zap className="w-3.5 h-3.5 text-white" />
-                <span>Auto Pick</span>
-                {!clientUser?.subscription?.canAutoBoardPattern && <Lock className="w-3 h-3 text-white" />}
-              </button>
+              {!wizardMode && (
+                <>
+                  <button
+                    onClick={() => {
+                      if (!clientUser) {
+                        setShowAuthModal(true);
+                        return;
+                      }
+                      if (!clientUser.subscription.canAutoBoardPattern) {
+                        setSubModalTitle("Auto Board Pattern Generator is Locked");
+                        setSubModalSubtitle("Free Plan only allows manual question selection. Upgrade to Go as you pay (Rs. 30), Standard, or Annual Plan for automatic board selection.");
+                        setSubModalHighlight("standard");
+                        setShowSubModal(true);
+                        return;
+                      }
+                      applyCustomPattern(10, 5, 2);
+                    }}
+                    className="px-3 py-1.5 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white text-xs font-bold shadow-[0_3px_0_0_#065f46,0_6px_12px_-2px_rgba(16,185,129,0.35),inset_0_1px_0_rgba(255,255,255,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap"
+                    title="Quick Auto Pick (10 MCQs, 5 Shorts, 2 Longs)"
+                  >
+                    <Zap className="w-3.5 h-3.5 text-white" />
+                    <span>Auto Pick</span>
+                    {!clientUser?.subscription?.canAutoBoardPattern && <Lock className="w-3 h-3 text-white" />}
+                  </button>
 
-              <button
-                onClick={() => setShowCustomModal(true)}
-                className="px-3 py-1.5 rounded-xl bg-white/85 hover:bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap"
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-slate-600" />
-                <span className="hidden sm:inline">Custom</span>
-              </button>
+                  <button
+                    onClick={() => setShowCustomModal(true)}
+                    className="px-3 py-1.5 rounded-xl bg-white/85 hover:bg-white border border-white text-slate-800 text-xs font-bold shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap"
+                  >
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-slate-600" />
+                    <span className="hidden sm:inline">Custom</span>
+                  </button>
 
-              <button
-                onClick={() => setShowManualQuestionModal(true)}
-                className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 border border-indigo-400 text-white text-xs font-bold shadow-[0_3px_0_0_#3730a3,inset_0_1px_0_rgba(255,255,255,.35)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap"
-                title="Add a question manually"
-              >
-                <CirclePlus className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Add Question</span>
-              </button>
+                  <button
+                    onClick={() => setShowManualQuestionModal(true)}
+                    className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 border border-indigo-400 text-white text-xs font-bold shadow-[0_3px_0_0_#3730a3,inset_0_1px_0_rgba(255,255,255,.35)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap"
+                    title="Add a question manually"
+                  >
+                    <CirclePlus className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Add Question</span>
+                  </button>
 
-              <button
-                onClick={() => setSelectedIds(new Set())}
-                disabled={selectedIds.size === 0}
-                className="p-1.5 rounded-xl bg-white/85 hover:bg-rose-50 border border-white text-slate-500 hover:text-rose-600 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] disabled:opacity-40 disabled:pointer-events-none text-xs font-semibold transition-all"
-                title="Clear selection"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-              </button>
+                  <button
+                    onClick={() => setSelectedIds(new Set())}
+                    disabled={selectedIds.size === 0}
+                    className="p-1.5 rounded-xl bg-white/85 hover:bg-rose-50 border border-white text-slate-500 hover:text-rose-600 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] disabled:opacity-40 disabled:pointer-events-none text-xs font-semibold transition-all"
+                    title="Clear selection"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                  </button>
+                </>
+              )}
 
               {clientUser ? (
                 <div className="flex items-center gap-1.5 bg-white/85 border border-white rounded-xl px-2.5 py-1 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff]">
@@ -1244,7 +1315,7 @@ export default function SelectQuestionsPage() {
           </div>
         </div>
 
-        {!headerCollapsed && (
+        {!wizardMode && !headerCollapsed && (
           <div className="max-w-[1700px] mx-auto px-3 sm:px-6 py-2.5 sm:py-3 space-y-3">
 
             {/* Vibrant Controls Grid: Pattern, Source, Language */}
@@ -1639,18 +1710,456 @@ export default function SelectQuestionsPage() {
         )}
 
         {/* Toggle Collapse Tab */}
-        <div className="flex justify-center -mb-3 relative z-10">
-          <button
-            onClick={() => setHeaderCollapsed(!headerCollapsed)}
-            className="w-10 h-6 bg-white border border-indigo-100 rounded-b-xl shadow-sm hover:bg-indigo-50 flex items-center justify-center text-indigo-600 transition-colors"
-            title={headerCollapsed ? "Expand Smart Header" : "Collapse Smart Header"}
-            id="btn-toggle-header"
-          >
-            {headerCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
-          </button>
-        </div>
+        {!wizardMode && (
+          <div className="flex justify-center -mb-3 relative z-10">
+            <button
+              onClick={() => setHeaderCollapsed(!headerCollapsed)}
+              className="w-10 h-6 bg-white border border-indigo-100 rounded-b-xl shadow-sm hover:bg-indigo-50 flex items-center justify-center text-indigo-600 transition-colors"
+              title={headerCollapsed ? "Expand Smart Header" : "Collapse Smart Header"}
+              id="btn-toggle-header"
+            >
+              {headerCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+            </button>
+          </div>
+        )}
       </header>
 
+      {/* =========================================================================
+          STEP-BY-STEP CURRICULUM WIZARD (CLASS -> SUBJECT -> CHAPTER -> PAPER)
+          ========================================================================= */}
+      {wizardMode ? (
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 pt-6 sm:pt-10 pb-20">
+          {/* Wizard Hero & Step Indicator */}
+          <div className="bg-white/90 backdrop-blur-xl rounded-3xl border border-indigo-100/90 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.1)] p-5 sm:p-8 space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-black uppercase tracking-wider mb-2">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Step-by-Step Paper Generator</span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                  {wizardStep === "class" && "Step 1: Choose Your Class"}
+                  {wizardStep === "subject" &&
+                    `Step 2: Choose Subject (${classesList.find((c) => c.id === selectedClassId)?.name || "Selected Class"})`}
+                  {wizardStep === "chapter" &&
+                    `Step 3: Choose Chapter / Unit (${currentSubject?.name || "Selected Subject"})`}
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                  {wizardStep === "class" &&
+                    "Select a class below to view its available subjects and chapter-wise question banks."}
+                  {wizardStep === "subject" &&
+                    "Select the subject for which you want to prepare your examination or test paper."}
+                  {wizardStep === "chapter" &&
+                    "Choose a chapter/unit below to open its solved MCQs, Short Questions, and Long Questions paper builder."}
+                </p>
+              </div>
+
+              {/* 4-Step Visual Progress Pills */}
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs font-extrabold shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setWizardStep("class")}
+                  className={`px-3 py-2 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer ${
+                    wizardStep === "class"
+                      ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-emerald-600 shadow-sm"
+                      : "bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100"
+                  }`}
+                >
+                  <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[11px] font-black">
+                    1
+                  </span>
+                  <span>
+                    {wizardStep !== "class" && classesList.find((c) => c.id === selectedClassId)
+                      ? classesList.find((c) => c.id === selectedClassId)?.name
+                      : "Class"}
+                  </span>
+                </button>
+
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+
+                <button
+                  type="button"
+                  disabled={wizardStep === "class"}
+                  onClick={() => setWizardStep("subject")}
+                  className={`px-3 py-2 rounded-xl border transition-all flex items-center gap-1.5 ${
+                    wizardStep === "subject"
+                      ? "bg-gradient-to-r from-indigo-600 to-blue-600 text-white border-indigo-600 shadow-sm cursor-pointer"
+                      : wizardStep === "chapter"
+                      ? "bg-indigo-50 text-indigo-900 border-indigo-200 hover:bg-indigo-100 cursor-pointer"
+                      : "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
+                  }`}
+                >
+                  <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[11px] font-black">
+                    2
+                  </span>
+                  <span className="max-w-[130px] truncate">
+                    {wizardStep === "chapter" && currentSubject ? currentSubject.name : "Subject"}
+                  </span>
+                </button>
+
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+
+                <div
+                  className={`px-3 py-2 rounded-xl border transition-all flex items-center gap-1.5 ${
+                    wizardStep === "chapter"
+                      ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white border-violet-600 shadow-sm"
+                      : "bg-slate-100 text-slate-400 border-slate-200"
+                  }`}
+                >
+                  <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[11px] font-black">
+                    3
+                  </span>
+                  <span>Chapter</span>
+                </div>
+
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400 hidden sm:inline" />
+
+                <div className="hidden sm:flex px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-400 items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[11px] font-black">
+                    4
+                  </span>
+                  <span>Generate Paper</span>
+                </div>
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="py-16 text-center space-y-3">
+                <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
+                <p className="text-sm font-bold text-slate-600">Loading available classes, subjects &amp; chapters...</p>
+              </div>
+            ) : !clientUser ? (
+              <div className="py-12 px-4 text-center max-w-lg mx-auto space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-100 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto">
+                  <Lock className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-black text-slate-900">Sign In to Choose Class &amp; Generate Papers</h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Please sign in to your account to select your class, subject, and chapter and build board-pattern exam papers.
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                  <button
+                    onClick={() => setShowAuthModal(true)}
+                    className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2 cursor-pointer"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>Sign In to Account</span>
+                  </button>
+                  <Link
+                    href="/register"
+                    className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs sm:text-sm shadow-md"
+                  >
+                    Register New Account
+                  </Link>
+                </div>
+              </div>
+            ) : !isPaidSubscriber(clientUser) ? (
+              <div className="py-12 px-4 text-center max-w-xl mx-auto space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center mx-auto">
+                  <Crown className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-black text-slate-900">Active Monthly Subscription Required</h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Upgrade to the Monthly Subscription Plan (Rs. 2,000/month) to unlock all classes, subjects, chapters, and unlimited PDF/DOCX exam paper generation.
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                  <Link
+                    href="/pricing"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2"
+                  >
+                    <Crown className="w-4 h-4" />
+                    <span>Subscribe Now — Rs. 2,000 / Month</span>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* =========================================================
+                    STEP 1: CHOOSE CLASS
+                    ========================================================= */}
+                {wizardStep === "class" && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {[...classesList]
+                        .sort((a, b) => {
+                          const orderA = a.numeric_order || 99;
+                          const orderB = b.numeric_order || 99;
+                          // Put 9, 10, 11, 12 at the top for teachers
+                          const priorityA = orderA >= 9 && orderA <= 12 ? orderA - 100 : orderA;
+                          const priorityB = orderB >= 9 && orderB <= 12 ? orderB - 100 : orderB;
+                          return priorityA - priorityB;
+                        })
+                        .map((cls) => {
+                          const classCourseIds = new Set(
+                            coursesList.filter((c) => c.class_id === cls.id).map((c) => c.id)
+                          );
+                          const classSubjects = allSubjectsList.filter((s) =>
+                            classCourseIds.has(s.course_id)
+                          );
+                          const classSubjectIds = new Set(classSubjects.map((s) => s.id));
+                          const classChaptersCount = allChaptersList.filter((ch) =>
+                            classSubjectIds.has(ch.subject_id)
+                          ).length;
+                          const isSelected = selectedClassId === cls.id;
+                          const isHighSchool =
+                            cls.numeric_order === 9 ||
+                            cls.numeric_order === 10 ||
+                            cls.numeric_order === 11 ||
+                            cls.numeric_order === 12;
+
+                          return (
+                            <button
+                              key={cls.id}
+                              type="button"
+                              onClick={async () => {
+                                await handleClassChange(cls.id);
+                                setWizardStep("subject");
+                              }}
+                              className={`group text-left p-5 rounded-2xl border-2 transition-all duration-150 flex flex-col justify-between gap-4 cursor-pointer ${
+                                isSelected
+                                  ? "bg-gradient-to-br from-emerald-50/90 via-white to-teal-50/70 border-emerald-500 shadow-md ring-2 ring-emerald-500/20"
+                                  : isHighSchool
+                                  ? "bg-gradient-to-br from-white via-slate-50/60 to-indigo-50/40 border-indigo-200/90 hover:border-emerald-500 hover:shadow-md hover:-translate-y-0.5"
+                                  : "bg-white border-slate-200 hover:border-emerald-400 hover:shadow-sm hover:-translate-y-0.5"
+                              }`}
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black text-base flex items-center justify-center shadow-sm shrink-0">
+                                    {cls.numeric_order || <GraduationCap className="w-6 h-6" />}
+                                  </div>
+                                  <div>
+                                    <span className="inline-block text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-md mb-1">
+                                      {cls.numeric_order === 9 || cls.numeric_order === 10
+                                        ? "Matric / SSC Board"
+                                        : cls.numeric_order === 11 || cls.numeric_order === 12
+                                        ? "Intermediate / HSSC"
+                                        : "School Curriculum"}
+                                    </span>
+                                    <h3 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
+                                      {cls.name}
+                                    </h3>
+                                  </div>
+                                </div>
+                                <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                              </div>
+
+                              <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs font-bold text-slate-600">
+                                <span className="inline-flex items-center gap-1.5 text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">
+                                  <BookOpen className="w-3.5 h-3.5" />
+                                  <span>{classSubjects.length} Subjects</span>
+                                </span>
+                                <span className="inline-flex items-center gap-1 text-emerald-700">
+                                  <span>{classChaptersCount} Chapters</span>
+                                  <span>&rarr;</span>
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                    </div>
+                  </div>
+                )}
+
+                {/* =========================================================
+                    STEP 2: CHOOSE SUBJECT
+                    ========================================================= */}
+                {wizardStep === "subject" && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setWizardStep("class")}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors cursor-pointer"
+                      >
+                        <ArrowLeft className="w-3.5 h-3.5" />
+                        <span>Back to Classes</span>
+                      </button>
+                      <span className="text-xs font-bold text-slate-500">
+                        Showing {subjects.length} subjects for{" "}
+                        <strong className="text-slate-900">
+                          {classesList.find((c) => c.id === selectedClassId)?.name}
+                        </strong>
+                      </span>
+                    </div>
+
+                    {subjects.length === 0 ? (
+                      <div className="p-10 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-3">
+                        <p className="text-sm font-bold text-slate-700">
+                          No subjects found for this class yet.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setWizardStep("class")}
+                          className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-black cursor-pointer"
+                        >
+                          Choose Another Class
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {subjects.map((sub) => {
+                          const subChapters = allChaptersList.filter(
+                            (ch) => ch.subject_id === sub.id
+                          );
+                          const isSelected = currentSubject?.id === sub.id;
+
+                          return (
+                            <button
+                              key={sub.id}
+                              type="button"
+                              onClick={async () => {
+                                await handleSubjectChange(sub.id);
+                                setWizardStep("chapter");
+                              }}
+                              className={`group text-left p-5 rounded-2xl border-2 transition-all duration-150 flex flex-col justify-between gap-4 cursor-pointer ${
+                                isSelected
+                                  ? "bg-gradient-to-br from-indigo-50/90 via-white to-emerald-50/60 border-indigo-500 shadow-md ring-2 ring-indigo-500/20"
+                                  : "bg-white border-slate-200 hover:border-indigo-500 hover:shadow-md hover:-translate-y-0.5"
+                              }`}
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="space-y-1 min-w-0">
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-md">
+                                    <GraduationCap className="w-3 h-3" />
+                                    <span>
+                                      {classesList.find((c) => c.id === selectedClassId)?.name}
+                                    </span>
+                                  </span>
+                                  <h3 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-indigo-700 transition-colors">
+                                    {sub.name}
+                                  </h3>
+                                  {sub.name_ur && (
+                                    <p className="font-urdu text-base text-emerald-700 pt-0.5">
+                                      {sub.name_ur}
+                                    </p>
+                                  )}
+                                </div>
+                                <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                              </div>
+
+                              <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs font-bold">
+                                <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+                                  {subChapters.length} Chapters / Units
+                                </span>
+                                <span className="text-indigo-700 group-hover:translate-x-0.5 transition-transform">
+                                  Choose Chapter &rarr;
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* =========================================================
+                    STEP 3: CHOOSE CHAPTER / UNIT -> OPEN PAPER GENERATOR
+                    ========================================================= */}
+                {wizardStep === "chapter" && (
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setWizardStep("subject")}
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors cursor-pointer"
+                        >
+                          <ArrowLeft className="w-3.5 h-3.5" />
+                          <span>Back to Subjects</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setWizardStep("class")}
+                          className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-xs transition-colors cursor-pointer"
+                        >
+                          <span>Change Class</span>
+                        </button>
+                      </div>
+
+                      <div className="text-xs font-bold text-slate-600">
+                        <span>
+                          {classesList.find((c) => c.id === selectedClassId)?.name} &bull;{" "}
+                          <strong className="text-emerald-800">{currentSubject?.name}</strong> (
+                          {chapters.length} Chapters)
+                        </span>
+                      </div>
+                    </div>
+
+                    {chapters.length === 0 ? (
+                      <div className="p-10 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-3">
+                        <p className="text-sm font-bold text-slate-700">
+                          No chapters available for this subject yet.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setWizardStep("subject")}
+                          className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-black cursor-pointer"
+                        >
+                          Choose Another Subject
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {chapters.map((ch) => {
+                          const isSelected = currentChapter?.id === ch.id;
+                          return (
+                            <button
+                              key={ch.id}
+                              type="button"
+                              onClick={async () => {
+                                await handleChapterChange(ch.id);
+                                setWizardMode(false);
+                              }}
+                              className={`group text-left p-5 rounded-2xl border-2 transition-all duration-150 flex flex-col justify-between gap-4 cursor-pointer ${
+                                isSelected
+                                  ? "bg-gradient-to-br from-emerald-50/90 via-white to-teal-50/60 border-emerald-500 shadow-md"
+                                  : "bg-white border-slate-200 hover:border-emerald-500 hover:shadow-md hover:-translate-y-0.5"
+                              }`}
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-start gap-3.5 min-w-0">
+                                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black text-xs flex flex-col items-center justify-center shrink-0 shadow-xs">
+                                    <span className="text-[9px] uppercase opacity-80 leading-none">Unit</span>
+                                    <span className="text-sm leading-tight">{ch.number}</span>
+                                  </div>
+                                  <div className="min-w-0">
+                                    <h3 className="text-sm sm:text-base font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
+                                      {ch.title}
+                                    </h3>
+                                    {ch.title_ur && (
+                                      <p className="font-urdu text-sm sm:text-base text-emerald-700 mt-1">
+                                        {ch.title_ur}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                                <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                              </div>
+
+                              <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs font-extrabold">
+                                <span className="text-slate-500">
+                                  MCQs &bull; Short Questions &bull; Long Questions
+                                </span>
+                                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-emerald-600 group-hover:bg-emerald-500 text-white shadow-2xs transition-colors">
+                                  <Zap className="w-3 h-3 fill-white" />
+                                  <span>Open Paper Builder</span>
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      ) : (
+        <>
       {/* =========================================================================
           MAIN LAYOUT: TOPICS (DESKTOP SIDEBAR + MOBILE ACCORDION) & QUESTIONS
           ========================================================================= */}
@@ -2259,6 +2768,8 @@ export default function SelectQuestionsPage() {
           </div>
         </div>
       </footer>
+        </>
+      )}
 
       {/* =========================================================================
           CUSTOM PATTERN SELECTION MODAL

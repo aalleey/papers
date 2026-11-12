@@ -541,7 +541,7 @@ export function ClientProfileView({
                       <span>Raast Transfer Proof Submitted ({fmtDate(client.paymentSubmission.submittedAt)})</span>
                     </div>
                     <div className="text-[11px] text-amber-100/95 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono">
-                      <span>Raast ID: <strong className="text-white">{client.paymentSubmission.raastId || "03092770207"}</strong></span>
+                      <span>WhatsApp / Account: <strong className="text-white">{client.paymentSubmission.raastId || "03473576122"}</strong></span>
                       <span>TID / Ref: <strong className="text-emerald-300 underline">{client.paymentSubmission.transactionRef}</strong></span>
                       {client.paymentSubmission.amount && <span>Amount: <strong className="text-white">Rs. {client.paymentSubmission.amount}</strong></span>}
                       {client.paymentSubmission.senderName && <span>Sender: <strong className="text-white">{client.paymentSubmission.senderName}</strong></span>}
@@ -1129,7 +1129,7 @@ export function ClientProfileView({
                   <span>Raast Payment Verification Details</span>
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Official PaperWala Raast ID: <strong className="font-mono text-slate-800">03092770207</strong>
+                  Official PaperWala Payment WhatsApp: <strong className="font-mono text-slate-800">03473576122</strong> &bull; HBL Account: <strong className="font-mono text-slate-800">11727901764099</strong>
                 </p>
               </div>
             </div>

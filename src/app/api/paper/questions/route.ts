@@ -52,18 +52,32 @@ export async function GET(req: NextRequest) {
   const subjectId = searchParams.get("subjectId") || searchParams.get("subject_id") || undefined;
 
   try {
-    // 1. If subjectId or courseId is given, fetch chapters/topics
-    let [boards, classes, courses, subjects, allChapters, topics] = await Promise.all([
+    // 1. Fetch full curriculum hierarchy + scoped chapters/topics
+    const [boards, classes, courses, rawSubjects, rawAllChapters, topics] = await Promise.all([
       db.getBoards(),
       db.getClasses(),
       db.getCourses(),
       db.getSubjects(courseId),
-      db.getChapters(subjectId),
+      db.getChapters(),
       db.getTopics(chapterId),
     ]);
 
-    // If subjectId wasn't passed but chapterId was, scope chapters to that chapter's subject
-    let chapters = allChapters;
+    // Filter out legacy duplicate seed chapter (ea100000-0000-0000-0000-000000000008) that has 0 questions
+    // when the active 2026-27 Computer Science subject (1def1b99-7726-55ec-8b98-17c3f3c85c6a) exists
+    const hasNewCsSubject = rawSubjects.some(
+      (s) => s.id === "1def1b99-7726-55ec-8b98-17c3f3c85c6a"
+    );
+    const subjects = hasNewCsSubject
+      ? rawSubjects.filter((s) => s.id !== "da100000-0000-0000-0000-000000000004")
+      : rawSubjects;
+    const allChapters = hasNewCsSubject
+      ? rawAllChapters.filter((c) => c.subject_id !== "da100000-0000-0000-0000-000000000004")
+      : rawAllChapters;
+
+    // Scope chapters to requested subjectId or chapterId's subject
+    let chapters = subjectId
+      ? allChapters.filter((c) => c.subject_id === subjectId)
+      : allChapters;
     if (!subjectId && chapterId) {
       const activeCh = allChapters.find((c) => c.id === chapterId);
       if (activeCh) {
@@ -84,6 +98,7 @@ export async function GET(req: NextRequest) {
       courses,
       subjects,
       chapters,
+      allChapters,
       topics,
       questions,
     });

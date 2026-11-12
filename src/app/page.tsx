@@ -288,63 +288,65 @@ export default function Home() {
       {/* =========================================================================
           TOP STICKY NAVBAR - iOS Liquid Glass 3D Floating Bar
           ========================================================================= */}
-      <header className="sticky top-2 sm:top-3 z-50 px-2 sm:px-6 lg:px-8 pointer-events-none">
+      <header className="sticky top-2 sm:top-3 z-50 px-2 sm:px-4 lg:px-8 pointer-events-none">
         <div className="pointer-events-auto max-w-7xl mx-auto rounded-[20px] sm:rounded-[22px] bg-gradient-to-b from-white/75 via-white/55 to-white/70 backdrop-blur-3xl border border-white/90 ring-1 ring-slate-900/[0.04] shadow-[0_22px_55px_-12px_rgba(15,23,42,0.18),0_6px_20px_-4px_rgba(16,185,129,0.12),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(255,255,255,0.7)] transition-all duration-200">
-          <div className="px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-6">
+          <div className="px-2.5 sm:px-5 lg:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 lg:gap-3 xl:gap-5">
             {/* Zone 1: 3D Liquid Glass Brand Emblem & Wordmark */}
-            <BrandLogo id="nav-brand-logo" size="sm" variant="full" />
+            <div className="shrink-0 min-w-0">
+              <BrandLogo id="nav-brand-logo" size="sm" variant="full" />
+            </div>
 
             {/* Zone 2: 3D Recessed Liquid Glass Navigation Track (Desktop) */}
             <nav
-              className="hidden lg:flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-900/[0.04] backdrop-blur-xl border border-white/80 shadow-[inset_0_2px_5px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.95)] text-xs font-semibold text-slate-700"
+              className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 p-1 xl:p-1.5 rounded-2xl bg-slate-900/[0.04] backdrop-blur-xl border border-white/80 shadow-[inset_0_2px_5px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.95)] text-[11px] xl:text-xs font-semibold text-slate-700 min-w-0"
               aria-label="Main Navigation"
             >
               <a
                 href="#how-it-works"
-                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="hidden xl:inline-block px-3 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 How It Works
               </a>
               <a
                 href="#active-chapters"
-                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="px-2.5 xl:px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 Question Bank
               </a>
               <Link
                 href="/notes"
-                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="px-2.5 xl:px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 Study Notes
               </Link>
               <a
                 href="#sample-paper"
-                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="hidden xl:inline-block px-3 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 Sample Paper
               </a>
               <Link
                 href="/pricing"
-                className="px-3.5 py-1.5 rounded-xl text-emerald-800 bg-gradient-to-b from-white/85 to-white/55 hover:from-white hover:to-white/80 shadow-[0_3px_8px_-1px_rgba(16,185,129,0.16),0_2px_0_0_#a7f3d0,inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="px-2.5 xl:px-3.5 py-1.5 rounded-xl text-emerald-800 bg-gradient-to-b from-white/85 to-white/55 hover:from-white hover:to-white/80 shadow-[0_3px_8px_-1px_rgba(16,185,129,0.16),0_2px_0_0_#a7f3d0,inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 Pricing
               </Link>
               <a
                 href="#faq"
-                className="px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
+                className="px-2.5 xl:px-3.5 py-1.5 rounded-xl hover:bg-gradient-to-b hover:from-white/95 hover:to-white/75 hover:text-slate-950 hover:shadow-[0_4px_12px_-2px_rgba(15,23,42,0.12),0_2px_0_0_rgba(203,213,225,0.85),inset_0_1px_1px_#ffffff] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 whitespace-nowrap shrink-0"
               >
                 FAQs
               </a>
             </nav>
 
             {/* Zone 3: iOS Liquid Glass 3D Account Controls & Primary Action */}
-            <div className="flex items-center gap-2.5 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 xl:gap-2.5 shrink-0 min-w-0">
               {clientUser ? (
                 <>
                   <Link
                     href="/quick-paper"
                     id="nav-quick-paper-btn"
-                    className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-b from-white/80 via-white/45 to-white/65 hover:from-white/95 hover:to-white/80 backdrop-blur-2xl border border-white/90 text-slate-800 text-xs font-bold shadow-[0_4px_0_0_rgba(203,213,225,0.8),0_8px_20px_-4px_rgba(15,23,42,0.12),inset_0_2px_2px_0_#ffffff,inset_0_-2px_4px_0_rgba(16,185,129,0.1)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                    className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-b from-white/80 via-white/45 to-white/65 hover:from-white/95 hover:to-white/80 backdrop-blur-2xl border border-white/90 text-slate-800 text-xs font-bold shadow-[0_4px_0_0_rgba(203,213,225,0.8),0_8px_20px_-4px_rgba(15,23,42,0.12),inset_0_2px_2px_0_#ffffff,inset_0_-2px_4px_0_rgba(16,185,129,0.1)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
                     title="Create or Paste Instant Paper"
                   >
                     <FileText className="w-3.5 h-3.5 text-emerald-600" />
@@ -355,31 +357,33 @@ export default function Home() {
                     <Link
                       href="/admin/users"
                       id="nav-admin-panel-btn"
-                      className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-b from-indigo-50/85 via-white/50 to-indigo-100/65 hover:from-indigo-50 hover:to-indigo-100/90 backdrop-blur-2xl border border-white/90 text-indigo-800 text-xs font-bold shadow-[0_4px_0_0_#c7d2fe,0_8px_20px_-4px_rgba(79,70,229,0.15),inset_0_2px_2px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                      className="hidden md:inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-2 rounded-xl bg-gradient-to-b from-indigo-50/85 via-white/50 to-indigo-100/65 hover:from-indigo-50 hover:to-indigo-100/90 backdrop-blur-2xl border border-white/90 text-indigo-800 text-xs font-bold shadow-[0_4px_0_0_#c7d2fe,0_8px_20px_-4px_rgba(79,70,229,0.15),inset_0_2px_2px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
                       title="Open Admin Panel"
                     >
                       <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
-                      <span>Admin</span>
+                      <span className="hidden xl:inline">Admin</span>
                     </Link>
                   )}
 
-                  <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-b from-white/80 via-white/45 to-white/65 backdrop-blur-2xl border border-white/90 text-xs font-medium shadow-[0_4px_0_0_rgba(203,213,225,0.8),0_8px_20px_-4px_rgba(15,23,42,0.12),inset_0_2px_2px_0_#ffffff] whitespace-nowrap shrink-0">
+                  <div className="hidden md:inline-flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-3.5 py-1.5 rounded-xl bg-gradient-to-b from-white/80 via-white/45 to-white/65 backdrop-blur-2xl border border-white/90 text-xs font-medium shadow-[0_4px_0_0_rgba(203,213,225,0.8),0_8px_20px_-4px_rgba(15,23,42,0.12),inset_0_2px_2px_0_#ffffff] whitespace-nowrap shrink-0">
                     <Link
                       href="/profile"
                       id="nav-my-profile-link"
                       title="My Profile & Paper History"
                       className="inline-flex items-center gap-1.5 text-slate-800 hover:text-emerald-700 transition-colors"
                     >
-                      <User className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="font-bold">{clientUser.fullName.split(" ")[0]}</span>
-                      <span className="text-slate-300" aria-hidden="true">·</span>
-                      <span className="text-[11px] text-emerald-700 font-bold">
+                      <User className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span className="font-bold max-w-[95px] xl:max-w-[140px] truncate">
+                        {clientUser.fullName.split(" ")[0]}
+                      </span>
+                      <span className="hidden 2xl:inline text-slate-300" aria-hidden="true">·</span>
+                      <span className="hidden 2xl:inline text-[11px] text-emerald-700 font-bold">
                         {clientUser.subscription.planName}
                       </span>
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="p-0.5 text-slate-400 hover:text-rose-600 transition-colors ml-1"
+                      className="p-0.5 text-slate-400 hover:text-rose-600 transition-colors ml-0.5"
                       title="Log Out"
                     >
                       <LogOut className="w-3.5 h-3.5" />
@@ -387,11 +391,11 @@ export default function Home() {
                   </div>
                 </>
               ) : (
-                <div className="hidden sm:flex items-center gap-2.5">
+                <div className="hidden sm:flex items-center gap-1.5 lg:gap-2">
                   <button
                     onClick={() => openAuth()}
                     id="nav-client-login-btn"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-white/85 via-white/45 to-white/70 hover:from-white hover:via-white/70 hover:to-emerald-50/75 backdrop-blur-2xl border border-white/95 ring-1 ring-slate-900/[0.04] text-slate-800 hover:text-emerald-900 text-xs font-bold shadow-[0_4px_0_0_rgba(203,213,225,0.85),0_10px_22px_-4px_rgba(15,23,42,0.14),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(16,185,129,0.12)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_rgba(167,243,208,0.9),0_14px_26px_-4px_rgba(16,185,129,0.22),inset_0_2px_3px_0_#ffffff] active:translate-y-0.5 active:shadow-[0_2px_0_0_rgba(203,213,225,0.9)] transition-all duration-150 whitespace-nowrap shrink-0 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 xl:px-4 py-2 rounded-xl bg-gradient-to-b from-white/85 via-white/45 to-white/70 hover:from-white hover:via-white/70 hover:to-emerald-50/75 backdrop-blur-2xl border border-white/95 ring-1 ring-slate-900/[0.04] text-slate-800 hover:text-emerald-900 text-xs font-bold shadow-[0_4px_0_0_rgba(203,213,225,0.85),0_10px_22px_-4px_rgba(15,23,42,0.14),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(16,185,129,0.12)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_rgba(167,243,208,0.9),0_14px_26px_-4px_rgba(16,185,129,0.22),inset_0_2px_3px_0_#ffffff] active:translate-y-0.5 active:shadow-[0_2px_0_0_rgba(203,213,225,0.9)] transition-all duration-150 whitespace-nowrap shrink-0 cursor-pointer"
                   >
                     <LogIn className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Sign In</span>
@@ -399,10 +403,10 @@ export default function Home() {
                   <Link
                     href="/register"
                     id="nav-client-signup-btn"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-50/85 via-white/45 to-teal-50/75 hover:from-white hover:via-emerald-50/65 hover:to-teal-100/80 backdrop-blur-2xl border border-white/95 ring-1 ring-emerald-500/15 text-emerald-900 hover:text-emerald-950 text-xs font-extrabold shadow-[0_4px_0_0_rgba(167,243,208,0.95),0_10px_22px_-4px_rgba(16,185,129,0.18),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(16,185,129,0.18)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_rgba(110,231,183,1),0_14px_28px_-4px_rgba(16,185,129,0.28),inset_0_2px_3px_0_#ffffff] active:translate-y-0.5 active:shadow-[0_2px_0_0_rgba(167,243,208,1)] transition-all duration-150 whitespace-nowrap shrink-0"
+                    className="hidden md:inline-flex items-center gap-1.5 px-3 xl:px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-50/85 via-white/45 to-teal-50/75 hover:from-white hover:via-emerald-50/65 hover:to-teal-100/80 backdrop-blur-2xl border border-white/95 ring-1 ring-emerald-500/15 text-emerald-900 hover:text-emerald-950 text-xs font-extrabold shadow-[0_4px_0_0_rgba(167,243,208,0.95),0_10px_22px_-4px_rgba(16,185,129,0.18),inset_0_2px_2px_0_rgba(255,255,255,1),inset_0_-2px_6px_0_rgba(16,185,129,0.18)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_rgba(110,231,183,1),0_14px_28px_-4px_rgba(16,185,129,0.28),inset_0_2px_3px_0_#ffffff] active:translate-y-0.5 active:shadow-[0_2px_0_0_rgba(167,243,208,1)] transition-all duration-150 whitespace-nowrap shrink-0"
                   >
                     <User className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Register Account</span>
+                    <span>Register</span>
                   </Link>
                 </div>
               )}
@@ -410,31 +414,31 @@ export default function Home() {
               {clientUser ? (
                 isPaidSubscriber(clientUser) ? (
                   <Link
-                    href="/select-questions?chapter=3"
+                    href="/select-questions"
                     id="nav-generate-paper-btn"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_2px_2px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_2px_2px_rgba(255,255,255,0.75)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
+                    className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 xl:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-[11px] sm:text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_2px_2px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_2px_2px_rgba(255,255,255,0.75)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
                   >
                     <span>Generate Paper</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </Link>
                 ) : (
                   <Link
                     href="/pricing"
                     id="nav-generate-paper-btn"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-amber-400 via-amber-500 to-orange-600 text-white font-bold text-xs shadow-[0_4px_0_0_#9a3412,0_10px_20px_-4px_rgba(245,158,11,0.45),inset_0_2px_2px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
+                    className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 xl:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-b from-amber-400 via-amber-500 to-orange-600 text-white font-bold text-[11px] sm:text-xs shadow-[0_4px_0_0_#9a3412,0_10px_20px_-4px_rgba(245,158,11,0.45),inset_0_2px_2px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150 whitespace-nowrap shrink-0"
                   >
                     <span>Upgrade Plan</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </Link>
                 )
               ) : (
                 <Link
                   href="/pricing"
                   id="nav-generate-paper-btn"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_2px_2px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_2px_2px_rgba(255,255,255,0.75)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
+                  className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 xl:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-[11px] sm:text-xs shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_2px_2px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#065f46,0_14px_24px_-4px_rgba(16,185,129,0.55),inset_0_2px_2px_rgba(255,255,255,0.75)] active:translate-y-0.5 active:shadow-[0_2px_0_0_#065f46] transition-all duration-150 whitespace-nowrap shrink-0"
                 >
                   <span>Plans &amp; Pricing</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </Link>
               )}
 
@@ -442,7 +446,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-xl bg-gradient-to-b from-white/85 to-white/60 border border-white text-slate-700 hover:text-slate-950 shadow-[0_3px_0_0_#cbd5e1,inset_0_2px_2px_#ffffff] active:translate-y-0.5 transition-all"
+                className="xl:hidden p-2 rounded-xl bg-gradient-to-b from-white/85 to-white/60 border border-white text-slate-700 hover:text-slate-950 shadow-[0_3px_0_0_#cbd5e1,inset_0_2px_2px_#ffffff] active:translate-y-0.5 transition-all shrink-0"
                 aria-label="Toggle Menu"
               >
                 {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -450,10 +454,23 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Mobile 3D Liquid Glass Navigation Drawer */}
+          {/* Mobile & Laptop 3D Liquid Glass Navigation Drawer */}
           {mobileMenuOpen && (
-            <div className="lg:hidden border-t border-white/70 bg-gradient-to-b from-white/75 to-white/60 backdrop-blur-3xl rounded-b-[22px] px-4 py-4 space-y-3">
-              <nav className="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700">
+            <div className="xl:hidden border-t border-white/70 bg-gradient-to-b from-white/75 to-white/60 backdrop-blur-3xl rounded-b-[22px] px-4 py-4 space-y-3">
+              {/* Primary Action CTA inside Drawer */}
+              {clientUser && isPaidSubscriber(clientUser) && (
+                <Link
+                  href="/select-questions"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-xs shadow-sm"
+                >
+                  <Zap className="w-3.5 h-3.5 fill-white" />
+                  <span>Generate Exam Paper (Choose Class → Subject → Chapter)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              )}
+
+              <nav className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs font-bold text-slate-700">
                 <a
                   href="#how-it-works"
                   onClick={() => setMobileMenuOpen(false)}
@@ -503,6 +520,15 @@ export default function Home() {
                 >
                   Quick Paper
                 </Link>
+                {clientUser && clientUser.email.toLowerCase() === "ali.khaliq50@gmail.com" && (
+                  <Link
+                    href="/admin/users"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-3 py-2 rounded-xl bg-indigo-50/90 border border-indigo-200 text-indigo-800 shadow-[0_2px_0_0_#c7d2fe,inset_0_1px_1px_#ffffff] transition-all"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
               </nav>
 
               <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between gap-2">
@@ -511,16 +537,16 @@ export default function Home() {
                     <Link
                       href="/profile"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 text-xs font-bold text-slate-800"
+                      className="flex items-center gap-2 text-xs font-bold text-slate-800 min-w-0 truncate"
                     >
-                      <User className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>{clientUser.fullName}</span>
-                      <span className="text-slate-400">·</span>
-                      <span className="text-emerald-700">{clientUser.subscription.planName}</span>
+                      <User className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span className="truncate">{clientUser.fullName}</span>
+                      <span className="text-slate-400 shrink-0">·</span>
+                      <span className="text-emerald-700 shrink-0">{clientUser.subscription.planName}</span>
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold shadow-[0_2px_0_0_#fecdd3]"
+                      className="px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold shadow-[0_2px_0_0_#fecdd3] shrink-0"
                     >
                       Sign Out
                     </button>
@@ -646,7 +672,7 @@ export default function Home() {
                   {clientUser ? (
                     isPaidSubscriber(clientUser) ? (
                       <Link
-                        href="/select-questions?chapter=3"
+                        href="/select-questions"
                         id="hero-generate-paper-btn"
                         className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm shadow-md shadow-emerald-700/25 transition-all"
                       >
@@ -1759,7 +1785,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
               {clientUser && isPaidSubscriber(clientUser) ? (
                 <Link
-                  href="/select-questions?chapter=3"
+                  href="/select-questions"
                   className="px-8 py-3.5 rounded-2xl bg-white text-emerald-900 hover:bg-emerald-50 font-black text-sm shadow-md transition-all flex items-center gap-2"
                 >
                   <Zap className="w-4 h-4 fill-emerald-900" />
