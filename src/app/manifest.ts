@@ -51,7 +51,7 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name: "School & Academy Pricing",
         short_name: "Pricing",
-        description: "View Rs. 30 per paper and Rs. 2,000/month unlimited educator plans.",
+        description: "View Rs. 2,000/month (50% OFF) unlimited educator subscription plan.",
         url: "/pricing",
       },
     ],

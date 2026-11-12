@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, BookOpen, Sparkles } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
+import { SiteNavbar } from "@/components/SiteNavbar";
 import { getNotesSubject } from "@/lib/notes";
 import { SITE_URL } from "@/lib/site-url";
 
@@ -112,28 +112,7 @@ export default async function SubjectNotesPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <BrandLogo size="sm" variant="full" />
-          <nav
-            aria-label="Page navigation"
-            className="flex items-center gap-3 sm:gap-5 text-xs font-bold text-slate-600"
-          >
-            <Link href="/notes" className="hover:text-emerald-700 transition-colors">
-              All Notes
-            </Link>
-            <Link href="/paper-maker" className="hidden sm:inline hover:text-emerald-700 transition-colors">
-              Paper Makers
-            </Link>
-            <Link
-              href={`/select-questions?subject_id=${encodeURIComponent(subject.primarySubjectId)}`}
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-colors"
-            >
-              Generate {subject.name} Paper
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <SiteNavbar />
 
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
         <nav

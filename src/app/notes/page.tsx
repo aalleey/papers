@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Sparkles, Layers } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
+import { SiteNavbar } from "@/components/SiteNavbar";
 import { getNotesCatalog } from "@/lib/notes";
 import { SITE_URL } from "@/lib/site-url";
 
@@ -84,31 +84,7 @@ export default async function NotesHubPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <BrandLogo size="sm" variant="full" />
-          <nav
-            aria-label="Page navigation"
-            className="flex items-center gap-3 sm:gap-5 text-xs font-bold text-slate-600"
-          >
-            <Link href="/paper-maker" className="hidden sm:inline hover:text-emerald-700 transition-colors">
-              Paper Makers
-            </Link>
-            <Link href="/quick-paper" className="hidden md:inline hover:text-emerald-700 transition-colors">
-              AI Quick Paper
-            </Link>
-            <Link href="/pricing" className="hover:text-emerald-700 transition-colors">
-              Pricing
-            </Link>
-            <Link
-              href="/select-questions"
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-colors"
-            >
-              Make a Paper
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <SiteNavbar />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
         <nav aria-label="Breadcrumb" className="text-xs font-medium text-slate-500 flex items-center gap-1.5">
@@ -283,7 +259,7 @@ export default async function NotesHubPage() {
               href="/pricing"
               className="px-5 py-3 rounded-xl bg-emerald-950/60 hover:bg-emerald-950 text-white border border-emerald-400/30 font-bold text-xs sm:text-sm"
             >
-              View Plans (Rs. 30 / paper)
+              Subscribe (Rs. 2,000/mo)
             </Link>
           </div>
         </section>

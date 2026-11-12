@@ -54,7 +54,7 @@ export const SEO_CATEGORY_META: Record<
 
 const pricingFaq = (label: string) => ({
   q: `What does PaperWala cost for ${label} papers?`,
-  a: `You can explore PaperWala and test AI topic search online. Generating and exporting print-ready PDF or editable Word (.docx) ${label} papers starts at Rs. 30 per paper (Pay-As-You-Go) or Rs. 2,000/month for unlimited school and academy papers.`,
+  a: `You can subscribe to PaperWala's Monthly Unlimited Educator Plan for Rs. 2,000/month (50% OFF from Rs. 4,000) to generate and export unlimited print-ready PDF and editable Word (.docx) ${label} papers with your custom school logo and answer keys.`,
 });
 
 interface BiseBoardSpec {

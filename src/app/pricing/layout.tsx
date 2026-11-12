@@ -4,9 +4,9 @@ import { SITE_URL } from "@/lib/site-url";
 const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "School & Academy Pricing – Unlimited Online Paper Maker",
+  title: "School & Academy Subscription Plans – Unlimited Online Paper Maker",
   description:
-    "Affordable online paper making plans for Pakistani schools, colleges & academies. Start at Rs. 30 per paper or Rs. 2,000/month unlimited board papers.",
+    "Subscribe to PaperWala for Rs. 2,000/month (50% OFF). Generate unlimited BISE & FBISE board-pattern exam papers with custom school logo, Urdu Nastaliq, PDF & Word export.",
   keywords: [
     "online paper maker pricing Pakistan",
     "school exam software price",
@@ -25,24 +25,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_PK",
     siteName: "PaperWala",
-    title: "School & Academy Pricing – Unlimited Paper Maker | PaperWala",
+    title: "School & Academy Subscription – Unlimited Paper Maker | PaperWala",
     description:
-      "Affordable online paper making plans for Pakistani schools, colleges, and coaching academies. Start at Rs. 30 per paper or Rs. 2,000/month unlimited.",
+      "Get unlimited board-pattern exam paper generation for Pakistani schools, colleges, and coaching academies for Rs. 2,000/month (50% OFF).",
     url: "/pricing",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "PaperWala School & Academy Pricing Plans",
+        alt: "PaperWala School & Academy Subscription Plans",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "School & Academy Pricing – Unlimited Paper Maker | PaperWala",
+    title: "School & Academy Subscription – Unlimited Paper Maker | PaperWala",
     description:
-      "Affordable online paper making plans for Pakistani schools, colleges & academies. Start at Rs. 30 per paper or Rs. 2,000/month unlimited board papers.",
+      "Subscribe to PaperWala for Rs. 2,000/month (50% OFF). Generate unlimited BISE & FBISE board-pattern exam papers with custom school logo, PDF & Word export.",
     images: ["/twitter-image"],
   },
 };
@@ -54,26 +54,18 @@ const pricingJsonLd = {
       "@type": "WebPage",
       "@id": `${siteUrl}/pricing#webpage`,
       "url": `${siteUrl}/pricing`,
-      "name": "School & Academy Pricing Plans – PaperWala Online Paper Maker",
+      "name": "School & Academy Subscription Plans – PaperWala Online Paper Maker",
       "description":
-        "Affordable online paper making plans for Pakistani schools, colleges, and coaching academies. Start with Rs. 30 per paper or Rs. 2,000/month unlimited board-pattern papers.",
+        "Unlimited online paper making subscription for Pakistani schools, colleges, and coaching academies at Rs. 2,000/month (50% OFF).",
       "mainEntity": {
         "@type": "OfferCatalog",
-        "name": "PaperWala Educator & School Plans",
+        "name": "PaperWala Educator & School Subscription Plans",
         "itemListElement": [
           {
             "@type": "Offer",
-            "name": "Pay As You Go Plan",
-            "description": "Single board-pattern exam paper generation credit with PDF & Word export.",
-            "price": "30",
-            "priceCurrency": "PKR",
-            "availability": "https://schema.org/InStock",
-            "url": `${siteUrl}/pricing`,
-          },
-          {
-            "@type": "Offer",
             "name": "Monthly Unlimited Educator Plan",
-            "description": "Unlimited board-pattern exam papers, AI Quick Paper Maker, Bilingual translator & Word export for 30 days.",
+            "description":
+              "Unlimited board-pattern exam papers, AI Quick Paper Maker, Bilingual translator, custom school header & Word/PDF export for 30 days.",
             "price": "2000",
             "priceCurrency": "PKR",
             "availability": "https://schema.org/InStock",
@@ -113,4 +105,3 @@ export default function PricingLayout({ children }: { children: React.ReactNode 
     </>
   );
 }
-

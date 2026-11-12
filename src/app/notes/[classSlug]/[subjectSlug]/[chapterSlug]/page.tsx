@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Sparkles, BookOpen, Lock, CheckCircle2 } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
+import { SiteNavbar } from "@/components/SiteNavbar";
 import { NotesChapterViewer } from "@/components/NotesChapterViewer";
 import { getCurrentClient, isCurrentUserAdmin } from "@/lib/auth";
 import { getNotesChapter } from "@/lib/notes";
@@ -216,31 +216,7 @@ export default async function ChapterNotesPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <BrandLogo size="sm" variant="full" />
-          <nav
-            aria-label="Page navigation"
-            className="flex items-center gap-3 sm:gap-5 text-xs font-bold text-slate-600"
-          >
-            <Link
-              href={`/notes/${cls.slug}/${subject.slug}`}
-              className="hidden sm:inline hover:text-emerald-700 transition-colors"
-            >
-              All {subject.name} Units
-            </Link>
-            <Link href="/notes" className="hover:text-emerald-700 transition-colors">
-              Notes Hub
-            </Link>
-            <Link
-              href={generatorUrl}
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-colors"
-            >
-              Generate Unit Test
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <SiteNavbar />
 
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
         {/* Breadcrumb */}

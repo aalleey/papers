@@ -309,38 +309,116 @@ export default function PaperEditorPage() {
   async function loadEditorData() {
     try {
       setLoading(true);
-      const res = await fetch("/api/paper/questions?chapter_id=68fc022a-f4b1-53f8-a133-2946135d88db");
-      const data = await res.json();
-      if (data.questions?.length) {
-        setBankQuestions(data.questions);
-      }
 
       const stored = sessionStorage.getItem("papermaker_selected_questions");
       const storedLang = sessionStorage.getItem("papermaker_language_mode");
+      const storedContextRaw = sessionStorage.getItem("papermaker_paper_context");
+
       if (storedLang === "Urdu" || storedLang === "English" || storedLang === "Bilingual") {
         setLanguageMode(storedLang);
       }
 
+      let parsedQuestions: Question[] = [];
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setQuestions(parsed);
-            const firstQ = parsed[0];
-            if (firstQ?.chapter_id && data.chapters) {
-              const matchCh = data.chapters.find((c: any) => c.id === firstQ.chapter_id);
-              if (matchCh) {
-                setSyllabusText(`Unit-${matchCh.number} ${matchCh.title}`);
-              }
-            }
-            return;
+            parsedQuestions = parsed;
+            setQuestions(parsedQuestions);
           }
         } catch {
           // ignore
         }
       }
 
-      // Default set matching Chapter 2
+      let parsedContext: {
+        classId?: string;
+        className?: string;
+        subjectId?: string;
+        subjectName?: string;
+        subjectNameUr?: string;
+        subjectLabel?: string;
+        chapterId?: string;
+        syllabusText?: string;
+      } | null = null;
+
+      if (storedContextRaw) {
+        try {
+          parsedContext = JSON.parse(storedContextRaw);
+        } catch {
+          // ignore
+        }
+      }
+
+      // Apply immediate context if available from Select Questions page
+      if (parsedContext?.subjectLabel) {
+        setSubjectTitle(parsedContext.subjectLabel);
+      } else if (parsedContext?.subjectName) {
+        setSubjectTitle(parsedContext.subjectName);
+      }
+      if (parsedContext?.className) {
+        setClassNameText(parsedContext.className.replace(/^Class\s+/i, "").trim() || parsedContext.className);
+      }
+      if (parsedContext?.syllabusText) {
+        setSyllabusText(parsedContext.syllabusText);
+      }
+
+      // Fetch bank questions & hierarchy metadata for the active chapter/subject
+      const targetChapterId =
+        parsedContext?.chapterId ||
+        parsedQuestions[0]?.chapter_id ||
+        "68fc022a-f4b1-53f8-a133-2946135d88db";
+      const targetSubjectId = parsedContext?.subjectId || "";
+      const apiParams = new URLSearchParams();
+      if (targetSubjectId) apiParams.set("subject_id", targetSubjectId);
+      if (targetChapterId) apiParams.set("chapter_id", targetChapterId);
+
+      const res = await fetch(`/api/paper/questions?${apiParams.toString()}`);
+      const data = await res.json();
+      if (data.questions?.length) {
+        setBankQuestions(data.questions);
+      }
+
+      if (parsedQuestions.length > 0) {
+        // Resolve/verify syllabus, subject, and class from DB hierarchy if any field was missing
+        const allChapters = data.allChapters || data.chapters || [];
+        const uniqueChapIds = Array.from(
+          new Set(parsedQuestions.map((q) => q.chapter_id).filter(Boolean))
+        );
+        const matchedChapters = uniqueChapIds
+          .map((cid) => allChapters.find((c: any) => c.id === cid))
+          .filter(Boolean);
+
+        if (matchedChapters.length > 0) {
+          if (!parsedContext?.syllabusText) {
+            const formattedSyllabus =
+              matchedChapters.length > 1
+                ? matchedChapters.map((ch: any) => `Unit-${ch.number}: ${ch.title}`).join(", ")
+                : `Unit-${matchedChapters[0].number} ${matchedChapters[0].title}`;
+            setSyllabusText(formattedSyllabus);
+          }
+
+          const primarySubId = parsedContext?.subjectId || matchedChapters[0].subject_id;
+          const matchSub = (data.subjects || []).find((s: any) => s.id === primarySubId);
+          if (matchSub && !parsedContext?.subjectLabel) {
+            setSubjectTitle(
+              matchSub.name_ur ? `${matchSub.name} ${matchSub.name_ur}` : matchSub.name
+            );
+          }
+          if (matchSub && !parsedContext?.className && data.courses && data.classes) {
+            const matchCourse = data.courses.find((c: any) => c.id === matchSub.course_id);
+            const matchClass = matchCourse
+              ? data.classes.find((cl: any) => cl.id === matchCourse.class_id)
+              : null;
+            if (matchClass?.name) {
+              setClassNameText(matchClass.name.replace(/^Class\s+/i, "").trim() || matchClass.name);
+            }
+          }
+        }
+        return;
+      }
+
+      // Default set matching Chapter 2 when visiting /paper-editor directly with no selected questions
       if (data.questions?.length) {
         const defaultMcqs = data.questions.filter((q: Question) => q.type === "mcq").slice(0, 7);
         const defaultShorts = data.questions.filter((q: Question) => q.type === "short").slice(0, 5);

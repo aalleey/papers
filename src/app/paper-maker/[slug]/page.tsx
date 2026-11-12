@@ -9,7 +9,7 @@ import {
   Layers,
   HelpCircle,
 } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
+import { SiteNavbar } from "@/components/SiteNavbar";
 import {
   SEO_LANDINGS,
   SEO_CATEGORY_META,
@@ -105,8 +105,8 @@ export default async function SeoLandingPage({
         description: page.description,
         offers: {
           "@type": "AggregateOffer",
-          lowPrice: "30",
-          highPrice: "2000",
+          lowPrice: "2000",
+          highPrice: "3000",
           priceCurrency: "PKR",
           offerCount: "2",
         },
@@ -140,35 +140,8 @@ export default async function SeoLandingPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Header */}
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <BrandLogo size="sm" variant="full" />
-          <nav
-            aria-label="Page navigation"
-            className="flex items-center gap-3 sm:gap-5 text-xs font-bold text-slate-600"
-          >
-            <Link href="/notes" className="hidden sm:inline hover:text-emerald-700 transition-colors">
-              Study Notes
-            </Link>
-            <Link href="/paper-maker" className="hidden sm:inline hover:text-emerald-700 transition-colors">
-              All Boards &amp; Subjects
-            </Link>
-            <Link href="/quick-paper" className="hidden md:inline hover:text-emerald-700 transition-colors">
-              AI Quick Paper
-            </Link>
-            <Link href="/pricing" className="hover:text-emerald-700 transition-colors">
-              Pricing
-            </Link>
-            <Link
-              href="/login"
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-colors"
-            >
-              Sign In
-            </Link>
-          </nav>
-        </div>
-      </header>
+      {/* Unified Header */}
+      <SiteNavbar />
 
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
         {/* Breadcrumb */}
@@ -250,7 +223,7 @@ export default async function SeoLandingPage({
               href="/pricing"
               className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl text-xs font-bold text-emerald-800 hover:underline"
             >
-              <span>Plans from Rs. 30 / paper</span>
+              <span>Unlimited Plan: Rs. 2,000/mo (50% OFF)</span>
             </Link>
           </div>
         </section>

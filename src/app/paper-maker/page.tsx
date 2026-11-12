@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
+import { SiteNavbar } from "@/components/SiteNavbar";
 import {
   SEO_LANDINGS,
   SEO_CATEGORY_META,
@@ -105,34 +105,7 @@ export default function PaperMakerDirectoryPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <BrandLogo size="sm" variant="full" />
-          <nav
-            aria-label="Page navigation"
-            className="flex items-center gap-3 sm:gap-5 text-xs font-bold text-slate-600"
-          >
-            <Link href="/notes" className="hidden sm:inline hover:text-emerald-700 transition-colors">
-              Study Notes
-            </Link>
-            <Link href="/select-questions" className="hidden sm:inline hover:text-emerald-700 transition-colors">
-              Question Bank
-            </Link>
-            <Link href="/quick-paper" className="hidden sm:inline hover:text-emerald-700 transition-colors">
-              AI Quick Paper
-            </Link>
-            <Link href="/pricing" className="hover:text-emerald-700 transition-colors">
-              Pricing
-            </Link>
-            <Link
-              href="/login"
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-colors"
-            >
-              Sign In
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <SiteNavbar />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-14 space-y-12">
         <nav aria-label="Breadcrumb" className="text-xs font-medium text-slate-500 flex items-center gap-1.5">

@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { SUBSCRIPTION_PLANS, ClientUser, isPaidSubscriber } from "@/lib/types";
 import { ClientAuthModal } from "@/components/ClientAuthModal";
-import { BrandLogo } from "@/components/BrandLogo";
+import { SiteNavbar } from "@/components/SiteNavbar";
 import { PaymentQr, OFFICIAL_WHATSAPP, OFFICIAL_WHATSAPP_INTL } from "@/components/PaymentQr";
 
 export default function PricingPage() {
@@ -119,76 +119,10 @@ export default function PricingPage() {
       />
 
       {/* Top Header */}
-      <header className="sticky top-2 sm:top-3 z-40 px-2 sm:px-6 lg:px-8 pointer-events-none">
-        <div className="pointer-events-auto max-w-7xl mx-auto rounded-2xl bg-white/75 backdrop-blur-2xl border border-white/85 shadow-[0_20px_50px_-12px_rgba(15,23,42,0.16),0_4px_16px_-2px_rgba(16,185,129,0.12),inset_0_2px_1px_0_rgba(255,255,255,0.95)]">
-          <div className="px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-6">
-            <div className="flex items-center gap-2 sm:gap-3 whitespace-nowrap shrink-0">
-              <Link
-                href="/"
-                className="p-1.5 sm:p-2 rounded-xl bg-white/80 hover:bg-white border border-white text-slate-700 hover:text-slate-950 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all duration-150"
-                title="Back to Home"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
-              <BrandLogo size="sm" variant="compact" />
-            </div>
-
-            <nav className="hidden md:flex items-center gap-1.5 p-1.5 rounded-xl bg-slate-900/[0.04] backdrop-blur-md border border-white/70 text-xs font-semibold text-slate-700">
-              <Link href="/" className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 transition-all whitespace-nowrap shrink-0">
-                Overview
-              </Link>
-              <Link href="/select-questions" className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 transition-all whitespace-nowrap shrink-0">
-                Question Bank
-              </Link>
-              <Link href="/quick-paper" className="px-3.5 py-1.5 rounded-lg hover:bg-white/90 hover:text-slate-950 transition-all whitespace-nowrap shrink-0">
-                Quick Paper
-              </Link>
-              <span className="px-3.5 py-1.5 rounded-lg bg-white/95 text-emerald-800 font-extrabold shadow-xs whitespace-nowrap shrink-0">
-                Buy Subscription
-              </span>
-            </nav>
-
-            <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-              {clientUser ? (
-                <div className="flex items-center gap-1.5 sm:gap-2.5">
-                  <Link
-                    href="/profile"
-                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 border border-white text-xs font-medium text-slate-700 shadow-[0_3px_0_0_#cbd5e1]"
-                  >
-                    <User className="w-3.5 h-3.5 text-emerald-600" />
-                    <span className="text-slate-900 font-bold">{clientUser.fullName.split(" ")[0]}</span>
-                    <span className="text-slate-300" aria-hidden="true">·</span>
-                    <span className="text-emerald-700 font-bold">{clientUser.subscription.planName}</span>
-                  </Link>
-                  <Link
-                    href="/select-questions"
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-bold text-xs shadow-[0_4px_0_0_#065f46] inline-flex items-center gap-1.5"
-                  >
-                    <span>Generator</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowAuthModal(true)}
-                    className="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-white/90 hover:bg-white border border-slate-200 text-slate-900 font-bold text-xs shadow-xs cursor-pointer"
-                  >
-                    Sign In
-                  </button>
-                  <Link
-                    href="/register"
-                    className="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white font-extrabold text-xs shadow-[0_4px_0_0_#065f46]"
-                  >
-                    Register
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      <SiteNavbar
+        clientUser={clientUser}
+        onOpenAuth={() => setShowAuthModal(true)}
+      />
 
       {/* Hero Banner */}
       <section className="relative z-10 pt-10 pb-8 px-4 sm:px-6 text-center max-w-4xl mx-auto space-y-4">

@@ -819,8 +819,53 @@ export default function SelectQuestionsPage() {
       const q = knownQuestionsMap[id] || allQuestions.find((item) => item.id === id);
       if (q) selectedList.push(q);
     }
+
+    // Persist exact Class, Subject & Chapter(s) context for the Paper Editor header/syllabus
+    const activeClass = classesList.find((c) => c.id === selectedClassId);
+    const chapterIdsInSelection = Array.from(
+      new Set(selectedList.map((q) => q.chapter_id).filter(Boolean))
+    );
+    const matchedChapters = chapterIdsInSelection
+      .map(
+        (cid) =>
+          allChaptersList.find((ch) => ch.id === cid) ||
+          chapters.find((ch) => ch.id === cid) ||
+          (currentChapter?.id === cid ? currentChapter : null)
+      )
+      .filter((ch): ch is Chapter => Boolean(ch));
+
+    const syllabusLabel =
+      matchedChapters.length > 1
+        ? matchedChapters.map((ch) => `Unit-${ch.number}: ${ch.title}`).join(", ")
+        : matchedChapters.length === 1
+        ? `Unit-${matchedChapters[0].number} ${matchedChapters[0].title}`
+        : currentChapter
+        ? `Unit-${currentChapter.number} ${currentChapter.title}`
+        : showAiResultsMode && aiSearchResult?.topicTitleEn
+        ? aiSearchResult.topicTitleEn
+        : "";
+
+    const subjectLabel = currentSubject
+      ? currentSubject.name_ur
+        ? `${currentSubject.name} ${currentSubject.name_ur}`
+        : currentSubject.name
+      : "";
+
     sessionStorage.setItem("papermaker_selected_questions", JSON.stringify(selectedList));
     sessionStorage.setItem("papermaker_language_mode", languageMode);
+    sessionStorage.setItem(
+      "papermaker_paper_context",
+      JSON.stringify({
+        classId: selectedClassId || "",
+        className: activeClass?.name || "",
+        subjectId: currentSubject?.id || "",
+        subjectName: currentSubject?.name || "",
+        subjectNameUr: currentSubject?.name_ur || "",
+        subjectLabel,
+        chapterId: matchedChapters[0]?.id || currentChapter?.id || "",
+        syllabusText: syllabusLabel,
+      })
+    );
     router.push("/paper-editor");
   };
 
