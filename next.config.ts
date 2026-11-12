@@ -17,20 +17,11 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // 1. Canonical Host Redirect: www.paperwala.world -> https://paperwala.world
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "www.paperwala.world",
-          },
-        ],
-        destination: "https://paperwala.world/:path*",
-        permanent: true,
-      },
+      // NOTE: Do NOT add a www <-> non-www host redirect here when hosted on Vercel,
+      // because Vercel's Edge Domain layer handles apex/www redirects before Next.js
+      // and conflicting rules cause ERR_TOO_MANY_REDIRECTS.
 
-      // 2. Common Root / Index Aliases -> /
+      // 1. Common Root / Index Aliases -> /
       {
         source: "/home",
         destination: "/",
