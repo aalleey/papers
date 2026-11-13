@@ -4,6 +4,9 @@ import path from "node:path";
 const nextConfig: NextConfig = {
   /* config options here */
   trailingSlash: false,
+  experimental: {
+    optimizePackageImports: ["lucide-react", "katex"],
+  },
   turbopack: {
     // Pin the workspace root to this project so file watching doesn't spill into
     // parent folders (which caused endless recompiles / auto-refresh).
@@ -14,6 +17,23 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  async headers() {
+    return [
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
   },
   async redirects() {
     return [

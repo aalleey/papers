@@ -6,6 +6,7 @@ export default function robots(): MetadataRoute.Robots {
 
   const allowedPaths = [
     "/",
+    "/_next/",
     "/notes",
     "/quick-paper",
     "/select-questions",

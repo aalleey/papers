@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Noto_Nastaliq_Urdu } from "next/font/google";
-import "katex/dist/katex.min.css";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site-url";
+import { SupportChatWidget } from "@/components/SupportChatWidget";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -171,13 +171,14 @@ const rootJsonLd = {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
       "url": siteUrl,
-      "name": "PaperWala – #1 Online Paper Maker & Board Exam Studio",
+      "name": "PaperWala",
       "alternateName": [
-        "PaperWala",
+        "PaperWala – #1 Online Paper Maker & Board Exam Studio",
         "Paper Wala",
+        "paperwala.world",
         "پیپر والا",
+        "PaperWala Pakistan",
         "Online Paper Maker Pakistan",
-        "BISE & FBISE Board Pattern Paper Generator",
       ],
       "description":
         "Create BISE & FBISE board-pattern exam papers online in 60 seconds. #1 paper maker for 9th, 10th, FSc & ICS with Bilingual Urdu Nastaliq, PDF & Word export.",
@@ -372,6 +373,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900"
       >
         {children}
+        <SupportChatWidget />
       </body>
     </html>
   );

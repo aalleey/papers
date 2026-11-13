@@ -35,12 +35,20 @@ import {
   Brain,
   Loader2,
 } from "lucide-react";
-import { MathRenderer } from "@/components/MathRenderer";
+import dynamic from "next/dynamic";
 import { UrduText } from "@/components/UrduText";
-import { ClientAuthModal } from "@/components/ClientAuthModal";
 import { BrandLogo, BrandEmblem } from "@/components/BrandLogo";
 import { SiteNavbar } from "@/components/SiteNavbar";
 import { ClientUser, isPaidSubscriber, Question } from "@/lib/types";
+
+const MathRenderer = dynamic(
+  () => import("@/components/MathRenderer").then((mod) => mod.MathRenderer),
+  { ssr: false }
+);
+const ClientAuthModal = dynamic(
+  () => import("@/components/ClientAuthModal").then((mod) => mod.ClientAuthModal),
+  { ssr: false }
+);
 
 export default function Home() {
   const [clientUser, setClientUser] = useState<ClientUser | null>(null);
@@ -135,21 +143,21 @@ export default function Home() {
             "position": 1,
             "name": "Select Chapter Questions or Use AI Quick Paper Maker",
             "text": "Choose your class (9th, 10th, 1st Year, 2nd Year), board (Punjab BISE or Federal FBISE), and chapter from the Question Bank, or paste/scan any topic in the AI Quick Paper Maker.",
-            "url": "https://paperwala.world/select-questions",
+            "url": "https://www.paperwala.world/select-questions",
           },
           {
             "@type": "HowToStep",
             "position": 2,
             "name": "Customize School Header, Crest & Board Pattern",
             "text": "Enter your school or academy name, upload your crest/logo, select Bilingual (English + Urdu Nastaliq), and pick Paper Code A/B/C/D.",
-            "url": "https://paperwala.world/paper-editor",
+            "url": "https://www.paperwala.world/paper-editor",
           },
           {
             "@type": "HowToStep",
             "position": 3,
             "name": "Download Editable Word (.docx) or Print 1-Page A4 PDF",
             "text": "Export a formatted Microsoft Word (.docx) document or print an exact 1-page A4 PDF complete with OMR bubble sheets and teacher answer keys.",
-            "url": "https://paperwala.world/quick-paper",
+            "url": "https://www.paperwala.world/quick-paper",
           },
         ],
       },
@@ -310,7 +318,7 @@ export default function Home() {
 
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.18]">
-                #1 Online Paper Maker &amp;{" "}
+                PaperWala – #1 Online Paper Maker &amp;{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800">
                   Board Pattern Exam Generator
                 </span>
@@ -318,12 +326,12 @@ export default function Home() {
 
               {/* Urdu Subtitle */}
               <div className="font-urdu text-xl sm:text-2xl text-emerald-900 font-bold leading-relaxed max-w-2xl mx-auto" dir="rtl">
-                سکول اور اکیڈمی کے بورڈ پیٹرن امتحانی پرچے آن لائن منٹوں میں تیار کریں — بغیر کسی ان پیج (InPage) یا فارمیٹنگ کی پریشانی کے!
+                پیپر والا (PaperWala) — سکول اور اکیڈمی کے بورڈ پیٹرن امتحانی پرچے آن لائن منٹوں میں تیار کریں!
               </div>
 
               {/* Simple description */}
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto font-normal">
-                Create official <strong>Punjab Board (BISE) &amp; Federal Board (FBISE)</strong> pattern test papers online for <strong>9th, 10th, 1st Year &amp; 2nd Year</strong>. Type, select from our verified question bank, or use our <strong>AI Quick Paper Maker</strong> to export <strong>1-Page A4 PDF</strong> &amp; editable <strong>Microsoft Word (.docx)</strong> papers in <strong>Urdu Nastaliq</strong> and <strong>English</strong>.
+                <strong>PaperWala (paperwala.world)</strong> lets Pakistani schools, colleges, and academies create official <strong>Punjab Board (BISE) &amp; Federal Board (FBISE)</strong> pattern test papers online for <strong>9th, 10th, 1st Year &amp; 2nd Year</strong>. Select from our verified question bank or use our <strong>AI Quick Paper Maker</strong> to export <strong>1-Page A4 PDF</strong> &amp; editable <strong>Microsoft Word (.docx)</strong> papers in <strong>Urdu Nastaliq</strong> and <strong>English</strong>.
               </p>
 
               {/* =================================================================
