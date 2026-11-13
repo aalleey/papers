@@ -40,6 +40,9 @@ import {
   Languages,
   Loader2,
   RefreshCw,
+  Zap,
+  FolderOpen,
+  SlidersHorizontal,
 } from "lucide-react";
 
 // Roman numeral converter
@@ -164,6 +167,7 @@ export default function PaperEditorPage() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
   const [settingsTab, setSettingsTab] = useState<"general" | "branding" | "fonts" | "content" | "watermark">("general");
+  const [mobileRibbonOpen, setMobileRibbonOpen] = useState(false);
 
   // Toast feedback
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -1218,60 +1222,59 @@ export default function PaperEditorPage() {
   return (
     <div
       onClick={() => setActiveDropdown(null)}
-      className={`min-h-screen bg-slate-100/90 print:bg-white text-slate-900 font-sans pb-28 print:pb-0 selection:bg-emerald-500 selection:text-white ${
+      className={`min-h-screen bg-[#eef2f7] bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.06),_transparent_55%),radial-gradient(ellipse_at_bottom_right,_rgba(79,70,229,0.05),_transparent_55%)] print:bg-white print:bg-none text-slate-900 font-sans pb-24 print:pb-0 selection:bg-emerald-500 selection:text-white ${
         entireContentBold ? "font-bold" : ""
       }`}
     >
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 backdrop-blur-xl text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold border border-white/15 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+        <div className="fixed bottom-5 right-5 z-50 bg-slate-900/95 backdrop-blur-xl text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold border border-white/15 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
           <Check className="w-4 h-4 text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* =========================================================================
-          TOP 3D LIQUID GLASS PAPER STUDIO COMMAND BAR & RIBBON
+          TOP MODERN PAPER STUDIO COMMAND BAR & RIBBON
           ========================================================================= */}
       <div
-        className="no-print sticky top-0 z-40 flex flex-col bg-gradient-to-b from-white/85 via-white/75 to-white/85 backdrop-blur-2xl saturate-150 border-b border-white/90 shadow-[0_12px_32px_-8px_rgba(15,23,42,0.12),0_4px_0_0_rgba(226,232,240,0.85),inset_0_2px_2px_0_#ffffff] px-3 sm:px-6 py-2.5 gap-2"
+        className="no-print sticky top-0 z-40 flex flex-col bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_4px_24px_-6px_rgba(15,23,42,0.08)] px-3 sm:px-5 lg:px-6 py-2.5 gap-2"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Specular Edge */}
-        <div
-          className="pointer-events-none absolute inset-x-6 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white to-transparent opacity-95"
-          aria-hidden="true"
-        />
-
         {/* Top Row: Brand, Version Selector, and Action Buttons */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 w-full">
+        <div className="flex flex-wrap items-center justify-between gap-2 w-full">
           {/* Left: Back & Editable Paper Title */}
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1 sm:flex-initial">
             <Link
               href="/select-questions"
-              className="p-2 rounded-xl bg-white/80 hover:bg-white text-slate-600 hover:text-slate-900 border border-slate-200/80 shadow-2xs transition-all shrink-0"
+              className="p-2 rounded-xl bg-slate-100/80 hover:bg-slate-200/70 text-slate-600 hover:text-slate-900 border border-slate-200/80 transition-all shrink-0"
               title="Back to Question Selector"
             >
               <ArrowLeft className="w-4 h-4" />
             </Link>
-            <BrandEmblem size="sm" />
-            <div className="min-w-0">
-              <div className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 leading-none mb-0.5 hidden sm:block">
-                Live Paper Studio
+            <div className="hidden sm:block shrink-0">
+              <BrandEmblem size="sm" />
+            </div>
+            <div className="min-w-0 flex-1 sm:flex-initial">
+              <div className="hidden sm:flex items-center gap-1.5 mb-0.5">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 leading-none">
+                  Live Paper Studio
+                </span>
               </div>
               <div
                 contentEditable
                 suppressContentEditableWarning
                 onBlur={(e) => setPaperTitle(e.currentTarget.textContent || paperTitle)}
-                className="text-sm sm:text-base font-black text-slate-900 truncate max-w-[180px] sm:max-w-[300px] outline-none hover:bg-white/80 px-1.5 py-0.5 rounded-lg cursor-text border border-transparent hover:border-slate-300"
+                className="text-xs sm:text-sm md:text-base font-black text-slate-900 truncate max-w-[160px] sm:max-w-[260px] lg:max-w-[320px] outline-none hover:bg-slate-100/80 focus:bg-white px-1.5 py-0.5 rounded-lg cursor-text border border-transparent hover:border-slate-200 focus:border-emerald-500 transition-colors"
               >
                 {paperTitle}
               </div>
             </div>
           </div>
 
-          {/* Center: Version Selector Pill */}
-          <div className="flex items-center gap-1.5 bg-white/85 px-2.5 py-1 rounded-xl border border-slate-200/90 shadow-2xs">
+          {/* Center: Version Selector Pill (Desktop & Tablet) */}
+          <div className="hidden lg:flex items-center gap-1.5 bg-slate-100/90 px-2.5 py-1 rounded-xl border border-slate-200/80">
             <label
               htmlFor="paperVersionSelector"
               className="text-[10px] font-black text-slate-500 uppercase tracking-wider whitespace-nowrap"
@@ -1292,84 +1295,104 @@ export default function PaperEditorPage() {
           </div>
 
           {/* Right: Studio Action Buttons */}
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Mobile Toolbar Expand Toggle */}
+            <button
+              type="button"
+              onClick={() => setMobileRibbonOpen((v) => !v)}
+              className={`md:hidden px-2.5 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 border transition-all cursor-pointer ${
+                mobileRibbonOpen
+                  ? "bg-slate-900 text-white border-slate-900"
+                  : "bg-slate-100 hover:bg-slate-200/70 text-slate-700 border-slate-200/80"
+              }`}
+              title="Toggle Format & Layout Toolbar"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Format</span>
+            </button>
+
             <Link
               href="/quick-paper"
-              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/85 hover:bg-white text-slate-700 hover:text-emerald-700 font-bold text-xs flex items-center gap-1 border border-slate-200/90 shadow-2xs transition-all"
+              className="px-2.5 py-1.5 rounded-xl bg-slate-100/80 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold text-xs flex items-center gap-1.5 border border-slate-200/80 hover:border-emerald-200 transition-all"
               title="Create or Paste Instant Paper"
             >
-              <span>⚡</span>
-              <span className="hidden md:inline">Quick Paper</span>
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              <span className="hidden xl:inline">Quick Paper</span>
             </Link>
 
             <Link
               href="/profile"
-              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/85 hover:bg-white text-slate-700 font-bold text-xs flex items-center gap-1 border border-slate-200/90 shadow-2xs transition-colors"
+              className="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-slate-100/80 hover:bg-slate-200/70 text-slate-700 font-bold text-xs items-center gap-1.5 border border-slate-200/80 transition-colors"
               title="Saved Papers Library"
             >
-              <span>📂</span>
-              <span className="hidden md:inline">Library</span>
+              <FolderOpen className="w-3.5 h-3.5 text-slate-500" />
+              <span className="hidden xl:inline">Library</span>
             </Link>
 
             <button
               onClick={() => setIsSettingsDrawerOpen(true)}
-              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/85 hover:bg-white text-slate-800 font-bold text-xs flex items-center gap-1 border border-slate-200/90 shadow-2xs transition-colors cursor-pointer"
+              className="px-2.5 py-1.5 rounded-xl bg-slate-100/80 hover:bg-slate-200/70 text-slate-800 font-bold text-xs flex items-center gap-1.5 border border-slate-200/80 transition-colors cursor-pointer"
               id="btnOpenSettings"
+              title="Paper Settings & Layout"
             >
-              <span>⚙️</span>
-              <span className="hidden sm:inline">Settings</span>
+              <Settings className="w-3.5 h-3.5 text-slate-600" />
+              <span className="hidden lg:inline">Settings</span>
             </button>
 
             <button
               onClick={handleSaveFavorite}
-              className="relative overflow-hidden px-3 py-1.5 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 hover:from-emerald-300 hover:to-teal-500 text-white font-extrabold text-xs flex items-center gap-1 border border-emerald-200/80 shadow-[0_3px_0_0_#065f46,0_6px_14px_-3px_rgba(16,185,129,0.4),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm shadow-emerald-600/20 hover:shadow-md transition-all cursor-pointer"
               id="btnSaveFavorite"
+              title="Save Paper to Library"
             >
-              <span>⭐</span>
-              <span className="hidden sm:inline">Save Paper</span>
+              <Star className="w-3.5 h-3.5 fill-current" />
+              <span className="hidden sm:inline">Save</span>
             </button>
 
             <button
               onClick={handleExportWord}
               disabled={isExportingDocx}
-              className="relative overflow-hidden px-3 py-1.5 rounded-xl bg-gradient-to-b from-indigo-500 via-indigo-600 to-violet-700 hover:from-indigo-400 hover:to-violet-600 text-white font-extrabold text-xs flex items-center gap-1.5 border border-indigo-300/60 shadow-[0_3px_0_0_#312e81,inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all disabled:opacity-50 cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm shadow-indigo-600/20 hover:shadow-md transition-all disabled:opacity-50 cursor-pointer"
               title="Download editable Microsoft Word (.docx) file"
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>{isExportingDocx ? "Exporting..." : "Word (.docx)"}</span>
+              <span className="hidden sm:inline">{isExportingDocx ? "Exporting..." : "Word"}</span>
             </button>
 
-            {/* Print 3D Split Button */}
-            <div className="relative inline-flex" id="printOptionDropdown">
+            {/* Print Split Button */}
+            <div className="relative inline-flex rounded-xl shadow-sm shadow-slate-900/15" id="printOptionDropdown">
               <button
                 onClick={() => handlePrint()}
-                className="relative overflow-hidden px-3.5 py-1.5 rounded-l-xl bg-gradient-to-b from-blue-500 via-blue-600 to-indigo-700 hover:from-blue-400 hover:to-indigo-600 text-white font-extrabold text-xs flex items-center gap-1.5 border border-blue-300/60 shadow-[0_3px_0_0_#1e3a8a,inset_0_1px_1px_rgba(255,255,255,0.6)] transition-all cursor-pointer"
+                className="px-2.5 sm:px-3.5 py-1.5 rounded-l-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
                 id="btnPrintNormal"
+                title="Print or Save as PDF"
               >
-                <span>🖨️</span>
-                <span>Print PDF</span>
+                <Printer className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Print PDF</span>
               </button>
               <button
                 onClick={() => setActiveDropdown(activeDropdown === "print" ? null : "print")}
-                className="px-2 py-1.5 rounded-r-xl bg-gradient-to-b from-blue-600 to-indigo-800 hover:from-blue-500 hover:to-indigo-700 text-white font-bold text-xs border-y border-r border-blue-300/60 border-l border-l-blue-400/50 shadow-[0_3px_0_0_#1e3a8a] transition-colors cursor-pointer"
+                className="px-1.5 sm:px-2 py-1.5 rounded-r-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border-l border-slate-700 transition-colors cursor-pointer"
                 title="Print Options"
               >
                 <ChevronDown className="w-3.5 h-3.5" />
               </button>
 
               {activeDropdown === "print" && (
-                <div className="absolute right-0 top-full mt-2 w-64 bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-2xl shadow-2xl py-1.5 text-xs font-semibold z-50 animate-in fade-in">
+                <div className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-200 rounded-2xl shadow-2xl py-1.5 text-xs font-semibold z-50 animate-in fade-in">
                   <button
                     onClick={() => handlePrint("portrait")}
-                    className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 flex items-center gap-2 cursor-pointer text-slate-800"
+                    className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 flex items-center gap-2.5 cursor-pointer text-slate-800"
                   >
-                    <span>📄</span> Standard Portrait Print
+                    <FileText className="w-4 h-4 text-slate-500" />
+                    <span>Standard Portrait Print</span>
                   </button>
                   <button
                     onClick={() => handlePrint("landscape_2up")}
-                    className="w-full text-left px-3.5 py-2.5 hover:bg-blue-50 text-blue-700 flex items-center gap-2 cursor-pointer font-bold"
+                    className="w-full text-left px-3.5 py-2.5 hover:bg-emerald-50 text-emerald-700 flex items-center gap-2.5 cursor-pointer font-bold"
                   >
-                    <span>📋</span> Landscape Side-by-Side (2-up)
+                    <Columns className="w-4 h-4 text-emerald-600" />
+                    <span>Landscape Side-by-Side (2-up)</span>
                   </button>
                 </div>
               )}
@@ -1380,7 +1403,11 @@ export default function PaperEditorPage() {
         {/* =========================================================================
             RESPONSIVE STUDIO CONFIGURATION RIBBON
             ========================================================================= */}
-        <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-900/5 border border-slate-200/80 rounded-2xl px-2.5 sm:px-3 py-1.5 text-xs">
+        <div
+          className={`${
+            mobileRibbonOpen ? "flex" : "hidden md:flex"
+          } flex-wrap items-center justify-between gap-2 bg-slate-100/80 border border-slate-200/80 rounded-xl px-2.5 sm:px-3 py-1.5 text-xs`}
+        >
           {/* Left Ribbon Group: Header Style, Language, Marks, Time, Date, Density */}
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full xl:w-auto">
             {/* Header Style Model Selector */}
@@ -1630,9 +1657,11 @@ export default function PaperEditorPage() {
                   e.stopPropagation();
                   setActiveDropdown(activeDropdown === "fonts" ? null : "fonts");
                 }}
-                className="h-8 px-2.5 rounded-lg bg-white border border-slate-300/90 border-l-4 border-l-blue-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs"
+                className="h-8 px-2.5 rounded-lg bg-white border border-slate-200/90 border-l-[3px] border-l-indigo-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer text-[11px] sm:text-xs"
               >
-                <span>📐 Fonts ▾</span>
+                <Type className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Fonts</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
               </button>
 
               {activeDropdown === "fonts" && (
@@ -1739,9 +1768,11 @@ export default function PaperEditorPage() {
                   e.stopPropagation();
                   setActiveDropdown(activeDropdown === "content" ? null : "content");
                 }}
-                className="h-8 px-2.5 rounded-lg bg-white border border-slate-300/90 border-l-4 border-l-emerald-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs"
+                className="h-8 px-2.5 rounded-lg bg-white border border-slate-200/90 border-l-[3px] border-l-emerald-600 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer text-[11px] sm:text-xs"
               >
-                <span>⚙️ Sections ▾</span>
+                <Layers className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Sections</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
               </button>
 
               {activeDropdown === "content" && (
@@ -1872,9 +1903,11 @@ export default function PaperEditorPage() {
                   e.stopPropagation();
                   setActiveDropdown(activeDropdown === "profile" ? null : "profile");
                 }}
-                className="h-8 px-2.5 rounded-lg bg-white border border-slate-300/90 border-l-4 border-l-amber-500 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs"
+                className="h-8 px-2.5 rounded-lg bg-white border border-slate-200/90 border-l-[3px] border-l-amber-500 font-bold text-slate-800 shadow-2xs hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer text-[11px] sm:text-xs"
               >
-                <span>🏛️ Branding ▾</span>
+                <Building2 className="w-3.5 h-3.5 text-amber-600" />
+                <span>Branding</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
               </button>
 
               {activeDropdown === "profile" && (
@@ -2123,25 +2156,31 @@ export default function PaperEditorPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
-            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-              <div className="flex items-center gap-2">
-                <Settings className="w-5 h-5 text-blue-600" />
-                <h3 className="font-black text-slate-900 text-base">Paper Settings &amp; Layout</h3>
+            <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/80">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+                  <Settings className="w-4 h-4 text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="font-black text-slate-900 text-sm">Paper Settings &amp; Layout</h3>
+                  <p className="text-[11px] text-slate-500">Customize board style, fonts, sections &amp; watermark</p>
+                </div>
               </div>
               <button
                 onClick={() => setIsSettingsDrawerOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200 text-lg font-bold"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/70 transition-colors cursor-pointer"
+                aria-label="Close Settings"
               >
-                &times;
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Drawer Tabs */}
-            <div className="flex border-b border-slate-200 text-xs font-bold bg-white overflow-x-auto">
+            <div className="flex border-b border-slate-200 text-xs font-bold bg-white overflow-x-auto px-2">
               <button
                 onClick={() => setSettingsTab("general")}
                 className={`py-2.5 px-3 whitespace-nowrap border-b-2 transition-colors cursor-pointer ${
-                  settingsTab === "general" ? "border-blue-600 text-blue-600 bg-blue-50/50" : "border-transparent text-slate-600 hover:text-slate-900"
+                  settingsTab === "general" ? "border-emerald-600 text-emerald-700 bg-emerald-50/40" : "border-transparent text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Header &amp; Style
@@ -2149,7 +2188,7 @@ export default function PaperEditorPage() {
               <button
                 onClick={() => setSettingsTab("fonts")}
                 className={`py-2.5 px-3 whitespace-nowrap border-b-2 transition-colors cursor-pointer ${
-                  settingsTab === "fonts" ? "border-blue-600 text-blue-600 bg-blue-50/50" : "border-transparent text-slate-600 hover:text-slate-900"
+                  settingsTab === "fonts" ? "border-emerald-600 text-emerald-700 bg-emerald-50/40" : "border-transparent text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Fonts &amp; Sizes
@@ -2157,7 +2196,7 @@ export default function PaperEditorPage() {
               <button
                 onClick={() => setSettingsTab("content")}
                 className={`py-2.5 px-3 whitespace-nowrap border-b-2 transition-colors cursor-pointer ${
-                  settingsTab === "content" ? "border-blue-600 text-blue-600 bg-blue-50/50" : "border-transparent text-slate-600 hover:text-slate-900"
+                  settingsTab === "content" ? "border-emerald-600 text-emerald-700 bg-emerald-50/40" : "border-transparent text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Sections
@@ -2165,7 +2204,7 @@ export default function PaperEditorPage() {
               <button
                 onClick={() => setSettingsTab("watermark")}
                 className={`py-2.5 px-3 whitespace-nowrap border-b-2 transition-colors cursor-pointer ${
-                  settingsTab === "watermark" ? "border-blue-600 text-blue-600 bg-blue-50/50" : "border-transparent text-slate-600 hover:text-slate-900"
+                  settingsTab === "watermark" ? "border-emerald-600 text-emerald-700 bg-emerald-50/40" : "border-transparent text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Watermark &amp; Border
@@ -3555,7 +3594,8 @@ export default function PaperEditorPage() {
                   className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-extrabold text-[11px] flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
                   title="Convert English questions & options to Urdu using AI"
                 >
-                  <span>✨ EN → Urdu</span>
+                  <Sparkles className="w-3 h-3 text-emerald-600" />
+                  <span>EN → Urdu</span>
                 </button>
                 <button
                   type="button"
@@ -3564,7 +3604,8 @@ export default function PaperEditorPage() {
                   className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 font-extrabold text-[11px] flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
                   title="Convert Urdu questions & options to English using AI"
                 >
-                  <span>✨ Urdu → EN</span>
+                  <Sparkles className="w-3 h-3 text-indigo-600" />
+                  <span>Urdu → EN</span>
                 </button>
                 <button
                   type="button"
@@ -3697,8 +3738,11 @@ export default function PaperEditorPage() {
                 </div>
               </div>
             ) : (
-              <div className="w-full pb-6 print:overflow-visible print:pb-0">
-                <div className="single-test-container w-full min-w-0">
+              <div className="w-full overflow-x-auto pb-8 print:overflow-visible print:pb-0">
+                <div className="no-print sm:hidden mb-2 text-[11px] font-semibold text-slate-500 flex items-center justify-center gap-1.5">
+                  <span>Swipe horizontally to inspect full A4 sheet</span>
+                </div>
+                <div className="single-test-container w-full min-w-[700px] sm:min-w-0 print:min-w-0">
                   {renderExamPaperSheet(1)}
                 </div>
               </div>
