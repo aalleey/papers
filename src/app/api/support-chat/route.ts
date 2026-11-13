@@ -8,11 +8,16 @@ export const dynamic = "force-dynamic";
 
 const SUPPORT_COOKIE = "pm_support_token";
 
-async function getOrCreateVisitorToken(): Promise<{ token: string; isNew: boolean }> {
+async function getOrCreateVisitorToken(
+  fallbackToken?: string | null
+): Promise<{ token: string; isNew: boolean }> {
   const cookieStore = await cookies();
   const existing = cookieStore.get(SUPPORT_COOKIE)?.value;
   if (existing && existing.length >= 8) {
     return { token: existing, isNew: false };
+  }
+  if (fallbackToken && fallbackToken.trim().length >= 8) {
+    return { token: fallbackToken.trim(), isNew: true };
   }
   return { token: crypto.randomUUID(), isNew: true };
 }
@@ -36,7 +41,10 @@ export async function GET(req: NextRequest) {
   if (mode === "admin") {
     const isAdmin = await isCurrentUserAdmin();
     if (!isAdmin) {
-      return NextResponse.json({ error: "Unauthorized. Admin role required." }, { status: 401 });
+      return NextResponse.json(
+        { error: "Unauthorized. Admin role required." },
+        { status: 401 }
+      );
     }
 
     const conversationId = searchParams.get("conversationId");
@@ -44,7 +52,10 @@ export async function GET(req: NextRequest) {
       const { conversation, messages } =
         await supportChatDb.getConversationWithMessages(conversationId);
       if (!conversation) {
-        return NextResponse.json({ error: "Conversation not found." }, { status: 404 });
+        return NextResponse.json(
+          { error: "Conversation not found." },
+          { status: 404 }
+        );
       }
       if (searchParams.get("markRead") === "1" && conversation.unreadByAdmin > 0) {
         await supportChatDb.markRead(conversationId, "admin");
@@ -72,23 +83,40 @@ export async function GET(req: NextRequest) {
   // Visitor / Educator Query
   const client = await getCurrentClient();
   const cookieStore = await cookies();
-  const visitorToken = cookieStore.get(SUPPORT_COOKIE)?.value || "";
+  const cookieToken = cookieStore.get(SUPPORT_COOKIE)?.value || "";
+  const queryToken =
+    searchParams.get("visitorToken") || req.headers.get("x-support-token") || "";
+  const visitorToken = cookieToken || queryToken;
+  const conversationId = searchParams.get("conversationId") || null;
 
-  if (!visitorToken && !client?.id) {
+  if (!visitorToken && !client?.id && !conversationId) {
     return NextResponse.json({ conversation: null, messages: [] });
   }
 
   const { conversation, messages } = await supportChatDb.getConversationByVisitor(
-    visitorToken || `user:${client?.id}`,
-    client?.id || null
+    visitorToken || (client?.id ? `user:${client.id}` : ""),
+    client?.id || null,
+    conversationId
   );
 
-  if (conversation && searchParams.get("markRead") === "1" && conversation.unreadByUser > 0) {
+  if (
+    conversation &&
+    searchParams.get("markRead") === "1" &&
+    conversation.unreadByUser > 0
+  ) {
     await supportChatDb.markRead(conversation.id, "user");
     conversation.unreadByUser = 0;
   }
 
-  return NextResponse.json({ conversation, messages });
+  const res = NextResponse.json({
+    conversation,
+    messages,
+    visitorToken: conversation?.visitorToken || visitorToken || undefined,
+  });
+  if (!cookieToken && (conversation?.visitorToken || visitorToken)) {
+    attachSupportCookie(res, conversation?.visitorToken || visitorToken);
+  }
+  return res;
 }
 
 // POST /api/support-chat
@@ -101,7 +129,10 @@ export async function POST(req: NextRequest) {
     if (action === "admin_reply") {
       const isAdmin = await isCurrentUserAdmin();
       if (!isAdmin) {
-        return NextResponse.json({ error: "Unauthorized. Admin role required." }, { status: 401 });
+        return NextResponse.json(
+          { error: "Unauthorized. Admin role required." },
+          { status: 401 }
+        );
       }
       const adminUser = await getCurrentUser();
       const conversationId = String(body.conversationId || "").trim();
@@ -122,45 +153,79 @@ export async function POST(req: NextRequest) {
       });
 
       if (!message) {
-        return NextResponse.json({ error: "Conversation not found." }, { status: 404 });
+        return NextResponse.json(
+          { error: "Conversation not found." },
+          { status: 404 }
+        );
       }
-      return NextResponse.json({ message });
+      const updated = await supportChatDb.getConversationWithMessages(conversationId);
+      return NextResponse.json({
+        message,
+        conversation: updated.conversation,
+        messages: updated.messages,
+      });
     }
 
     // 2. Admin Status Toggle (open / resolved)
     if (action === "admin_status") {
       const isAdmin = await isCurrentUserAdmin();
       if (!isAdmin) {
-        return NextResponse.json({ error: "Unauthorized. Admin role required." }, { status: 401 });
+        return NextResponse.json(
+          { error: "Unauthorized. Admin role required." },
+          { status: 401 }
+        );
       }
       const conversationId = String(body.conversationId || "").trim();
       const status = body.status === "resolved" ? "resolved" : "open";
       const updated = await supportChatDb.setStatus(conversationId, status);
       if (!updated) {
-        return NextResponse.json({ error: "Conversation not found." }, { status: 404 });
+        return NextResponse.json(
+          { error: "Conversation not found." },
+          { status: 404 }
+        );
       }
       return NextResponse.json({ conversation: updated });
     }
 
     // 3. Visitor / Educator Send Message or Start New Conversation
     const client = await getCurrentClient();
-    const { token, isNew } = await getOrCreateVisitorToken();
+    const clientTokenHint =
+      typeof body.visitorToken === "string"
+        ? body.visitorToken
+        : req.headers.get("x-support-token");
+    const { token, isNew } = await getOrCreateVisitorToken(clientTokenHint);
     const content = String(body.content || "").trim();
     if (!content) {
-      return NextResponse.json({ error: "Please enter a message." }, { status: 400 });
+      return NextResponse.json(
+        { error: "Please enter a message." },
+        { status: 400 }
+      );
     }
 
     const forceNew = action === "new_conversation";
+    const requestedConvId =
+      typeof body.conversationId === "string" && body.conversationId.trim()
+        ? body.conversationId.trim()
+        : null;
     let existingConv = null;
 
     if (!forceNew) {
-      const lookup = await supportChatDb.getConversationByVisitor(token, client?.id || null);
+      const lookup = await supportChatDb.getConversationByVisitor(
+        token,
+        client?.id || null,
+        requestedConvId
+      );
       existingConv = lookup.conversation;
     }
 
-    if (existingConv && (!body.conversationId || body.conversationId === existingConv.id)) {
+    if (
+      existingConv &&
+      (!requestedConvId || requestedConvId === existingConv.id)
+    ) {
       const senderName =
-        client?.fullName || existingConv.userName || String(body.userName || "Guest Educator");
+        client?.fullName ||
+        existingConv.userName ||
+        String(body.userName || "Guest Educator");
       const message = await supportChatDb.addMessage({
         conversationId: existingConv.id,
         senderRole: "user",
@@ -168,16 +233,27 @@ export async function POST(req: NextRequest) {
         content: content.slice(0, 2000),
       });
 
-      const res = NextResponse.json({ conversation: existingConv, message });
-      if (isNew) attachSupportCookie(res, token);
+      const updated = await supportChatDb.getConversationWithMessages(
+        existingConv.id
+      );
+
+      const res = NextResponse.json({
+        conversation: updated.conversation || existingConv,
+        messages: updated.messages,
+        message,
+        visitorToken: existingConv.visitorToken || token,
+      });
+      if (isNew) attachSupportCookie(res, existingConv.visitorToken || token);
       return res;
     }
 
     // Create new conversation
     const userName =
       client?.fullName || String(body.userName || "").trim() || "Guest Educator";
-    const userEmail = client?.email || (String(body.userEmail || "").trim() || null);
-    const userPhone = client?.phone || (String(body.userPhone || "").trim() || null);
+    const userEmail =
+      client?.email || (String(body.userEmail || "").trim() || null);
+    const userPhone =
+      client?.phone || (String(body.userPhone || "").trim() || null);
     const subject = String(body.subject || "").trim() || "General Support";
 
     const created = await supportChatDb.createConversationWithMessage({
@@ -190,11 +266,18 @@ export async function POST(req: NextRequest) {
       content: content.slice(0, 2000),
     });
 
-    const res = NextResponse.json(created, { status: 201 });
+    const res = NextResponse.json(
+      {
+        ...created,
+        visitorToken: token,
+      },
+      { status: 201 }
+    );
     if (isNew) attachSupportCookie(res, token);
     return res;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to process chat message.";
+    const message =
+      err instanceof Error ? err.message : "Failed to process chat message.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

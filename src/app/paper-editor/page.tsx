@@ -162,6 +162,8 @@ export default function PaperEditorPage() {
   // Paper Size & Print Density
   const [paperSize, setPaperSize] = useState<"a4" | "letter" | "legal">("a4");
   const [testDensity, setTestDensity] = useState<"1_per_page" | "2_per_page">("1_per_page");
+  const [fitToOnePage, setFitToOnePage] = useState<boolean>(true);
+  const [autoPrintZoom, setAutoPrintZoom] = useState<number>(1);
 
   // Popovers & Drawer
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -192,6 +194,10 @@ export default function PaperEditorPage() {
       const savedDensity = localStorage.getItem("paperwala_test_density");
       if (savedDensity === "1_per_page" || savedDensity === "2_per_page") {
         setTestDensity(savedDensity);
+      }
+      const savedFitToOnePage = localStorage.getItem("paperwala_fit_to_one_page");
+      if (savedFitToOnePage !== null) {
+        setFitToOnePage(savedFitToOnePage === "true");
       }
       const savedHeaderStyle = localStorage.getItem("paperwala_header_style");
       if (savedHeaderStyle === "style1" || savedHeaderStyle === "style2") {
@@ -505,6 +511,91 @@ export default function PaperEditorPage() {
   const effectiveShortMarks = shorts.length * 2;
   const effectiveLongMarks = longs.length * 5;
 
+  // Auto-Fit All Content to 1 Printable Page (A4 / Letter / Legal)
+  const recalculatePrintZoom = (densityOverride?: "1_per_page" | "2_per_page") => {
+    const activeDensity = densityOverride ?? testDensity;
+    if (!fitToOnePage || printShortLongSeparatePage) {
+      setAutoPrintZoom(1);
+      return 1;
+    }
+
+    const sheetEl = document.getElementById("paper-outer-container");
+    if (!sheetEl) {
+      setAutoPrintZoom(1);
+      return 1;
+    }
+
+    // Printable safe heights in px at 96dpi (accounting for 4mm page margins + minor wrap variance)
+    const targetHeightPx =
+      activeDensity === "2_per_page"
+        ? paperSize === "a4"
+          ? 705
+          : 725
+        : paperSize === "legal"
+        ? 1220
+        : paperSize === "letter"
+        ? 945
+        : 1005;
+
+    const rawHeight = sheetEl.scrollHeight;
+    if (!rawHeight || rawHeight <= targetHeightPx) {
+      setAutoPrintZoom(1);
+      return 1;
+    }
+
+    const nextZoom = Math.max(0.35, Math.min(1, Number((targetHeightPx / rawHeight).toFixed(3))));
+    setAutoPrintZoom(nextZoom);
+    return nextZoom;
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      recalculatePrintZoom();
+    }, 120);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    displayedMcqs,
+    shorts,
+    longs,
+    headerStyle,
+    languageMode,
+    objFontSize,
+    subFontSize,
+    logoSize,
+    instFontSize,
+    includeHeaderSection,
+    includeStudentSection,
+    includeBubbleSheet,
+    includeMcqAnswerKey,
+    includeInstructions,
+    paperSize,
+    testDensity,
+    fitToOnePage,
+    printShortLongSeparatePage,
+  ]);
+
+  useEffect(() => {
+    const handleBeforePrint = () => {
+      recalculatePrintZoom();
+    };
+    window.addEventListener("beforeprint", handleBeforePrint);
+    return () => window.removeEventListener("beforeprint", handleBeforePrint);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fitToOnePage, printShortLongSeparatePage, paperSize, testDensity]);
+
+  const toggleFitToOnePage = () => {
+    setFitToOnePage((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("paperwala_fit_to_one_page", String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
   // Print Action
   const handlePrint = (layoutType?: "portrait" | "landscape_2up") => {
     if (!clientUser) {
@@ -566,10 +657,12 @@ export default function PaperEditorPage() {
       updateTestDensity("1_per_page");
     }
 
+    recalculatePrintZoom(activeLayout === "landscape_2up" ? "2_per_page" : "1_per_page");
     setActiveDropdown(null);
     setTimeout(() => {
+      recalculatePrintZoom(activeLayout === "landscape_2up" ? "2_per_page" : "1_per_page");
       window.print();
-    }, 150);
+    }, 180);
   };
 
   // Save Favorite Action
@@ -3571,6 +3664,22 @@ export default function PaperEditorPage() {
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 font-black uppercase tracking-wider text-[10px]">
                   {paperSize.toUpperCase()} {testDensity === "2_per_page" ? "Landscape (2-Up)" : "Portrait"}
                 </span>
+                <button
+                  type="button"
+                  onClick={toggleFitToOnePage}
+                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md border font-black uppercase tracking-wider text-[10px] transition-colors cursor-pointer ${
+                    fitToOnePage && !printShortLongSeparatePage
+                      ? "bg-indigo-50 text-indigo-800 border-indigo-200 hover:bg-indigo-100"
+                      : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200"
+                  }`}
+                  title="Automatically scale all paper content to fit on a single A4/Letter/Legal page when printing"
+                >
+                  <span>
+                    {fitToOnePage && !printShortLongSeparatePage
+                      ? `Fit 1 Page: ON${autoPrintZoom < 1 ? ` (${Math.round(autoPrintZoom * 100)}%)` : ""}`
+                      : "Fit 1 Page: OFF"}
+                  </span>
+                </button>
                 <span className="text-slate-400">&bull;</span>
                 <span className="tabular-nums">
                   MCQs: <strong className="text-slate-900">{displayedMcqs.length}</strong>
@@ -3760,7 +3869,13 @@ export default function PaperEditorPage() {
                           ? `${paperSize === "letter" ? "letter" : paperSize === "legal" ? "legal" : "A4"} landscape`
                           : `${paperSize === "letter" ? "letter" : paperSize === "legal" ? "legal" : "A4"} portrait`
                       } !important;
-                      margin: ${testDensity === "2_per_page" ? "4mm 5mm" : "6mm 8mm"} !important;
+                      margin: ${
+                        fitToOnePage && !printShortLongSeparatePage
+                          ? "4mm 5mm"
+                          : testDensity === "2_per_page"
+                          ? "4mm 5mm"
+                          : "6mm 8mm"
+                      } !important;
                     }
                     ${
                       testDensity === "2_per_page"
@@ -3803,15 +3918,54 @@ export default function PaperEditorPage() {
                         box-shadow: none !important;
                         margin: 0 !important;
                         border: 1.5px solid #000 !important;
+                        ${
+                          fitToOnePage && !printShortLongSeparatePage && autoPrintZoom < 1
+                            ? `
+                          zoom: ${autoPrintZoom} !important;
+                          width: ${(100 / autoPrintZoom).toFixed(2)}% !important;
+                          max-width: none !important;
+                        `
+                            : ""
+                        }
                       }
                     `
                         : `
+                      html, body {
+                        width: 100% !important;
+                        height: auto !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        background: #ffffff !important;
+                      }
                       .single-test-container {
                         width: 100% !important;
                         max-width: 100% !important;
+                        min-width: 0 !important;
                       }
                       .paper-sheet {
                         box-shadow: none !important;
+                        margin: 0 !important;
+                        ${
+                          fitToOnePage && !printShortLongSeparatePage
+                            ? `
+                          padding: 3.5mm 4.5mm !important;
+                          page-break-inside: avoid !important;
+                          break-inside: avoid !important;
+                          ${
+                            autoPrintZoom < 1
+                              ? `
+                            zoom: ${autoPrintZoom} !important;
+                            width: ${(100 / autoPrintZoom).toFixed(2)}% !important;
+                            max-width: none !important;
+                          `
+                              : `
+                            width: 100% !important;
+                            max-width: 100% !important;
+                          `
+                          }
+                        `
+                            : ""
+                        }
                       }
                     `
                     }

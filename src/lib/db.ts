@@ -1150,7 +1150,11 @@ export const db = {
 
     if (adminClient) {
       try {
-        let q = adminClient.from("clients").select("*");
+        let q = adminClient
+          .from("clients")
+          .select("*")
+          .neq("id", "__system_support_chat_store__")
+          .neq("environment", "support_store");
         if (isProductionEnvironment()) {
           q = q.eq("environment", "production");
         }

@@ -1,4 +1,5 @@
 import fs from "fs";
+import os from "os";
 import path from "path";
 import crypto from "crypto";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
@@ -39,24 +40,32 @@ interface LocalSupportStore {
 
 const DATA_DIR = path.join(process.cwd(), ".data");
 const DATA_FILE = path.join(DATA_DIR, "support-chat.json");
+const TMP_FILE = path.join(os.tmpdir(), "paperwala-support-chat.json");
+const SUPABASE_FALLBACK_ROW_ID = "__system_support_chat_store__";
 
-// In-memory fallback when running on a read-only filesystem without Supabase migration
+// In-memory cache across hot reloads / warm serverless invocations
 const globalForSupport = globalThis as unknown as {
   __pmSupportStore?: LocalSupportStore;
 };
 
-function readLocalStore(): LocalSupportStore {
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const raw = fs.readFileSync(DATA_FILE, "utf8");
-      const parsed = JSON.parse(raw);
-      if (parsed && Array.isArray(parsed.conversations) && Array.isArray(parsed.messages)) {
-        globalForSupport.__pmSupportStore = parsed;
-        return parsed;
+function readDiskStore(): LocalSupportStore {
+  for (const filePath of [DATA_FILE, TMP_FILE]) {
+    try {
+      if (fs.existsSync(filePath)) {
+        const raw = fs.readFileSync(filePath, "utf8");
+        const parsed = JSON.parse(raw);
+        if (
+          parsed &&
+          Array.isArray(parsed.conversations) &&
+          Array.isArray(parsed.messages)
+        ) {
+          globalForSupport.__pmSupportStore = parsed;
+          return parsed;
+        }
       }
+    } catch {
+      // try next path
     }
-  } catch {
-    // ignore read errors
   }
   if (!globalForSupport.__pmSupportStore) {
     globalForSupport.__pmSupportStore = { conversations: [], messages: [] };
@@ -64,15 +73,96 @@ function readLocalStore(): LocalSupportStore {
   return globalForSupport.__pmSupportStore;
 }
 
-function writeLocalStore(store: LocalSupportStore): void {
+function writeDiskStore(store: LocalSupportStore): void {
   globalForSupport.__pmSupportStore = store;
+  const serialized = JSON.stringify(store, null, 2);
+
   try {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
-    fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2), "utf8");
+    fs.writeFileSync(DATA_FILE, serialized, "utf8");
   } catch {
-    // Serverless/read-only filesystem fallback stays in memory
+    // Read-only cwd on Vercel serverless; fall through to /tmp
+  }
+
+  try {
+    fs.writeFileSync(TMP_FILE, serialized, "utf8");
+  } catch {
+    // ignore tmp write errors
+  }
+}
+
+/**
+ * Reads the persistent store from Supabase `clients` JSONB row when
+ * `support_conversations` table is not migrated yet, merging with disk/memory.
+ */
+async function readPersistentStore(): Promise<LocalSupportStore> {
+  const local = readDiskStore();
+  const supabase = createAdminSupabaseClient();
+  if (!supabase) return local;
+
+  try {
+    const { data, error } = await supabase
+      .from("clients")
+      .select("subscription")
+      .eq("id", SUPABASE_FALLBACK_ROW_ID)
+      .maybeSingle();
+
+    if (!error && data && data.subscription) {
+      const sub = data.subscription as unknown as Partial<LocalSupportStore>;
+      if (Array.isArray(sub.conversations) && Array.isArray(sub.messages)) {
+        // Merge remote + local so no in-flight message is ever lost
+        const convMap = new Map<string, SupportConversation>();
+        for (const c of sub.conversations) convMap.set(c.id, c);
+        for (const c of local.conversations) {
+          const existing = convMap.get(c.id);
+          if (!existing || c.updatedAt >= existing.updatedAt) {
+            convMap.set(c.id, c);
+          }
+        }
+
+        const msgMap = new Map<string, SupportMessage>();
+        for (const m of sub.messages) msgMap.set(m.id, m);
+        for (const m of local.messages) msgMap.set(m.id, m);
+
+        const merged: LocalSupportStore = {
+          conversations: Array.from(convMap.values()),
+          messages: Array.from(msgMap.values()),
+        };
+        writeDiskStore(merged);
+        return merged;
+      }
+    }
+  } catch {
+    // ignore and return local
+  }
+
+  return local;
+}
+
+async function writePersistentStore(store: LocalSupportStore): Promise<void> {
+  writeDiskStore(store);
+  const supabase = createAdminSupabaseClient();
+  if (!supabase) return;
+
+  try {
+    await supabase.from("clients").upsert({
+      id: SUPABASE_FALLBACK_ROW_ID,
+      email: "support-store@internal.paperwala.world",
+      full_name: "PaperWala Support Store",
+      academy_name: "System Internal",
+      phone: "03473576122",
+      role: "support_store",
+      environment: "support_store",
+      subscription: {
+        conversations: store.conversations.slice(-300),
+        messages: store.messages.slice(-2000),
+      },
+      updated_at: new Date().toISOString(),
+    });
+  } catch {
+    // ignore if clients table schema differs
   }
 }
 
@@ -89,7 +179,9 @@ function mapSupabaseConversation(row: Record<string, unknown>): SupportConversat
     unreadByAdmin: Number(row.unread_by_admin || 0),
     unreadByUser: Number(row.unread_by_user || 0),
     lastMessagePreview: String(row.last_message_preview || ""),
-    lastMessageAt: String(row.last_message_at || row.created_at || new Date().toISOString()),
+    lastMessageAt: String(
+      row.last_message_at || row.created_at || new Date().toISOString()
+    ),
     createdAt: String(row.created_at || new Date().toISOString()),
     updatedAt: String(row.updated_at || row.created_at || new Date().toISOString()),
   };
@@ -100,7 +192,9 @@ function mapSupabaseMessage(row: Record<string, unknown>): SupportMessage {
     id: String(row.id),
     conversationId: String(row.conversation_id),
     senderRole:
-      row.sender_role === "admin" || row.sender_role === "system" ? row.sender_role : "user",
+      row.sender_role === "admin" || row.sender_role === "system"
+        ? row.sender_role
+        : "user",
     senderName: String(row.sender_name || "Support"),
     content: String(row.content || ""),
     createdAt: String(row.created_at || new Date().toISOString()),
@@ -110,7 +204,8 @@ function mapSupabaseMessage(row: Record<string, unknown>): SupportMessage {
 export const supportChatDb = {
   async getConversationByVisitor(
     visitorToken: string,
-    userId?: string | null
+    userId?: string | null,
+    conversationId?: string | null
   ): Promise<{ conversation: SupportConversation | null; messages: SupportMessage[] }> {
     const supabase = createAdminSupabaseClient();
     if (supabase) {
@@ -121,8 +216,12 @@ export const supportChatDb = {
           .order("updated_at", { ascending: false })
           .limit(1);
 
-        if (userId) {
+        if (conversationId) {
+          query = query.eq("id", conversationId);
+        } else if (userId && visitorToken) {
           query = query.or(`visitor_token.eq.${visitorToken},user_id.eq.${userId}`);
+        } else if (userId) {
+          query = query.eq("user_id", userId);
         } else {
           query = query.eq("visitor_token", visitorToken);
         }
@@ -144,13 +243,18 @@ export const supportChatDb = {
           };
         }
       } catch {
-        // Fallback to local store if table not migrated yet
+        // Fallback to persistent store
       }
     }
 
-    const store = readLocalStore();
+    const store = await readPersistentStore();
     const matched = store.conversations
-      .filter((c) => c.visitorToken === visitorToken || (userId && c.userId === userId))
+      .filter(
+        (c) =>
+          (conversationId && c.id === conversationId) ||
+          (visitorToken && c.visitorToken === visitorToken) ||
+          (userId && c.userId === userId)
+      )
       .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0];
 
     if (!matched) return { conversation: null, messages: [] };
@@ -179,13 +283,15 @@ export const supportChatDb = {
           return data.map(mapSupabaseConversation);
         }
       } catch {
-        // Fallback to local store
+        // Fallback to persistent store
       }
     }
 
-    const store = readLocalStore();
+    const store = await readPersistentStore();
     return store.conversations
-      .filter((c) => !statusFilter || statusFilter === "all" || c.status === statusFilter)
+      .filter(
+        (c) => !statusFilter || statusFilter === "all" || c.status === statusFilter
+      )
       .sort((a, b) => b.lastMessageAt.localeCompare(a.lastMessageAt));
   },
 
@@ -214,11 +320,11 @@ export const supportChatDb = {
           };
         }
       } catch {
-        // Fallback to local store
+        // Fallback to persistent store
       }
     }
 
-    const store = readLocalStore();
+    const store = await readPersistentStore();
     const conv = store.conversations.find((c) => c.id === conversationId) || null;
     const messages = conv
       ? store.messages
@@ -240,6 +346,8 @@ export const supportChatDb = {
   }): Promise<{ conversation: SupportConversation; messages: SupportMessage[] }> {
     const now = new Date().toISOString();
     const preview = input.content.slice(0, 140);
+    const autoReplyText =
+      "Assalam-o-Alaikum! Thank you for messaging PaperWala Support. Our team has received your message and will reply shortly. For instant payment verification or urgent help, you can also tap the WhatsApp button above (03473576122).";
 
     const supabase = createAdminSupabaseClient();
     if (supabase) {
@@ -255,7 +363,7 @@ export const supportChatDb = {
             subject: input.subject,
             status: "open",
             unread_by_admin: 1,
-            unread_by_user: 1,
+            unread_by_user: 0,
             last_message_preview: preview,
             last_message_at: now,
             created_at: now,
@@ -280,8 +388,7 @@ export const supportChatDb = {
                 conversation_id: conv.id,
                 sender_role: "system",
                 sender_name: "PaperWala Support",
-                content:
-                  "Thanks for contacting PaperWala Support! Our team has received your message and will reply shortly.",
+                content: autoReplyText,
                 created_at: new Date(Date.now() + 100).toISOString(),
               },
             ])
@@ -293,11 +400,11 @@ export const supportChatDb = {
           };
         }
       } catch {
-        // Fallback to local store
+        // Fallback to persistent store
       }
     }
 
-    const store = readLocalStore();
+    const store = await readPersistentStore();
     const conv: SupportConversation = {
       id: crypto.randomUUID(),
       visitorToken: input.visitorToken,
@@ -308,7 +415,7 @@ export const supportChatDb = {
       subject: input.subject,
       status: "open",
       unreadByAdmin: 1,
-      unreadByUser: 1,
+      unreadByUser: 0,
       lastMessagePreview: preview,
       lastMessageAt: now,
       createdAt: now,
@@ -327,14 +434,13 @@ export const supportChatDb = {
       conversationId: conv.id,
       senderRole: "system",
       senderName: "PaperWala Support",
-      content:
-        "Thanks for contacting PaperWala Support! Our team has received your message and will reply shortly.",
+      content: autoReplyText,
       createdAt: new Date(Date.now() + 100).toISOString(),
     };
 
     store.conversations.push(conv);
     store.messages.push(userMsg, systemMsg);
-    writeLocalStore(store);
+    await writePersistentStore(store);
 
     return { conversation: conv, messages: [userMsg, systemMsg] };
   },
@@ -376,9 +482,13 @@ export const supportChatDb = {
               .update({
                 status: "open",
                 unread_by_admin:
-                  input.senderRole === "user" ? Number(convRow.unread_by_admin || 0) + 1 : 0,
+                  input.senderRole === "user"
+                    ? Number(convRow.unread_by_admin || 0) + 1
+                    : 0,
                 unread_by_user:
-                  input.senderRole === "admin" ? Number(convRow.unread_by_user || 0) + 1 : 0,
+                  input.senderRole === "admin"
+                    ? Number(convRow.unread_by_user || 0) + 1
+                    : 0,
                 last_message_preview: preview,
                 last_message_at: now,
                 updated_at: now,
@@ -389,11 +499,11 @@ export const supportChatDb = {
           }
         }
       } catch {
-        // Fallback to local store
+        // Fallback to persistent store
       }
     }
 
-    const store = readLocalStore();
+    const store = await readPersistentStore();
     const conv = store.conversations.find((c) => c.id === input.conversationId);
     if (!conv) return null;
 
@@ -419,7 +529,7 @@ export const supportChatDb = {
     conv.updatedAt = now;
 
     store.messages.push(msg);
-    writeLocalStore(store);
+    await writePersistentStore(store);
     return msg;
   },
 
@@ -435,16 +545,16 @@ export const supportChatDb = {
           .eq("id", conversationId);
         if (!error) return;
       } catch {
-        // Fallback to local store
+        // Fallback to persistent store
       }
     }
 
-    const store = readLocalStore();
+    const store = await readPersistentStore();
     const conv = store.conversations.find((c) => c.id === conversationId);
     if (!conv) return;
     if (reader === "admin") conv.unreadByAdmin = 0;
     else conv.unreadByUser = 0;
-    writeLocalStore(store);
+    await writePersistentStore(store);
   },
 
   async setStatus(
@@ -463,16 +573,16 @@ export const supportChatDb = {
           .single();
         if (!error && data) return mapSupabaseConversation(data);
       } catch {
-        // Fallback to local store
+        // Fallback to persistent store
       }
     }
 
-    const store = readLocalStore();
+    const store = await readPersistentStore();
     const conv = store.conversations.find((c) => c.id === conversationId);
     if (!conv) return null;
     conv.status = status;
     conv.updatedAt = now;
-    writeLocalStore(store);
+    await writePersistentStore(store);
     return conv;
   },
 };

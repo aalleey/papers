@@ -154,8 +154,15 @@ export default function AdminSupportPage() {
         }),
       });
       if (res.ok) {
+        const data = await res.json();
         setReplyText("");
-        await Promise.all([loadThread(selectedId, true), loadConversations()]);
+        if (data.conversation) setActiveConv(data.conversation);
+        if (Array.isArray(data.messages)) {
+          setMessages(data.messages);
+        } else if (data.message) {
+          setMessages((prev) => [...prev, data.message]);
+        }
+        await loadConversations();
       }
     } finally {
       setSending(false);
@@ -396,10 +403,18 @@ export default function AdminSupportPage() {
                         </span>
                       )}
                       {activeConv.userPhone && (
-                        <span className="inline-flex items-center gap-1">
-                          <Phone className="w-3 h-3 text-slate-400 shrink-0" />
+                        <a
+                          href={`https://wa.me/${activeConv.userPhone
+                            .replace(/[^0-9]/g, "")
+                            .replace(/^0/, "92")}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-emerald-700 hover:underline font-bold"
+                          title="Open WhatsApp chat with this educator"
+                        >
+                          <Phone className="w-3 h-3 text-emerald-600 shrink-0" />
                           <span>{activeConv.userPhone}</span>
-                        </span>
+                        </a>
                       )}
                       <span className="hidden sm:inline-flex items-center gap-1 text-slate-400">
                         <Clock className="w-3 h-3" />

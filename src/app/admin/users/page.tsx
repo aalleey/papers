@@ -596,8 +596,8 @@ export default function AdminUsersPage() {
                 </span>
               </div>
               <p className="text-xs text-slate-500 font-medium max-w-2xl mt-0.5">
-                Inspect educator activity, Raast ID (
-                <strong className="font-mono text-slate-700">03092770207</strong>) verifications, and subscription plans.
+                Inspect educator activity, HBL / WhatsApp (
+                <strong className="font-mono text-slate-700">03473576122</strong>) verifications, and subscription plans.
               </p>
             </div>
           </div>
@@ -724,7 +724,7 @@ export default function AdminUsersPage() {
             <span className="text-[11px] text-amber-800 font-bold">on hold</span>
           </div>
           <div className="mt-1.5 text-[10px] text-amber-700 font-semibold truncate">
-            Raast 03092770207 review
+            WhatsApp 03473576122 review
           </div>
         </button>
 
