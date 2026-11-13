@@ -565,43 +565,39 @@ export default function AdminUsersPage() {
       )}
 
       {/* =====================================================================
-          1. TOP EXECUTIVE COMMAND BAR (3D LIQUID GLASS)
+          1. TOP EXECUTIVE COMMAND BAR (MODERN SAAS DESIGN)
           ===================================================================== */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-white/85 via-white/70 to-emerald-50/50 backdrop-blur-2xl saturate-150 p-5 sm:p-6 rounded-3xl border border-white/95 shadow-[0_24px_55px_-15px_rgba(15,23,42,0.12),0_4px_0_0_rgba(203,213,225,0.6),inset_0_2px_2px_#ffffff] flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="relative overflow-hidden bg-white/95 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-white/80 to-transparent"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -right-12 -top-12 w-56 h-56 rounded-full bg-gradient-to-br from-emerald-400/20 via-teal-400/15 to-transparent blur-2xl"
+          className="pointer-events-none absolute -right-12 -top-12 w-56 h-56 rounded-full bg-gradient-to-br from-emerald-400/15 via-teal-400/10 to-indigo-400/10 blur-2xl"
           aria-hidden="true"
         />
 
         <div className="relative space-y-1.5">
           <div className="flex flex-wrap items-center gap-2 text-[11px] font-extrabold uppercase tracking-wider text-emerald-700">
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-800">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800">
               <Sparkles className="w-3 h-3 text-emerald-600" />
-              Admin Executive CRM
+              Executive CRM
             </span>
             <span className="text-slate-300">/</span>
-            <span>Educator Profiles &amp; Live Usage Telemetry</span>
+            <span className="text-slate-500">Educators &amp; Subscriptions</span>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-[0_4px_0_0_#065f46,0_8px_16px_-4px_rgba(16,185,129,0.4),inset_0_1px_1px_rgba(255,255,255,0.65)] shrink-0">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-indigo-600 text-white flex items-center justify-center shadow-sm shadow-emerald-500/25 shrink-0">
               <Users className="w-5 h-5" />
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                  Educators Directory &amp; Rich Profiles
+                  Educators Directory
                 </h1>
-                <span className="font-urdu text-emerald-800 text-base sm:text-lg font-bold px-3 py-0.5 bg-white/80 backdrop-blur-md border border-emerald-500/25 rounded-xl shadow-2xs">
-                  اساتذہ پروفائلز اور سبسکرپشن کنٹرول
+                <span className="font-urdu text-emerald-700 text-sm sm:text-base font-bold px-2.5 py-0.5 bg-emerald-50/80 border border-emerald-200/70 rounded-xl">
+                  اساتذہ پروفائلز
                 </span>
               </div>
-              <p className="text-xs text-slate-600 font-medium max-w-2xl mt-0.5">
-                Inspect educator paper generation activity, subject preferences, Raast ID (
-                <strong className="font-mono text-slate-800">03092770207</strong>) verifications, and fine-grained entitlements.
+              <p className="text-xs text-slate-500 font-medium max-w-2xl mt-0.5">
+                Inspect educator activity, Raast ID (
+                <strong className="font-mono text-slate-700">03092770207</strong>) verifications, and subscription plans.
               </p>
             </div>
           </div>
@@ -609,13 +605,13 @@ export default function AdminUsersPage() {
 
         <div className="relative flex flex-wrap items-center gap-2.5 shrink-0">
           {/* View Mode Toggle (Desktop) */}
-          <div className="hidden lg:inline-flex items-center p-1 rounded-xl bg-white/80 backdrop-blur-md border border-slate-200/90 shadow-[0_2px_0_0_#cbd5e1,inset_0_1px_0_#ffffff]">
+          <div className="hidden lg:inline-flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200/80">
             <button
               type="button"
               onClick={() => setViewMode("table")}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 viewMode === "table"
-                  ? "bg-slate-900 text-white shadow-xs"
+                  ? "bg-white text-slate-900 shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
               }`}
               title="High-Density Table View"
@@ -626,50 +622,46 @@ export default function AdminUsersPage() {
             <button
               type="button"
               onClick={() => setViewMode("cards")}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 viewMode === "cards"
-                  ? "bg-slate-900 text-white shadow-xs"
+                  ? "bg-white text-slate-900 shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
               }`}
-              title="Rich Glass Profile Cards View"
+              title="Rich Profile Cards View"
             >
               <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Profile Cards</span>
+              <span>Cards</span>
             </button>
           </div>
 
           <button
             onClick={() => loadClients()}
             title="Refresh Profiles"
-            className="p-2.5 rounded-xl bg-white/90 hover:bg-white border border-slate-200/90 text-slate-700 shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+            className="p-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 shadow-2xs transition-all cursor-pointer"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-emerald-600" : ""}`} />
           </button>
           <button
             onClick={handleExportCsv}
-            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/90 hover:bg-white border border-slate-200/90 text-slate-800 text-xs font-extrabold shadow-[0_3px_0_0_#cbd5e1,inset_0_1px_0_#ffffff] hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold shadow-2xs transition-all cursor-pointer"
           >
             <Download className="w-4 h-4 text-emerald-600" />
             <span>Export CSV</span>
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className="relative overflow-hidden inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-600 text-white text-xs font-extrabold border border-emerald-300/80 shadow-[0_4px_0_0_#065f46,0_10px_20px_-4px_rgba(16,185,129,0.45),inset_0_2px_1px_rgba(255,255,255,0.65)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-extrabold shadow-sm shadow-emerald-600/25 hover:-translate-y-0.5 transition-all cursor-pointer"
           >
-            <span
-              className="pointer-events-none absolute inset-x-1.5 top-0.5 h-2 rounded-t-full bg-gradient-to-b from-white/50 to-transparent"
-              aria-hidden="true"
-            />
-            <Plus className="w-4 h-4 relative z-10" />
-            <span className="relative z-10">Register New Educator</span>
+            <Plus className="w-4 h-4" />
+            <span>Register Educator</span>
           </button>
         </div>
       </div>
 
       {/* =====================================================================
-          2. 6 INTERACTIVE 3D GLASS KPI TELEMETRY CARDS
+          2. 6 INTERACTIVE MODERN KPI TELEMETRY CARDS
           ===================================================================== */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3.5">
         {/* 1. Total Educators */}
         <button
           type="button"
@@ -679,15 +671,15 @@ export default function AdminUsersPage() {
           }}
           className={`text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
             filterStatus === "all" && filterPlan === "all"
-              ? "bg-white/95 border-emerald-500 ring-2 ring-emerald-500/20 shadow-[0_5px_0_0_#10b981,0_12px_25px_-6px_rgba(16,185,129,0.2)]"
-              : "bg-gradient-to-b from-white/85 to-white/70 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7),0_10px_25px_-8px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5"
+              ? "bg-white border-emerald-500 ring-2 ring-emerald-500/15 shadow-sm"
+              : "bg-white/90 border-slate-200/80 shadow-2xs hover:border-slate-300 hover:-translate-y-0.5"
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
               Total Educators
             </span>
-            <div className="p-1.5 rounded-xl bg-blue-500/10 text-blue-600 border border-blue-200/60">
+            <div className="p-1.5 rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
               <Users className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -711,17 +703,17 @@ export default function AdminUsersPage() {
           }}
           className={`text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
             filterStatus === "pending_verification"
-              ? "bg-amber-50/95 border-amber-500 ring-2 ring-amber-500/25 shadow-[0_5px_0_0_#f59e0b]"
+              ? "bg-amber-50 border-amber-500 ring-2 ring-amber-500/20 shadow-sm"
               : stats.pendingVerification > 0
-              ? "bg-gradient-to-b from-amber-50/90 to-white/85 backdrop-blur-xl border-amber-300 shadow-[0_4px_0_0_#fcd34d]"
-              : "bg-gradient-to-b from-white/85 to-white/70 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7),inset_0_1px_0_#ffffff] hover:-translate-y-0.5"
+              ? "bg-amber-50/60 border-amber-200 shadow-2xs hover:border-amber-300"
+              : "bg-white/90 border-slate-200/80 shadow-2xs hover:border-slate-300 hover:-translate-y-0.5"
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-extrabold text-amber-800 uppercase tracking-wider">
               Pending Approval
             </span>
-            <div className="p-1.5 rounded-xl bg-amber-500/15 text-amber-700 border border-amber-300/60">
+            <div className="p-1.5 rounded-xl bg-amber-100 text-amber-700 border border-amber-200">
               <Clock className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -745,15 +737,15 @@ export default function AdminUsersPage() {
           }}
           className={`text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
             filterPlan === "standard" || filterPlan === "annual"
-              ? "bg-white/95 border-emerald-500 ring-2 ring-emerald-500/20 shadow-[0_5px_0_0_#10b981]"
-              : "bg-gradient-to-b from-white/85 to-white/70 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7),0_10px_25px_-8px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5"
+              ? "bg-white border-emerald-500 ring-2 ring-emerald-500/15 shadow-sm"
+              : "bg-white/90 border-slate-200/80 shadow-2xs hover:border-slate-300 hover:-translate-y-0.5"
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
               Paid Pro Plans
             </span>
-            <div className="p-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 border border-emerald-200/60">
+            <div className="p-1.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
               <Crown className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -769,12 +761,12 @@ export default function AdminUsersPage() {
         </button>
 
         {/* 4. Total Papers Generated Across Users */}
-        <div className="text-left p-4 rounded-2xl border bg-gradient-to-b from-indigo-50/75 via-white/85 to-white/80 backdrop-blur-xl border-indigo-200/80 shadow-[0_4px_0_0_rgba(199,210,254,0.8),0_10px_25px_-8px_rgba(79,70,229,0.1),inset_0_1px_0_#ffffff] relative overflow-hidden">
+        <div className="text-left p-4 rounded-2xl border bg-gradient-to-br from-indigo-50/70 via-white to-white border-indigo-200/80 shadow-2xs relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-extrabold text-indigo-800 uppercase tracking-wider">
               Papers Generated
             </span>
-            <div className="p-1.5 rounded-xl bg-indigo-500/15 text-indigo-700 border border-indigo-200">
+            <div className="p-1.5 rounded-xl bg-indigo-100/80 text-indigo-700 border border-indigo-200">
               <FileText className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -800,8 +792,8 @@ export default function AdminUsersPage() {
           }}
           className={`text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
             filterPlan === "free"
-              ? "bg-white/95 border-slate-500 ring-2 ring-slate-400/20 shadow-[0_5px_0_0_#64748b]"
-              : "bg-gradient-to-b from-white/85 to-white/70 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7),0_10px_25px_-8px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5"
+              ? "bg-white border-slate-500 ring-2 ring-slate-400/20 shadow-sm"
+              : "bg-white/90 border-slate-200/80 shadow-2xs hover:border-slate-300 hover:-translate-y-0.5"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -830,8 +822,8 @@ export default function AdminUsersPage() {
           }}
           className={`text-left p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
             filterStatus === "suspended"
-              ? "bg-rose-50/95 border-rose-500 ring-2 ring-rose-500/20 shadow-[0_5px_0_0_#f43f5e]"
-              : "bg-gradient-to-b from-white/85 to-white/70 backdrop-blur-xl border-white/90 shadow-[0_4px_0_0_rgba(203,213,225,0.7),0_10px_25px_-8px_rgba(15,23,42,0.08),inset_0_1px_0_#ffffff] hover:-translate-y-0.5"
+              ? "bg-rose-50 border-rose-500 ring-2 ring-rose-500/20 shadow-sm"
+              : "bg-white/90 border-slate-200/80 shadow-2xs hover:border-slate-300 hover:-translate-y-0.5"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -853,9 +845,9 @@ export default function AdminUsersPage() {
       </div>
 
       {/* =====================================================================
-          3. FROSTED GLASS SEARCH & FILTER BAR
+          3. CLEAN SEARCH & FILTER BAR
           ===================================================================== */}
-      <div className="bg-gradient-to-b from-white/85 to-white/75 backdrop-blur-2xl p-4 rounded-2xl border border-white/90 shadow-[0_12px_32px_-10px_rgba(15,23,42,0.08),0_3px_0_0_rgba(203,213,225,0.6),inset_0_1px_0_#ffffff] flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      <div className="bg-white/95 backdrop-blur-xl p-4 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
